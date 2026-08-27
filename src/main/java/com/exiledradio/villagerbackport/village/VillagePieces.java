@@ -71,9 +71,9 @@ public final class VillagePieces {
      * pieces, and a collision would have one mod's building loaded as another's.
      */
     public static void register() {
-        MapGenStructureIO.registerStructureComponent(VillageWorkshop.class, "ViTr:Workshop");
-        MapGenStructureIO.registerStructureComponent(VillageMarketStall.class, "ViTr:Stall");
-        MapGenStructureIO.registerStructureComponent(VillageMeetingPoint.class, "ViTr:MeetingPoint");
+        MapGenStructureIO.registerStructureComponent(VillageWorkshop.class, "VBP:Workshop");
+        MapGenStructureIO.registerStructureComponent(VillageMarketStall.class, "VBP:Stall");
+        MapGenStructureIO.registerStructureComponent(VillageMeetingPoint.class, "VBP:MeetingPoint");
 
         if (!ModConfig.villages.enabled) {
             VillagerBackport.LOGGER.info(
