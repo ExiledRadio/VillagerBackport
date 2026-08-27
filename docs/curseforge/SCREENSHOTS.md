@@ -19,10 +19,14 @@ spawning, and the grindstone or stonecutter screen.
 
 ## Icon
 
-`project-avatar.png` in the project root is the 512x512 CurseForge avatar, in the same style as
-the other mods': dark squircle, radial lift, lavender sparkles, emerald above the subject. The
-background colours, corner radius and sparkle colour are sampled from
-`RLCraftVillagerTomes/project-avatar.png` so the set matches.
+`project-avatar.png` in the project root is the 512x512 CurseForge avatar: a bed with the
+emerald above it, on the same dark squircle with the lavender sparkles the other mods use. The
+background colours, corner radius, sparkle colour and gem are sampled from
+`RLCraftVillagerTomes/project-avatar.png`, and the red and cream from the Death Overhaul heart
+and the Enchant Recipes book, so the set shares a palette.
 
-`docs/curseforge/icon.png` is the same file, and `icon-400.png` is CurseForge's stated 400x400.
+Sparkles are placed against the subject's own silhouette rather than a bounding box, so none
+of them end up half-hidden behind the bed.
+
+`docs/curseforge/icon.png` is the same file and `icon-400.png` is CurseForge's stated 400x400.
 Run `python docs/curseforge/avatar.py` to regenerate all three.
