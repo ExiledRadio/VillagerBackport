@@ -608,36 +608,6 @@ public final class ModConfig {
         public int maxLecternPerChunk = 1;
 
         @Config.Comment({
-                "Turn the plank blocks framed by trapdoors into workstations.",
-                "",
-                "The bench-like thing that turns up all over the larger villages - a plank block with",
-                "wooden trapdoors hung on two to five of its sides - already reads as a piece of",
-                "furniture somebody works at, and there are a great many of them. Swapping the plank",
-                "for a workstation leaves the trapdoor frame standing around it, so it still looks",
-                "like what it was built to look like.",
-                "",
-                "Costs nothing where the pack has none: without the trapdoors around it a plank block",
-                "is just a plank block, and is left alone."
-        })
-        public boolean trapdoorFramedTables = true;
-
-        @Config.Comment({
-                "How likely one of those is to become a workstation.",
-                "Set to 0 to leave them all as they were built."
-        })
-        @Config.RangeDouble(min = 0.0D, max = 1.0D)
-        public double trapdoorTableChance = 0.5D;
-
-        @Config.Comment({
-                "How many sides must carry a trapdoor before a plank block counts as one of these.",
-                "",
-                "Two is what the smallest of them use. Raising it to three or four picks out only the",
-                "more thoroughly framed ones and leaves plain panelling alone."
-        })
-        @Config.RangeInt(min = 1, max = 4)
-        public int trapdoorTableMinSides = 2;
-
-        @Config.Comment({
                 "What may be replaced, how often, and with what.",
                 "",
                 "Each entry is 'block=chance' or 'block=chance=replacement,replacement'. The chance",

@@ -7,7 +7,6 @@ import com.exiledradio.villagerbackport.block.BlockWorkstation;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.BlockCrops;
-import net.minecraft.block.BlockTrapDoor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -25,15 +24,12 @@ import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Map;
 import java.util.Random;
 
@@ -42,20 +38,18 @@ import java.util.Random;
  * them one.
  *
  * <h2>What it looks for</h2>
- * Four kinds of thing, all of them furniture somebody built to mean "work happens here":
+ * Three kinds of thing, all of them furniture somebody built to mean "work happens here":
  *
  * <ul>
  * <li>crafting tables and furnaces, the plainest signal a house belongs to somebody who works;
  * <li>cauldrons, which packs scatter far more of than any village needs leatherworkers - rerolling
  *     one trades a job nobody wanted for one somebody did;
- * <li>a plank block framed by wooden trapdoors, the bench that turns up all over the larger
- *     villages, which keeps its frame and gains a purpose;
  * <li>a field of wheat large enough to be worth farming, which gets a composter stood among the
  *     crops - the one part of a village that obviously belongs to somebody and holds nothing to
  *     work at.
  * </ul>
  *
- * <p>The last two matter most in the mega villages a pack like RLCraft generates: those are mostly
+ * <p>The last matters most in the mega villages a pack like RLCraft generates: those are mostly
  * fields and houses and short on crafting tables, so the rest of this finds little there.
  *
  * <h2>Why this and not more buildings</h2>
@@ -121,7 +115,6 @@ public final class StructureWorkstations implements IWorldGenerator {
     }
 
     private static Map<Block, Rule> rules;
-    private static Set<Block> planks;
 
     /** Blocks between two workstations stood among the same crop field or library. */
     private static final int MIN_SPACING = 6;
@@ -143,7 +136,6 @@ public final class StructureWorkstations implements IWorldGenerator {
     /** Drops the parsed rules so a config change is picked up. */
     public static void invalidate() {
         rules = null;
-        planks = null;
     }
 
     private static Map<Block, Rule> rules() {
@@ -253,12 +245,6 @@ public final class StructureWorkstations implements IWorldGenerator {
                             }
                             continue;
                         }
-
-                        if (isTrapdoorFramed(world, chunk, pos, block)
-                                && random.nextDouble() < ModConfig.structures.trapdoorTableChance) {
-                            replaceWith(world, chunk, pos, state,
-                                    WorkstationPool.pick(random, block), random);
-                        }
                     }
                 }
             }
@@ -362,64 +348,6 @@ public final class StructureWorkstations implements IWorldGenerator {
                 placed.add(pos);
             }
         }
-    }
-
-    /**
-     * @return true if this is one of the plank blocks framed by trapdoors
-     *
-     * <p>Only the four sides are counted, which is where they are hung. Anything across a chunk
-     * border that has not generated yet counts as no trapdoor rather than being asked about - asking
-     * would generate that chunk from inside generation.
-     */
-    private boolean isTrapdoorFramed(World world, Chunk chunk, BlockPos pos, Block block) {
-        if (!ModConfig.structures.trapdoorFramedTables || !planks().contains(block)) {
-            return false;
-        }
-
-        int sides = 0;
-
-        for (EnumFacing facing : EnumFacing.HORIZONTALS) {
-            BlockPos side = pos.offset(facing);
-            Chunk owner = chunk;
-
-            if ((side.getX() >> 4) != chunk.x || (side.getZ() >> 4) != chunk.z) {
-                owner = world.getChunkProvider().getLoadedChunk(side.getX() >> 4, side.getZ() >> 4);
-                if (owner == null) {
-                    continue;
-                }
-            }
-
-            IBlockState state = owner.getBlockState(side);
-
-            if (state.getBlock() instanceof BlockTrapDoor && state.getMaterial() == Material.WOOD) {
-                sides++;
-            }
-        }
-
-        return sides >= ModConfig.structures.trapdoorTableMinSides;
-    }
-
-    /**
-     * @return every block the ore dictionary calls a wooden plank
-     *
-     * <p>Read from the ore dictionary rather than named, because the villages these appear in are
-     * built by structure mods out of whatever wood they please.
-     */
-    private static Set<Block> planks() {
-        if (planks == null) {
-            Set<Block> found = new HashSet<Block>();
-
-            for (ItemStack stack : OreDictionary.getOres("plankWood")) {
-                Block block = Block.getBlockFromItem(stack.getItem());
-                if (block != Blocks.AIR) {
-                    found.add(block);
-                }
-            }
-
-            planks = found;
-        }
-
-        return planks;
     }
 
     /** Puts a workstation where something else was, keeping a facing if the old block had one. */
