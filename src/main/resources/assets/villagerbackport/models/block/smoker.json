@@ -1,0 +1,9 @@
+{
+  "parent": "villagerbackport:block/orientable_with_bottom",
+  "textures": {
+    "bottom": "villagerbackport:blocks/smoker_bottom",
+    "top": "villagerbackport:blocks/smoker_top",
+    "front": "villagerbackport:blocks/smoker_front",
+    "side": "villagerbackport:blocks/smoker_side"
+  }
+}

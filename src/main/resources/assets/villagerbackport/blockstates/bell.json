@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "villagerbackport:bell"
+    },
+    "facing=south": {
+      "model": "villagerbackport:bell",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "villagerbackport:bell",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "villagerbackport:bell",
+      "y": 90
+    }
+  }
+}

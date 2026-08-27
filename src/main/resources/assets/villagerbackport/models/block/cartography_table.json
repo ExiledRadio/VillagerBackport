@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "villagerbackport:blocks/cartography_table_side3",
+    "down": "blocks/planks_big_oak",
+    "up": "villagerbackport:blocks/cartography_table_top",
+    "north": "villagerbackport:blocks/cartography_table_side3",
+    "east": "villagerbackport:blocks/cartography_table_side3",
+    "south": "villagerbackport:blocks/cartography_table_side1",
+    "west": "villagerbackport:blocks/cartography_table_side2"
+  }
+}

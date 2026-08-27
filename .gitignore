@@ -1,0 +1,16 @@
+# Gradle
+/build/
+/.gradle/
+
+# ForgeGradle's generated run directory and decompiled workspace
+/run/
+/eclipse/
+/.idea/
+*.iml
+*.ipr
+*.iws
+/out/
+
+# OS
+.DS_Store
+Thumbs.db

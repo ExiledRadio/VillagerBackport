@@ -1,0 +1,53 @@
+gui.villagerbackport.level.1=Novice
+gui.villagerbackport.level.2=Apprentice
+gui.villagerbackport.level.3=Journeyman
+gui.villagerbackport.level.4=Expert
+gui.villagerbackport.level.5=Master
+
+gui.villagerbackport.xp.progress=%s/%s XP
+gui.villagerbackport.xp.max=%s XP
+gui.villagerbackport.trades=Trades
+
+config.villagerbackport.restock=Restocking
+config.villagerbackport.pricing=Pricing & Experience
+config.villagerbackport.display=Display
+
+gui.villagerbackport.outofstock=Villagers restock up to two times per day.
+
+config.villagerbackport.jobs=Workstations
+config.villagerbackport.villages=Village Generation
+config.villagerbackport.structures=Structures
+
+tile.villagerbackport.barrel.name=Barrel
+tile.villagerbackport.bell.name=Bell
+tile.villagerbackport.blast_furnace.name=Blast Furnace
+tile.villagerbackport.cartography_table.name=Cartography Table
+tile.villagerbackport.composter.name=Composter
+tile.villagerbackport.fletching_table.name=Fletching Table
+tile.villagerbackport.grindstone.name=Grindstone
+tile.villagerbackport.lectern.name=Lectern
+tile.villagerbackport.loom.name=Loom
+tile.villagerbackport.smithing_table.name=Smithing Table
+tile.villagerbackport.smoker.name=Smoker
+tile.villagerbackport.stonecutter.name=Stonecutter
+entity.Villager.mason=Mason
+config.villagerbackport.workstations=Workstations
+container.villagerbackport.barrel=Barrel
+container.villagerbackport.composter=Composter
+container.villagerbackport.smoker=Smoker
+container.villagerbackport.blast_furnace=Blast Furnace
+container.villagerbackport.grindstone=Repair and Disenchant
+container.villagerbackport.cartography_table=Cartography Table
+container.villagerbackport.stonecutter=Stonecutter
+container.villagerbackport.loom=Loom
+lectern.take_book=Take Book
+
+item.villagerbackport.creeper_banner_pattern.name=Banner Pattern
+item.villagerbackport.creeper_banner_pattern.desc=Creeper Charge
+item.villagerbackport.skull_banner_pattern.name=Banner Pattern
+item.villagerbackport.skull_banner_pattern.desc=Skull Charge
+item.villagerbackport.flower_banner_pattern.name=Banner Pattern
+item.villagerbackport.flower_banner_pattern.desc=Flower Charge
+item.villagerbackport.mojang_banner_pattern.name=Banner Pattern
+item.villagerbackport.mojang_banner_pattern.desc=Thing
+container.villagerbackport.fletching_table=Fletching Table

@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "villagerbackport:blocks/fletching_table_front",
+    "down": "blocks/planks_birch",
+    "up": "villagerbackport:blocks/fletching_table_top",
+    "north": "villagerbackport:blocks/fletching_table_front",
+    "east": "villagerbackport:blocks/fletching_table_side",
+    "south": "villagerbackport:blocks/fletching_table_front",
+    "west": "villagerbackport:blocks/fletching_table_side"
+  }
+}

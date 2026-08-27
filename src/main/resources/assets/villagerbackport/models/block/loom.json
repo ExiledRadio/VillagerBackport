@@ -1,0 +1,9 @@
+{
+  "parent": "block/orientable",
+  "textures": {
+    "top": "villagerbackport:blocks/loom_top",
+    "bottom": "villagerbackport:blocks/loom_bottom",
+    "front": "villagerbackport:blocks/loom_front",
+    "side": "villagerbackport:blocks/loom_side"
+  }
+}

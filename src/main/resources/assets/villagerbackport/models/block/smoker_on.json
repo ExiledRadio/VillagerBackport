@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "villagerbackport:blocks/smoker_front_on",
+    "down": "villagerbackport:blocks/smoker_bottom",
+    "up": "villagerbackport:blocks/smoker_top",
+    "north": "villagerbackport:blocks/smoker_front_on",
+    "east": "villagerbackport:blocks/smoker_side",
+    "south": "villagerbackport:blocks/smoker_side",
+    "west": "villagerbackport:blocks/smoker_side"
+  }
+}

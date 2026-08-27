@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "minecraft:red_flower",
+      "data": 8
+    }
+  ],
+  "result": {
+    "item": "villagerbackport:flower_banner_pattern",
+    "count": 1
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "minecraft:golden_apple",
+      "data": 1
+    }
+  ],
+  "result": {
+    "item": "villagerbackport:mojang_banner_pattern",
+    "count": 1
+  }
+}

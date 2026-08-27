@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "villagerbackport:blocks/smithing_table_front",
+    "down": "villagerbackport:blocks/smithing_table_bottom",
+    "up": "villagerbackport:blocks/smithing_table_top",
+    "north": "villagerbackport:blocks/smithing_table_front",
+    "east": "villagerbackport:blocks/smithing_table_side",
+    "south": "villagerbackport:blocks/smithing_table_front",
+    "west": "villagerbackport:blocks/smithing_table_side"
+  }
+}

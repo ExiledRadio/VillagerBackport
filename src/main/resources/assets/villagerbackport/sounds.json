@@ -1,0 +1,154 @@
+{
+  "block.bell.use": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:block/bell/bell_use01",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bell/bell_use02",
+        "stream": false
+      }
+    ]
+  },
+  "block.bell.resonate": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:block/bell/resonate",
+        "stream": false
+      }
+    ]
+  },
+  "block.grindstone.use": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:block/grindstone/grindstone1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/grindstone/grindstone2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/grindstone/grindstone3",
+        "stream": false
+      }
+    ]
+  },
+  "ui.cartography_table.take_result": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:ui/cartography_table/drawmap1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:ui/cartography_table/drawmap2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:ui/cartography_table/drawmap3",
+        "stream": false
+      }
+    ]
+  },
+  "ui.stonecutter.take_result": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:ui/stonecutter/cut1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:ui/stonecutter/cut1",
+        "pitch": 0.92,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:ui/stonecutter/cut2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:ui/stonecutter/cut2",
+        "pitch": 0.92,
+        "stream": false
+      }
+    ]
+  },
+  "ui.loom.select_pattern": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:ui/loom/select_pattern1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:ui/loom/select_pattern2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:ui/loom/select_pattern3",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:ui/loom/select_pattern4",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:ui/loom/select_pattern5",
+        "stream": false
+      }
+    ]
+  },
+  "ui.loom.take_result": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:ui/loom/take_result1",
+        "volume": 0.5,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:ui/loom/take_result2",
+        "volume": 0.5,
+        "stream": false
+      }
+    ]
+  },
+  "item.book.put": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:item/book/close_put1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/book/close_put2",
+        "stream": false
+      }
+    ]
+  },
+  "item.book.page_turn": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:item/book/open_flip1",
+        "volume": 2.0,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/book/open_flip2",
+        "volume": 2.0,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/book/open_flip3",
+        "volume": 2.0,
+        "stream": false
+      }
+    ]
+  }
+}

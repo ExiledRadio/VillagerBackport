@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "villagerbackport:lectern"
+    },
+    "facing=south": {
+      "model": "villagerbackport:lectern",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "villagerbackport:lectern",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "villagerbackport:lectern",
+      "y": 90
+    }
+  }
+}

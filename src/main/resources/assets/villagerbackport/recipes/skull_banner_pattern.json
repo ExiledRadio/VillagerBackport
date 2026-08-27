@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "minecraft:skull",
+      "data": 1
+    }
+  ],
+  "result": {
+    "item": "villagerbackport:skull_banner_pattern",
+    "count": 1
+  }
+}

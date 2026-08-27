@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "villagerbackport:stonecutter"
+    },
+    "facing=south": {
+      "model": "villagerbackport:stonecutter",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "villagerbackport:stonecutter",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "villagerbackport:stonecutter",
+      "y": 90
+    }
+  }
+}
