@@ -19,5 +19,10 @@ spawning, and the grindstone or stonecutter screen.
 
 ## Icon
 
-`icon.png` is 512×512, `icon-400.png` is CurseForge's stated 400×400. Either uploads; the 512
-scales down cleanly since both are whole multiples of the 32-pixel source grid.
+`project-avatar.png` in the project root is the 512x512 CurseForge avatar, in the same style as
+the other mods': dark squircle, radial lift, lavender sparkles, emerald above the subject. The
+background colours, corner radius and sparkle colour are sampled from
+`RLCraftVillagerTomes/project-avatar.png` so the set matches.
+
+`docs/curseforge/icon.png` is the same file, and `icon-400.png` is CurseForge's stated 400x400.
+Run `python docs/curseforge/avatar.py` to regenerate all three.
