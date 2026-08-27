@@ -20,7 +20,11 @@ W = OUT * S
 BG_EDGE, BG_CORE = (14, 13, 22), (42, 26, 40)
 SPARK = (206, 190, 246)
 GLOW = (47, 164, 92)
-GEM_HI, GEM_MID, GEM_LO = (126, 230, 168), (61, 194, 128), (36, 142, 91)
+# traced off the Tomes gem: silhouette 110x106 at 512, table (121,227,173),
+# crown and upper pavilion (68,202,137), right pavilion facet (43,161,103)
+GEM_TABLE_HI, GEM_TABLE_LO = (124, 230, 176), (118, 224, 170)
+GEM_BODY_HI, GEM_BODY_LO = (70, 205, 140), (58, 190, 125)
+GEM_DARK_HI, GEM_DARK_LO = (45, 163, 105), (38, 152, 97)
 SHEET_HI, SHEET_LO = (186, 62, 82), (132, 38, 56)
 BLANKET_HI, BLANKET_LO = (212, 84, 102), (154, 48, 68)
 FOLD_HI, FOLD_LO = (232, 112, 128), (176, 64, 84)
@@ -72,10 +76,15 @@ def fill(layer, mask, b, top, bottom):
 
 
 def glow(layer, mask, colour, blur, strength):
-    g = Image.new("RGBA", (W, W), (0, 0, 0, 0))
-    g.paste(colour + (255,), (0, 0), mask)
-    g = g.filter(ImageFilter.GaussianBlur(p(blur)))
-    g.putalpha(g.split()[3].point(lambda v: int(v * strength)))
+    """Blur the mask, not the colour.
+
+    Blurring an RGBA layer blurs its colour channels against the transparent black
+    outside it, so the halo comes out dark instead of the colour asked for. Blurring
+    only the alpha and laying it over a flat colour keeps the halo the right hue.
+    """
+    a = mask.filter(ImageFilter.GaussianBlur(p(blur))).point(lambda v: int(v * strength))
+    g = Image.new("RGBA", (W, W), colour + (0,))
+    g.putalpha(a)
     layer.alpha_composite(g)
 
 
@@ -122,21 +131,44 @@ def sparkles(layer, occupied):
     layer.alpha_composite(shape)
 
 
-def emerald(layer, cx, cy, size):
-    hw, hh = size / 2, size / 2 * 1.15
-    ty, my, by = cy - hh, cy - hh * 0.3, cy + hh
-    q = lambda x, y: (p(x), p(y))
-    body = [q(cx - hw * 0.6, ty), q(cx + hw * 0.6, ty), q(cx + hw, my), q(cx, by), q(cx - hw, my)]
+def emerald(layer, cx, cy, width):
+    """The Tomes gem, traced from it.
+
+    Vertices are fractions of the silhouette's own box, measured off that icon: the
+    top face spans the middle 59% of the width, the shoulders sit 38% of the way
+    down, the dark facet hangs off the table's bottom-right corner rather than the
+    shoulder, and the whole thing is very slightly wider than it is tall - the
+    previous version was 15% taller than wide, which is what made it look stretched.
+    """
+    h = width * 106.0 / 110.0
+    x0, y0 = cx - width / 2, cy - h / 2
+
+    def q(u, v):
+        return (p(x0 + u * width), p(y0 + v * h))
+
+    TL, TR = q(0.191, 0.0), q(0.782, 0.0)
+    L, R = q(0.0, 0.377), q(1.0, 0.377)
+    TIP = q(0.495, 1.0)
+    CREASE = q(0.664, 0.292)              # where the table, crown and dark facet meet
+    silhouette = [TL, TR, R, TIP, L]
+    table = [TL, TR, q(0.682, 0.292), q(0.318, 0.292)]
+    pavilion_right = [CREASE, R, TIP]
+
+    box = [min(v[0] for v in silhouette), min(v[1] for v in silhouette),
+           max(v[0] for v in silhouette), max(v[1] for v in silhouette)]
+
     m = blank()
-    ImageDraw.Draw(m).polygon(body, fill=255)
-    glow(layer, m, GLOW, 15, 0.9)
+    ImageDraw.Draw(m).polygon(silhouette, fill=255)
+    glow(layer, m, GLOW, 21, 0.75)
+
     g = Image.new("RGBA", (W, W), (0, 0, 0, 0))
-    d = ImageDraw.Draw(g)
-    d.polygon(body, fill=GEM_MID + (255,))
-    d.polygon([q(cx - hw * 0.6, ty), q(cx + hw * 0.6, ty), q(cx + hw * 0.3, my),
-               q(cx - hw * 0.3, my)], fill=GEM_HI + (255,))
-    d.polygon([q(cx + hw * 0.6, ty), q(cx + hw, my), q(cx + hw * 0.3, my)], fill=GEM_LO + (255,))
-    d.polygon([q(cx - hw * 0.3, my), q(cx + hw * 0.3, my), q(cx, by)], fill=GEM_LO + (255,))
+    for pts, top, bottom in ((silhouette, GEM_BODY_HI, GEM_BODY_LO),
+                             (pavilion_right, GEM_DARK_HI, GEM_DARK_LO),
+                             (table, GEM_TABLE_HI, GEM_TABLE_LO)):
+        facet = blank()
+        ImageDraw.Draw(facet).polygon(pts, fill=255)
+        fill(g, facet, box, top, bottom)
+    g.putalpha(m)
     layer.alpha_composite(g)
 
 
@@ -147,7 +179,7 @@ def bed(layer):
     leg_bot = 392
     pillow_l, pillow_r = left + 16, left + 106
 
-    glow(layer, rect(bx(left, sheet_top, right, frame_bot), 12), (168, 58, 78), 28, 0.55)
+    glow(layer, rect(bx(left, sheet_top, right, frame_bot), 12), (176, 62, 82), 26, 0.3)
 
     for lx in (left + 6, right - 40):
         b = bx(lx, frame_bot - 6, lx + 34, leg_bot)
@@ -171,7 +203,7 @@ def bed(layer):
 def build():
     subject = Image.new("RGBA", (W, W), (0, 0, 0, 0))
     bed(subject)
-    emerald(subject, 256, 178, 100)
+    emerald(subject, 256, 179, 110)
 
     art = Image.new("RGBA", (W, W), (0, 0, 0, 0))
     sparkles(art, subject.split()[3])

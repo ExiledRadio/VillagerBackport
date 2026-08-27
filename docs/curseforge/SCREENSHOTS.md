@@ -20,10 +20,12 @@ spawning, and the grindstone or stonecutter screen.
 ## Icon
 
 `project-avatar.png` in the project root is the 512x512 CurseForge avatar: a bed with the
-emerald above it, on the same dark squircle with the lavender sparkles the other mods use. The
-background colours, corner radius, sparkle colour and gem are sampled from
-`RLCraftVillagerTomes/project-avatar.png`, and the red and cream from the Death Overhaul heart
-and the Enchant Recipes book, so the set shares a palette.
+emerald above it, on the same dark squircle with the lavender sparkles the other mods use.
+
+The gem is traced off the one on the Tomes icon rather than drawn by eye - its silhouette,
+facet vertices and colours were measured out of that image, so the two are the same gem at the
+same size. The background colours, corner radius and sparkle colour come from there too, and
+the bed's red and cream from the Death Overhaul heart and the Enchant Recipes book.
 
 Sparkles are placed against the subject's own silhouette rather than a bounding box, so none
 of them end up half-hidden behind the bed.
