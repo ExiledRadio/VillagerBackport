@@ -1,21 +1,26 @@
-# Screenshots to take
+# Images
 
-Five `PASTE_URL` placeholders in `DESCRIPTION.md`, in order. Upload each to the CurseForge
-project's Images tab first, then paste the forgecdn URL in.
+Uploaded to the project's Images tab and linked from `DESCRIPTION.md` by URL. Listed here so
+the page can be rebuilt without hunting for them.
 
-1. **The 1.14 trade screen** — a villager with several trades, scrolled, level badge and
-   experience bar visible. This is the header image, so pick the busiest merchant available.
-2. **Workstations** — all twelve blocks placed together, or a village square with several in
-   use. Villagers standing at them reads better than an empty row.
-3. **Demand pricing** — a trade whose price has risen, with the struck-out original showing.
-   Trade the same offer four or five times first.
-4. **Villager skins and level badges** — three or four villagers of different professions and
-   levels side by side, close enough that the badges are legible.
-5. **The village command** — `/village` run in a village at night, showing the green and red
-   bed boxes and the white outline, with the chat counts in shot.
+| Shot | Where it sits | URL |
+| --- | --- | --- |
+| Trade screen | header | `1900/425/villagergui-png.png` |
+| Twelve workstations | Jobs | `1900/426/workstations-png.png` |
+| Stonecutter | The blocks actually work | `1900/423/stonecutter-png.png` |
+| Fletching table | The blocks actually work | `1900/418/fletching-png.png` |
+| Cartography table | The blocks actually work | `1900/421/map-png.png` |
+| Loom | The blocks actually work | `1900/420/loom-png.png` |
+| Rolled: Punch II | The blocks actually work | `1900/419/lecternmessage-png.png` |
+| Demand pricing | Prices move | `1900/417/demandpricing-png.png` |
+| Villager skin | Levels | `1900/424/villager-png.png` |
+| Market stall | Villages | `1900/422/stalls-png.png` |
+| Config screen | Config | `1900/416/config-png.png` |
 
-Worth having beyond these, for the Images tab: a villager asleep in a bed, an iron golem
-spawning, and the grindstone or stonecutter screen.
+All prefixed with `https://media.forgecdn.net/attachments/`.
+
+Still worth capturing for the Images tab: a villager asleep in a bed, an iron golem spawning,
+and `/village` run at night with the bed boxes drawn.
 
 ## Icon
 

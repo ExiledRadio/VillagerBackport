@@ -48,4 +48,4 @@ blocks or the new trade screen.
 
 ## Licence
 
-MIT. Unofficial; not affiliated with Mojang or the RLCraft team.
+MIT. Not affiliated with Mojang.

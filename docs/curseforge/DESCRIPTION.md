@@ -8,17 +8,17 @@ Ported from decompiled 1.14.4 sources. The pricing formula, restock timings, gos
 
 Twelve workstation blocks come with it, all functional. No dependencies. Needed on both client and server.
 
-Pairs with my other mods: [RLCraft Enchantment Recipes](https://www.curseforge.com/minecraft/mc-mods/rlcraft-enchantment-recipes) and [RLCraft Villager Tomes](https://www.curseforge.com/minecraft/mc-mods/rlcraft-villager-tomes).
-
 > 💬 **[Join the Discord](https://discord.gg/kxQvMDJBTN)** — bug reports, questions and release pings.
 
-![The 1.14 trade screen](PASTE_URL)
+![The 1.14 trade screen](https://media.forgecdn.net/attachments/1900/425/villagergui-png.png)
 
 ***
 
 ## Jobs
 
 A villager claims the nearest unclaimed workstation it can walk to and takes that profession. It has to reach the block — no claiming through a wall, and no claiming across a village it cannot path to. Break the workstation and it loses the job and goes looking for another.
+
+![The twelve workstations](https://media.forgecdn.net/attachments/1900/426/workstations-png.png)
 
 | Block | Job | What it does |
 | --- | --- | --- |
@@ -35,11 +35,24 @@ A villager claims the nearest unclaimed workstation it can walk to and takes tha
 | <strong>Stonecutter</strong> |Mason |Cuts stone with no offcuts |
 | <strong>Brewing stand / Cauldron</strong> |Cleric / Leatherworker |The two 1.12.2 already had |
 
-The stonecutter and fletching table read the crafting recipes already installed and work out what can be cut from them, so a pack with Chisel or Quark gets its blocks in both without either mod knowing about the other. The composter uses the ore dictionary for the same reason.
-
 The bell is not a job site. Ring it and every villager in range glows through walls for a few seconds, which is how you find the one you were looking for.
 
-![Workstations](PASTE_URL)
+***
+
+## The blocks actually work
+
+Not decoration with a job attached. Each one does in 1.12.2 what it does in 1.14.
+
+| | |
+| --- | --- |
+| ![Stonecutter](https://media.forgecdn.net/attachments/1900/423/stonecutter-png.png) | ![Fletching table](https://media.forgecdn.net/attachments/1900/418/fletching-png.png) |
+| ![Cartography table](https://media.forgecdn.net/attachments/1900/421/map-png.png) | ![Loom](https://media.forgecdn.net/attachments/1900/420/loom-png.png) |
+
+The stonecutter and fletching table read the crafting recipes already installed and work out what can be cut from them, so a pack with Chisel or Quark gets its blocks in both without either mod knowing about the other. The composter uses the ore dictionary for the same reason.
+
+Rerolling a librarian is breaking and replacing its lectern until the book is one you want, so the roll is reported in chat as it happens rather than making you open the trade screen to find out.
+
+![Rolled: Punch II](https://media.forgecdn.net/attachments/1900/419/lecternmessage-png.png)
 
 ***
 
@@ -57,7 +70,7 @@ Every use of a trade raises its demand; every restock that finds it untouched lo
 
 The trade screen strikes out the original price and shows the new one in its place, so you can see which trade you have exhausted.
 
-![Demand pricing](PASTE_URL)
+![A trade that has gone up in price](https://media.forgecdn.net/attachments/1900/417/demandpricing-png.png)
 
 ***
 
@@ -76,6 +89,16 @@ The discount is that score times the same multiplier the surcharge uses. Trading
 
 ***
 
+## Zombie villagers
+
+In 1.12.2 a zombified villager is thrown away. The game keeps its profession and nothing else — the career is re-rolled and the trades are gone, so a cured librarian is a stranger who happens to sell books.
+
+Here the whole villager rides across and back, the way 1.14 does it. Trades, level, experience, demand and gossip are all held on the zombie while it stands there, and handed back when it is cured. The librarian you cure is the same librarian, with the same book.
+
+That is what makes curing worth the trouble: it is also the largest discount in the mod, and the part of it that matters never decays. **Curing the same villager again drops its prices again**, up to the five cures 1.14 caps it at.
+
+***
+
 ## Levels
 
 | Level | Experience | Badge |
@@ -90,7 +113,7 @@ Trades unlock by level rather than by trade count. Experience is 1.14's: a tier-
 
 Villagers wear 1.14's skins — biome type, profession robes and the badge for their level — so a master weaponsmith is identifiable across the village.
 
-![Villager skins and level badges](PASTE_URL)
+![A villager in 1.14's skin](https://media.forgecdn.net/attachments/1900/424/villager-png.png)
 
 ***
 
@@ -99,8 +122,6 @@ Villagers wear 1.14's skins — biome type, profession robes and the badge for t
 A villager claims a bed as its home, sleeps in it from dusk until shortly after dawn, and wakes if you shove it far enough out. Babies sleep too. Breeding needs a free bed rather than a door, so a 1.14 breeder design built in 1.12.2 works.
 
 `/village [radius]` draws the village: a box round every bed, green where claimed and red where free, and the counts that decide whether it can grow.
-
-![The village command](PASTE_URL)
 
 ***
 
@@ -114,7 +135,9 @@ These are the rules 1.14 golem farms are built around, and the sleep requirement
 
 ## Villages
 
-Generated villages get workshops, market stalls and a meeting point, registered as ordinary weighted village pieces — so vanilla houses, RLCraft's houses and these mix into one village with no patching on either side.
+Generated villages get workshops, market stalls and a meeting point, registered as ordinary weighted village pieces — so vanilla houses, houses from any structure mod, and these all mix into one village with no patching on either side.
+
+![A market stall in a generated village](https://media.forgecdn.net/attachments/1900/422/stalls-png.png)
 
 Villages that already generated are retrofitted as you find them: composters in crop fields, lecterns in libraries, workbenches replaced with the workstation the building implies.
 
@@ -123,6 +146,8 @@ Villages that already generated are retrofitted as you find them: composters in 
 ## Config
 
 `config/villagerbackport.cfg`, or the in-game config screen. Eight categories, every setting documented in the file.
+
+![The config screen](https://media.forgecdn.net/attachments/1900/416/config-png.png)
 
 *   **restock** — how many per day, the gap between them, working hours, sounds
 *   **pricing** — demand multipliers, gossip range and decay, stock, experience, level gating
@@ -138,8 +163,6 @@ Every part of it switches off. Turn off `homes` and villagers ignore beds; turn 
 ***
 
 ## Things to know
-
-**Curing a zombie villager keeps everything.** Trades, level, experience and gossip all survive, which they did not in 1.12.2.
 
 **Existing worlds work.** Villagers already in the world take jobs the first time they find a workstation, and villages that already generated get workstations retrofitted.
 
@@ -161,6 +184,8 @@ Drop the jar in `mods` on both sides. **Delete any older version first** — two
 
 ***
 
-Unofficial. Not affiliated with Mojang or the RLCraft team. Licensed MIT.
+Also by me: [Enchantment Recipes](https://www.curseforge.com/minecraft/mc-mods/rlcraft-enchantment-recipes), craft enchanted books from mod materials, and [Villager Tomes](https://www.curseforge.com/minecraft/mc-mods/rlcraft-villager-tomes), teach a librarian the books you find.
+
+Not affiliated with Mojang. Licensed MIT.
 
 Source: [https://github.com/ExiledRadio/VillagerBackport](https://github.com/ExiledRadio/VillagerBackport)
