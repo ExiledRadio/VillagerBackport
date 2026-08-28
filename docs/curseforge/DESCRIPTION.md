@@ -41,14 +41,16 @@ The bell is not a job site. Ring it and every villager in range glows through wa
 
 ## The blocks actually work
 
-Not decoration with a job attached. Each one does in 1.12.2 what it does in 1.14.
+Not decoration with a job attached. Each does in 1.12.2 what it does in 1.14 — except the one that does nothing in 1.14.
 
 | | |
 | --- | --- |
 | ![Stonecutter](https://media.forgecdn.net/attachments/1900/423/stonecutter-png.png) | ![Fletching table](https://media.forgecdn.net/attachments/1900/418/fletching-png.png) |
 | ![Cartography table](https://media.forgecdn.net/attachments/1900/421/map-png.png) | ![Loom](https://media.forgecdn.net/attachments/1900/420/loom-png.png) |
 
-The stonecutter and fletching table read the crafting recipes already installed and work out what can be cut from them, so a pack with Chisel or Quark gets its blocks in both without either mod knowing about the other. The composter uses the ore dictionary for the same reason.
+**The fletching table is the one thing here that is not a backport.** In 1.14 it does nothing at all — it hands a villager a job and has no use of its own. Here it is the stonecutter's twin for wood: a log becomes planks, planks become stairs and slabs, one click and none of the offcuts a crafting grid charges you. No version of Minecraft does this.
+
+Both saws read the crafting recipes already installed and work out what can be cut from them, so a pack with Chisel or Quark gets its blocks in both without either mod knowing about the other. The composter uses the ore dictionary for the same reason.
 
 Rerolling a librarian is breaking and replacing its lectern until the book is one you want, so the roll is reported in chat as it happens rather than making you open the trade screen to find out.
 
@@ -143,6 +145,16 @@ Villages that already generated are retrofitted as you find them: composters in 
 
 ***
 
+## What this does not add
+
+**No raids, and no pillagers.** This backports the villager, not everything 1.14 shipped alongside it. There are no illagers, no pillager patrols or outposts, no ravagers, no Bad Omen and no Hero of the Village discount. Raids are a whole second system — new mobs, wave spawning, patrol generation — and none of it is here.
+
+1.14's bell exists to make raiders glow so a village under attack can see them coming. With nothing to raid it, ours highlights villagers instead, which is more use in a village you have built up anyway.
+
+Also absent: wandering traders and their llamas, map locking (1.12.2's map data has nowhere to store it), and 1.14's full daily schedule — villagers work, sleep and breed on 1.14's timings, but they do not gather at the bell at midday and babies do not have a play period.
+
+***
+
 ## Config
 
 `config/villagerbackport.cfg`, or the in-game config screen. Eight categories, every setting documented in the file.
@@ -165,8 +177,6 @@ Every part of it switches off. Turn off `homes` and villagers ignore beds; turn 
 ## Things to know
 
 **Existing worlds work.** Villagers already in the world take jobs the first time they find a workstation, and villages that already generated get workstations retrofitted.
-
-**Raids and illagers are not here.** 1.14's bell warns of a raid; with no raids to warn of, ours highlights villagers instead. Map locking is missing for a similar reason — 1.12.2's map data has nowhere to store it.
 
 **Spacebar refills the trade.** If it does not, another mod has claimed the key — Inventory Tweaks binds it by default. The key is configurable.
 
