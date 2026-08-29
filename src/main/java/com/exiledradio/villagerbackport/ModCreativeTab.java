@@ -1,5 +1,7 @@
 package com.exiledradio.villagerbackport;
 
+import com.exiledradio.villagerbackport.block.Names;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -25,6 +27,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  *
  * <p>The fallback matters. An icon of nothing leaves the creative screen drawing an empty slot
  * where the tab should be, and an emerald is at least on the nose for this mod.
+ *
+ * <h2>The label</h2>
+ * Resolved here rather than left to the creative screen, for the reason described on {@link Names}:
+ * in a pack where this mod's language file is not loaded, the tab draws as
+ * {@code itemGroup.villagerbackport}. Every other name this mod shows already goes through that
+ * fallback; the tab was the one string reaching a vanilla lookup directly.
+ *
+ * <p>Returning text where a key is expected is safe both ways round. The creative screen passes
+ * whatever comes back to {@code I18n.format}, which hands an unrecognised string straight back.
  */
 public final class ModCreativeTab extends CreativeTabs {
 
@@ -33,9 +44,18 @@ public final class ModCreativeTab extends CreativeTabs {
     /** The block whose item stands for the whole tab. */
     private static final String ICON = "lectern";
 
+    /** Shown when the language file has not loaded. Matches the entry in en_us.lang. */
+    private static final String LABEL = "1.14 Villager Backport";
+
     private ModCreativeTab() {
         // Becomes the itemGroup.villagerbackport translation key.
         super(VillagerBackport.MOD_ID);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public String getTranslationKey() {
+        return Names.translateOr(super.getTranslationKey(), LABEL);
     }
 
     @Override
