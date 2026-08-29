@@ -1,5 +1,6 @@
 package com.exiledradio.villagerbackport.block;
 
+import com.exiledradio.villagerbackport.ModCreativeTab;
 import com.exiledradio.villagerbackport.VillagerBackport;
 
 import net.minecraft.block.Block;
@@ -102,6 +103,7 @@ public final class ModBlocks {
     private static void add(RegistryEvent.Register<Block> event, String name, Block block) {
         block.setRegistryName(new ResourceLocation(VillagerBackport.MOD_ID, name));
         block.setTranslationKey(VillagerBackport.MOD_ID + "." + name);
+        block.setCreativeTab(ModCreativeTab.TAB);
 
         event.getRegistry().register(block);
         BLOCKS.add(block);

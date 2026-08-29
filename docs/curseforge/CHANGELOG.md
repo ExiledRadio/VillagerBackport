@@ -1,4 +1,4 @@
-# 1.0.0
+# 1.0.1
 
 First release. Backports 1.14.4's village mechanics to 1.12.2, ported from decompiled 1.14.4 sources.
 
@@ -19,5 +19,7 @@ Beds: claimed as homes, slept in at night, and used for breeding instead of door
 Villages: workshops, stalls and a meeting point generate in new villages, and existing ones are retrofitted with workstations as you find them.
 
 Screen: 1.14's trade screen, with the scrollable trade list, level badge, experience bar and spacebar refill.
+
+Everything the mod adds sits in its own creative tab, the twelve workstations and the four banner patterns together.
 
 `/village` draws the village's beds and the counts that decide whether it can grow. Everything is configurable in eight categories, and every part of it can be switched off.

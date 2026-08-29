@@ -3,7 +3,6 @@ package com.exiledradio.villagerbackport.item;
 import com.exiledradio.villagerbackport.block.Names;
 
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.BannerPattern;
@@ -48,7 +47,6 @@ public class ItemBannerPattern extends Item {
         this.fallbackDescription = fallbackDescription;
 
         setMaxStackSize(1);
-        setCreativeTab(CreativeTabs.MISC);
     }
 
     public BannerPattern getPattern() {
