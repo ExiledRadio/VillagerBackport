@@ -6,21 +6,21 @@ import net.minecraft.util.text.translation.I18n;
 /**
  * Readable names when the language file is not loaded.
  *
- * <h2>Why this keeps coming up</h2>
- * This mod's language file is present in the jar, correctly named and keyed, and other resources
- * beside it load without trouble - the block textures and models all render. Only the translations
- * are skipped, which has already surfaced twice: as block names reading
- * {@code tile.villagerbackport.stonecutter.name}, and as a barrel titled
- * {@code container.villagerbackport.barrel}.
+ * <h2>Why this used to happen</h2>
+ * The jar shipped without a {@code pack.mcmeta}, so {@code FMLFileResourcePack} substituted a dummy
+ * one declaring {@code pack_format: 2}. {@code FMLClientHandler.addModAsResource} wraps any pack
+ * declaring exactly 2 in {@link net.minecraft.client.resources.LegacyV2Adapter}, whose
+ * {@code fudgePath} rewrites every path under {@code lang/} ending in {@code .lang} by uppercasing
+ * the region code. So each request for {@code lang/en_us.lang} was quietly turned into
+ * {@code lang/en_US.lang}, which a zip lookup does not find.
  *
- * <p>The likeliest explanation is how the two are fetched. A texture is looked up by explicit path,
- * whereas translations are gathered by walking every resource domain the game knows about - so a mod
- * absent from that list loses its translations while keeping everything else. What removes it in a
- * pack of this size has not been identified.
+ * <p>That is why textures and models were fine while only translations went missing: nothing else
+ * goes through that rewrite. A {@code pack.mcmeta} declaring format 3, which is 1.12.2's own, keeps
+ * the adapter out of the way and is why the uppercase file name so many 1.12.2 tutorials recommend
+ * also works.
  *
- * <p>Rather than patch each place separately as it appears, everything user-facing goes through here.
- * A translation is used when one exists, so this is invisible on an installation where the language
- * file loads normally - which includes a plain 1.12.2 install.
+ * <p>The fallbacks stay. They cost nothing where translations load, and they are what kept the mod
+ * readable through three releases of not knowing this. A translation is used whenever one exists.
  *
  * <p>Deliberately server-safe: this uses the common {@code I18n}, not the client-only one, because
  * container titles are built server-side.

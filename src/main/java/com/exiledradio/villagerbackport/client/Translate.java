@@ -9,18 +9,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  *
  * <h2>Why this exists</h2>
  * {@link I18n#format} returns the key unchanged when it cannot resolve it, which is how untranslated
- * text ends up rendered as {@code gui.villagerbackport.level.3} on screen. That happened in testing
- * even though the lang file was present and correctly named ({@code en_us.lang}, matching vanilla's
- * own) at the right path in the built jar. The pack it was running in has 239 mods, including
- * OptiFine and ResourceLoader, both of which replace parts of resource handling; something there is
- * not exposing this mod's resource domain.
+ * text ends up rendered as {@code gui.villagerbackport.level.3} on screen. That happened for three
+ * releases even though the lang file was present, correctly named and at the right path in the
+ * built jar.
  *
  * <p>Rather than leave the interface showing raw keys, every lookup falls back to a hardcoded
  * English string when the key does not resolve. Translations still work wherever the lang file loads
  * normally - this only takes over when it does not.
  *
- * <p>This is a workaround, not a fix. The underlying reason the domain is missing has not been
- * identified, and it would be worth finding if translations matter later.
+ * <p>The cause was a missing {@code pack.mcmeta}, and is fixed; see
+ * {@link com.exiledradio.villagerbackport.block.Names} for the chain. This is kept as a safety net
+ * rather than removed, since a pack can break resource loading in other ways.
  */
 @SideOnly(Side.CLIENT)
 public final class Translate {

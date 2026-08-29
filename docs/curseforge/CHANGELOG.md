@@ -1,3 +1,11 @@
+# 1.0.2
+
+Fixes this mod's language file never loading, which showed up as raw keys on screen: block names reading `tile.villagerbackport.stonecutter.name`, a barrel titled `container.villagerbackport.barrel`, and in 1.0.1 the creative tab labelled `itemGroup.villagerbackport`.
+
+The jar shipped without a `pack.mcmeta`, so Forge substituted one declaring pack format 2. Minecraft treats a pack of that vintage as old enough to need a compatibility adapter, and that adapter rewrites every `lang/en_us.lang` request to `lang/en_US.lang`, which is not what the file is called. Declaring the format 1.12.2 actually uses stops the rewrite. Textures and models were never affected, which is what made it so hard to spot.
+
+***
+
 # 1.0.1
 
 Everything the mod adds now has a creative tab of its own, the twelve workstations and the four banner patterns together. They were spread between Decorations and Miscellaneous before.
