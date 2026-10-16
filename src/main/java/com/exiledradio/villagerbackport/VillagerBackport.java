@@ -131,6 +131,8 @@ public final class VillagerBackport {
     public void serverStarted(net.minecraftforge.fml.common.event.FMLServerStartingEvent event) {
         event.registerServerCommand(new com.exiledradio.villagerbackport.home.VillageCommand());
         event.registerServerCommand(new com.exiledradio.villagerbackport.trade.ForgiveCommand());
+        // Registered after vanilla's, so it takes the /locate name over.
+        event.registerServerCommand(new com.exiledradio.villagerbackport.village.modern.LocateCommand());
     }
 
 }

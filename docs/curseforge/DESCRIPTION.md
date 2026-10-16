@@ -173,6 +173,8 @@ Houses sit on the ground they were planned for. 1.14 shapes the terrain around a
 
 A mod that brings its own village generator, such as Village Names, keeps it.
 
+`/locate` works as in later versions: it gives the distance and the coordinates in green brackets you can click to fill in a teleport, and `/locate village_plains`, `village_desert`, `village_savanna`, `village_taiga` or `village_snowy` finds the nearest village of that kind.
+
 Workstations come only from the buildings themselves, as in 1.14. Nothing else in the world is turned into one.
 
 ***

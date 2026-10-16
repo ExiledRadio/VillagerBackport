@@ -34,10 +34,106 @@ public class MapGenModernVillage extends MapGenVillage {
 
     private static boolean registered;
 
+    /** 1.12.2's village spacing in chunks, as copied from the generator replaced. */
+    private int spacing = 32;
+
     public MapGenModernVillage(MapGenVillage replaced) {
         copy(replaced, "size", "field_75054_f");
         copy(replaced, "distance", "field_82665_g");
         copy(replaced, "minTownSeparation", "field_82666_h");
+        try {
+            Field field = ReflectionHelper.findField(MapGenVillage.class, "distance", "field_82665_g");
+            field.setAccessible(true);
+            this.spacing = Math.max(9, field.getInt(this));
+        } catch (Exception e) {
+            this.spacing = 32;
+        }
+    }
+
+    /**
+     * The nearest village of one 1.14 type, for {@code /locate village_plains} and friends.
+     *
+     * <p>Walks the same grid 1.12.2 places villages on, ring by ring outwards: each grid cell holds
+     * at most one village, at a chunk fixed by the world seed, and its type is the type of the biome
+     * it starts in - which is all that decides it, so villages not yet generated can be found too.
+     * A village already generated the 1.12.2 way, before 1.14 villages were switched on, is skipped.
+     *
+     * @return the village's start position, or null if none lies within {@code maxRings} cells
+     */
+    @javax.annotation.Nullable
+    public net.minecraft.util.math.BlockPos findNearest(net.minecraft.world.World world,
+                                                        net.minecraft.util.math.BlockPos from,
+                                                        ModernVillageStart.Type type, int maxRings) {
+        this.world = world;
+        int baseX = Math.floorDiv(from.getX() >> 4, this.spacing);
+        int baseZ = Math.floorDiv(from.getZ() >> 4, this.spacing);
+        net.minecraft.util.math.BlockPos best = null;
+        double bestDistance = Double.MAX_VALUE;
+        int foundRing = -1;
+
+        for (int ring = 0; ring <= maxRings; ring++) {
+            // A village one ring further out can still be nearer than the first one found.
+            if (foundRing >= 0 && ring > foundRing + 1) {
+                break;
+            }
+            for (int dx = -ring; dx <= ring; dx++) {
+                for (int dz = -ring; dz <= ring; dz++) {
+                    if (Math.abs(dx) != ring && Math.abs(dz) != ring) {
+                        continue;
+                    }
+                    int cellX = baseX + dx;
+                    int cellZ = baseZ + dz;
+                    java.util.Random random = world.setRandomSeed(cellX, cellZ, 10387312);
+                    int chunkX = cellX * this.spacing + random.nextInt(this.spacing - 8);
+                    int chunkZ = cellZ * this.spacing + random.nextInt(this.spacing - 8);
+                    if (!canSpawnStructureAtCoords(chunkX, chunkZ)) {
+                        continue;
+                    }
+                    StructureStart existing = this.structureMap.get(net.minecraft.util.math.ChunkPos.asLong(chunkX, chunkZ));
+                    if (existing != null && !(existing instanceof ModernVillageStart)) {
+                        continue;
+                    }
+                    net.minecraft.world.biome.Biome biome = world.getBiomeProvider()
+                            .getBiome(new net.minecraft.util.math.BlockPos((chunkX << 4) + 9, 0, (chunkZ << 4) + 9));
+                    if (ModernVillageStart.Type.of(biome) != type) {
+                        continue;
+                    }
+                    net.minecraft.util.math.BlockPos pos = new net.minecraft.util.math.BlockPos((chunkX << 4) + 8, 64, (chunkZ << 4) + 8);
+                    double distance = pos.distanceSq(from.getX(), 64, from.getZ());
+                    if (distance < bestDistance) {
+                        bestDistance = distance;
+                        best = pos;
+                        if (foundRing < 0) {
+                            foundRing = ring;
+                        }
+                    }
+                }
+            }
+        }
+        return best;
+    }
+
+    /** @return the overworld's village generator if it is this one and builds 1.14 villages, else null */
+    @javax.annotation.Nullable
+    public static MapGenModernVillage of(net.minecraft.world.World world) {
+        if (ModConfig.villages.style != Style.MODERN || !(world instanceof net.minecraft.world.WorldServer)
+                || TerrainHeights.forWorld(world) == null) {
+            return null;
+        }
+        net.minecraft.world.gen.IChunkGenerator generator =
+                ((net.minecraft.world.WorldServer) world).getChunkProvider().chunkGenerator;
+        if (!(generator instanceof net.minecraft.world.gen.ChunkGeneratorOverworld)) {
+            return null;
+        }
+        try {
+            Field field = ReflectionHelper.findField(net.minecraft.world.gen.ChunkGeneratorOverworld.class,
+                    "villageGenerator", "field_186005_x");
+            field.setAccessible(true);
+            Object village = field.get(generator);
+            return village instanceof MapGenModernVillage ? (MapGenModernVillage) village : null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private void copy(MapGenVillage from, String... names) {

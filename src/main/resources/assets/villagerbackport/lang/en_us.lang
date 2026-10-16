@@ -56,3 +56,7 @@ item.villagerbackport.flower_banner_pattern.desc=Flower Charge
 item.villagerbackport.mojang_banner_pattern.name=Banner Pattern
 item.villagerbackport.mojang_banner_pattern.desc=Thing
 container.villagerbackport.fletching_table=Fletching Table
+commands.villagerbackport.locate.usage=/locate <Village|village_plains|village_desert|village_savanna|village_taiga|village_snowy|Stronghold|Monument|Mansion|...>
+commands.villagerbackport.locate.success=The nearest %s is at %s (%s blocks away)
+commands.villagerbackport.locate.tooltip=Click to teleport
+commands.villagerbackport.locate.nomodern=Village types can only be located when villages.style is MODERN and the world uses the vanilla overworld generator
