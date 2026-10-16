@@ -50,6 +50,13 @@ public class LayerVillagerSkin implements LayerRenderer<EntityVillager> {
         }
 
         ResourceLocation skin = skinFor(villager);
+        if (skin == null && VillagerSkin.isVanillaProfession(villager)) {
+            // The 1.14 skin could not be built - a texture missing from a resource pack, or the jar
+            // replaced underneath a running game. The vanilla skin underneath has been blanked, so
+            // drawing nothing here would leave only the villager's shadow. Its own 1.12.2 texture
+            // is drawn instead.
+            skin = VanillaSkinSuppressor.original(villager.getProfessionForge());
+        }
         if (skin == null) {
             return;
         }

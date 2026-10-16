@@ -53,6 +53,10 @@ public final class VanillaSkinSuppressor {
 
     private static boolean applied;
 
+    /** Each suppressed profession's own texture, for drawing when a 1.14 skin cannot be built. */
+    private static final java.util.Map<VillagerRegistry.VillagerProfession, ResourceLocation> ORIGINALS =
+            new java.util.HashMap<VillagerRegistry.VillagerProfession, ResourceLocation>();
+
     private VanillaSkinSuppressor() {
     }
 
@@ -81,6 +85,7 @@ public final class VanillaSkinSuppressor {
                     continue;
                 }
 
+                ORIGINALS.put(profession, profession.getSkin());
                 texture.set(profession, BLANK);
                 count++;
             }
@@ -93,6 +98,15 @@ public final class VanillaSkinSuppressor {
                     "Could not suppress the vanilla villager textures. The 1.14 skins will still be "
                             + "drawn, but over the old ones rather than instead of them.", e);
         }
+    }
+
+    /**
+     * @return the profession's own 1.12.2 texture as it was before being blanked, or null if this
+     * profession was never suppressed
+     */
+    @javax.annotation.Nullable
+    public static ResourceLocation original(@javax.annotation.Nullable VillagerRegistry.VillagerProfession profession) {
+        return profession == null ? null : ORIGINALS.get(profession);
     }
 
     /**

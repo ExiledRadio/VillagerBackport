@@ -44,6 +44,9 @@ public final class VillagerSkinComposer {
 
     private static final Map<String, ResourceLocation> CACHE = new HashMap<String, ResourceLocation>();
 
+    /** Skins that could not be built, so they are not attempted again until resources reload. */
+    private static final java.util.Set<String> FAILED = new java.util.HashSet<String>();
+
     private VillagerSkinComposer() {
     }
 
@@ -61,11 +64,16 @@ public final class VillagerSkinComposer {
             return cached;
         }
 
-        // Cached even on failure, as a null entry would be, so a missing texture is not retried on
-        // every frame for every villager. Recorded as absent by leaving it out and returning null.
+        // A failure is remembered too, so a missing texture is tried once rather than on every
+        // frame for every villager - which logged each missing file thousands of times a minute.
+        if (FAILED.contains(key)) {
+            return null;
+        }
         ResourceLocation built = build(key, layers);
         if (built != null) {
             CACHE.put(key, built);
+        } else {
+            FAILED.add(key);
         }
         return built;
     }
@@ -135,5 +143,6 @@ public final class VillagerSkinComposer {
      */
     public static void clear() {
         CACHE.clear();
+        FAILED.clear();
     }
 }
