@@ -1,27 +1,63 @@
-# 1.3.0
+# 2.0.0
 
-**New: 1.14's villages.** Villages now generate the way they do in 1.14, from 1.14's own buildings: plains, desert, savanna, taiga and snowy villages, with streets, farms, animal pens, lamp posts and the occasional abandoned zombie village. Workstations are inside the houses where 1.14 puts them, so a village has its librarian's lectern, its butcher's smoker and so on from the start. Snowy villages now generate on snowy tundra.
+The biggest update yet: 1.14's villages and 1.14's trades. The mod still needs nothing else to run, and now also uses items from other backport mods when you have them.
 
-*   The workshops, market stalls and bell squares this mod used to add to villages are gone. 1.14 never had them. Ones already in your world stay where they are.
-*   Blocks 1.12.2 does not have are swapped for the closest it does. Lanterns are new, as a block of their own (eight iron nuggets around a torch), because they light most of a 1.14 village.
-*   Village chests have 1.14's loot.
-*   Only for villages that generate after updating. Villages you have already found keep their layout.
-*   1.14 villages need the vanilla overworld generator. Worlds made by another generator get 1.12.2's villages, and so does setting `villages.style` to `LEGACY`. Either way, 1.12.2's village buildings now get the workstation their trade needs: a lectern in the library, a smoker in the butcher's, a blast furnace, smithing table and grindstone at the blacksmith's, a brewing stand in the church, a composter on each field and a bell at the well.
-*   If another mod replaces the village generator, such as Village Names, its villages are kept.
+## Before you update an existing world
 
-**New: 1.14's trades.** Villagers now sell what they sell in 1.14. Each level offers two trades drawn at random from that level's list, so two farmers can sell different things, and every trade has 1.14's price and stock. A librarian's bookshelf is 9 emeralds, as in current Minecraft.
+*   **New chunks get the new villages.** Villages you have already found keep their layout. Where explored land meets new land you can see an old 1.12.2-style village next to a new one.
+*   **The market stalls, workshops and bell squares are gone** from new villages. Ones already built stay where they are.
+*   **Villagers nobody has traded with get the new trades.** Villagers you have traded with, even once, keep every trade they have. See "Trades" below.
+*   **Two config sections are gone:** `structures`, and the workshop and stall settings in `villages`. Minecraft does not remove old settings from your config file; they do nothing now and can be deleted.
 
-*   Items 1.12.2 does not have are offered when a mod that adds them is installed, and simply left out of the draw when none is. No mod is required. Future MC supplies the crossbow, campfire, bucket of cod, sweet berries and suspicious stew; Crossbows Backport the crossbow; Oceanic Expanse the turtle scute and dried kelp block; Deeper Depths the candles. A butcher and leatherworker can come up short at the top levels without these.
-*   A master librarian sells red and yellow candles, as in current Minecraft, when Deeper Depths is installed, and 1.14's name tag when it is not.
-*   The cartographer's globe banner pattern is replaced with one of the four banner patterns this mod adds, since 1.12.2 has no globe.
-*   **Villagers you have traded with keep their trades.** Anything they have unlocked stays, and they keep unlocking 1.12.2's trades as they level. Villagers nobody has traded with switch to the new trades the next time they are near you. Turn that off with `rebuildUntradedVillagers`.
+## New: 1.14's villages
+
+Villages generate the way they do in 1.14, from 1.14's own buildings: plains, desert, savanna, taiga and snowy villages, laid out street by street, with farms, animal pens, lamp posts, decorations, an iron golem and the occasional abandoned zombie village.
+
+*   **Workstations are inside the houses**, where 1.14 puts them. A village has its librarian's lectern, its butcher's smoker and its armourer's blast furnace from the start, alongside the beds, the bell at the meeting point and unemployed villagers waiting for work.
+*   **Snowy villages** now generate on snowy tundra.
+*   **Village chests** have 1.14's loot.
+*   **New block: the lantern.** Eight iron nuggets around a torch. It stands on a block or hangs under one, and it lights most of a 1.14 village.
+*   Blocks 1.12.2 does not have are swapped for the closest it does: stripped logs become logs, blue ice becomes packed ice, smooth sandstone becomes cut sandstone.
+*   Houses sit on the ground they were planned for. The terrain inside each building is cleared and the ground under it filled in, so a house on a slope is neither half buried nor standing on stilts.
+*   Streets that cross water become plank bridges, in the village's own wood, as in the real game.
+*   1.14 villages need the vanilla overworld generator to plan them. In a world made by another generator, or with `villages.style` set to `LEGACY`, villages are 1.12.2's, and each building gets the workstation its trade needs: a lectern in the library, a smoker in the butcher's, a blast furnace, smithing table and grindstone at the blacksmith's, a brewing stand in the church, a composter on each field, a bell at the well and one at random in each small house. Turn that off with `legacyHouseWorkstations`.
+
+## New: 1.14's trades
+
+Villagers sell what they sell in 1.14, at 1.14's prices and stock. Each level offers two trades drawn at random from that level's list, so two farmers can sell different things.
+
+*   A few trades follow current Minecraft rather than 1.14: the librarian's bookshelf is 9 emeralds, and a master librarian sells candles when a mod adds them.
+*   **Villagers you have traded with keep their trades.** Anything they have unlocked stays, and they keep unlocking 1.12.2's trades as they level. Villagers nobody has traded with switch to the new trades the next time they are near a player. Turn that off with `trades.rebuildUntradedVillagers`.
 *   Prefer the old trades? Set `trades.table` to `LEGACY`.
+*   The cartographer sells one of the four banner patterns this mod adds in place of 1.14's globe pattern, which 1.12.2 has no pattern for.
 
-**New: `/locate` answers like 1.15.** It says how far away the structure is and gives the coordinates in green brackets. Click them and a teleport command is put in your chat box. It also finds one kind of village at a time: `/locate village_plains`, `village_desert`, `village_savanna`, `village_taiga` or `village_snowy`. These find 1.14-style villages, including ones not generated yet. Everything `/locate` found before it still finds, and the names are no longer case-sensitive.
+## New: works with other backports
 
-**Removed: workstation swapping.** The mod no longer turns crafting tables, furnaces, cauldrons, bookshelves or trapdoor-framed tables into workstations, or drops composters into crop fields, in newly generated chunks. 1.14 never did this: its workstations come from the village buildings themselves, and now so do this mod's. The `structures` config section is gone with it and can be deleted from your config.
+Nothing here needs another mod. When one is installed, its items join the trades where the real game has them, and leave nothing behind when it is not:
 
-**Settings:** two new sections, `trades` and the reworked `villages`. They are written to your config automatically. The old `villages` settings for workshops and stalls no longer do anything and can be deleted.
+| Mod | Adds to trades |
+| --- | --- |
+| Future MC | Crossbow, campfire, bucket of cod, sweet berries, suspicious stew |
+| Crossbows Backport | Crossbow |
+| Oceanic Expanse | Turtle scute, dried kelp block |
+| Deeper Depths | Red and yellow candles, for the master librarian |
+
+Without them the trade is simply left out of the draw, and the master librarian sells a name tag, as in 1.14. A butcher and leatherworker can come up short at the top levels without these mods.
+
+A mod that brings its own village generator, such as Village Names, keeps its villages.
+
+## New: `/locate` answers like 1.15
+
+`/locate` says how far away the structure is and gives the coordinates in green brackets. Click them to put a teleport command in your chat box. It also finds one kind of village at a time: `/locate village_plains`, `village_desert`, `village_savanna`, `village_taiga` or `village_snowy`, including villages not generated yet. Everything `/locate` found before it still finds, and names are no longer case-sensitive.
+
+## Removed
+
+*   **Workstation swapping.** The mod no longer turns crafting tables, furnaces, cauldrons, bookshelves or trapdoor-framed tables into workstations, or drops composters into crop fields. 1.14 never did this: its workstations come from the village buildings, and now so do this mod's.
+*   **Market stalls, workshops and bell squares** in new villages. 1.14 never had them.
+
+## Settings
+
+New: `trades` (`table`, `rebuildUntradedVillagers`) and `villages` (`style`, `legacyHouseWorkstations`). Both are written to your config automatically. Gone: the `structures` section and the workshop, stall and meeting point settings in `villages`.
 
 ***
 

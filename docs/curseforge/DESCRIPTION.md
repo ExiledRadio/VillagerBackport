@@ -1,16 +1,33 @@
 # 1.14 Villager Backport
 
-**Modern Minecraft's villagers, on 1.12.2.**
+**Modern Minecraft's villagers and villages, on 1.12.2.**
 
-Villagers claim a workstation and take the job that comes with it. They go to work every day, restock twice a day and charge more for the trades you use most. They remember what you have done to them and gossip about it, sleep in beds at night, breed when they have food and a free bed, run when they are hurt, and call an iron golem when frightened.
+Villages generate the way they do in 1.14, from 1.14's own buildings, with the workstations inside the houses. Villagers take the job that comes with a workstation, sell 1.14's trades, go to work every day, restock twice a day and charge more for the trades you use most. They remember what you have done to them and gossip about it, sleep in beds at night, breed when they have food and a free bed, run when they are hurt, and call an iron golem when frightened.
 
-Ported from decompiled 1.14.4 sources. The pricing formula, restock timings, gossip weights, experience values, golem conditions and sleep pose are the ones 1.14 uses.
+Ported from decompiled 1.14.4 sources. Village layouts, trade tables, pricing formula, restock timings, gossip weights, experience values, golem conditions and the sleep pose are the ones the real game uses.
 
-Twelve workstation blocks come with it, all functional. No dependencies. Needed on both client and server.
+**Standalone, and friendly with other backports.** Twelve working workstation blocks and a lantern come with it, and it needs no other mod. Install Future MC, Oceanic Expanse, Deeper Depths or Crossbows Backport alongside it and villagers start trading their items too. Needed on both client and server.
 
 > 💬 **[Join the Discord](https://discord.gg/kxQvMDJBTN)** for bug reports, questions and release pings.
 
 ![The 1.14 trade screen](https://media.forgecdn.net/attachments/1900/425/villagergui-png.png)
+
+***
+
+## Villages
+
+Villages are 1.14's villages: plains, desert, savanna, taiga and snowy, built from 1.14's own structure files and laid out street by street the way 1.14 lays them out. Farms, animal pens, lamp posts, a meeting point with its bell, an iron golem, unemployed villagers waiting for work, and now and then an abandoned zombie village. Snowy villages generate on snowy tundra, which 1.12.2 never built villages on.
+
+The workstations are inside the houses where 1.14 puts them, so a village has its librarian's lectern and its butcher's smoker from the start. Workstations come only from the buildings, as in the real game; nothing else in the world is turned into one.
+
+*   Blocks 1.12.2 does not have are swapped for the closest it does: stripped logs become logs, blue ice becomes packed ice, smooth sandstone becomes cut sandstone. Lanterns are a block of their own.
+*   Village chests carry 1.14's loot.
+*   Houses sit on the ground they were planned for. The terrain inside each building is cleared and the ground under it filled in, so a house on a slope is neither half buried nor standing on stilts.
+*   Streets that cross water become plank bridges in the village's own wood, as in the real game.
+
+1.14 villages need the vanilla overworld generator to plan them. In a world made by another generator, or with `villages.style` set to `LEGACY`, villages are 1.12.2's, and each building gets the workstation its trade needs: a lectern in the library, a smoker in the butcher's, a blast furnace, smithing table and grindstone at the blacksmith's, a brewing stand in the church, a composter on each field, a bell at the well and one at random in each small house.
+
+`/locate village_plains`, `village_desert`, `village_savanna`, `village_taiga` or `village_snowy` finds the nearest village of that kind.
 
 ***
 
@@ -37,9 +54,31 @@ Villagers with a job go to work every day. During work hours they keep returning
 | <strong>Stonecutter</strong> |Mason |Cuts stone with no offcuts |
 | <strong>Brewing stand / Cauldron</strong> |Cleric / Leatherworker |The two 1.12.2 already had |
 
-The bell is not a job site. Ring it and every villager in range glows through walls for a few seconds.
+The bell is not a job site. Ring it and every villager in range glows through walls for a few seconds. The lantern is not one either: it lights the village, standing on a block or hanging under one.
 
 **Nitwits** are their own thing again: the green-robed villager that never takes a job and wears no level badge. They come from village generation and from curing zombie villagers that were nitwits. Villagers from spawn eggs and babies always start out unemployed.
+
+***
+
+## Trades and levels
+
+Villagers sell 1.14's trades, at 1.14's prices and stock. Each level offers two trades drawn at random from that level's list, so two farmers can sell different things. A few follow current Minecraft rather than 1.14: the librarian's bookshelf is 9 emeralds, and a master librarian sells candles when a mod adds them.
+
+| Level | Experience | Badge |
+| --- | --- | --- |
+| <strong>Novice</strong> |0 |Stone |
+| <strong>Apprentice</strong> |10 |Iron |
+| <strong>Journeyman</strong> |70 |Gold |
+| <strong>Expert</strong> |150 |Emerald |
+| <strong>Master</strong> |250 |Diamond |
+
+Trades unlock by level rather than by trade count. A tier-one trade pays the villager 1 or 2 experience, a tier-five trade pays 30. A villager levels up at most once per trading session, after you close the screen. You get 3 to 6 experience per trade, plus 5 on the trade that levels the villager up.
+
+Prefer 1.12.2's own trades? Set `trades.table` to `LEGACY`. A villager you have traded with keeps the trades it has whichever you choose, and keeps unlocking from the list it started on.
+
+Villagers wear 1.14's skins, so biome type, profession robes and the badge for the level all show.
+
+![A villager in 1.14's skin](https://media.forgecdn.net/attachments/1900/424/villager-png.png)
 
 ***
 
@@ -66,7 +105,7 @@ Rerolling a librarian means breaking and replacing its lectern until the book is
 
 Twice a day, at the villager's own workstation, during work hours. A villager that cannot get to its workstation does not restock. A trade selling out shows green sparkles, so you can see which one ran dry.
 
-Every trade has the stock the matching modern trade has: enchanted tools, weapons and armour sell 3 times between restocks; villagers buy everyday goods like crops and wool 16 times and valuable things like iron, gold and diamonds 12 times. 1.12.2 gives everything 7.
+Every trade has the stock the real game gives it: enchanted tools, weapons and armour sell 3 times between restocks; villagers buy everyday goods like crops and wool 16 times and valuable things like iron, gold and diamonds 12 times. 1.12.2 gives everything 7.
 
 ***
 
@@ -97,10 +136,6 @@ Trading a lot takes about an emerald off. Curing a villager takes six off an ord
 
 Opinions fade day by day and spread by **gossip**. Villagers swap news when they walk up to each other, at most once a minute, and only part of what they know gets passed on, a little weaker each time. A grudge travels through a village over a day or so, not all at once.
 
-### /forgive
-
-Look at a villager and run `/forgive` to clear its grudges against you, or `/forgive 32` for every villager within 32 blocks. It only clears grudges, so discounts you have earned stay. Operators only.
-
 ***
 
 ## Zombie villagers
@@ -113,33 +148,9 @@ Curing is the biggest discount in the mod, and most of it never fades. Curing th
 
 ***
 
-## Levels
-
-| Level | Experience | Badge |
-| --- | --- | --- |
-| <strong>Novice</strong> |0 |Stone |
-| <strong>Apprentice</strong> |10 |Iron |
-| <strong>Journeyman</strong> |70 |Gold |
-| <strong>Expert</strong> |150 |Emerald |
-| <strong>Master</strong> |250 |Diamond |
-
-Trades unlock by level rather than by trade count. A tier-one trade pays the villager 1 or 2 experience, a tier-five trade pays 30. A villager levels up at most once per trading session, after you close the screen. You get 3 to 6 experience per trade, plus 5 on the trade that levels the villager up.
-
-Villagers sell 1.14's trades. Each level offers two trades drawn at random from that level's list, so two farmers can sell different things. Items 1.12.2 does not have, such as the crossbow, campfire and sweet berries, are offered only when a mod that adds them is installed. Set `trades.table` to `LEGACY` for 1.12.2's own trades. A villager you have traded with keeps the trades it has whichever you choose, and keeps unlocking from the list it started on.
-
-Villagers wear 1.14's skins, so biome type, profession robes and the badge for the level all show.
-
-![A villager in 1.14's skin](https://media.forgecdn.net/attachments/1900/424/villager-png.png)
-
-***
-
 ## Beds and sleep
 
 A villager claims a bed up to 48 blocks away and sleeps in it from dusk to dawn. Sleeping villagers lie in the bed with a small hitbox on the pillow. Right-click a sleeping villager or its bed to wake it; it lies back down a couple of seconds later if the bed is still free. To take a villager's bed, wake it and sleep there yourself, and it will find another. A villager with no bed waits indoors until morning.
-
-`/village [radius]` draws the village. Every bed gets a box, green where a villager has claimed it and red where it is going spare, with the counts that decide whether the village can grow.
-
-***
 
 ## Breeding
 
@@ -147,41 +158,44 @@ Villagers breed on food and beds, not doors, so a modern breeder design built in
 
 A villager is willing when the food it carries adds up to 12: bread is worth 4, carrots, potatoes and beetroot 1 each, in any mix. Both parents need beds of their own, and the baby needs a free bed they can walk to with two empty blocks above it. With no such bed, the attempt fails with angry particles and the food is still eaten. Villagers with jobs do not breed during work hours.
 
-***
-
-## Danger
+## Danger and iron golems
 
 Villagers panic when they are hurt or when they see a zombie, husk, zombie villager or illager close by. A panicking villager wakes up if it was asleep, runs from the threat, and goes back to what it was doing once it has passed.
 
-## Iron golems
-
-A frightened villager calls for an iron golem, needing three villagers nearby who can help. Villagers chatting call one too, needing five. Any grown villager that has slept in the last 20 minutes can help, and none will while a golem is within 16 blocks, so a village keeps the golems it has rather than filling up with them.
-
-These are the rules modern golem farms are built around.
+A frightened villager calls for an iron golem, needing three villagers nearby who can help. Villagers chatting call one too, needing five. Any grown villager that has slept in the last 20 minutes can help, and none will while a golem is within 16 blocks, so a village keeps the golems it has rather than filling up with them. These are the rules modern golem farms are built around.
 
 ***
 
-## Villages
+## Works with other backports
 
-Villages are 1.14's villages, built from 1.14's own structure files: plains, desert, savanna, taiga and snowy, laid out street by street the way 1.14 lays them out, with the occasional abandoned zombie village. The workstations are inside the houses where 1.14 puts them, along with the beds, the bell at the meeting point and the villagers. Snowy villages generate on snowy tundra, which 1.12.2 never built villages on.
+Nothing here needs another mod. When one of these is installed, its items join the trades where the real game has them:
 
-Blocks 1.12.2 does not have are swapped for the closest it does: stripped logs become logs, blue ice becomes packed ice, smooth sandstone becomes cut sandstone. Lanterns are added as a block of their own, since they light most of the village. Chests carry 1.14's village loot.
+| Mod | Adds to trades |
+| --- | --- |
+| <strong>Future MC</strong> |Crossbow, campfire, bucket of cod, sweet berries, suspicious stew |
+| <strong>Crossbows Backport</strong> |Crossbow |
+| <strong>Oceanic Expanse</strong> |Turtle scute, dried kelp block |
+| <strong>Deeper Depths</strong> |Red and yellow candles, sold by the master librarian |
 
-Houses sit on the ground they were planned for. 1.14 shapes the terrain around a village as it generates; here the inside of each building is cleared and the ground under it filled in, so a house on a slope is neither buried on one side nor standing on stilts on the other.
+Without them the trade is simply left out of the draw, and the master librarian sells a name tag as in 1.14. Butchers and leatherworkers have fewer trades at the top levels without these mods.
 
-1.14 villages need the vanilla overworld generator to plan them. In a world made by another generator, and with `villages.style` set to `LEGACY`, villages are 1.12.2's, and each building gets the workstation its trade needs: a lectern in the library, a smoker in the butcher's, a blast furnace, smithing table and grindstone at the blacksmith's, a brewing stand in the church, a composter on each field, a bell at the well, and one at random in each small house.
+**Future MC** adds many of the same blocks. Both sets give villagers jobs, so a fisherman takes either barrel, and one of each pair is hidden from the creative menu, JEI and crafting so you are not shown two of everything. Choose which with `compat.futureMcDuplicates`. Future MC's smithing table is always the one kept, since it upgrades gear to netherite.
 
-A mod that brings its own village generator, such as Village Names, keeps it.
+**Village Names** and any other mod that brings its own village generator keep their villages.
 
-`/locate` works as in later versions: it gives the distance and the coordinates in green brackets you can click to fill in a teleport, and `/locate village_plains`, `village_desert`, `village_savanna`, `village_taiga` or `village_snowy` finds the nearest village of that kind.
+***
 
-Workstations come only from the buildings themselves, as in 1.14. Nothing else in the world is turned into one.
+## Commands
+
+*   `/locate <structure>` gives the distance and the coordinates in green brackets; click them to put a teleport in your chat box. Takes every structure 1.12.2 can find, plus `village_plains`, `village_desert`, `village_savanna`, `village_taiga` and `village_snowy`.
+*   `/village [radius]` draws the village. Every bed gets a box, green where a villager has claimed it and red where it is going spare, with the counts that decide whether the village can grow.
+*   `/forgive` clears a villager's grudges against you; `/forgive 32` does every villager within 32 blocks. Discounts you have earned stay. Operators only.
 
 ***
 
 ## What is not here
 
-No raids and no pillagers. This backports the villager, and 1.14 shipped a lot besides.
+No raids and no pillagers. This backports the villager and the village, and 1.14 shipped a lot besides.
 
 *   Illagers, pillager patrols, outposts, ravagers
 *   Bad Omen, and the Hero of the Village discount
@@ -195,18 +209,19 @@ No raids and no pillagers. This backports the villager, and 1.14 shipped a lot b
 
 ## Config
 
-`config/villagerbackport.cfg`, or the in-game config screen. Eight categories, every setting documented in the file.
+`config/villagerbackport.cfg`, or the in-game config screen. Nine categories, every setting documented in the file.
 
 ![The config screen](https://media.forgecdn.net/attachments/1900/416/config-png.png)
 
+*   `villages`: 1.14's villages or 1.12.2's, and workstations for 1.12.2's houses
+*   `trades`: 1.14's trades or 1.12.2's, and whether untraded villagers switch over
 *   `restock`: how many per day, the gap between them, working hours, sounds
 *   `pricing`: demand multipliers, gossip, stock, experience, level gating
 *   `jobs`: search radius, working distance, whether villagers must be at their workstation to restock, the job-to-block map
 *   `workstations`: what each block accepts and produces, extra recipes, compostables
-*   `trades`: 1.14's trades or 1.12.2's, and whether untraded villagers switch over
-*   `villages`: 1.14's villages or 1.12.2's, and workstations for 1.12.2's houses
 *   `homes`: beds, sleeping, breeding, golems
 *   `display`: trade screen, level badges, villager skins, the refill key
+*   `compat`: Future MC's duplicate blocks
 
 Every part of it switches off. Turn off `homes` and villagers ignore beds. Turn off `jobs` and the workstations are decoration.
 
@@ -214,7 +229,9 @@ Every part of it switches off. Turn off `homes` and villagers ignore beds. Turn 
 
 ## Things to know
 
-Existing worlds work. Villagers already in the world take jobs the first time they find a workstation. Villages that generated before this mod was installed have no workstations of their own; place some, and the villagers will find them.
+Existing worlds work. Villages generate the new way in chunks you have not explored yet, so where old land meets new you can see a 1.12.2 village beside a 1.14 one. Villagers already in the world take jobs the first time they find a workstation; villages that generated before this mod was installed have no workstations of their own, so place some and the villagers will find them.
+
+Updating from 1.x: villagers you have traded with keep every trade they have. Ones nobody has traded with switch to 1.14's trades. The old `structures` section and the stall and workshop settings in your config do nothing now and can be deleted.
 
 If your world has villages missing their workstation blocks, set `strictJobSite` to `false` and villagers will restock without one.
 
