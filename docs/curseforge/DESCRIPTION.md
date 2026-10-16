@@ -173,7 +173,7 @@ Houses sit on the ground they were planned for. 1.14 shapes the terrain around a
 
 A mod that brings its own village generator, such as Village Names, keeps it.
 
-Villages that already generated are retrofitted as you find them. Composters go into crop fields, lecterns into libraries, and a workbench becomes the workstation the building implies.
+Workstations come only from the buildings themselves, as in 1.14. Nothing else in the world is turned into one.
 
 ***
 
@@ -193,7 +193,7 @@ No raids and no pillagers. This backports the villager, and 1.14 shipped a lot b
 
 ## Config
 
-`config/villagerbackport.cfg`, or the in-game config screen. Nine categories, every setting documented in the file.
+`config/villagerbackport.cfg`, or the in-game config screen. Eight categories, every setting documented in the file.
 
 ![The config screen](https://media.forgecdn.net/attachments/1900/416/config-png.png)
 
@@ -203,7 +203,6 @@ No raids and no pillagers. This backports the villager, and 1.14 shipped a lot b
 *   `workstations`: what each block accepts and produces, extra recipes, compostables
 *   `trades`: 1.14's trades or 1.12.2's, and whether untraded villagers switch over
 *   `villages`: 1.14's villages or 1.12.2's, and workstations for 1.12.2's houses
-*   `structures`: retrofitting workstations into structures that already generate
 *   `homes`: beds, sleeping, breeding, golems
 *   `display`: trade screen, level badges, villager skins, the refill key
 
@@ -213,7 +212,7 @@ Every part of it switches off. Turn off `homes` and villagers ignore beds. Turn 
 
 ## Things to know
 
-Existing worlds work. Villagers already in the world take jobs the first time they find a workstation, and villages that already generated get workstations retrofitted.
+Existing worlds work. Villagers already in the world take jobs the first time they find a workstation. Villages that generated before this mod was installed have no workstations of their own; place some, and the villagers will find them.
 
 If your world has villages missing their workstation blocks, set `strictJobSite` to `false` and villagers will restock without one.
 

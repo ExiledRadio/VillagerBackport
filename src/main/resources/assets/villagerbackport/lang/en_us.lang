@@ -19,7 +19,6 @@ gui.villagerbackport.outofstock=Villagers restock up to two times per day.
 config.villagerbackport.trades=Trade Tables
 config.villagerbackport.jobs=Villager Jobs
 config.villagerbackport.villages=Village Generation
-config.villagerbackport.structures=Structures
 config.villagerbackport.compat=Mod Compatibility
 config.villagerbackport.homes=Beds, Sleeping & Golems
 

@@ -84,7 +84,6 @@ public final class VillagerBackport {
         // ahead of a village being read back, and the creation handlers ahead of one being laid out.
         com.exiledradio.villagerbackport.village.VillagePieces.register();
         com.exiledradio.villagerbackport.village.modern.MapGenModernVillage.register();
-        com.exiledradio.villagerbackport.village.StructureWorkstations.register();
 
         // Client-only rendering lives in a class of its own that a server never loads. The call
         // itself is safe to compile in here because it names no client type - see ClientSetup for

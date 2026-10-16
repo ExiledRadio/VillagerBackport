@@ -16,6 +16,8 @@
 *   **Villagers you have traded with keep their trades.** Anything they have unlocked stays, and they keep unlocking 1.12.2's trades as they level. Villagers nobody has traded with switch to the new trades the next time they are near you. Turn that off with `rebuildUntradedVillagers`.
 *   Prefer the old trades? Set `trades.table` to `LEGACY`.
 
+**Removed: workstation swapping.** The mod no longer turns crafting tables, furnaces, cauldrons, bookshelves or trapdoor-framed tables into workstations, or drops composters into crop fields, in newly generated chunks. 1.14 never did this: its workstations come from the village buildings themselves, and now so do this mod's. The `structures` config section is gone with it and can be deleted from your config.
+
 **Settings:** two new sections, `trades` and the reworked `villages`. They are written to your config automatically. The old `villages` settings for workshops and stalls no longer do anything and can be deleted.
 
 ***

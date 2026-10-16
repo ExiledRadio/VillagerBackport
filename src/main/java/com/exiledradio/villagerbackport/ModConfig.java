@@ -40,10 +40,6 @@ public final class ModConfig {
     @Config.Comment("Which villages generate: 1.14's or 1.12.2's.")
     public static final Villages villages = new Villages();
 
-    @Config.LangKey("config.villagerbackport.structures")
-    @Config.Comment("Workstations put into structures that already generate.")
-    public static final Structures structures = new Structures();
-
     @Config.LangKey("config.villagerbackport.homes")
     @Config.Comment("Beds, sleeping, breeding and iron golems.")
     public static final Homes homes = new Homes();
@@ -497,132 +493,6 @@ public final class ModConfig {
         public String[] excludedWorkstations = {};
     }
 
-    public static final class Structures {
-
-        @Config.Comment({
-                "Turn some of the crafting tables and furnaces structures generate with into",
-                "workstations.",
-                "",
-                "Adding village buildings only reaches villages. This reaches everything: vanilla",
-                "structures, and in a pack with a structure mod the hundreds of houses scattered",
-                "across the world, every one of which already says somebody works here by putting",
-                "a workbench and an oven in the corner.",
-                "",
-                "Those blocks are already indoors, on a floor, where whoever built the structure",
-                "thought a workbench belonged - so this inherits their judgement instead of guessing",
-                "at a spot, and needs to know nothing about the mod that placed them.",
-                "",
-                "Only ever touches chunks as they generate, so a crafting table a player placed is",
-                "never at risk, and a furnace with anything in it is always left alone."
-        })
-        @Config.RequiresMcRestart
-        public boolean replaceWorkbenches = true;
-
-        @Config.Comment({
-                "Only touch structures that are part of a village.",
-                "",
-                "Without this, anything generated anywhere is fair game - a lodge in the woods, a",
-                "dungeon library, a lone farm - and workstations end up scattered across the world",
-                "where no villager will ever stand at one.",
-                "",
-                "A position counts when it falls inside a village structure piece, which is also how",
-                "mods that add village buildings register them - they declare their houses as vanilla",
-                "village pieces, so those are inside a village by this test as surely as vanilla's",
-                "own are.",
-                "",
-                "Turn this off if a pack's world generator does not keep village structures. The test",
-                "can only be answered by the generator, and one that cannot answer says no to",
-                "everything - which turns all of this off rather than misplacing it."
-        })
-        public boolean villagesOnly = true;
-
-        @Config.Comment({
-                "How far from a village's centre still counts as part of it, in blocks.",
-                "",
-                "Villages sprawl, and the outlying field or the house at the end of the path is as",
-                "much village as the well is. Too small and the edges of a large village are left out;",
-                "too large and a lone structure a little way off gets swept in with it."
-        })
-        @Config.RangeInt(min = 16, max = 512)
-        public int villageReach = 128;
-
-        @Config.Comment({
-                "Put a composter in among a large field of crops.",
-                "",
-                "A field is the one part of a village that plainly belongs to somebody and yet holds",
-                "nothing to work at - the crops are the job, and there is no block that says so. So a",
-                "field big enough to be worth farming gets a composter dropped into it, standing in",
-                "for one of the crops, and the village gains a farmer it can actually employ.",
-                "",
-                "Mega villages benefit most: they are mostly fields and houses, and short on the",
-                "crafting tables the rest of this works from."
-        })
-        public boolean composterInCropFields = true;
-
-        @Config.Comment({
-                "How many crop blocks must be in a chunk before it is worth a composter.",
-                "",
-                "Any crop counts, not only wheat - carrots, potatoes and beetroot are as much a farm as",
-                "wheat is, and so is whatever a pack grows, since nearly all of them are built on the",
-                "same crop block.",
-                "",
-                "Counted per chunk, so this is roughly 'a field this big'. A vanilla village field runs",
-                "to about 28 crops in its fullest chunk, for scale."
-        })
-        @Config.RangeInt(min = 8, max = 256)
-        public int cropsPerComposter = 20;
-
-        @Config.Comment("Most composters one chunk of field may be given.")
-        @Config.RangeInt(min = 1, max = 8)
-        public int maxComposterPerChunk = 1;
-
-        @Config.Comment({
-                "Put a lectern in among a large wall of bookshelves.",
-                "",
-                "The same idea as the composter in a field: a library is unmistakably somewhere work",
-                "happens and has nothing in it to work at. Some structure mods build very large ones,",
-                "and a librarian is the trade most players actually want.",
-                "",
-                "One of the bookshelves becomes the lectern, so the room keeps its shape."
-        })
-        public boolean lecternInLibraries = true;
-
-        @Config.Comment({
-                "How many bookshelves must be in a chunk before it is worth a lectern.",
-                "A shelf or two in somebody's house is not a library; a wall of them is."
-        })
-        @Config.RangeInt(min = 4, max = 256)
-        public int bookshelvesPerLectern = 24;
-
-        @Config.Comment("Most lecterns one chunk of library may be given.")
-        @Config.RangeInt(min = 1, max = 8)
-        public int maxLecternPerChunk = 1;
-
-        @Config.Comment({
-                "What may be replaced, how often, and with what.",
-                "",
-                "Each entry is 'block=chance' or 'block=chance=replacement,replacement'. The chance",
-                "runs from 0 to 1 and is rolled per block. Naming replacements limits that block to",
-                "those; leaving them off draws from every workstation in the mapping above.",
-                "",
-                "Furnaces are held to the two that are ovens, so a structure's hearth still reads as",
-                "one. Crafting tables can become anything, which is what puts the variety about.",
-                "",
-                "Cauldrons are in the list because packs scatter far more of them than any village",
-                "needs leatherworkers - a cauldron is already a workstation, so rerolling one trades a",
-                "job nobody wanted for one somebody did. A block is never replaced with itself.",
-                "",
-                "Raise the chances for a world where nearly every house has a trade in it; lower them",
-                "to keep a workbench meaning what it used to."
-        })
-        public String[] replacements = {
-                "minecraft:crafting_table=0.6",
-                "minecraft:cauldron=0.5",
-                "minecraft:furnace=0.5=villagerbackport:smoker,villagerbackport:blast_furnace",
-                "minecraft:lit_furnace=0.5=villagerbackport:smoker,villagerbackport:blast_furnace",
-        };
-    }
-
     public static final class Workstations {
 
         @Config.Comment({
@@ -1000,7 +870,6 @@ public final class ModConfig {
                 com.exiledradio.villagerbackport.job.WorkstationIndex.invalidateAll();
                 com.exiledradio.villagerbackport.block.Compostables.loadExtras();
                 com.exiledradio.villagerbackport.block.StonecutterRecipes.invalidate();
-                com.exiledradio.villagerbackport.village.StructureWorkstations.invalidate();
             }
         }
 
