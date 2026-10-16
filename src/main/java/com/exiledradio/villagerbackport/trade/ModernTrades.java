@@ -34,8 +34,9 @@ import java.util.Random;
  * <h2>Source</h2>
  * {@code VillagerTrades} from the 1.14.4 sources, entry for entry and in the same order, with the
  * few later changes minecraft.wiki documents for current Java applied on top: the librarian's
- * bookshelf is 9 emeralds for one rather than 6 for three, and an enchanted fishing rod is stocked 3
- * like every other piece of enchanted gear.
+ * bookshelf is 9 emeralds for one rather than 6 for three, an enchanted fishing rod is stocked 3
+ * like every other piece of enchanted gear, and a master librarian sells candles rather than a name
+ * tag when a mod that adds candles is installed.
  *
  * <h2>Picking</h2>
  * Each level is a pool, and a villager reaching that level takes two different trades from it at
@@ -152,7 +153,7 @@ public final class ModernTrades {
         table("minecraft:farmer", "fisherman",
                 level(buy(Items.STRING, 20, 16), buy(Items.COAL, 10, 16),
                         convert(stack(Items.FISH, 6, 0), 1, stack(Items.COOKED_FISH, 6, 0), 16),
-                        optionalSell(3, 1, 16, "futuremc:cod_bucket", "oe:cod_bucket")),
+                        optionalSell(3, 1, 16, "futuremc:cod_bucket")),
                 level(buy(stack(Items.FISH, 15, 0), 16),
                         convert(stack(Items.FISH, 6, 1), 1, stack(Items.COOKED_FISH, 6, 1), 16),
                         optionalSell(2, 1, STOCK, "futuremc:campfire")),
@@ -191,11 +192,15 @@ public final class ModernTrades {
 
         table("minecraft:librarian", "librarian",
                 level(buy(Items.PAPER, 24, 16), enchantedBook(), sell(new ItemStack(Blocks.BOOKSHELF), 9, 1, STOCK)),
-                level(buy(Items.BOOK, 4, 12), enchantedBook(), optionalSell(1, 1, STOCK, "futuremc:lantern")),
+                level(buy(Items.BOOK, 4, 12), enchantedBook(), optionalSell(1, 1, STOCK, "villagerbackport:lantern", "futuremc:lantern")),
                 level(buy(dye(EnumDyeColor.BLACK, 5), 12), enchantedBook(), sell(new ItemStack(Blocks.GLASS), 1, 4, STOCK)),
                 level(buy(Items.WRITABLE_BOOK, 2, 12), enchantedBook(), sell(Items.CLOCK, 5, 1, STOCK),
                         sell(Items.COMPASS, 4, 1, STOCK)),
-                level(sell(Items.NAME_TAG, 20, 1, STOCK)));
+                // Current Java's master librarian sells candles, which replaced 1.14's name tag in 1.17.
+                // Without a mod that adds candles, the name tag stays.
+                level(optionalSell(3, 1, STOCK, "deeperdepths:yellow_candle"),
+                        optionalSell(3, 1, STOCK, "deeperdepths:red_candle"),
+                        unless(sell(Items.NAME_TAG, 20, 1, STOCK), "deeperdepths:yellow_candle", "deeperdepths:red_candle")));
 
         table("minecraft:librarian", "cartographer",
                 level(buy(Items.PAPER, 24, 16), sell(Items.MAP, 7, 1, STOCK)),
@@ -208,7 +213,7 @@ public final class ModernTrades {
                 level(buy(Items.ROTTEN_FLESH, 32, 16), sell(Items.REDSTONE, 1, 2, STOCK)),
                 level(buy(Items.GOLD_INGOT, 3, 12), sell(dye(EnumDyeColor.BLUE, 1), 1, STOCK)),
                 level(buy(Items.RABBIT_FOOT, 2, 12), sell(new ItemStack(Blocks.GLOWSTONE), 4, 1, STOCK)),
-                level(optionalBuy(4, 12, "oe:turtle_scute", "futuremc:scute"), buy(Items.GLASS_BOTTLE, 9, 12),
+                level(optionalBuy(4, 12, "oe:turtle_scute"), buy(Items.GLASS_BOTTLE, 9, 12),
                         sell(Items.ENDER_PEARL, 5, 1, STOCK)),
                 level(buy(Items.NETHER_WART, 22, 12), sell(Items.EXPERIENCE_BOTTLE, 3, 1, STOCK)));
 
@@ -253,14 +258,14 @@ public final class ModernTrades {
                         sell(Items.RABBIT_STEW, 1, 1, STOCK)),
                 level(buy(Items.COAL, 15, 16), sell(Items.COOKED_PORKCHOP, 1, 5, 16), sell(Items.COOKED_CHICKEN, 1, 8, 16)),
                 level(buy(Items.MUTTON, 7, 16), buy(Items.BEEF, 10, 16)),
-                level(optionalBuy(10, 12, "oe:dried_kelp_block", "futuremc:dried_kelp_block")),
+                level(optionalBuy(10, 12, "oe:dried_kelp_block")),
                 level(optionalBuy(10, 12, "futuremc:sweet_berries")));
 
         table("minecraft:butcher", "leather",
                 level(buy(Items.LEATHER, 6, 16), dyed(Items.LEATHER_LEGGINGS, 3), dyed(Items.LEATHER_CHESTPLATE, 7)),
                 level(buy(Items.FLINT, 26, 12), dyed(Items.LEATHER_HELMET, 5), dyed(Items.LEATHER_BOOTS, 4)),
                 level(buy(Items.RABBIT_HIDE, 9, 12), dyed(Items.LEATHER_CHESTPLATE, 7)),
-                level(optionalBuy(4, 12, "oe:turtle_scute", "futuremc:scute")),
+                level(optionalBuy(4, 12, "oe:turtle_scute")),
                 level(sell(Items.SADDLE, 6, 1, STOCK), dyed(Items.LEATHER_HELMET, 5)));
     }
 
@@ -614,6 +619,27 @@ public final class ModernTrades {
         public boolean available() {
             return item() != null;
         }
+    }
+
+    /** A trade offered only when none of the named items exist - the fallback for a missing one. */
+    private static Trade unless(final Trade trade, final String... absent) {
+        return new Trade() {
+            @Override
+            public boolean available() {
+                for (String name : absent) {
+                    Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(name));
+                    if (item != null && item != Items.AIR) {
+                        return false;
+                    }
+                }
+                return trade.available();
+            }
+
+            @Override
+            public MerchantRecipe offer(EntityVillager villager, Random random) {
+                return trade.offer(villager, random);
+            }
+        };
     }
 
     private static Trade optionalSell(final int emeralds, final int count, final int stock, String... candidates) {

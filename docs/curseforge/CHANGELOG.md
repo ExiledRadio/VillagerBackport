@@ -11,7 +11,8 @@
 
 **New: 1.14's trades.** Villagers now sell what they sell in 1.14. Each level offers two trades drawn at random from that level's list, so two farmers can sell different things, and every trade has 1.14's price and stock. A librarian's bookshelf is 9 emeralds, as in current Minecraft.
 
-*   Items 1.12.2 does not have (crossbows, campfires, lanterns, sweet berries, scutes, dried kelp) are only offered when a mod that adds them is installed. Without one, that trade is simply not in the draw. A butcher and leatherworker can come up short at the top levels for this reason.
+*   Items 1.12.2 does not have are offered when a mod that adds them is installed, and simply left out of the draw when none is. No mod is required. Future MC supplies the crossbow, campfire, bucket of cod, sweet berries and suspicious stew; Crossbows Backport the crossbow; Oceanic Expanse the turtle scute and dried kelp block; Deeper Depths the candles. A butcher and leatherworker can come up short at the top levels without these.
+*   A master librarian sells red and yellow candles, as in current Minecraft, when Deeper Depths is installed, and 1.14's name tag when it is not.
 *   The cartographer's globe banner pattern is replaced with one of the four banner patterns this mod adds, since 1.12.2 has no globe.
 *   **Villagers you have traded with keep their trades.** Anything they have unlocked stays, and they keep unlocking 1.12.2's trades as they level. Villagers nobody has traded with switch to the new trades the next time they are near you. Turn that off with `rebuildUntradedVillagers`.
 *   Prefer the old trades? Set `trades.table` to `LEGACY`.
