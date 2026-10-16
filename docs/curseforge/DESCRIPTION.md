@@ -181,7 +181,7 @@ Without them the trade is simply left out of the draw, and the master librarian 
 
 **Future MC** adds many of the same blocks. Both sets give villagers jobs, so a fisherman takes either barrel, and one of each pair is hidden from the creative menu, JEI and crafting so you are not shown two of everything. Choose which with `compat.futureMcDuplicates`. Future MC's smithing table is always the one kept, since it upgrades gear to netherite.
 
-**Village Names** and any other mod that brings its own village generator keep their villages.
+**Village Names** and any other mod that brings its own village generator keep their villages. To have Village Names' houses built with this mod's workstations, use **VillagerFix** by Rxpev.
 
 ***
 
@@ -252,6 +252,8 @@ Drop the jar in `mods` on both sides. Delete any older version first, or two cop
 ***
 
 Also by me: [Enchantment Recipes](https://www.curseforge.com/minecraft/mc-mods/rlcraft-enchantment-recipes), craft enchanted books from mod materials, and [Villager Tomes](https://www.curseforge.com/minecraft/mc-mods/rlcraft-villager-tomes), teach a librarian the books you find.
+
+Thanks to Rxpev, whose VillagerFix mod gave Village Names' 1.14 houses this mod's workstations, and showed me the 1.14 villages were worth finishing properly instead of putting off. 2.0.0's village generation exists because of it.
 
 Not affiliated with Mojang. Licensed MIT.
 
