@@ -2,6 +2,8 @@
 
 The biggest update yet: 1.14's villages and 1.14's trades. The mod still needs nothing else to run, and now also uses items from other backport mods when you have them.
 
+Shoutout to **Rxpev** and their **VillagerFix** mod, which got Village Names' 1.14 houses building with this mod's workstations and pushed me to stop being lazy and finish structure generation properly. 2.0.0's villages exist because of it.
+
 ## Before you update an existing world
 
 *   **New chunks get the new villages.** Villages you have already found keep their layout. Where explored land meets new land you can see an old 1.12.2-style village next to a new one.
