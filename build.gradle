@@ -46,8 +46,12 @@ minecraft {
 // Compiling against it and leaving it out of the jar gets the best of both. With Mouse Tweaks
 // installed its own class supplies the type and the annotation resolves; without it, the annotation
 // simply never resolves, and an annotation whose class is missing is one the JVM never looks at.
+// The same goes for the handful of JEI interfaces under mezz/, which the plugin that hides
+// duplicated workstations is compiled against. JEI is the only thing that loads that plugin, so
+// when the types are needed JEI's real ones are there.
 jar {
     exclude 'yalter/**'
+    exclude 'mezz/**'
 }
 
 processResources {
@@ -95,6 +99,8 @@ processResources {
 task devJar(type: Jar) {
 	classifier = 'dev'
 	from sourceSets.main.output
+	// A dev environment with JEI in it must get JEI's interfaces, not the stand-ins.
+	exclude 'mezz/**'
 }
 
 task sourcesJar(type: Jar) {
@@ -142,4 +148,9 @@ task deployToInstance(type: Copy) {
 }
 
 deployToInstance.dependsOn reobfJar
+
+// reobfJar rewrites the jar in place, which Gradle cannot see, so it can decide there is nothing to
+// do and leave a jar with development names in it. That jar works in runClient and crashes a real
+// instance with NoSuchMethodError on the first Minecraft method it calls. Always run it.
+reobfJar.outputs.upToDateWhen { false }
 build.finalizedBy deployToInstance

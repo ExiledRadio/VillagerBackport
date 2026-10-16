@@ -1,6 +1,7 @@
 package com.exiledradio.villagerbackport.restock;
 
 import com.exiledradio.villagerbackport.VillagerBackport;
+import com.exiledradio.villagerbackport.compat.FutureMc;
 import com.exiledradio.villagerbackport.block.ModSounds;
 import com.exiledradio.villagerbackport.job.JobSite;
 
@@ -55,7 +56,10 @@ final class WorkSounds {
     private static SoundEvent forBlock(IBlockState state, EntityVillager villager, BlockPos pos) {
         ResourceLocation name = state.getBlock().getRegistryName();
 
-        if (name != null && VillagerBackport.MOD_ID.equals(name.getNamespace())) {
+        // Future MC names its workstations exactly as this mod and 1.14 do, so its loom can sound like
+        // a loom without this knowing anything more about it.
+        if (name != null && (VillagerBackport.MOD_ID.equals(name.getNamespace())
+                || FutureMc.MOD_ID.equals(name.getNamespace()))) {
             SoundEvent ours = ofOurs(name.getPath());
             if (ours != null) {
                 return ours;

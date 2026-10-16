@@ -56,6 +56,36 @@ public final class PricingHandler {
             com.exiledradio.villagerbackport.network.PacketRefillTrade.Handler
                     .forget((EntityPlayerMP) event.getEntityPlayer());
         }
+
+        returnPayment(event);
+    }
+
+    /**
+     * Puts whatever is left in the payment slots back in the player's inventory.
+     *
+     * <p>1.12.2 throws it on the ground when the screen closes; the game puts it back, and only drops
+     * what will not fit. This runs before the container's own close, so anything still in a slot
+     * afterwards - the part that did not fit - is dropped by 1.12.2 exactly as before.
+     */
+    private static void returnPayment(PlayerContainerEvent.Close event) {
+        if (event.getEntityPlayer().world.isRemote
+                || !(event.getContainer() instanceof net.minecraft.inventory.ContainerMerchant)) {
+            return;
+        }
+
+        net.minecraft.inventory.InventoryMerchant payment =
+                ((net.minecraft.inventory.ContainerMerchant) event.getContainer()).getMerchantInventory();
+
+        for (int slot = 0; slot < 2; slot++) {
+            net.minecraft.item.ItemStack held = payment.getStackInSlot(slot);
+            if (held.isEmpty()) {
+                continue;
+            }
+
+            net.minecraft.item.ItemStack rest = held.copy();
+            event.getEntityPlayer().inventory.addItemStackToInventory(rest);
+            payment.setInventorySlotContents(slot, rest.isEmpty() ? net.minecraft.item.ItemStack.EMPTY : rest);
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -105,9 +135,11 @@ public final class PricingHandler {
         // What this villager thinks of this player, priced in. 1.14 works this out in
         // updateSpecialPrices immediately before setting the customer, for exactly this reason: the
         // discount belongs to the player who opened the screen, not to the trade.
-        int standing = Gossip.specialPriceFor(villager, event.getEntityPlayer());
+        int reputation = Gossip.reputation(villager, event.getEntityPlayer());
 
         for (MerchantRecipe recipe : recipes) {
+            int standing = Gossip.specialPriceFor(reputation, PriceEngine.multiplierFor(recipe));
+
             PriceEngine.applyPrice(villager, recipe, TradeKey.of(villager, recipe), standing);
         }
     }

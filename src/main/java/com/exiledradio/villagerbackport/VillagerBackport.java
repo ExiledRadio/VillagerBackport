@@ -69,6 +69,12 @@ public final class VillagerBackport {
         MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.home.BedInteraction());
         MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.home.VillageWatch());
         MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.home.PanicWatch());
+        MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.home.SleepPose());
+        MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.trade.RefusalHandler());
+        MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.job.SpawnSource());
+        MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.home.Persistence());
+        MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.trade.TradeExperience());
+        MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.trade.ShowWares());
         MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.home.BedBreeding());
         MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.job.JobSiteAttacher());
         MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.job.JobSiteClaims());
@@ -77,6 +83,7 @@ public final class VillagerBackport {
         // Before anything can load a world: the piece names have to be known to the save format
         // ahead of a village being read back, and the creation handlers ahead of one being laid out.
         com.exiledradio.villagerbackport.village.VillagePieces.register();
+        com.exiledradio.villagerbackport.village.modern.MapGenModernVillage.register();
         com.exiledradio.villagerbackport.village.StructureWorkstations.register();
 
         // Client-only rendering lives in a class of its own that a server never loads. The call
@@ -99,6 +106,13 @@ public final class VillagerBackport {
     @Mod.EventHandler
     public void init(net.minecraftforge.fml.common.event.FMLInitializationEvent event) {
         com.exiledradio.villagerbackport.job.MasonCareer.register();
+        com.exiledradio.villagerbackport.compat.FutureMc.hideFromCreative();
+    }
+
+    /** Catches recipes for hidden duplicates that were added after the recipe registry event. */
+    @Mod.EventHandler
+    public void postInit(net.minecraftforge.fml.common.event.FMLPostInitializationEvent event) {
+        com.exiledradio.villagerbackport.compat.FutureMc.removeLateRecipes();
     }
 
     /**
@@ -113,10 +127,11 @@ public final class VillagerBackport {
         com.exiledradio.villagerbackport.block.StonecutterRecipes.invalidate();
     }
 
-    /** Registers the commands this mod adds, which is the one that draws a village. */
+    /** Registers the commands this mod adds: the one that draws a village, and /forgive. */
     @Mod.EventHandler
     public void serverStarted(net.minecraftforge.fml.common.event.FMLServerStartingEvent event) {
         event.registerServerCommand(new com.exiledradio.villagerbackport.home.VillageCommand());
+        event.registerServerCommand(new com.exiledradio.villagerbackport.trade.ForgiveCommand());
     }
 
 }

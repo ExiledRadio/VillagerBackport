@@ -44,7 +44,6 @@ public class BlockComposter extends BlockWorkstation {
     /** Wall thickness and floor height, in sixteenths, matching 1.14's inner box. */
     private static final double THICKNESS = 2.0D / 16.0D;
 
-    private static final AxisAlignedBB FLOOR = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, THICKNESS, 1.0D);
     private static final AxisAlignedBB NORTH_WALL = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, THICKNESS);
     private static final AxisAlignedBB SOUTH_WALL = new AxisAlignedBB(0.0D, 0.0D, 1.0D - THICKNESS, 1.0D, 1.0D, 1.0D);
     private static final AxisAlignedBB WEST_WALL = new AxisAlignedBB(0.0D, 0.0D, 0.0D, THICKNESS, 1.0D, 1.0D);
@@ -220,16 +219,39 @@ public class BlockComposter extends BlockWorkstation {
      *
      * <p>The default implementation offers a single box and would seal the block. Listing the pieces
      * means the hollow is genuinely empty as far as collision is concerned.
+     *
+     * <h2>The floor rises with the compost</h2>
+     * As in the game, the inside floor sits at 2/16 when empty and climbs 2/16 with each level, so a
+     * nearly full composter is barely a dip and a finished one is solid.
+     *
+     * <h2>Except for villagers</h2>
+     * Villagers treat it as solid. Their pathfinding counts the rim of a composter as somewhere to
+     * walk, a farmer goes to its composter every few seconds during work hours, and one that stepped
+     * on the rim dropped into the hole and could not find a way out again.
      */
     @Override
     public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox,
                                       List<AxisAlignedBB> collidingBoxes, @Nullable Entity entity,
                                       boolean isActualState) {
-        addCollisionBoxToList(pos, entityBox, collidingBoxes, FLOOR);
+        double floor = floorHeight(state);
+
+        if (entity instanceof net.minecraft.entity.passive.EntityVillager || floor >= 1.0D) {
+            addCollisionBoxToList(pos, entityBox, collidingBoxes, FULL_BLOCK_AABB);
+            return;
+        }
+
+        addCollisionBoxToList(pos, entityBox, collidingBoxes,
+                new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, floor, 1.0D));
         addCollisionBoxToList(pos, entityBox, collidingBoxes, NORTH_WALL);
         addCollisionBoxToList(pos, entityBox, collidingBoxes, SOUTH_WALL);
         addCollisionBoxToList(pos, entityBox, collidingBoxes, WEST_WALL);
         addCollisionBoxToList(pos, entityBox, collidingBoxes, EAST_WALL);
+    }
+
+    /** The game's inside floor: 2/16 when empty, then 1 + 2 per level, in sixteenths, up to full. */
+    private static double floorHeight(IBlockState state) {
+        int level = state.getValue(LEVEL);
+        return Math.min(16, Math.max(2, 1 + level * 2)) / 16.0D;
     }
 
     /** The aiming outline stays a full cube, as it is in 1.14. */

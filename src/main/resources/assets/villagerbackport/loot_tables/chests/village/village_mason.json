@@ -1,0 +1,80 @@
+{
+  "pools": [
+    {
+      "rolls": {
+        "min": 1.0,
+        "max": 5.0
+      },
+      "entries": [
+        {
+          "type": "item",
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 3.0
+              }
+            }
+          ],
+          "name": "minecraft:clay_ball",
+          "entryName": "minecraft:clay_ball#0"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:flower_pot",
+          "entryName": "minecraft:flower_pot#1"
+        },
+        {
+          "type": "item",
+          "weight": 2,
+          "name": "minecraft:stone",
+          "entryName": "minecraft:stone#2"
+        },
+        {
+          "type": "item",
+          "weight": 2,
+          "name": "minecraft:stonebrick",
+          "entryName": "minecraft:stonebrick#3"
+        },
+        {
+          "type": "item",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              }
+            }
+          ],
+          "name": "minecraft:bread",
+          "entryName": "minecraft:bread#4"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:dye",
+          "functions": [
+            {
+              "function": "set_data",
+              "data": 11
+            }
+          ],
+          "entryName": "minecraft:dye#5"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:stone_slab",
+          "entryName": "minecraft:stone_slab#6"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:emerald",
+          "entryName": "minecraft:emerald#7"
+        }
+      ],
+      "name": "pool0"
+    }
+  ]
+}

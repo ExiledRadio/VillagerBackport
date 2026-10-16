@@ -46,6 +46,9 @@ public final class LevelGate {
      */
     private static final int LEVEL_UP_DELAY_TICKS = 40;
 
+    /** Set by a trade that earned a level-up, cleared when the level lands. */
+    private static final String LEVEL_UP_EARNED = "LevelUpEarned";
+
     /** Entity status for a burst of VILLAGER_HAPPY particles, the same value in both versions. */
     private static final byte LEVEL_UP_PARTICLE_STATUS = 14;
 
@@ -82,7 +85,16 @@ public final class LevelGate {
         // 1.14 will not let a level-up land while the screen is open - its reset block is guarded by
         // "not currently trading". Holding off here is what lets the bar fill and stay full until
         // the player closes the screen, with the rank and the new trades arriving together after.
-        if (villager.getCustomer() != null || !canLevelUp(villager, applied)) {
+        if (villager.getCustomer() != null) {
+            VillagerTradeData.clearLevelUpAt(villager);
+            return;
+        }
+
+        // Only a level a trade has earned. 1.14 checks for a level-up inside the trade itself, so a
+        // villager with experience enough for two levels takes one, and needs another trade before
+        // it takes the second; it does not level twice on its own.
+        if (!VillagerTradeData.root(villager).getBoolean(LEVEL_UP_EARNED) || !canLevelUp(villager, applied)) {
+            VillagerTradeData.root(villager).removeTag(LEVEL_UP_EARNED);
             VillagerTradeData.clearLevelUpAt(villager);
             return;
         }
@@ -107,7 +119,27 @@ public final class LevelGate {
         }
 
         VillagerTradeData.clearLevelUpAt(villager);
+        VillagerTradeData.root(villager).removeTag(LEVEL_UP_EARNED);
         levelUp(villager, applied + 1);
+    }
+
+    /**
+     * Records that the trade just made has earned a level-up, if it has.
+     *
+     * <p>1.14's {@code onVillagerTrade}: after adding the trade's experience it asks whether the
+     * villager can now level up, and if so marks the level-up to happen once the screen closes. That
+     * one question per trade is the only way a level is ever gained.
+     */
+    public static void noteTrade(EntityVillager villager) {
+        int applied = VillagerTradeData.getAppliedLevel(villager);
+
+        if (applied >= 0 && canLevelUp(villager, Math.min(applied, VillagerLevel.MAX_LEVEL))
+                && !VillagerTradeData.root(villager).getBoolean(LEVEL_UP_EARNED)) {
+            VillagerTradeData.root(villager).setBoolean(LEVEL_UP_EARNED, true);
+
+            // The trade that earns the level is the one that pays the player the extra 5.
+            TradeExperience.levelUpBonus(villager);
+        }
     }
 
     /**
@@ -150,7 +182,7 @@ public final class LevelGate {
             MerchantRecipeList before = VillagerAccess.getBuyingList(villager);
             int had = before == null ? 0 : before.size();
 
-            VillagerAccess.unlockTier(villager, level);
+            TradeTables.unlockTier(villager, level);
             BookAnnouncer.announce(villager, VillagerAccess.getBuyingList(villager), had);
         }
 

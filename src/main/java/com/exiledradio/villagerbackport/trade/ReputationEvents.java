@@ -90,8 +90,11 @@ public final class ReputationEvents {
         EntityVillager victim = (EntityVillager) event.getEntityLiving();
         AxisAlignedBB box = victim.getEntityBoundingBox().grow(WITNESS_RANGE);
 
+        // Only the villagers the victim could see. 1.14 tells the villagers in its VISIBLE_MOBS
+        // memory - inside the same 16 blocks, and in line of sight - so a killing behind a wall, or
+        // on the floor above, goes unwitnessed by the villagers on the other side of it.
         for (EntityVillager witness : victim.world.getEntitiesWithinAABB(EntityVillager.class, box)) {
-            if (witness != victim) {
+            if (witness != victim && victim.canEntityBeSeen(witness)) {
                 Gossip.add(witness, player.getUniqueID(), GossipType.MAJOR_NEGATIVE, 25);
             }
         }

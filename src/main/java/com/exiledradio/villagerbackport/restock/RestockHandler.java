@@ -9,6 +9,7 @@ import com.exiledradio.villagerbackport.job.JobSiteWork;
 import com.exiledradio.villagerbackport.trade.Gossip;
 import com.exiledradio.villagerbackport.trade.LevelGate;
 import com.exiledradio.villagerbackport.trade.TradeKey;
+import com.exiledradio.villagerbackport.trade.TradeTables;
 import com.exiledradio.villagerbackport.trade.TradeTracker;
 
 import net.minecraft.entity.passive.EntityVillager;
@@ -72,15 +73,6 @@ public final class RestockHandler {
      */
     private static final int TRADING_INTERVAL_TICKS = 2;
 
-    /**
-     * How often a villager repeats what it thinks to a neighbour.
-     *
-     * <p>A minute apart. 1.14 does this at the meeting point around midday, so it is rare there too,
-     * and it wants to be rare here: every pass is an entity lookup, and gossip that spread on every
-     * tick would be all over a village in seconds rather than making its way round over a day.
-     */
-    private static final int GOSSIP_INTERVAL_TICKS = 1200;
-
     /** Ticks in a Minecraft day, used to convert world time into a day number. */
     private static final long TICKS_PER_DAY = 24000L;
 
@@ -104,6 +96,16 @@ public final class RestockHandler {
         // whatever it last cost. Once prices are back at base the work is a no-op, and it is
         // throttled to once a second per villager regardless.
 
+        // A villager found standing inside a composter fell in before composters were solid to
+        // villagers, and its pathfinding cannot get it back out. Put it on top.
+        if ((villager.ticksExisted + villager.getEntityId()) % CHECK_INTERVAL_TICKS == 0) {
+            net.minecraft.util.math.BlockPos at = new net.minecraft.util.math.BlockPos(villager);
+            if (villager.world.getBlockState(at).getBlock()
+                    instanceof com.exiledradio.villagerbackport.block.BlockComposter) {
+                villager.setPositionAndUpdate(villager.posX, at.getY() + 1.0D, villager.posZ);
+            }
+        }
+
         // Babies have no trades, and vanilla builds their list only once they grow up. They do get
         // a profession though, which they should not have until they are old enough to work.
         if (villager.isChild()) {
@@ -126,6 +128,12 @@ public final class RestockHandler {
             return;
         }
 
+        // Here and nowhere else: this event fires before the villager's AI runs, so its goal list is
+        // free to change. tick() is also reached from inside a goal - see workNow - and adding or
+        // removing a goal from in there breaks the loop that is running it, which crashed the
+        // villager's tick the moment one took the farmer's job at a composter.
+        com.exiledradio.villagerbackport.job.FarmWork.sync(villager);
+
         tick(villager);
     }
 
@@ -140,6 +148,13 @@ public final class RestockHandler {
      */
     public static void workNow(EntityVillager villager) {
         if (!villager.world.isRemote && VillagerAccess.isAvailable() && !villager.isChild()) {
+            // 1.14 plays the work sound every time a villager uses its workstation, restock or not.
+            // It is the outward sign that a villager is at work, and a restock is simply something
+            // that sometimes happens while it is.
+            if (ModConfig.restock.playWorkSound && !Employment.isUnemployed(villager)) {
+                WorkSounds.playFor(villager);
+            }
+
             INSTANCE.tick(villager);
         }
     }
@@ -158,15 +173,18 @@ public final class RestockHandler {
         Employment.initialise(villager);
         checkJobLoss(villager);
 
+        // Opinions wear off and spread whether or not anything is being bought, and whether or not
+        // the villager has a trade to its name - a jobless villager hears and repeats news in 1.14
+        // like anyone else. See Gossip.
+        Gossip.decayIfDue(villager);
+        Gossip.meet(villager, villager.getRNG());
+
+        // Before the list is read: an untraded villager may be rebuilt from the other trade table.
+        TradeTables.adopt(villager);
+
         MerchantRecipeList recipes = VillagerAccess.getBuyingList(villager);
         if (recipes == null || recipes.isEmpty()) {
             return;
-        }
-
-        // Opinions wear off and spread whether or not anything is being bought - see Gossip.
-        Gossip.decayIfDue(villager);
-        if ((villager.ticksExisted + villager.getEntityId()) % GOSSIP_INTERVAL_TICKS == 0) {
-            Gossip.shareWith(villager, villager.getRNG());
         }
 
         repairDemand(villager, recipes);
@@ -216,28 +234,26 @@ public final class RestockHandler {
             return;
         }
 
-        // Never while the trade screen is open - see RestockRules.couldRestockNow. Checked here as
-        // well as there because this is the path that actually restocks, and the poll runs ten times
-        // more often for a villager with a customer than for one without.
+        // Never while the trade screen is open. 1.14 cannot restock a villager that has a customer,
+        // because restocking happens in a work task and a villager being traded with is not running
+        // one. Doing it anyway refills the shelves under the player's hands mid-session.
         if (villager.getCustomer() != null) {
             return;
         }
 
         long gameTime = villager.world.getTotalWorldTime();
 
+        // 1.14 does all of this from inside its work task, which only runs during work hours with
+        // the villager standing at its workstation. So both are preconditions, and come first.
+        if (!RestockRules.isWorkingHours(villager.world) || !JobSiteWork.canRestock(villager)) {
+            return;
+        }
+
+        // The day turns over from the same place: a villager's day starts when it first gets to
+        // work, not at midnight, and not for a villager with no job to go to.
         rollOverDay(villager, recipes, gameTime);
 
         if (!RestockRules.hasAllowance(villager, gameTime) || !RestockRules.hasExhaustedTrade(recipes)) {
-            return;
-        }
-
-        // 1.14 restocks from inside the task that walks a villager to its workstation, so being
-        // there is a precondition rather than a check. Same rule, stated explicitly.
-        if (!JobSiteWork.canRestock(villager)) {
-            return;
-        }
-
-        if (!RestockRules.isWorkingHours(villager.world)) {
             return;
         }
 
@@ -250,14 +266,27 @@ public final class RestockHandler {
     }
 
     /**
-     * Resets the daily restock allowance when a new day has started.
+     * Starts a villager's new day: settles yesterday's unused restocks, then refunds the allowance.
      *
-     * <p>1.14 checks this two ways and so do we, because either one alone has a hole. Comparing
-     * day numbers from world time handles the normal case, but world time can be frozen
+     * <p>1.14 checks for a new day two ways and so do we, because either one alone has a hole.
+     * Comparing day numbers from world time handles the normal case, but world time can be frozen
      * ({@code doDaylightCycle false}) or moved backwards by a command, and then the day number
      * never advances and villagers would stop restocking for good. The elapsed-game-time check
      * covers that: game time is monotonic and unaffected by both. A villager that was unloaded
      * across a day boundary is caught by the day-number branch when it loads back in.
+     *
+     * <h2>One step, in this order</h2>
+     * The settling reads how many restocks were spent, so it has to run before that count is
+     * cleared, and at the same moment - 1.14's {@code resetRestocksAndCatchUp} is the two lines
+     * together. Here they used to be apart: the count was cleared as soon as half a day had passed
+     * since the last restock, which is always the same evening, and the settling ran at midnight
+     * and so always found nothing spent. Every villager shed two full stocks of demand a day
+     * however hard it had been traded, and no price ever built up from one day to the next.
+     *
+     * <h2>Once, not for the rest of the morning</h2>
+     * The elapsed-time test stays true until the next restock. 1.14.4 runs the settling on every
+     * work call for as long as it does, which strips demand from any villager nobody is buying
+     * from; later versions restart the clock here so it happens once, and so does this.
      */
     private void rollOverDay(EntityVillager villager, MerchantRecipeList recipes, long gameTime) {
         long lastRestock = VillagerTradeData.getLastRestock(villager);
@@ -273,27 +302,14 @@ public final class RestockHandler {
 
         VillagerTradeData.setLastDayCheck(villager, worldTime);
 
-        // Settling unused restocks is destructive, so it happens on the day actually turning over
-        // and nowhere else. The condition above is not that edge: it stays true on every check from
-        // the moment half a day has passed until the next restock, which had the settling run once a
-        // second - clearing every trade's stock and shedding two stocks' worth of demand each time.
-        long day = worldTime / TICKS_PER_DAY;
-        long settled = VillagerTradeData.getLastCatchUpDay(villager);
-
-        if (settled != day) {
-            VillagerTradeData.setLastCatchUpDay(villager, day);
-
-            // Never on first sight: a villager loaded today has not been idle for a day, it has
-            // simply never been asked before.
-            if (settled >= 0) {
-                catchUpDemand(villager, recipes);
-                VillagerTradeData.setRestocksToday(villager, 0);
-            }
+        if (!newDay) {
+            return;
         }
 
-        if (newDay) {
-            VillagerTradeData.setRestocksToday(villager, 0);
-        }
+        VillagerTradeData.setLastRestock(villager, gameTime);
+
+        catchUpDemand(villager, recipes);
+        VillagerTradeData.setRestocksToday(villager, 0);
     }
 
     /**
@@ -377,12 +393,5 @@ public final class RestockHandler {
 
         VillagerTradeData.setLastRestock(villager, gameTime);
         VillagerTradeData.setRestocksToday(villager, VillagerTradeData.getRestocksToday(villager) + 1);
-
-        // 1.14 plays the villager's work sound as it uses the workstation, which is the only outward
-        // sign that a restock has happened at all - without it the shop refills silently and the
-        // only way to find out is to open the screen and look.
-        if (ModConfig.restock.playWorkSound) {
-            WorkSounds.playFor(villager);
-        }
     }
 }

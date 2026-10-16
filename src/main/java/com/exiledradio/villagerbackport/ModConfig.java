@@ -24,6 +24,10 @@ public final class ModConfig {
     @Config.Comment("Supply-and-demand pricing and villager experience.")
     public static final Pricing pricing = new Pricing();
 
+    @Config.LangKey("config.villagerbackport.trades")
+    @Config.Comment("Which trades villagers offer.")
+    public static final Trades trades = new Trades();
+
     @Config.LangKey("config.villagerbackport.jobs")
     @Config.Comment("Workstations villagers go to work at.")
     public static final Jobs jobs = new Jobs();
@@ -33,7 +37,7 @@ public final class ModConfig {
     public static final Workstations workstations = new Workstations();
 
     @Config.LangKey("config.villagerbackport.villages")
-    @Config.Comment("Workstation buildings added to generated villages.")
+    @Config.Comment("Which villages generate: 1.14's or 1.12.2's.")
     public static final Villages villages = new Villages();
 
     @Config.LangKey("config.villagerbackport.structures")
@@ -48,7 +52,40 @@ public final class ModConfig {
     @Config.Comment("What the trade screen shows.")
     public static final Display display = new Display();
 
+    @Config.LangKey("config.villagerbackport.compat")
+    @Config.Comment("Getting along with other mods that add the same blocks.")
+    public static final Compat compat = new Compat();
+
     private ModConfig() {
+    }
+
+    public static final class Trades {
+
+        @Config.Comment({
+                "Which trades new villagers get.",
+                "",
+                "MODERN: 1.14's trade tables. Each level offers two trades picked at random from that",
+                "level's list, so two farmers can sell different things. 1.14 items 1.12.2 does not",
+                "have (crossbows, campfires, lanterns, sweet berries, scutes) are only offered when a",
+                "mod that adds them is installed.",
+                "LEGACY: 1.12.2's own trades, as each career registers them - including any trades",
+                "another mod has added to a career.",
+                "",
+                "Villagers someone has already traded with keep the trades they have, and keep",
+                "unlocking from the table they started on, whatever this is set to. Careers another",
+                "mod adds always use their own trades."
+        })
+        public com.exiledradio.villagerbackport.trade.TradeTables.Table table =
+                com.exiledradio.villagerbackport.trade.TradeTables.Table.MODERN;
+
+        @Config.Comment({
+                "Rebuild the trades of villagers nobody has traded with yet, so they match the table",
+                "above.",
+                "",
+                "This is how villages that existed before switching tables get the new trades. A",
+                "villager anyone has traded with, even once, is never touched."
+        })
+        public boolean rebuildUntradedVillagers = true;
     }
 
     public static final class Restock {
@@ -99,7 +136,8 @@ public final class ModConfig {
         public boolean workHoursOnly = true;
 
         @Config.Comment({
-                "Play a sound when a villager restocks at its workstation.",
+                "Play a sound each time a villager uses its workstation, about every 15 seconds",
+                "while it is at work, whether or not it restocks.",
                 "",
                 "1.14 gives each profession its own work sound and plays it as the villager uses its",
                 "job site. The sound is taken from the workstation rather than the profession here,",
@@ -143,15 +181,15 @@ public final class ModConfig {
         public double priceMultiplier = 0.05D;
 
         @Config.Comment({
-                "How sharply demand moves the price of premium trades. 1.14's value is 0.2.",
+                "How sharply demand and reputation move the price of premium trades. 1.14's value",
+                "is 0.2.",
                 "",
                 "1.14 stores a multiplier per trade and uses exactly two: 0.05 for ordinary trades and",
-                "0.2 for the premium ones - enchanted books, enchanted tools and armour, maps, bells,",
-                "saddles. In VillagerTrades that is seven trades at 0.05 against thirty-five at 0.2.",
-                "",
-                "1.12.2 recipes have no such field, so a trade counts as premium here when what it",
-                "sells is enchanted or is a filled map. That covers the cases players notice, chiefly",
-                "the enchanted book trade, whose price would otherwise climb four times too slowly."
+                "0.2 for the premium ones. 1.12.2 recipes have no such field, so a trade counts as",
+                "premium here when what it sells is one of 1.14's premium items: enchanted books,",
+                "explorer maps, enchanted gear other than the iron sword and bow, and plain iron and",
+                "chainmail armour, shields, the iron axe, stone tools, the diamond hoe, saddles and",
+                "leather armour."
         })
         @Config.RangeDouble(min = 0.0D, max = 2.0D)
         public double premiumPriceMultiplier = 0.2D;
@@ -173,26 +211,34 @@ public final class ModConfig {
         @Config.Comment({
                 "Let villagers repeat their opinions to each other.",
                 "",
-                "1.14 does this when they gather at the meeting point, handing over only the part of an",
-                "opinion above its sharing floor and at most ten of it - so a killing travels but",
-                "arrives much weaker, and trading barely travels at all."
+                "1.14 does this when they gather at the meeting point. An opinion loses strength each",
+                "time it is retold and a villager keeps only the strongest version it has heard - so a",
+                "killing travels but arrives weaker, and trading barely travels at all."
         })
         public boolean gossipSpreads = true;
 
         @Config.Comment({
-                "How close two villagers must be to pass an opinion between them, in blocks."
+                "How close two villagers must stand to swap gossip, in blocks. 1.14's value is",
+                "2.24, the square root of 5: they have to walk right up to each other.",
+                "",
+                "Each villager talks at most once a minute, and hears ten weighted picks from what",
+                "its partner knows rather than all of it, so news travels round a village over a",
+                "day or so rather than in minutes."
         })
         @Config.RangeDouble(min = 1.0D, max = 32.0D)
-        public double gossipRange = 8.0D;
+        public double gossipRange = 2.24D;
 
         @Config.Comment({
-                "Ceiling on how far demand can accumulate in either direction.",
-                "1.14 leaves demand unbounded and relies on the stack-size cap to bound the price.",
-                "That works, but it lets a value in saved data grow without limit, so it is capped",
-                "here. The default is high enough that the stack-size cap is still what binds."
+                "Ceiling on how far demand can accumulate in either direction. 0 means no ceiling,",
+                "which is 1.14's behaviour and the default.",
+                "",
+                "With no ceiling a trade that is sold out every day keeps getting dearer until it",
+                "reaches a full stack, and one left alone for weeks builds up a long way the other",
+                "way, so it takes as long to start rising again. Set a number to bound both: at 128,",
+                "a 1-emerald trade at the ordinary rate tops out at 7."
         })
-        @Config.RangeInt(min = 1, max = 1024)
-        public int maxDemand = 128;
+        @Config.RangeInt(min = 0, max = 100000)
+        public int maxDemand = 0;
 
         @Config.Comment({
                 "Scales the experience villagers earn from trading. 1.0 uses 1.14's own values.",
@@ -224,24 +270,32 @@ public final class ModConfig {
         public boolean levelGatedTrades = true;
 
         @Config.Comment({
-                "How many times a trade the player SELLS into can be used before running dry.",
-                "1.14's value is 16; 1.12.2 defaults to 7. Set 0 to leave trades as their author",
-                "made them.",
+                "How many times a trade the player SELLS into can be used before running dry, for",
+                "trades 1.14 has no figure of its own for. 1.12.2 defaults to 7. Set 0 to leave",
+                "selling trades as their author made them, including the ones below.",
+                "",
+                "Trades that match one of 1.14's are set to 1.14's own stock for that trade instead:",
+                "16 for everyday goods like crops, wool and meat, 12 for valuable ones like iron,",
+                "gold, diamonds and books.",
                 "",
                 "This is what makes the experience values above add up. They are 1.14's per-trade",
                 "amounts, calibrated against 1.14's stock - paying them over less than half the",
                 "trades means a villager sells out with the next level still out of reach.",
                 "",
-                "Trades that already allow more than this keep what they have, so a mod that",
+                "Trades this figure applies to are only ever raised to it, so a mod that",
                 "deliberately made something scarce is not overridden."
         })
         @Config.RangeInt(min = 0, max = 64)
         public int sellingTradeStock = 16;
 
         @Config.Comment({
-                "How many times a trade the player BUYS from can be used before running dry.",
-                "1.14's value is 12; 1.12.2 defaults to 7. Set 0 to leave trades untouched.",
-                "Lower than the selling figure, exactly as in 1.14."
+                "How many times a trade the player BUYS from can be used before running dry, for",
+                "trades 1.14 has no figure of its own for. 1.14's usual value is 12; 1.12.2 defaults",
+                "to 7. Set 0 to leave buying trades untouched, including the ones below.",
+                "",
+                "Trades that match one of 1.14's are set to 1.14's own stock for that trade instead:",
+                "3 for every enchanted tool, weapon and piece of armour, 16 for a few everyday",
+                "goods like bread and wool, 12 for the rest."
         })
         @Config.RangeInt(min = 0, max = 64)
         public int buyingTradeStock = 12;
@@ -286,14 +340,19 @@ public final class ModConfig {
         @Config.Comment({
                 "Also gate villagers whose career HAS a workstation but that have not found one.",
                 "",
-                "Off by default. On, a village with no lectern anywhere has librarians that never",
-                "restock, which is 1.14's behaviour but unforgiving on a world built before this",
-                "mod was installed. Off, they restock freely until they find one."
+                "On by default, which is 1.14's rule: a villager only restocks at its own workstation,",
+                "so a village with no lectern anywhere has librarians that never restock. Turn it off",
+                "for a world built before this mod was installed, where villages may be missing the",
+                "blocks; off, villagers restock freely until they find one.",
+                "",
+                "Careers this mod has no workstation for, such as ones added by other mods, are never",
+                "gated either way."
         })
-        public boolean strictJobSite = false;
+        public boolean strictJobSite = true;
 
         @Config.Comment({
-                "How far a villager will look for an unclaimed workstation, in blocks.",
+                "How far a villager will look for an unclaimed workstation, in blocks, in every",
+                "direction - up and down as far as sideways, as in 1.14.",
                 "",
                 "48 is 1.14's own reach, and this reaches it the same way 1.14 does: the",
                 "workstations in each chunk are indexed, and a villager queries that index instead of",
@@ -308,21 +367,6 @@ public final class ModConfig {
         public int searchRadius = 48;
 
         @Config.Comment({
-                "How far up and down a villager looks for a workstation, in blocks.",
-                "Much shallower than the horizontal reach on purpose: workstations sit at about the",
-                "villager's own level, and the search cost grows with the volume.",
-                "",
-                "Deep enough for a two-storey house and for a village built across a slope, which is",
-                "most of them once a pack is generating its own terrain.",
-                "",
-                "Still much shallower than the horizontal reach, but now for the sake of what a",
-                "villager ought to consider its own rather than to save any work - a workstation two",
-                "floors below is somebody else's."
-        })
-        @Config.RangeInt(min = 1, max = 32)
-        public int searchHeight = 8;
-
-        @Config.Comment({
                 "How close a villager must be to its workstation to count as working at it.",
                 "",
                 "Measured from the villager to the middle of the block, so the default of 1.75 means",
@@ -334,20 +378,6 @@ public final class ModConfig {
         })
         @Config.RangeDouble(min = 1.0D, max = 8.0D)
         public double workingDistance = 1.75D;
-
-        @Config.Comment({
-                "Ticks a villager may hold a workstation it has never reached before giving it up.",
-                "",
-                "Holding a claim is what stops a villager looking for work, so a claim on a block it",
-                "cannot actually walk to - across a river, behind a wall, on the far side of a door",
-                "it will not open - would freeze it for good, and it would ignore a workstation put",
-                "down at its feet. This is the escape hatch.",
-                "",
-                "Only ever applies before the first arrival. Once a villager has stood at its",
-                "workstation the claim is kept however far it wanders afterwards."
-        })
-        @Config.RangeInt(min = 20, max = 24000)
-        public int abandonUnreachedTicks = 600;
 
         @Config.Comment({
                 "Let villagers path as far as they are allowed to look for work.",
@@ -373,16 +403,21 @@ public final class ModConfig {
         public double walkSpeed = 0.6D;
 
         @Config.Comment({
-                "Which block each career works at, as 'modid:block=career'.",
+                "Which blocks each career works at, as 'modid:block=career', one block per line.",
                 "",
                 "Career names are 1.12.2's own, which abbreviates three of them: 'armor', 'weapon'",
                 "and 'tool' are the armorer, weaponsmith and toolsmith. The others are farmer,",
-                "fisherman, shepherd, fletcher, librarian, cartographer, cleric, butcher, leather",
-                "and nitwit.",
+                "fisherman, shepherd, fletcher, librarian, cartographer, cleric, butcher, leather,",
+                "mason and nitwit.",
                 "",
-                "Only the two workstations 1.12.2 already has are mapped by default. The rest of",
-                "1.14's are blocks this mod has yet to add; entries naming a block that is not",
-                "installed are ignored, so pointing a career at another mod's block is safe."
+                "A career can have as many workstations as you like: give it one line per block,",
+                "and its villagers work at whichever they reach first. 'minecraft:bookshelf=librarian'",
+                "added beside the lectern line makes both employ a librarian. A block can only",
+                "belong to one career, though - if two lines name the same block, the first wins.",
+                "",
+                "Entries naming a block that is not installed are ignored, so pointing a career at",
+                "another mod's block is safe. Future MC's workstations do not need listing here;",
+                "see compat.futureMcWorkstations."
         })
         public String[] workstations = {
                 // This mod's own workstations, one per 1.14 profession.
@@ -407,78 +442,34 @@ public final class ModConfig {
     public static final class Villages {
 
         @Config.Comment({
-                "Add workstation buildings to villages as they generate.",
+                "Which villages generate.",
                 "",
-                "1.12.2's fourteen village piece types contain no workstations at all - and no beds",
-                "either, since both arrived with 1.14 - so a village that generates normally has",
-                "almost nothing for a villager to be employed at. This fills that gap the same way",
-                "1.14 does, by building the job sites in.",
+                "MODERN: 1.14's villages, built from 1.14's own structure files - plains, desert,",
+                "savanna, taiga and snowy villages, with the workstations, beds and bells inside the",
+                "houses where 1.14 puts them, and the occasional abandoned zombie village. Blocks",
+                "1.12.2 does not have are swapped for the nearest it does.",
+                "LEGACY: 1.12.2's villages, with workstations put into the existing houses.",
                 "",
-                "These are registered as ordinary weighted village pieces, which is the same route",
-                "structure mods use for the village houses they add. Vanilla houses, another mod's",
-                "houses and these all mix into one village with no compatibility work on either side.",
+                "MODERN needs the vanilla overworld generator to lay a village out. In a world made",
+                "by another generator villages stay LEGACY.",
                 "",
-                "Only affects villages generated after this is turned on. Villages already on disk",
-                "are laid out and will not change."
+                "Only affects villages generated after the change. Villages already on disk keep",
+                "the layout they were generated with."
         })
         @Config.RequiresMcRestart
-        public boolean enabled = true;
+        public com.exiledradio.villagerbackport.village.modern.MapGenModernVillage.Style style =
+                com.exiledradio.villagerbackport.village.modern.MapGenModernVillage.Style.MODERN;
 
         @Config.Comment({
-                "How often a workshop is chosen while a village lays itself out.",
+                "In LEGACY villages, put workstations into the houses as they generate: a lectern in",
+                "the library, a smoker at the butcher's, a blast furnace and smithing table at the",
+                "blacksmith's, a brewing stand in the church, a composter beside each field, a bell at",
+                "the well, and one at random in each small house.",
                 "",
-                "Vanilla's own weights run from 3 for a small hut to 20 for a church. Higher means",
-                "picked more often, and the limits below are what actually cap the count."
+                "1.12.2's village houses have no workstations at all, so without this a 1.12.2 village",
+                "has almost nowhere for a villager to work."
         })
-        @Config.RangeInt(min = 0, max = 100)
-        @Config.RequiresMcRestart
-        public int workshopWeight = 8;
-
-        @Config.Comment({
-                "Most workshops one village may have, before its size is added.",
-                "",
-                "A fixed cap rather than a rolled one, deliberately. Vanilla rolls its limits from",
-                "the same random the whole village layout is then built with, and a mod drawing from",
-                "that stream makes villages stop being reproducible from their seed - Forge asks each",
-                "mod's handler for its weight in an order that varies between launches, so the stream",
-                "ends up in a different place each time and the village grows a different way.",
-                "",
-                "Nothing is lost by fixing it: pieces still compete for the spots along the roads, so",
-                "two villages with the same cap are not alike."
-        })
-        @Config.RangeInt(min = 1, max = 32)
-        @Config.RequiresMcRestart
-        public int workshopLimit = 6;
-
-        @Config.Comment({
-                "How often an open market stall is chosen.",
-                "",
-                "Stalls have no door, so unlike workshops they do not enlarge the village that holds",
-                "them - 1.12.2 counts doors to decide how many villagers a village supports."
-        })
-        @Config.RangeInt(min = 0, max = 100)
-        @Config.RequiresMcRestart
-        public int stallWeight = 5;
-
-        @Config.Comment({
-                "Most stalls one village may have, before its size is added.",
-                "",
-                "Set higher than the workshops on purpose. A stall has no door, and 1.12.2 sizes a",
-                "village - and so the number of villagers it supports - by counting doors. A stall",
-                "therefore adds somewhere to work without adding anybody to work there, which is the",
-                "only lever here that improves the ratio rather than moving both ends of it."
-        })
-        @Config.RangeInt(min = 1, max = 32)
-        @Config.RequiresMcRestart
-        public int stallLimit = 8;
-
-        @Config.Comment({
-                "How often the bell square is chosen. Limited to one per village either way.",
-                "Set to 0 to leave it out entirely."
-        })
-        @Config.RangeInt(min = 0, max = 100)
-        @Config.RequiresMcRestart
-        public int meetingPointWeight = 15;
+        public boolean legacyHouseWorkstations = true;
 
         @Config.Comment({
                 "How often each workstation is chosen relative to the others, as 'modid:block=weight'.",
@@ -781,6 +772,47 @@ public final class ModConfig {
         public boolean loomOnlyBannerPatterns = false;
     }
 
+    public static final class Compat {
+
+        @Config.Comment({
+                "Let villagers work at Future MC's workstations as well as this mod's own.",
+                "",
+                "Future MC adds ten of the same job blocks - barrel, composter, cartography table,",
+                "fletching table, smithing table, loom, blast furnace, smoker, grindstone and",
+                "stonecutter. With this on, each employs the same villager its twin here does, so",
+                "a fisherman takes either barrel. Does nothing unless Future MC is installed.",
+                "",
+                "These are added on top of jobs.workstations. A line there that names one of",
+                "Future MC's blocks takes priority over this."
+        })
+        public boolean futureMcWorkstations = true;
+
+        @Config.Comment({
+                "Which copy of each block stays visible when Future MC is installed too.",
+                "",
+                "Both mods add the same eleven blocks with the same recipes, which puts two of",
+                "everything in JEI and leaves two recipes competing for each crafting grid. This",
+                "picks one of each pair to keep:",
+                "",
+                "  KEEP_OURS       keep this mod's blocks, hide Future MC's",
+                "  KEEP_FUTURE_MC  keep Future MC's blocks, hide this mod's",
+                "  SHOW_BOTH       hide nothing",
+                "",
+                "A hidden block still exists and still works - anything already placed is",
+                "untouched, and villagers still take jobs at it. It loses its crafting recipe and",
+                "its place in JEI and the creative menu, and villages are no longer built with it.",
+                "",
+                "Two exceptions. The smithing table kept is always Future MC's, because theirs",
+                "upgrades to netherite and this mod's is decorative. And the lectern is never",
+                "hidden, because Future MC has none.",
+                "",
+                "Does nothing unless Future MC is installed."
+        })
+        @Config.RequiresMcRestart
+        public com.exiledradio.villagerbackport.compat.FutureMc.Duplicates futureMcDuplicates =
+                com.exiledradio.villagerbackport.compat.FutureMc.Duplicates.KEEP_OURS;
+    }
+
     public static final class Homes {
 
         @Config.Comment({
@@ -819,12 +851,11 @@ public final class ModConfig {
                 "Villagers spawn iron golems when frightened, on 1.14's rules.",
                 "",
                 "A panicking villager tries every 100 ticks and needs two others nearby that are also",
-                "eligible. Eligible means: employed, slept within the last 24000 ticks, worked at its",
-                "job site within the last 36000, and no golem seen in the last 600.",
+                "eligible. Eligible means: grown, slept within the last 24000 ticks, and no golem seen",
+                "in the last 600. A job is not needed, so nitwits and unemployed villagers count.",
                 "",
-                "Those conditions are why this needs the rest of the mod running. A village whose",
-                "villagers cannot reach a bed or a workstation will never produce a golem, exactly as",
-                "in 1.14."
+                "That is why this needs the rest of the mod running. A village whose villagers cannot",
+                "reach a bed will never produce a golem, as in the game."
         })
         public boolean golemSpawning = true;
 
@@ -842,7 +873,7 @@ public final class ModConfig {
         public int sleepStartTime = 12000;
 
         @Config.RangeInt(min = 0, max = 23999)
-        public int sleepEndTime = 100;
+        public int sleepEndTime = 10;
 
         @Config.Comment({
                 "Report village life in chat: beds claimed, villagers sleeping, gossip exchanged, and",
@@ -930,6 +961,14 @@ public final class ModConfig {
                 "villager levels up. Turning this off stops both."
         })
         public boolean showLevelBadge = true;
+
+        @Config.Comment({
+                "Villagers hold up what they would give you for the item in your hand, as in the game.",
+                "Hold wheat near a farmer that buys wheat and it holds up an emerald; with several",
+                "trades for the same item it cycles through them. Only when you are within about four",
+                "blocks, and not while it sleeps or trades."
+        })
+        public boolean showTradeItems = true;
 
         @Config.Comment({
                 "Give villagers 1.14's appearance - the redrawn body, a biome outfit, and a",

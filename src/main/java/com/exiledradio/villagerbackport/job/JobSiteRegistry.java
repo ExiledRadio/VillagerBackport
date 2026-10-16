@@ -2,6 +2,7 @@ package com.exiledradio.villagerbackport.job;
 
 import com.exiledradio.villagerbackport.ModConfig;
 import com.exiledradio.villagerbackport.VillagerBackport;
+import com.exiledradio.villagerbackport.compat.FutureMc;
 import com.exiledradio.villagerbackport.compat.VillagerAccess;
 
 import net.minecraft.block.Block;
@@ -17,7 +18,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Which block a villager of a given career goes to work at.
@@ -37,17 +41,22 @@ import java.util.Map;
  * share a workstation.
  *
  * <h2>Only what exists</h2>
- * The defaults cover the workstations 1.12.2 already has: brewing stands and cauldrons. The rest of
- * 1.14's are blocks this mod has yet to add, and a career with no workstation registered is not
- * gated at all - it restocks freely. That matters, because gating a career on a block that does not
- * exist would recreate the permanently-stuck villager this mod set out to fix.
+ * An entry naming a block that is not installed is skipped, and a career left with no workstation
+ * at all is not gated - it restocks freely. That matters, because gating a career on a block that
+ * does not exist would recreate the permanently-stuck villager this mod set out to fix.
  *
- * <p>The mapping is configurable, so a pack can point a career at any block it likes.
+ * <h2>More than one block per career</h2>
+ * A career may be listed against any number of blocks, and a villager of that career works at
+ * whichever of them it reaches first. A block still offers exactly one career, because an
+ * unemployed villager arriving at it has to become something. This is what lets another mod's
+ * barrel employ a fisherman alongside this mod's own - see {@link FutureMc}.
+ *
+ * <p>The mapping is configurable, so a pack can point a career at any blocks it likes.
  */
 public final class JobSiteRegistry {
 
-    /** Career name to the block its villagers work at. */
-    private static final Map<String, Block> SITES = new LinkedHashMap<String, Block>();
+    /** Career name to the blocks its villagers work at. */
+    private static final Map<String, Set<Block>> SITES = new LinkedHashMap<String, Set<Block>>();
 
     /** The same mapping the other way round, for working out what job a block offers. */
     private static final Map<Block, String> CAREERS_BY_BLOCK = new LinkedHashMap<Block, String>();
@@ -64,7 +73,14 @@ public final class JobSiteRegistry {
         SITES.clear();
         CAREERS_BY_BLOCK.clear();
 
-        for (String entry : ModConfig.jobs.workstations) {
+        List<String> entries = new ArrayList<String>();
+        Collections.addAll(entries, ModConfig.jobs.workstations);
+
+        // After the configured ones, so a pack that has already mapped one of these blocks to a
+        // career of its own choosing keeps its answer.
+        entries.addAll(FutureMc.mappings());
+
+        for (String entry : entries) {
             String[] parts = entry.split("=", 2);
             if (parts.length != 2) {
                 VillagerBackport.LOGGER.warn(
@@ -81,28 +97,54 @@ public final class JobSiteRegistry {
                 continue;
             }
 
-            SITES.put(parts[1].trim(), block);
-            CAREERS_BY_BLOCK.put(block, parts[1].trim());
+            String career = parts[1].trim();
+
+            // A block offers one career. The first line to name it wins, and a later one is not
+            // added to the second career either - a villager working at a block that would have
+            // given it a different job is a contradiction better refused than half-kept.
+            String existing = CAREERS_BY_BLOCK.get(block);
+            if (existing != null) {
+                if (!existing.equals(career)) {
+                    VillagerBackport.LOGGER.warn(
+                            "Ignoring workstation entry '{}'; that block already belongs to '{}'.",
+                            entry, existing);
+                }
+                continue;
+            }
+
+            Set<Block> blocks = SITES.get(career);
+            if (blocks == null) {
+                blocks = new LinkedHashSet<Block>();
+                SITES.put(career, blocks);
+            }
+
+            blocks.add(block);
+            CAREERS_BY_BLOCK.put(block, career);
         }
 
         loaded = true;
-        VillagerBackport.LOGGER.info("Loaded {} villager workstation mappings.", SITES.size());
+        VillagerBackport.LOGGER.info("Loaded {} villager workstations for {} careers.",
+                CAREERS_BY_BLOCK.size(), SITES.size());
     }
 
     /**
-     * @return the block this villager works at, or null if its career has none registered
+     * @return the blocks this villager works at, empty if its career has none registered
      *
-     * <p>Null is the ungated case and is deliberately common right now - most of 1.14's workstations
-     * are blocks this mod has not added yet.
+     * <p>Empty is the ungated case: a career nobody mapped, or one whose blocks are all missing.
      */
-    @Nullable
-    public static Block siteFor(EntityVillager villager) {
+    public static Set<Block> sitesFor(EntityVillager villager) {
         if (!loaded) {
             load();
         }
 
         String career = careerName(villager);
-        return career == null ? null : SITES.get(career);
+        Set<Block> blocks = career == null ? null : SITES.get(career);
+        return blocks == null ? Collections.<Block>emptySet() : blocks;
+    }
+
+    /** @return true if this villager's career has at least one workstation to go to. */
+    public static boolean hasSite(EntityVillager villager) {
+        return !sitesFor(villager).isEmpty();
     }
 
     /**
@@ -141,8 +183,7 @@ public final class JobSiteRegistry {
 
     /** @return true if the block at this position is the villager's workstation. */
     public static boolean isSiteFor(EntityVillager villager, World world, BlockPos pos) {
-        Block wanted = siteFor(villager);
-        return wanted != null && world.getBlockState(pos).getBlock() == wanted;
+        return sitesFor(villager).contains(world.getBlockState(pos).getBlock());
     }
 
     /**

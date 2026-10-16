@@ -14,16 +14,17 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import javax.annotation.Nullable;
 
 /**
- * Getting a villager out of a bed you want.
+ * Clicking on a sleeping villager, or on the bed it is sleeping in.
  *
- * <h2>Why this has to intercept rather than add</h2>
- * A sleeping villager stands in the same block as its bed, so a right-click aimed at the bed hits
- * the villager instead - and a right-click on a villager opens the trade screen. Both things then
- * happen at once: the shop opens and the sleeper is bundled out from under it.
+ * <h2>Either click wakes it</h2>
+ * A villager wakes when its bed is used - a right-click on the bed - or when it is right-clicked
+ * itself, and goes back to sleep a moment later if the bed is still free. The wiki gives the first
+ * on its Villager page and the second on its Bed page; both are honoured. The trade screen never
+ * opens from a click on a sleeper.
  *
- * <p>So the interaction is claimed outright while a villager is asleep. Waking it is the whole of
- * what the click does, and the trade screen stays shut. That is the useful reading of the gesture:
- * nobody right-clicks a bed at midnight hoping to buy something.
+ * <p>Both clicks are still claimed outright here. A sleeping villager stands in the same block as its
+ * bed, so a click aimed at the bed lands on the villager, and a click on a villager would otherwise
+ * open its trade screen in the middle of the night.
  *
  * <p>Runs at the highest priority so it is decided before anything else looks at the click -
  * including this mod's own pricing, which sits at the lowest and skips cancelled interactions.
@@ -31,30 +32,30 @@ import javax.annotation.Nullable;
 public final class BedInteraction {
 
     /**
-     * Right-clicking a sleeping villager wakes it rather than trading with it.
+     * How long a villager woken by its bed being used stays up before trying again. The current
+     * game's sleep task waits 40 ticks after it ends: long enough for the player to take the bed
+     * with a second click, after which the villager finds it occupied and gives it up.
      */
+    private static final int BED_USED_TICKS = 40;
+
+    /** Right-clicking a sleeping villager wakes it, as the wiki's Bed page describes, and never trades. */
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
         if (event.getWorld().isRemote || !ModConfig.homes.enabled) {
             return;
         }
 
-        if (!(event.getTarget() instanceof EntityVillager)) {
-            return;
-        }
-
-        EntityVillager villager = (EntityVillager) event.getTarget();
-
-        if (HomeSite.isSleeping(villager)) {
-            HomeSite.disturb(villager);
-            VillageDebug.say(villager, "sleep: turned out of bed");
-
+        if (event.getTarget() instanceof EntityVillager
+                && HomeSite.isSleeping((EntityVillager) event.getTarget())) {
+            EntityVillager sleeper = (EntityVillager) event.getTarget();
+            HomeSite.disturb(sleeper, BED_USED_TICKS);
+            VillageDebug.say(sleeper, "sleep: woken by a player");
             event.setCanceled(true);
         }
     }
 
     /**
-     * Right-clicking the bed itself wakes whoever is in it.
+     * Right-clicking a bed a villager is asleep in wakes the villager, without the player lying down.
      *
      * <p>The click can land on either half of the bed and the sleeper is recorded against the head,
      * so a click on the foot is followed round to the other end before asking who is in it.
@@ -75,8 +76,8 @@ public final class BedInteraction {
             return;
         }
 
-        HomeSite.disturb(sleeper);
-        VillageDebug.say(sleeper, "sleep: turned out of bed");
+        HomeSite.disturb(sleeper, BED_USED_TICKS);
+        VillageDebug.say(sleeper, "sleep: woken by its bed being used");
 
         event.setCanceled(true);
     }

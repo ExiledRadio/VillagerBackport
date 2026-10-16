@@ -31,34 +31,6 @@ public final class RestockRules {
     }
 
     /**
-     * @return true if a restock could happen right now, leaving aside where the villager is standing
-     *
-     * <p>Everything a villager cannot change by walking somewhere: the clock, the daily allowance
-     * and the cooldown. What it can change - being at its workstation - is deliberately not asked
-     * here, because this is the question asked <em>before</em> setting off.
-     */
-    public static boolean couldRestockNow(EntityVillager villager) {
-        if (!ModConfig.restock.enabled) {
-            return false;
-        }
-
-        // Not while somebody is looking at the shop. 1.14 cannot restock a villager that has a
-        // customer because restocking happens in a work task and a villager being traded with is not
-        // running one - it is stood still, facing the player, for as long as the screen is open.
-        //
-        // Doing it anyway refills the shelves under the player's hands mid-session: trades that were
-        // sold out a moment ago silently work again, stock counts jump, and a daily allowance is
-        // spent on a villager that was going to be restocked properly the moment the player walked
-        // away. It also lets one player hold a villager open and drain it past its daily limit.
-        if (villager.getCustomer() != null) {
-            return false;
-        }
-
-        return isWorkingHours(villager.world)
-                && hasAllowance(villager, villager.world.getTotalWorldTime());
-    }
-
-    /**
      * @return true if it is a time of day a villager would be at work
      *
      * <h2>Why a clock is part of restocking at all</h2>

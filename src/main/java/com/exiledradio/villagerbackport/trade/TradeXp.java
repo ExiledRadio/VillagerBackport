@@ -93,7 +93,7 @@ public final class TradeXp {
 
         // The player paying emeralds means they are buying from the villager. This is the same test
         // vanilla uses in EntityVillager.useRecipe to decide whether the villager gains wealth.
-        int[] table = recipe.getItemToBuy().getItem() == Items.EMERALD ? BUYING : SELLING;
+        int[] table = PriceEngine.pricedStack(recipe).getItem() == Items.EMERALD ? BUYING : SELLING;
 
         int base = table[index];
         return Math.max(0, Math.round((float) base * (float) ModConfig.pricing.xpMultiplier));

@@ -1,6 +1,7 @@
 package com.exiledradio.villagerbackport.home;
 
 import com.exiledradio.villagerbackport.ModConfig;
+import com.exiledradio.villagerbackport.job.ClaimReach;
 import com.exiledradio.villagerbackport.job.WorkPathing;
 
 import net.minecraft.entity.ai.EntityAIBase;
@@ -60,6 +61,14 @@ public final class EntityAISleep extends EntityAIBase {
     private BlockPos bed;
     private int walkTime;
 
+    /** Whether the last attempt found a way to the bed. */
+    private boolean onTheWay;
+
+    /** After failing to find a way, how long before trying again. */
+    private static final long RETRY_TICKS = 200L;
+
+    private long retryAt;
+
     public EntityAISleep(EntityVillager villager) {
         this.villager = villager;
 
@@ -83,6 +92,15 @@ public final class EntityAISleep extends EntityAIBase {
             return false;
         }
 
+        if (this.villager.world.getTotalWorldTime() < this.retryAt) {
+            return false;
+        }
+
+        // A frightened villager does not go to bed, and one already in bed gets out - see below.
+        if (PanicWatch.isPanicking(this.villager)) {
+            return false;
+        }
+
         this.bed = HomeSite.validated(this.villager);
         return this.bed != null;
     }
@@ -92,7 +110,10 @@ public final class EntityAISleep extends EntityAIBase {
         this.walkTime = 0;
 
         if (!HomeSite.isAtBed(this.villager)) {
-            WorkPathing.walkTo(this.villager, this.bed, ModConfig.jobs.walkSpeed);
+            this.onTheWay = WorkPathing.walkTo(this.villager, this.bed, ModConfig.jobs.walkSpeed);
+            ClaimReach.walked(this.villager, ClaimReach.Claim.HOME, this.onTheWay);
+        } else {
+            this.onTheWay = true;
         }
     }
 
@@ -111,12 +132,30 @@ public final class EntityAISleep extends EntityAIBase {
             return false;
         }
 
+        // Attacked, or a zombie or illager in sight: the villager wakes and runs, and goes back to
+        // bed once the fright has passed, as the game's villagers do.
+        if (PanicWatch.isPanicking(this.villager)) {
+            return false;
+        }
+
         if (HomeSite.isSleeping(this.villager)) {
             return stillInBed();
         }
 
+        // No way to the bed at all: stand down rather than stare at a wall, and try again later. A
+        // minute of this and the villager gives the bed up - see ClaimReach.
+        if (!this.onTheWay) {
+            this.retryAt = this.villager.world.getTotalWorldTime() + RETRY_TICKS;
+            return false;
+        }
+
         // Still walking. A bed it cannot get to tonight is not worth standing outside until dawn.
-        return ++this.walkTime <= WALK_TIMEOUT;
+        if (++this.walkTime > WALK_TIMEOUT) {
+            ClaimReach.failed(this.villager, ClaimReach.Claim.HOME);
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -127,13 +166,18 @@ public final class EntityAISleep extends EntityAIBase {
         }
 
         if (HomeSite.isAtBed(this.villager)) {
-            fallAsleep();
+            // 1.14's SleepAtHomeTask will not start in an occupied bed. The villager stays up beside
+            // it, and HomeClaims has it give the bed up - see there.
+            if (!HomeSite.isOccupiedByOther(this.villager, this.bed)) {
+                fallAsleep();
+            }
             return;
         }
 
         // Navigation gives up for all sorts of reasons; ask again periodically rather than assume.
         if (this.villager.getNavigator().noPath() && this.walkTime % 40 == 0) {
-            WorkPathing.walkTo(this.villager, this.bed, ModConfig.jobs.walkSpeed);
+            this.onTheWay = WorkPathing.walkTo(this.villager, this.bed, ModConfig.jobs.walkSpeed);
+            ClaimReach.walked(this.villager, ClaimReach.Claim.HOME, this.onTheWay);
         }
     }
 
@@ -147,6 +191,7 @@ public final class EntityAISleep extends EntityAIBase {
                 // otherwise it climbs straight back in against whoever is pushing it.
                 HomeSite.disturb(this.villager, SHOVED_COOLDOWN);
                 this.villager.setNoGravity(false);
+                SleepPose.apply(this.villager, false);
                 VillageDebug.say(this.villager, "sleep: pushed out of bed");
             }
         }
@@ -155,6 +200,7 @@ public final class EntityAISleep extends EntityAIBase {
     }
 
     private void fallAsleep() {
+        ClaimReach.reached(this.villager, ClaimReach.Claim.HOME);
         this.villager.getNavigator().clearPath();
         HomeSite.setSleeping(this.villager, true);
 
@@ -166,6 +212,7 @@ public final class EntityAISleep extends EntityAIBase {
         this.villager.motionX = 0.0D;
         this.villager.motionZ = 0.0D;
 
+        SleepPose.apply(this.villager, true);
         lieStill();
         SleepSync.broadcast(this.villager);
         VillageDebug.say(this.villager, "sleep: went to bed");
@@ -246,6 +293,7 @@ public final class EntityAISleep extends EntityAIBase {
                 this.bed.getX() + 0.5D,
                 this.bed.getY() + BED_TOP,
                 this.bed.getZ() + 0.5D);
+        SleepPose.apply(this.villager, false);
 
         SleepSync.broadcast(this.villager);
         VillageDebug.say(this.villager, "sleep: woke up");
@@ -257,7 +305,7 @@ public final class EntityAISleep extends EntityAIBase {
      * <p>1.14's schedule turns REST on at 12000 and leaves it at daybreak, so the window runs
      * through midnight - which is why this handles a start later than its end.
      */
-    static boolean isBedtime(EntityVillager villager) {
+    public static boolean isBedtime(EntityVillager villager) {
         long timeOfDay = villager.world.getWorldTime() % TICKS_PER_DAY;
         int start = ModConfig.homes.sleepStartTime;
         int end = ModConfig.homes.sleepEndTime;

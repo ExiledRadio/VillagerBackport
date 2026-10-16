@@ -3,9 +3,11 @@ package com.exiledradio.villagerbackport.client;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -35,6 +37,9 @@ public final class SleepRenderer {
      * pillow. A villager is shorter and differently proportioned, and 1.5 is where it lands right.
      */
     private static final double ALONG_BED = 1.5D;
+
+    /** 1.14's eye height for the sleeping pose. */
+    private static final double SLEEPING_EYE_HEIGHT = 0.2D;
 
     /**
      * Vanilla's own bed angles, from {@code EntityPlayer.getBedOrientationInDegrees}.
@@ -70,6 +75,8 @@ public final class SleepRenderer {
         }
 
         EnumFacing facing = facingOf(event.getEntity().world.getBlockState(bed));
+
+        lightFromBed((EntityVillager) event.getEntity());
 
         GlStateManager.pushMatrix();
 
@@ -110,6 +117,28 @@ public final class SleepRenderer {
     }
 
     /** @return which way the bed points, or north if the block is no longer a bed. */
+    /**
+     * Lights a sleeper by the light where it lies, not where its head would be standing up.
+     *
+     * <p>An entity is lit by sampling the block at its eye height, and a villager's eye height is
+     * fixed at 1.62 whatever it is doing. Lying in bed that lands in the block two above the bed, so
+     * a solid block there - an ordinary ceiling over a bed set into a wall - left the whole model
+     * drawn in darkness. 1.14 puts a sleeper's eyes 0.2 up, inside the bed, and that is where the
+     * light is taken from here. The renderer has already set the lightmap from the wrong block by
+     * the time this event fires, so it is simply set again.
+     */
+    private static void lightFromBed(EntityVillager villager) {
+        BlockPos at = new BlockPos(
+                MathHelper.floor(villager.posX),
+                MathHelper.floor(villager.posY + SLEEPING_EYE_HEIGHT),
+                MathHelper.floor(villager.posZ));
+
+        int light = villager.world.isBlockLoaded(at) ? villager.world.getCombinedLight(at, 0) : 0;
+
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit,
+                (float) (light % 65536), (float) (light / 65536));
+    }
+
     private static EnumFacing facingOf(IBlockState state) {
         return state.getBlock() instanceof BlockBed
                 ? state.getValue(BlockBed.FACING)

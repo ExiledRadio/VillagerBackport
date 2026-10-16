@@ -1,6 +1,7 @@
 package com.exiledradio.villagerbackport.client;
 
 import com.exiledradio.villagerbackport.ModConfig;
+import com.exiledradio.villagerbackport.trade.PriceEngine;
 import com.exiledradio.villagerbackport.trade.VillagerLevel;
 
 import io.netty.buffer.Unpooled;
@@ -562,10 +563,10 @@ public class GuiVillagerMerchant extends GuiContainer {
         }
 
         if (isOverIcon(mouseX, this.guiLeft + 10)) {
-            return recipe.getItemToBuy();
+            return PriceEngine.pricedStack(recipe);
         }
         if (isOverIcon(mouseX, this.guiLeft + 40)) {
-            return recipe.getSecondItemToBuy();
+            return PriceEngine.unpricedStack(recipe);
         }
         if (isOverIcon(mouseX, this.guiLeft + 73)) {
             return recipe.getItemToSell();
@@ -602,9 +603,12 @@ public class GuiVillagerMerchant extends GuiContainer {
             MerchantRecipe recipe = recipes.get(index);
             int y = this.guiTop + 19 + row * ROW_HEIGHT;
 
-            drawCost(recipe.getItemToBuy(), MerchantOverlay.basePrice(index), this.guiLeft + 10, y);
+            // The priced stack goes in the first column whichever slot the recipe keeps it in, so
+            // an enchanted book reads emeralds-then-book as it does in 1.14 and the struck-out
+            // price always has the gap beside the first column to sit in.
+            drawCost(PriceEngine.pricedStack(recipe), MerchantOverlay.basePrice(index), this.guiLeft + 10, y);
 
-            ItemStack second = recipe.getSecondItemToBuy();
+            ItemStack second = PriceEngine.unpricedStack(recipe);
             if (!second.isEmpty()) {
                 drawStack(second, this.guiLeft + 40, y);
             }
@@ -652,17 +656,8 @@ public class GuiVillagerMerchant extends GuiContainer {
      * merchant texture drawn across the middle of the original.
      */
     private void drawCost(ItemStack cost, int basePrice, int x, int y) {
-        // Only ever drawn for a price that went up.
-        //
-        // Demand cannot make a trade cheaper than it started - 1.14 floors the surcharge at zero in
-        // MerchantOffer.getCostA, so demand raises a price or leaves it alone, and a trade nobody
-        // buys falls back towards its base rather than below it. Discounts in 1.14 come from
-        // specialPrice, which gossip and Hero of the Village drive, and none of that exists here yet.
-        //
-        // So a recorded base above the current price is not a discount, it is a stale figure - two
-        // trades of the same items share a key, and vanilla re-rolls prices when it unlocks a tier,
-        // which can leave the base belonging to a trade the villager no longer offers. Drawing that
-        // as a saving would be inventing one.
+        // Either direction: demand and a grudge raise a price, goodwill and a cure lower it, and the
+        // game strikes out the original whenever the two differ.
         if (basePrice <= 0 || basePrice == cost.getCount()) {
             drawStack(cost, x, y);
             return;
@@ -671,8 +666,14 @@ public class GuiVillagerMerchant extends GuiContainer {
         ItemStack original = cost.copy();
         original.setCount(basePrice);
 
-        drawStack(original, x, y);
-        drawStack(cost, x + 14, y);
+        // The item once, with the original count on it, and the price now as a bare number beside
+        // it - the way the game draws it. A count of one is written out, where it would normally be
+        // left off, because "1" next to a struck-out "3" is the whole point.
+        this.itemRender.renderItemAndEffectIntoGUI(original, x, y);
+        this.itemRender.renderItemOverlayIntoGUI(this.fontRenderer, original, x, y,
+                original.getCount() == 1 ? "1" : null);
+        this.itemRender.renderItemOverlayIntoGUI(this.fontRenderer, cost, x + 14, y,
+                cost.getCount() == 1 ? "1" : null);
 
         // Over the item, or the line lands underneath it and is never seen.
         GlStateManager.pushMatrix();

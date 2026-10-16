@@ -51,13 +51,40 @@ public final class WorkPathing {
         }
     }
 
-    /** Starts the villager walking to the workstation, with the longer reach for the path itself. */
-    public static void walkTo(EntityVillager villager, BlockPos pos, double speed) {
+    /**
+     * Starts the villager walking to the workstation, with the longer reach for the path itself.
+     *
+     * <h2>Only a path that gets there</h2>
+     * The navigator will happily build a path to the closest point it can reach and call that a
+     * success. For a workstation on the far side of a fence that point is the fence, and a villager
+     * sent along it walks into the corner nearest its workstation and stays pressed against it -
+     * every few seconds, all day, with every other villager whose workstation lies the same way.
+     *
+     * <p>So a path counts only if it ends next to the target. One that falls short is dropped before
+     * the villager takes a step, and reported as no path - which is what lets the game's rule apply,
+     * that a villager unable to reach its workstation or bed for a minute gives it up.
+     *
+     * @return true if a path reaching the target was found and the villager is on its way
+     */
+    public static boolean walkTo(EntityVillager villager, BlockPos pos, double speed) {
         IAttributeInstance range = borrow(villager);
 
         try {
-            villager.getNavigator().tryMoveToXYZ(
-                    pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, speed);
+            if (!villager.getNavigator().tryMoveToXYZ(
+                    pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, speed)) {
+                return false;
+            }
+
+            Path path = villager.getNavigator().getPath();
+            net.minecraft.pathfinding.PathPoint end = path == null ? null : path.getFinalPathPoint();
+
+            if (end == null || Math.abs(end.x - pos.getX()) > 1
+                    || Math.abs(end.y - pos.getY()) > 1 || Math.abs(end.z - pos.getZ()) > 1) {
+                villager.getNavigator().clearPath();
+                return false;
+            }
+
+            return true;
         } finally {
             give(range);
         }

@@ -83,6 +83,9 @@ public final class ModBlocks {
         add(event, "stonecutter", new BlockStonecutter(rock, SoundType.STONE, 3.5F, STONECUTTER_SHAPE, true));
         add(event, "bell", new BlockBell(rock, SoundType.METAL, 5.0F, BELL_SHAPE, true));
 
+        // Not a workstation, but what 1.14's villages are lit with.
+        add(event, "lantern", new BlockLantern());
+
         // Registered alongside the blocks so it exists before any world loads one.
         net.minecraftforge.fml.common.registry.GameRegistry.registerTileEntity(
                 TileEntityComposter.class, new ResourceLocation(VillagerBackport.MOD_ID, "composter"));

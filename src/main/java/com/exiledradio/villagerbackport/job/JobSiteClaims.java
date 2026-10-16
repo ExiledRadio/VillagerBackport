@@ -47,6 +47,13 @@ import java.util.Set;
  */
 public final class JobSiteClaims {
 
+    /** How close a villager has to come to a workstation to take its job. */
+    private static final double FULL_CLAIM_RANGE = 2.0D;
+
+    /** Entity statuses 1.12.2 turns into villager particles. */
+    private static final byte ANGRY_PARTICLES = 13;
+    private static final byte HAPPY_PARTICLES = 14;
+
     /**
      * Ticks between attempts for a villager with no workstation.
      *
@@ -81,7 +88,9 @@ public final class JobSiteClaims {
             return;
         }
 
-        if (villager.isChild() || villager.getCustomer() != null) {
+        // Claiming only happens awake, as in the game.
+        if (villager.isChild() || villager.getCustomer() != null
+                || com.exiledradio.villagerbackport.home.HomeSite.isSleeping(villager)) {
             return;
         }
 
@@ -93,25 +102,30 @@ public final class JobSiteClaims {
         update(villager);
     }
 
-    /** Claims a workstation if there is one to claim, and takes the job if standing at it. */
+    /** Claims a workstation if there is one to claim, and takes the job it offers. */
     public static void update(EntityVillager villager) {
         BlockPos site = JobSite.validated(villager);
 
         if (site != null) {
             if (JobSite.isAtSite(villager)) {
-                JobSite.markReached(villager);
-            } else if (JobSite.isUnreachedFor(villager, ModConfig.jobs.abandonUnreachedTicks)) {
-                // Holding a claim is what stops a villager searching, so a claim it can never get to
-                // would freeze it for good - it would ignore a workstation placed at its feet. The
-                // goal that walks there used to be what noticed this, which was no good: that goal
-                // only runs when it wins the movement mutex, so a villager could hold an unreachable
-                // claim indefinitely without anything ever reconsidering it.
+                ClaimReach.reached(villager, ClaimReach.Claim.JOB);
+            } else if (ClaimReach.givenUp(villager, ClaimReach.Claim.JOB)) {
+                // 1.14's StayNearPointTask: a minute of being unable to walk to its workstation and
+                // a villager lets it go, whether it has been there before or never once made it.
+                // Holding a claim is what stops a villager searching, so a claim it can no longer
+                // get to would otherwise freeze it for good.
                 //
                 // Recorded as failed on the way out, or the next search would pick the very same
                 // block again for the very same reason - it is still the nearest - and the villager
                 // would spend the rest of its life alternating between claiming and giving up.
                 UnreachableSites.remember(villager, site, villager.world.getTotalWorldTime());
                 JobSite.clear(villager);
+                ClaimReach.reached(villager, ClaimReach.Claim.JOB);
+
+                // The game's angry particles for a workstation the villager could not get to.
+                villager.world.setEntityState(villager, ANGRY_PARTICLES);
+                com.exiledradio.villagerbackport.home.VillageDebug.say(villager,
+                        "work: gave up on a workstation it could not reach");
                 site = null;
             }
         }
@@ -120,7 +134,7 @@ public final class JobSiteClaims {
             claimNearby(villager);
         }
 
-        takeJobIfAtSite(villager);
+        takeJob(villager);
     }
 
     /**
@@ -282,12 +296,11 @@ public final class JobSiteClaims {
     }
 
     /**
-     * Called when a villager reaches its workstation: the claim is now its for keeps, and if it had
-     * no job it takes the one the block offers.
+     * Called when a villager reaches its workstation: the claim is now its for keeps.
      */
     public static void onArrival(EntityVillager villager) {
-        JobSite.markReached(villager);
-        takeJobIfAtSite(villager);
+        ClaimReach.reached(villager, ClaimReach.Claim.JOB);
+        takeJob(villager);
 
         // 1.14 stamps LAST_WORKED_AT_POI from the task that uses the workstation, and golem
         // spawning reads it: a villager that has not been to work in a day and a half does not
@@ -303,25 +316,27 @@ public final class JobSiteClaims {
     /**
      * Takes the job the claimed workstation offers, if the villager has not got one.
      *
-     * <p>Tied to standing at the block rather than to holding the claim, so a villager cannot claim a
-     * lectern across the village and become a librarian without ever walking to it. For one already
-     * beside a workstation those are the same moment, which is the point.
+     * <h2>Within two blocks of it</h2>
+     * Spotting a workstation only stakes a provisional claim: the villager sets off towards it, and
+     * gives the claim up if it cannot get there within a minute - see {@link #update}. The claim
+     * becomes its own, and the profession with it, once the villager is within two blocks of the
+     * block's centre, and it gives off green particles as it does.
      */
-    public static void takeJobIfAtSite(EntityVillager villager) {
+    public static void takeJob(EntityVillager villager) {
         if (!Employment.isUnemployed(villager)) {
             return;
         }
 
         BlockPos site = JobSite.validated(villager);
-        if (site == null || !JobSite.isAtSite(villager)) {
+        if (site == null || villager.getDistanceSqToCenter(site) > FULL_CLAIM_RANGE * FULL_CLAIM_RANGE) {
             return;
         }
 
         String career = JobSiteRegistry.careerForBlock(
                 villager.world.getBlockState(site).getBlock());
 
-        if (career != null) {
-            Employment.assign(villager, career);
+        if (career != null && Employment.assign(villager, career)) {
+            villager.world.setEntityState(villager, HAPPY_PARTICLES);
         }
     }
 
@@ -354,16 +369,15 @@ public final class JobSiteClaims {
             if (!ModConfig.jobs.professionsFromWorkstations) {
                 return null;
             }
-        } else if (JobSiteRegistry.siteFor(villager) == null) {
+        } else if (!JobSiteRegistry.hasSite(villager)) {
             // A career with no workstation registered has nowhere to go, and nothing is gated on it.
             return null;
         }
 
-        Block wanted = unemployed ? null : JobSiteRegistry.siteFor(villager);
+        Set<Block> wanted = unemployed ? null : JobSiteRegistry.sitesFor(villager);
 
         World world = villager.world;
         int radius = ModConfig.jobs.searchRadius;
-        int height = ModConfig.jobs.searchHeight;
         BlockPos origin = new BlockPos(villager);
 
         // Every claim that could collide with one made here, fetched once - see JobSite.claimsNear.
@@ -384,15 +398,14 @@ public final class JobSiteClaims {
             for (int chunkZ = minChunkZ; chunkZ <= maxChunkZ; chunkZ++) {
 
                 for (BlockPos pos : WorkstationIndex.workstationsIn(world, chunkX, chunkZ)) {
-                    // The index knows the whole column, so the reach is applied here: square
-                    // horizontally, and much shallower vertically.
-                    if (Math.abs(pos.getX() - origin.getX()) > radius
-                            || Math.abs(pos.getZ() - origin.getZ()) > radius
-                            || Math.abs(pos.getY() - origin.getY()) > height) {
+                    // The index knows the whole column, so the reach is applied here, and it is
+                    // 1.14's: a sphere, the same distance in every direction. A shallow box missed
+                    // a workstation two floors up or in a basement that 1.14 would have found.
+                    if (origin.distanceSq(pos) > (double) radius * radius) {
                         continue;
                     }
 
-                    if (!unemployed && world.getBlockState(pos).getBlock() != wanted) {
+                    if (!unemployed && !wanted.contains(world.getBlockState(pos).getBlock())) {
                         continue;
                     }
 
@@ -409,6 +422,7 @@ public final class JobSiteClaims {
 
         if (best != null) {
             JobSite.set(villager, best);
+            ClaimReach.reached(villager, ClaimReach.Claim.JOB);
             com.exiledradio.villagerbackport.home.VillageDebug.say(villager,
                     "work: claimed " + villager.world.getBlockState(best).getBlock().getLocalizedName()
                             + " at " + best.getX() + ", " + best.getY() + ", " + best.getZ());
@@ -427,12 +441,14 @@ public final class JobSiteClaims {
      * nothing like one standing beside a free lectern it cannot path to, and from outside the two
      * look identical - a villager doing nothing.
      */
-    private static void report(EntityVillager villager, boolean unemployed, Block wanted, int candidates) {
+    private static void report(EntityVillager villager, boolean unemployed, Set<Block> wanted,
+                               int candidates) {
         if (candidates == 0) {
             com.exiledradio.villagerbackport.home.VillageDebug.repeat(villager, "work-none",
                     unemployed
                             ? "work: no free workstation within " + ModConfig.jobs.searchRadius + " blocks"
-                            : "work: no free " + (wanted == null ? "workstation" : wanted.getLocalizedName())
+                            : "work: no free " + (wanted == null || wanted.isEmpty()
+                                    ? "workstation" : wanted.iterator().next().getLocalizedName())
                                     + " within " + ModConfig.jobs.searchRadius + " blocks"
                                     + " (it is already employed, so only its own kind counts)");
             return;

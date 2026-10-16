@@ -1,0 +1,108 @@
+{
+  "pools": [
+    {
+      "rolls": {
+        "min": 3.0,
+        "max": 8.0
+      },
+      "entries": [
+        {
+          "type": "item",
+          "name": "minecraft:clay_ball",
+          "entryName": "minecraft:clay_ball#0"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:dye",
+          "functions": [
+            {
+              "function": "set_data",
+              "data": 2
+            }
+          ],
+          "entryName": "minecraft:dye#1"
+        },
+        {
+          "type": "item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              }
+            }
+          ],
+          "name": "minecraft:cactus",
+          "entryName": "minecraft:cactus#2"
+        },
+        {
+          "type": "item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 7.0
+              }
+            }
+          ],
+          "name": "minecraft:wheat",
+          "entryName": "minecraft:wheat#3"
+        },
+        {
+          "type": "item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              }
+            }
+          ],
+          "name": "minecraft:bread",
+          "entryName": "minecraft:bread#4"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:book",
+          "entryName": "minecraft:book#5"
+        },
+        {
+          "type": "item",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 3.0
+              }
+            }
+          ],
+          "name": "minecraft:deadbush",
+          "entryName": "minecraft:deadbush#6"
+        },
+        {
+          "type": "item",
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 3.0
+              }
+            }
+          ],
+          "name": "minecraft:emerald",
+          "entryName": "minecraft:emerald#7"
+        }
+      ],
+      "name": "pool0"
+    }
+  ]
+}

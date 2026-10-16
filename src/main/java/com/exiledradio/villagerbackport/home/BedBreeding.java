@@ -6,7 +6,7 @@ import com.exiledradio.villagerbackport.job.WorkstationIndex;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.Set;
@@ -27,6 +27,12 @@ import java.util.Set;
  *
  * <p>Gating the birth rather than the courtship is deliberate. Whether two villagers are willing is
  * decided deep inside vanilla's task; whether a child appears is an event anybody can answer.
+ *
+ * <p>The event is the birth itself, {@code BabyEntitySpawnEvent}, which Forge fires from vanilla's
+ * mating task and which this mod's own fires too. It used to be every child villager joining the
+ * world, and a child joins the world for plenty of reasons that are not being born: a spawn egg, a
+ * baby zombie villager being cured, and its own chunk loading. Refusing those kept existing
+ * children out of a village that had since filled its beds.
  */
 public final class BedBreeding {
 
@@ -34,24 +40,17 @@ public final class BedBreeding {
     private static final int BED_RANGE = 48;
 
     @SubscribeEvent
-    public void onEntityJoin(EntityJoinWorldEvent event) {
-        if (event.getWorld().isRemote || !ModConfig.homes.enabled
-                || !ModConfig.homes.bedsForBreeding) {
+    public void onBirth(BabyEntitySpawnEvent event) {
+        if (!ModConfig.homes.enabled || !ModConfig.homes.bedsForBreeding) {
             return;
         }
 
-        if (!(event.getEntity() instanceof EntityVillager)) {
+        if (!(event.getParentA() instanceof EntityVillager) || event.getParentA().world.isRemote) {
             return;
         }
 
-        EntityVillager baby = (EntityVillager) event.getEntity();
-
-        // Only newborns. An adult joining the world is a chunk loading, not a birth.
-        if (!baby.isChild()) {
-            return;
-        }
-
-        if (!hasFreeBed(baby)) {
+        // Measured from the parent, which is where the child is about to be put.
+        if (!hasFreeBed((EntityVillager) event.getParentA())) {
             event.setCanceled(true);
         }
     }
@@ -75,8 +74,7 @@ public final class BedBreeding {
         for (int chunkX = minChunkX; chunkX <= maxChunkX; chunkX++) {
             for (int chunkZ = minChunkZ; chunkZ <= maxChunkZ; chunkZ++) {
                 for (BlockPos bed : WorkstationIndex.bedsIn(world, chunkX, chunkZ)) {
-                    if (Math.abs(bed.getX() - origin.getX()) > BED_RANGE
-                            || Math.abs(bed.getZ() - origin.getZ()) > BED_RANGE) {
+                    if (origin.distanceSq(bed) > (double) BED_RANGE * BED_RANGE) {
                         continue;
                     }
 

@@ -1,0 +1,129 @@
+{
+  "pools": [
+    {
+      "rolls": {
+        "min": 1.0,
+        "max": 5.0
+      },
+      "entries": [
+        {
+          "type": "item",
+          "weight": 6,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 8.0
+              }
+            }
+          ],
+          "name": "minecraft:wool",
+          "entryName": "minecraft:wool#0"
+        },
+        {
+          "type": "item",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 3.0
+              }
+            },
+            {
+              "function": "set_data",
+              "data": 15
+            }
+          ],
+          "name": "minecraft:wool",
+          "entryName": "minecraft:wool#1"
+        },
+        {
+          "type": "item",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 3.0
+              }
+            },
+            {
+              "function": "set_data",
+              "data": 7
+            }
+          ],
+          "name": "minecraft:wool",
+          "entryName": "minecraft:wool#2"
+        },
+        {
+          "type": "item",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 3.0
+              }
+            },
+            {
+              "function": "set_data",
+              "data": 12
+            }
+          ],
+          "name": "minecraft:wool",
+          "entryName": "minecraft:wool#3"
+        },
+        {
+          "type": "item",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 3.0
+              }
+            },
+            {
+              "function": "set_data",
+              "data": 8
+            }
+          ],
+          "name": "minecraft:wool",
+          "entryName": "minecraft:wool#4"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:emerald",
+          "entryName": "minecraft:emerald#5"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:shears",
+          "entryName": "minecraft:shears#6"
+        },
+        {
+          "type": "item",
+          "weight": 6,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 6.0
+              }
+            }
+          ],
+          "name": "minecraft:wheat",
+          "entryName": "minecraft:wheat#7"
+        }
+      ],
+      "name": "pool0"
+    }
+  ]
+}

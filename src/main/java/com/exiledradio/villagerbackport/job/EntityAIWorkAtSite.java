@@ -31,11 +31,22 @@ public class EntityAIWorkAtSite extends EntityAIBase {
     /** Ticks to keep walking before giving up on a workstation that cannot be reached. */
     private static final int WALK_TIMEOUT = 400;
 
+    /** 1.14's {@code SpawnGolemTask}, which is its work task, runs at most once per 300 ticks. */
+    private static final long WORK_INTERVAL = 300L;
+
     private final EntityVillager villager;
 
     private BlockPos target;
 
     private int walkTime;
+
+    /** Whether the last attempt found a way there. Without one there is no point standing about. */
+    private boolean onTheWay;
+
+    /** After failing to find a way, how long before trying again. */
+    private static final long RETRY_TICKS = 200L;
+
+    private long retryAt;
 
     public EntityAIWorkAtSite(EntityVillager villager) {
         this.villager = villager;
@@ -51,6 +62,10 @@ public class EntityAIWorkAtSite extends EntityAIBase {
             return false;
         }
 
+        if (this.villager.world.getTotalWorldTime() < this.retryAt) {
+            return false;
+        }
+
         boolean unemployed = Employment.isUnemployed(this.villager);
 
         if (unemployed) {
@@ -61,23 +76,23 @@ public class EntityAIWorkAtSite extends EntityAIBase {
             }
         } else {
             // A career with no workstation registered has nowhere to go, and nothing is gated on it.
-            if (JobSiteRegistry.siteFor(this.villager) == null) {
+            if (!JobSiteRegistry.hasSite(this.villager)) {
                 return false;
             }
 
-            // Only bother when there is a reason to. Walking to a workstation with nothing to restock
-            // is motion for its own sake, and villagers already have plenty of that.
-            if (!JobSiteWork.needsToWork(this.villager)) {
+            // 1.14's working day. Every employed villager goes to its workstation during work hours,
+            // whether or not it has anything to restock, and uses it - which is what stamps it as
+            // having worked, plays its work sound, and restocks it if a restock is due. Going only
+            // when a trade had sold out left a village nobody traded with looking idle all day, and
+            // after a day and a half no longer able to raise a golem, because golems need villagers
+            // who have worked.
+            if (!RestockRules.isWorkingHours(this.villager.world)) {
                 return false;
             }
 
-            // And only when the trip could actually end in a restock. Sold-out trades are a reason to
-            // want to work, not permission to: the allowance may be spent, the cooldown may be
-            // running, or it may simply be the middle of the night. Setting off anyway means arriving,
-            // achieving nothing, being released to whatever moves the villager next, and coming
-            // straight back - which from the outside is a villager sprinting at its workstation over
-            // and over for no visible reason.
-            if (!RestockRules.couldRestockNow(this.villager)) {
+            // And no more often than 1.14 uses a workstation: once every fifteen seconds. Between
+            // uses the villager is free to wander off and come back, as it does in 1.14.
+            if (com.exiledradio.villagerbackport.home.GolemSpawner.workedWithin(this.villager, WORK_INTERVAL)) {
                 return false;
             }
         }
@@ -110,11 +125,20 @@ public class EntityAIWorkAtSite extends EntityAIBase {
             return false;
         }
 
+        // No way there: let the villager get on with something else, and do not ask again for a
+        // while - a path search is not free. The failure is on record, and a minute of them costs
+        // the villager the claim - see ClaimReach.
+        if (!this.onTheWay) {
+            this.retryAt = this.villager.world.getTotalWorldTime() + RETRY_TICKS;
+            return false;
+        }
+
         // Unreachable, or something keeps interrupting. Only stops walking - whether the claim is
         // worth keeping is decided on the villager's own tick, so that one owner decides it whether
         // or not this goal ever gets to run. See JobSiteClaims.
         if (++this.walkTime > WALK_TIMEOUT) {
             JobSiteClaims.noteUnreachable(this.villager, this.target);
+            ClaimReach.failed(this.villager, ClaimReach.Claim.JOB);
             return false;
         }
 
@@ -138,6 +162,7 @@ public class EntityAIWorkAtSite extends EntityAIBase {
     }
 
     private void walkToTarget() {
-        WorkPathing.walkTo(this.villager, this.target, ModConfig.jobs.walkSpeed);
+        this.onTheWay = WorkPathing.walkTo(this.villager, this.target, ModConfig.jobs.walkSpeed);
+        ClaimReach.walked(this.villager, ClaimReach.Claim.JOB, this.onTheWay);
     }
 }

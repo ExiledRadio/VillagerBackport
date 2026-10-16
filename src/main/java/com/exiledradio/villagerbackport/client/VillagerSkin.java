@@ -112,6 +112,17 @@ public final class VillagerSkin {
                 && VANILLA_PROFESSIONS.contains(profession.getRegistryName().toString());
     }
 
+    /** @return true if this villager wears the nitwit profession, which 1.14 never badges. */
+    public static boolean isNitwit(EntityVillager villager) {
+        try {
+            VillagerRegistry.VillagerProfession profession = villager.getProfessionForge();
+            return profession != null && profession.getRegistryName() != null
+                    && "minecraft:nitwit".equals(profession.getRegistryName().toString());
+        } catch (RuntimeException e) {
+            return false;
+        }
+    }
+
     public static boolean isVanillaProfession(EntityVillager villager) {
         try {
             return isVanilla(villager.getProfessionForge());
@@ -202,7 +213,23 @@ public final class VillagerSkin {
             return "taiga";
         }
 
-        // Modded biomes rarely extend the vanilla classes, so fall back to climate.
+        // The game's list puts every badlands biome with the desert and every windswept hills with
+        // the taiga, and neither is a subclass of those here.
+        if (biome instanceof net.minecraft.world.biome.BiomeMesa) {
+            return "desert";
+        }
+        if (biome instanceof net.minecraft.world.biome.BiomeHills) {
+            return "taiga";
+        }
+
+        // Any other vanilla biome is plains, as the game has it - the Nether and stony shore
+        // included, which the climate reading below would have dressed as desert and taiga.
+        if (biome.getRegistryName() != null && "minecraft".equals(biome.getRegistryName().getNamespace())) {
+            return "plains";
+        }
+
+        // Modded biomes rarely extend the vanilla classes, so fall back to climate. The game would
+        // call all of them plains, which in a pack made of modded biomes would be every villager.
         float temperature = biome.getDefaultTemperature();
         if (temperature <= 0.05F) {
             return "snow";

@@ -1,11 +1,8 @@
 package com.exiledradio.villagerbackport.job;
 
 import com.exiledradio.villagerbackport.ModConfig;
-import com.exiledradio.villagerbackport.compat.VillagerAccess;
 
 import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.village.MerchantRecipe;
-import net.minecraft.village.MerchantRecipeList;
 
 /**
  * Whether a villager may restock, and whether it has reason to go to work.
@@ -38,7 +35,7 @@ public final class JobSiteWork {
         }
 
         // No workstation defined for this career - ungated. See the note above on failing open.
-        if (JobSiteRegistry.siteFor(villager) == null) {
+        if (!JobSiteRegistry.hasSite(villager)) {
             return true;
         }
 
@@ -49,27 +46,5 @@ public final class JobSiteWork {
         }
 
         return JobSite.isAtSite(villager);
-    }
-
-    /**
-     * @return true if the villager has trades worth replenishing.
-     *
-     * <p>Used to decide whether walking to the workstation is worth doing at all. A villager with
-     * nothing sold out has no reason to make the trip, and sending it anyway would have villagers
-     * permanently clustered around their workstations rather than going about the village.
-     */
-    public static boolean needsToWork(EntityVillager villager) {
-        MerchantRecipeList recipes = VillagerAccess.getBuyingList(villager);
-        if (recipes == null || recipes.isEmpty()) {
-            return false;
-        }
-
-        for (MerchantRecipe recipe : recipes) {
-            if (recipe.isRecipeDisabled()) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "hanging=true": { "model": "villagerbackport:hanging_lantern" },
+    "hanging=false": { "model": "villagerbackport:lantern" }
+  }
+}

@@ -53,4 +53,14 @@ public final class SleepSync {
 
         NetworkHandler.sendVillagerSleep(villager, HomeSite.isSleeping(villager), bed, RANGE);
     }
+
+    /**
+     * Tells clients a villager is up, for the case where it no longer has a bed to look up.
+     *
+     * <p>{@link #broadcast} reads the bed from the claim and says nothing without one, which is
+     * exactly the state a villager is in the moment its bed is broken.
+     */
+    public static void broadcastAwake(EntityVillager villager, BlockPos formerBed) {
+        NetworkHandler.sendVillagerSleep(villager, false, formerBed, RANGE);
+    }
 }

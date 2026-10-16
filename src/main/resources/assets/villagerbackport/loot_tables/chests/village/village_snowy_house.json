@@ -1,0 +1,123 @@
+{
+  "pools": [
+    {
+      "rolls": {
+        "min": 3.0,
+        "max": 8.0
+      },
+      "entries": [
+        {
+          "type": "item",
+          "name": "minecraft:packed_ice",
+          "entryName": "minecraft:packed_ice#0"
+        },
+        {
+          "type": "item",
+          "weight": 4,
+          "name": "minecraft:snow",
+          "entryName": "minecraft:snow#1"
+        },
+        {
+          "type": "item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 7.0
+              }
+            }
+          ],
+          "name": "minecraft:potato",
+          "entryName": "minecraft:potato#2"
+        },
+        {
+          "type": "item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              }
+            }
+          ],
+          "name": "minecraft:bread",
+          "entryName": "minecraft:bread#3"
+        },
+        {
+          "type": "item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 5.0
+              }
+            }
+          ],
+          "name": "minecraft:beetroot_seeds",
+          "entryName": "minecraft:beetroot_seeds#4"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:beetroot_soup",
+          "entryName": "minecraft:beetroot_soup#5"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:furnace",
+          "entryName": "minecraft:furnace#6"
+        },
+        {
+          "type": "item",
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              }
+            }
+          ],
+          "name": "minecraft:emerald",
+          "entryName": "minecraft:emerald#7"
+        },
+        {
+          "type": "item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 7.0
+              }
+            }
+          ],
+          "name": "minecraft:snowball",
+          "entryName": "minecraft:snowball#8"
+        },
+        {
+          "type": "item",
+          "weight": 5,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              }
+            }
+          ],
+          "name": "minecraft:coal",
+          "entryName": "minecraft:coal#9"
+        }
+      ],
+      "name": "pool0"
+    }
+  ]
+}

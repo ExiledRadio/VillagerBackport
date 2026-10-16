@@ -1,6 +1,7 @@
 package com.exiledradio.villagerbackport.village;
 
 import com.exiledradio.villagerbackport.VillagerBackport;
+import com.exiledradio.villagerbackport.compat.FutureMc;
 import com.exiledradio.villagerbackport.block.BlockWorkstation;
 
 import net.minecraft.block.Block;
@@ -102,6 +103,7 @@ public class VillageMeetingPoint extends StructureVillagePieces.Village {
 
         Block bell = ForgeRegistries.BLOCKS.getValue(BELL);
         if (bell != null) {
+            bell = FutureMc.preferred(bell);
             IBlockState state = bell.getDefaultState();
 
             if (state.getPropertyKeys().contains(BlockWorkstation.FACING)) {

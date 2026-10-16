@@ -41,6 +41,9 @@ public final class JobSiteAttacher {
     /** Where vanilla puts mating, and where its replacement goes. */
     private static final int MATE_PRIORITY = 6;
 
+    /** Where 1.12.2 kept its own fleeing goals, above sleep. */
+    private static final int PANIC_PRIORITY = 1;
+
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (event.getWorld().isRemote || !(event.getEntity() instanceof EntityVillager)) {
@@ -64,6 +67,22 @@ public final class JobSiteAttacher {
                 villager.tasks.addTask(SLEEP_PRIORITY,
                         new com.exiledradio.villagerbackport.home.EntityAISleep(villager));
                 removeMoveIndoors(villager);
+            }
+
+            // A villager with no bed waits indoors instead, in sleep's place.
+            if (ModConfig.homes.enabled && ModConfig.homes.sleepAtNight && !hasGoal(villager,
+                    com.exiledradio.villagerbackport.home.EntityAIShelterAtNight.class)) {
+                villager.tasks.addTask(SLEEP_PRIORITY,
+                        new com.exiledradio.villagerbackport.home.EntityAIShelterAtNight(villager));
+            }
+
+            // Panic outranks everything here, sleep included: a villager that is hurt or sees a
+            // zombie gets up and runs.
+            if (ModConfig.homes.enabled && !hasGoal(villager,
+                    com.exiledradio.villagerbackport.home.EntityAIVillagerPanic.class)) {
+                removeVanillaFleeing(villager);
+                villager.tasks.addTask(PANIC_PRIORITY,
+                        new com.exiledradio.villagerbackport.home.EntityAIVillagerPanic(villager));
             }
 
             if (ModConfig.homes.enabled && ModConfig.homes.bedsForBreeding
@@ -167,6 +186,32 @@ public final class JobSiteAttacher {
     private boolean hasBreedGoal(EntityVillager villager) {
         for (EntityAITasks.EntityAITaskEntry entry : villager.tasks.taskEntries) {
             if (entry.action instanceof com.exiledradio.villagerbackport.home.EntityAIBreedOnBeds) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Takes off 1.12.2's own running-away goals, which the panic goal replaces.
+     *
+     * <p>They ran from the wrong things at the wrong distances - zombie pigmen, which the game's
+     * villagers ignore; vindicators at 8 blocks rather than 10; illusioners not at all - and with two
+     * sets of goals a villager could be pulled two ways at once.
+     */
+    private void removeVanillaFleeing(EntityVillager villager) {
+        for (EntityAITasks.EntityAITaskEntry entry :
+                new java.util.ArrayList<EntityAITasks.EntityAITaskEntry>(villager.tasks.taskEntries)) {
+
+            if (entry.action instanceof net.minecraft.entity.ai.EntityAIAvoidEntity) {
+                villager.tasks.removeTask(entry.action);
+            }
+        }
+    }
+
+    private boolean hasGoal(EntityVillager villager, Class<?> type) {
+        for (EntityAITasks.EntityAITaskEntry entry : villager.tasks.taskEntries) {
+            if (type.isInstance(entry.action)) {
                 return true;
             }
         }

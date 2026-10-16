@@ -1,54 +1,54 @@
 package com.exiledradio.villagerbackport.home;
 
 import com.exiledradio.villagerbackport.ModConfig;
+import com.exiledradio.villagerbackport.job.Employment;
+import com.exiledradio.villagerbackport.restock.RestockRules;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 
 /**
- * Villagers breeding because there is a bed spare, rather than because there are enough doors.
+ * Two villagers having a baby, the way the game does it.
  *
- * <h2>Why vanilla's task had to be replaced rather than nudged</h2>
- * 1.12.2 counts doors, and it does the counting inside {@code EntityAIVillagerMate}:
+ * <h2>Who</h2>
+ * Two grown villagers near each other, both with a bed of their own and the food to be willing -
+ * see {@link VillagerFood} - and neither on its five-minute cooldown. Employed villagers do not breed during work hours;
+ * nitwits and the unemployed can, at any time they are up and about.
  *
- * <pre>
- *   village = world.getVillageCollection().getNearestVillage(pos, 0);
- *   if (village == null) return false;
- *   int i = (int)(village.getNumVillageDoors() * 0.35D);
- *   return village.getNumVillagers() &lt; i;
- * </pre>
+ * <h2>How</h2>
+ * They spend about fourteen to sixteen seconds together, hearts showing now and then. Then both eat
+ * the food breeding costs, whatever happens next. A baby needs a free bed within 48 blocks that the
+ * parent can find a path to and that has two empty blocks above it; with one, the baby is born and
+ * given that bed. Without one, both parents show angry particles and no baby comes.
  *
- * <p>Every line of that is fatal to a village built the way 1.14 taught people to build one. A
- * breeder made of beds and food has no doors, so there is no village at all, so
- * {@code getNearestVillage} returns null and mating never even begins. No amount of gating births
- * afterwards can help, because the courtship never starts - which is why the first attempt at this,
- * a check on the baby, did nothing for anyone following a modern tutorial.
- *
- * <p>So the whole task is replaced. This is vanilla's, line for line - the same one-in-five-hundred
- * rate, the same eight-block search for a partner, the same three hundred tick courtship, the same
- * birth - with the door test swapped for 1.14's question: is there a bed free for the child.
- *
- * <p>Willingness is left exactly as 1.12.2 has it. Food is still what makes a villager willing, and
- * {@code getIsWillingToMate} still decides, so bread and carrots work the way every player expects.
+ * <p>This replaces 1.12.2's own mating goal, which counts doors and gives up with no village, so a
+ * breeder built of beds and food without doors never bred at all.
  */
 public final class EntityAIBreedOnBeds extends EntityAIBase {
 
-    /** Vanilla's courtship length, in ticks. */
-    private static final int COURTSHIP = 300;
+    /** The game's courtship: 275 ticks, plus up to 50 more. */
+    private static final int COURTSHIP = 275;
+    private static final int COURTSHIP_SPREAD = 50;
 
-    /** How far apart two villagers may be and still find each other, as vanilla has it. */
+    /** How close the pair has to stand, as the game has it: within the square root of 5. */
+    private static final double CLOSE_ENOUGH_SQ = 5.0D;
+
     private static final double SEARCH_RANGE = 8.0D;
+
+    private static final byte HEARTS = 12;
+    private static final byte ANGRY = 13;
 
     private final EntityVillager villager;
     private final World world;
 
     private EntityVillager mate;
-    private int matingTimeout;
+    private long endsAt;
+    private boolean done;
 
     public EntityAIBreedOnBeds(EntityVillager villager) {
         this.villager = villager;
@@ -64,100 +64,121 @@ public final class EntityAIBreedOnBeds extends EntityAIBase {
             return false;
         }
 
-        if (this.villager.getGrowingAge() != 0) {
-            return false;
-        }
-
         // Vanilla's rate. Breeding is meant to be something that happens eventually, not on cue.
-        if (this.villager.getRNG().nextInt(500) != 0) {
+        if (this.villager.getRNG().nextInt(500) != 0 || !ready(this.villager)) {
             return false;
         }
 
-        if (!BedBreeding.hasFreeBed(this.villager)) {
-            return false;
+        for (EntityVillager other : this.world.getEntitiesWithinAABB(EntityVillager.class,
+                this.villager.getEntityBoundingBox().grow(SEARCH_RANGE, 3.0D, SEARCH_RANGE))) {
+            if (other != this.villager && ready(other) && this.villager.canEntityBeSeen(other)) {
+                this.mate = other;
+                return true;
+            }
         }
 
-        if (!this.villager.getIsWillingToMate(true)) {
-            return false;
-        }
+        return false;
+    }
 
-        Entity found = this.world.findNearestEntityWithinAABB(EntityVillager.class,
-                this.villager.getEntityBoundingBox().grow(SEARCH_RANGE, 3.0D, SEARCH_RANGE),
-                this.villager);
+    /** Grown, off cooldown, fed, awake, not at work, and with a bed of its own. */
+    private static boolean ready(EntityVillager villager) {
+        return villager.isEntityAlive()
+                && villager.getGrowingAge() == 0
+                && villager.getCustomer() == null
+                && !HomeSite.isSleeping(villager)
+                && !EntityAISleep.isBedtime(villager)
+                && !PanicWatch.isPanicking(villager)
+                && !atWork(villager)
+                && HomeSite.validated(villager) != null
+                && VillagerFood.isWilling(villager);
+    }
 
-        if (!(found instanceof EntityVillager)) {
-            return false;
-        }
-
-        this.mate = (EntityVillager) found;
-        return this.mate.getGrowingAge() == 0 && this.mate.getIsWillingToMate(true);
+    /** Employed villagers keep their work hours for work. */
+    private static boolean atWork(EntityVillager villager) {
+        return !Employment.isUnemployed(villager) && !Employment.isNitwit(villager)
+                && RestockRules.isWorkingHours(villager.world);
     }
 
     @Override
     public void startExecuting() {
-        this.matingTimeout = COURTSHIP;
+        this.done = false;
+        this.endsAt = this.world.getTotalWorldTime() + COURTSHIP
+                + this.villager.getRNG().nextInt(COURTSHIP_SPREAD);
         this.villager.setMating(true);
+        this.mate.setMating(true);
     }
 
     @Override
     public boolean shouldContinueExecuting() {
-        return this.matingTimeout >= 0
-                && BedBreeding.hasFreeBed(this.villager)
-                && this.villager.getGrowingAge() == 0
-                && this.villager.getIsWillingToMate(false);
+        return !this.done && this.mate != null && this.mate.isEntityAlive()
+                && this.world.getTotalWorldTime() <= this.endsAt
+                && ready(this.villager) && ready(this.mate);
     }
 
     @Override
     public void updateTask() {
-        --this.matingTimeout;
-
         this.villager.getLookHelper().setLookPositionWithEntity(this.mate, 10.0F, 30.0F);
 
-        if (this.villager.getDistanceSq(this.mate) > 2.25D) {
-            this.villager.getNavigator().tryMoveToEntityLiving(this.mate, 0.25D);
-        } else if (this.matingTimeout == 0 && this.mate.isMating()) {
-            giveBirth();
+        if (this.villager.getDistanceSq(this.mate) > CLOSE_ENOUGH_SQ) {
+            this.villager.getNavigator().tryMoveToEntityLiving(this.mate, 0.5D);
+            return;
         }
 
-        // The hearts, which vanilla throws at the same rate.
-        if (this.villager.getRNG().nextInt(35) == 0) {
-            this.world.setEntityState(this.villager, (byte) 12);
+        if (this.world.getTotalWorldTime() >= this.endsAt) {
+            this.done = true;
+            breed();
+        } else if (this.villager.getRNG().nextInt(35) == 0) {
+            this.world.setEntityState(this.villager, HEARTS);
+            this.world.setEntityState(this.mate, HEARTS);
         }
     }
 
     @Override
     public void resetTask() {
-        this.mate = null;
         this.villager.setMating(false);
+        if (this.mate != null) {
+            this.mate.setMating(false);
+        }
+        this.mate = null;
     }
 
-    /**
-     * Brings the child into the world, exactly as vanilla does.
-     *
-     * <p>Including the Forge event, which other mods listen to and can cancel - a birth this mod
-     * arranges should be as interruptible as one the game arranges itself.
-     */
-    private void giveBirth() {
-        EntityAgeable child = this.villager.createChild(this.mate);
+    private void breed() {
+        // Eaten first, whatever comes of it.
+        VillagerFood.eatForBreeding(this.villager);
+        VillagerFood.eatForBreeding(this.mate);
 
-        this.mate.setGrowingAge(6000);
-        this.villager.setGrowingAge(6000);
-        this.mate.setIsWillingToMate(false);
-        this.villager.setIsWillingToMate(false);
+        BlockPos bed = HomeClaims.freeBedFor(this.villager, true);
+        if (bed == null) {
+            this.world.setEntityState(this.villager, ANGRY);
+            this.world.setEntityState(this.mate, ANGRY);
+            VillageDebug.say(this.villager, "breeding: no free bed it could reach, so no baby");
+            return;
+        }
+
+        EntityAgeable child = this.villager.createChild(this.mate);
+        if (child == null) {
+            return;
+        }
 
         BabyEntitySpawnEvent event = new BabyEntitySpawnEvent(this.villager, this.mate, child);
-
         if (MinecraftForge.EVENT_BUS.post(event) || event.getChild() == null) {
             return;
         }
 
+        this.villager.setGrowingAge(6000);
+        this.mate.setGrowingAge(6000);
+
         child = event.getChild();
         child.setGrowingAge(-24000);
-        child.setLocationAndAngles(this.villager.posX, this.villager.posY, this.villager.posZ,
-                0.0F, 0.0F);
+        child.setLocationAndAngles(this.villager.posX, this.villager.posY, this.villager.posZ, 0.0F, 0.0F);
 
         this.world.spawnEntity(child);
-        this.world.setEntityState(child, (byte) 12);
+        this.world.setEntityState(child, HEARTS);
+
+        // The bed that made the birth possible is the baby's.
+        if (child instanceof EntityVillager) {
+            HomeSite.set((EntityVillager) child, bed);
+        }
 
         VillageDebug.say(this.villager, "breeding: a child was born");
     }

@@ -16,9 +16,12 @@ config.villagerbackport.display=Display
 
 gui.villagerbackport.outofstock=Villagers restock up to two times per day.
 
-config.villagerbackport.jobs=Workstations
+config.villagerbackport.trades=Trade Tables
+config.villagerbackport.jobs=Villager Jobs
 config.villagerbackport.villages=Village Generation
 config.villagerbackport.structures=Structures
+config.villagerbackport.compat=Mod Compatibility
+config.villagerbackport.homes=Beds, Sleeping & Golems
 
 tile.villagerbackport.barrel.name=Barrel
 tile.villagerbackport.bell.name=Bell
@@ -32,8 +35,9 @@ tile.villagerbackport.loom.name=Loom
 tile.villagerbackport.smithing_table.name=Smithing Table
 tile.villagerbackport.smoker.name=Smoker
 tile.villagerbackport.stonecutter.name=Stonecutter
+tile.villagerbackport.lantern.name=Lantern
 entity.Villager.mason=Mason
-config.villagerbackport.workstations=Workstations
+config.villagerbackport.workstations=Workstation Blocks
 container.villagerbackport.barrel=Barrel
 container.villagerbackport.composter=Composter
 container.villagerbackport.smoker=Smoker

@@ -1,0 +1,104 @@
+{
+  "pools": [
+    {
+      "rolls": {
+        "min": 3.0,
+        "max": 8.0
+      },
+      "entries": [
+        {
+          "type": "item",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              }
+            }
+          ],
+          "name": "minecraft:redstone",
+          "entryName": "minecraft:redstone#0"
+        },
+        {
+          "type": "item",
+          "weight": 7,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              }
+            }
+          ],
+          "name": "minecraft:bread",
+          "entryName": "minecraft:bread#1"
+        },
+        {
+          "type": "item",
+          "weight": 7,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              }
+            }
+          ],
+          "name": "minecraft:rotten_flesh",
+          "entryName": "minecraft:rotten_flesh#2"
+        },
+        {
+          "type": "item",
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              }
+            },
+            {
+              "function": "set_data",
+              "data": 4
+            }
+          ],
+          "name": "minecraft:dye",
+          "entryName": "minecraft:dye#3"
+        },
+        {
+          "type": "item",
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              }
+            }
+          ],
+          "name": "minecraft:gold_ingot",
+          "entryName": "minecraft:gold_ingot#4"
+        },
+        {
+          "type": "item",
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              }
+            }
+          ],
+          "name": "minecraft:emerald",
+          "entryName": "minecraft:emerald#5"
+        }
+      ],
+      "name": "pool0"
+    }
+  ]
+}

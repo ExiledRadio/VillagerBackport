@@ -43,6 +43,7 @@ public final class ClientSetup {
         MinecraftForge.EVENT_BUS.register(new LayerInstaller());
         MinecraftForge.EVENT_BUS.register(new VillagerLevelCache());
         MinecraftForge.EVENT_BUS.register(new SleepCache());
+        MinecraftForge.EVENT_BUS.register(new SleepPoseClient());
         MinecraftForge.EVENT_BUS.register(new SleepRenderer());
         MinecraftForge.EVENT_BUS.register(new VillageOutlineRenderer());
 

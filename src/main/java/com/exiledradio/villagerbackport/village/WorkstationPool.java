@@ -1,6 +1,7 @@
 package com.exiledradio.villagerbackport.village;
 
 import com.exiledradio.villagerbackport.ModConfig;
+import com.exiledradio.villagerbackport.compat.FutureMc;
 import com.exiledradio.villagerbackport.job.JobSiteRegistry;
 
 import net.minecraft.block.Block;
@@ -53,7 +54,9 @@ public final class WorkstationPool {
         List<Block> pool = new ArrayList<Block>();
 
         for (Block block : JobSiteRegistry.allSites()) {
-            if (!excluded.contains(block)) {
+            // A hidden duplicate still employs a villager, but a village is not built out of the half
+            // of a pair the player has been told is not there.
+            if (!excluded.contains(block) && !FutureMc.isHidden(block)) {
                 pool.add(block);
             }
         }

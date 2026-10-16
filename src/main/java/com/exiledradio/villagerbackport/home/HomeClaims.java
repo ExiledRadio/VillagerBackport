@@ -1,6 +1,7 @@
 package com.exiledradio.villagerbackport.home;
 
 import com.exiledradio.villagerbackport.ModConfig;
+import com.exiledradio.villagerbackport.job.ClaimReach;
 import com.exiledradio.villagerbackport.job.JobSite;
 import com.exiledradio.villagerbackport.job.WorkPathing;
 import com.exiledradio.villagerbackport.job.WorkstationIndex;
@@ -42,6 +43,9 @@ public final class HomeClaims {
     /** How many beds one search may ask the navigator about. Each question is a pathfind. */
     private static final int MAX_PATH_CHECKS = 6;
 
+    /** How close 1.14's {@code ExpirePOITask} has a villager come before it checks its bed. */
+    private static final double EXPIRE_RANGE = 5.0D;
+
     @SubscribeEvent
     public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
         if (!(event.getEntity() instanceof EntityVillager)) {
@@ -66,7 +70,30 @@ public final class HomeClaims {
             return;
         }
 
-        if (HomeSite.validated(villager) == null) {
+        // 1.14's StayNearPointTask for the home, as for the job site: a minute of being unable to
+        // walk to its bed and a villager gives the bed up and looks for another. Without it a bed
+        // walled off after it was claimed stayed the villager's for good, and it never slept again.
+        BlockPos bed = HomeSite.validated(villager);
+        if (bed != null && !HomeSite.isSleeping(villager)
+                && ClaimReach.givenUp(villager, ClaimReach.Claim.HOME)) {
+            HomeSite.clear(villager);
+            ClaimReach.reached(villager, ClaimReach.Claim.HOME);
+            VillageDebug.say(villager, "bed: gave up on a bed it could not reach");
+            bed = null;
+        }
+
+        // 1.14's ExpirePOITask for the home: a villager that comes within five blocks of its bed and
+        // finds somebody else lying in it - a player, or another villager - lets the bed go and finds
+        // another. That is how a player takes a villager's bed in 1.14: by sleeping in it first.
+        if (bed != null && !HomeSite.isSleeping(villager)
+                && villager.getDistanceSqToCenter(bed) <= EXPIRE_RANGE * EXPIRE_RANGE
+                && HomeSite.isOccupiedByOther(villager, bed)) {
+            HomeSite.clear(villager);
+            VillageDebug.say(villager, "bed: someone else is sleeping in it, so it found another");
+            bed = null;
+        }
+
+        if (bed == null) {
             claimNearby(villager);
         }
     }
@@ -80,6 +107,27 @@ public final class HomeClaims {
      */
     @Nullable
     public static BlockPos claimNearby(EntityVillager villager) {
+        BlockPos best = freeBedFor(villager, false);
+
+        if (best != null) {
+            HomeSite.set(villager, best);
+            ClaimReach.reached(villager, ClaimReach.Claim.HOME);
+            VillageDebug.say(villager, "bed: claimed one at "
+                    + best.getX() + ", " + best.getY() + ", " + best.getZ());
+        }
+
+        return best;
+    }
+
+    /**
+     * @return the nearest unclaimed bed this villager can find a path to, within the search sphere,
+     * or null
+     *
+     * @param needHeadroom also require two empty blocks above the bed, which the game asks of a bed
+     *                     a baby is to be born into - it needs room to jump on it
+     */
+    @Nullable
+    public static BlockPos freeBedFor(EntityVillager villager, boolean needHeadroom) {
         World world = villager.world;
         int radius = ModConfig.homes.searchRadius;
         final BlockPos origin = new BlockPos(villager);
@@ -95,13 +143,13 @@ public final class HomeClaims {
         for (int chunkX = minChunkX; chunkX <= maxChunkX; chunkX++) {
             for (int chunkZ = minChunkZ; chunkZ <= maxChunkZ; chunkZ++) {
                 for (BlockPos pos : WorkstationIndex.bedsIn(world, chunkX, chunkZ)) {
-                    if (Math.abs(pos.getX() - origin.getX()) > radius
-                            || Math.abs(pos.getZ() - origin.getZ()) > radius
-                            || Math.abs(pos.getY() - origin.getY()) > radius) {
+                    // A sphere, as 1.14 searches for a home - not a cube, whose corners reach
+                    // three quarters as far again as its sides.
+                    if (origin.distanceSq(pos) > (double) radius * radius) {
                         continue;
                     }
 
-                    if (!taken.contains(pos)) {
+                    if (!taken.contains(pos) && (!needHeadroom || hasHeadroom(world, pos))) {
                         candidates.add(pos);
                     }
                 }
@@ -110,11 +158,7 @@ public final class HomeClaims {
 
         BlockPos best = chooseReachable(villager, origin, candidates);
 
-        if (best != null) {
-            HomeSite.set(villager, best);
-            VillageDebug.say(villager, "bed: claimed one at "
-                    + best.getX() + ", " + best.getY() + ", " + best.getZ());
-        } else if (VillageDebug.on() && !candidates.isEmpty()) {
+        if (best == null && VillageDebug.on() && !candidates.isEmpty()) {
             VillageDebug.repeat(villager, "bed-unreachable", "bed: " + candidates.size()
                     + " free nearby but none it can walk to");
         }
@@ -157,6 +201,12 @@ public final class HomeClaims {
     }
 
     /** @return true if a path exists that ends against the bed rather than merely near it. */
+    /** @return true if the two blocks above the bed are clear to stand in */
+    private static boolean hasHeadroom(World world, BlockPos bed) {
+        return !world.getBlockState(bed.up()).getMaterial().blocksMovement()
+                && !world.getBlockState(bed.up(2)).getMaterial().blocksMovement();
+    }
+
     private static boolean canReach(EntityVillager villager, BlockPos pos) {
         if (JobSite.isTouching(villager, pos)) {
             return true;

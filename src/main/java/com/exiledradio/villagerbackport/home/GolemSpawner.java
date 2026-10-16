@@ -2,9 +2,7 @@ package com.exiledradio.villagerbackport.home;
 
 import com.exiledradio.villagerbackport.ModConfig;
 import com.exiledradio.villagerbackport.data.VillagerTradeData;
-import com.exiledradio.villagerbackport.job.Employment;
 
-import net.minecraft.entity.monster.EntityGolem;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,17 +13,19 @@ import net.minecraft.world.World;
 import java.util.List;
 
 /**
- * 1.14's iron golem spawning, ported rule for rule.
+ * The game's iron golem spawning.
  *
- * <h2>The rules, from {@code VillagerEntity}</h2>
+ * <h2>The rules</h2>
  * A villager counts towards a golem only if all of this holds:
  *
  * <ul>
- *   <li>it has a profession - {@code NONE} and {@code NITWIT} are excluded</li>
+ *   <li>it is grown</li>
  *   <li>it has slept within the last 24000 ticks</li>
- *   <li>it has worked at its job site within the last 36000 ticks</li>
- *   <li>it has not seen a golem spawn in the last 600 ticks</li>
+ *   <li>it has not been near a golem in the last 600 ticks</li>
  * </ul>
+ *
+ * <p>A job does not come into it. 1.14 also asked for a profession and a recent shift at work; the
+ * game since asks only for sleep, and nitwits and unemployed villagers count like anyone else.
  *
  * <p>When one of them tries, it counts the eligible villagers within ten blocks - 1.14 stops
  * counting at five - and spawns a golem if there are enough. A panicking villager needs three; two
@@ -33,15 +33,14 @@ import java.util.List;
  * a golem, not merely the ones that counted, which is the thirty-second cooldown that stops a
  * frightened village producing a wall of them.
  *
- * <p>The sleeping and working conditions are the whole reason iron golem farms are built the way
- * they are from 1.14 onward, and they are why this had to wait for beds: a villager that cannot
- * reach a bed never qualifies, however frightened it is.
+ * <p>The sleeping condition is the whole reason iron golem farms are built the way they are, and
+ * it is why this had to wait for beds: a villager that cannot reach a bed never qualifies, however
+ * frightened it is.
  */
 public final class GolemSpawner {
 
-    /** 1.14's constants, named. */
+    /** The game's constants, named. */
     private static final long SLEPT_WITHIN = 24000L;
-    private static final long WORKED_WITHIN = 36000L;
     private static final long GOLEM_SEEN_WITHIN = 600L;
     private static final double NEIGHBOUR_RANGE = 10.0D;
     private static final int COUNT_LIMIT = 5;
@@ -124,16 +123,10 @@ public final class GolemSpawner {
         if (villager.isChild()) {
             return "still a child";
         }
-        if (Employment.isUnemployed(villager)) {
-            return "no profession";
-        }
         if (!HomeSite.sleptWithin(villager, SLEPT_WITHIN)) {
             return HomeSite.get(villager) == null
                     ? "has no bed, so has never slept"
                     : "has not slept in the last " + SLEPT_WITHIN + " ticks";
-        }
-        if (!workedWithin(villager, WORKED_WITHIN)) {
-            return "has not been to its workstation in the last " + WORKED_WITHIN + " ticks";
         }
         if (hasSeenGolemRecently(villager, now)) {
             return "saw a golem in the last " + GOLEM_SEEN_WITHIN + " ticks";
@@ -141,17 +134,18 @@ public final class GolemSpawner {
         return "unknown";
     }
 
-    /** 1.14's {@code canSpawnGolem}: employed, rested, recently at work, and not just served. */
+    /**
+     * The game's test for a villager that counts towards a golem: grown, slept in the last twenty
+     * minutes, and not near a golem recently. That is all - a job, or having been to work, does not
+     * come into it, so nitwits and unemployed villagers count as much as anyone. (1.14 asked for a
+     * profession and a recent shift at work as well; the game no longer does.)
+     */
     public static boolean isEligible(EntityVillager villager, long now) {
-        if (villager.isChild() || Employment.isUnemployed(villager)) {
+        if (villager.isChild()) {
             return false;
         }
 
         if (!HomeSite.sleptWithin(villager, SLEPT_WITHIN)) {
-            return false;
-        }
-
-        if (!workedWithin(villager, WORKED_WITHIN)) {
             return false;
         }
 
@@ -169,7 +163,7 @@ public final class GolemSpawner {
                 .setLong(LAST_WORKED, villager.world.getTotalWorldTime());
     }
 
-    private static boolean workedWithin(EntityVillager villager, long ticks) {
+    public static boolean workedWithin(EntityVillager villager, long ticks) {
         NBTTagCompound tag = VillagerTradeData.root(villager);
         if (!tag.hasKey(LAST_WORKED, TAG_ANY_NUMBER)) {
             return false;
@@ -187,7 +181,7 @@ public final class GolemSpawner {
         return now - tag.getLong(GOLEM_SEEN) <= GOLEM_SEEN_WITHIN;
     }
 
-    private static void markGolemSeen(EntityVillager villager, long now) {
+    public static void markGolemSeen(EntityVillager villager, long now) {
         VillagerTradeData.root(villager).setLong(GOLEM_SEEN, now);
     }
 
@@ -235,11 +229,5 @@ public final class GolemSpawner {
         }
 
         return null;
-    }
-
-    /** @return true if anything golem-shaped is already about, so a village keeps just the one. */
-    public static boolean golemNearby(EntityVillager villager, double range) {
-        AxisAlignedBB box = villager.getEntityBoundingBox().grow(range);
-        return !villager.world.getEntitiesWithinAABB(EntityGolem.class, box).isEmpty();
     }
 }

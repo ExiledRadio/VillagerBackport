@@ -1,0 +1,112 @@
+{
+  "pools": [
+    {
+      "rolls": {
+        "min": 3.0,
+        "max": 8.0
+      },
+      "entries": [
+        {
+          "type": "item",
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 3.0
+              }
+            }
+          ],
+          "name": "minecraft:diamond",
+          "entryName": "minecraft:diamond#0"
+        },
+        {
+          "type": "item",
+          "weight": 5,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 5.0
+              }
+            }
+          ],
+          "name": "minecraft:iron_ingot",
+          "entryName": "minecraft:iron_ingot#1"
+        },
+        {
+          "type": "item",
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 3.0
+              }
+            }
+          ],
+          "name": "minecraft:gold_ingot",
+          "entryName": "minecraft:gold_ingot#2"
+        },
+        {
+          "type": "item",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 3.0
+              }
+            }
+          ],
+          "name": "minecraft:bread",
+          "entryName": "minecraft:bread#3"
+        },
+        {
+          "type": "item",
+          "weight": 5,
+          "name": "minecraft:iron_pickaxe",
+          "entryName": "minecraft:iron_pickaxe#4"
+        },
+        {
+          "type": "item",
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 3.0
+              }
+            }
+          ],
+          "name": "minecraft:coal",
+          "entryName": "minecraft:coal#5"
+        },
+        {
+          "type": "item",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 3.0
+              }
+            }
+          ],
+          "name": "minecraft:stick",
+          "entryName": "minecraft:stick#6"
+        },
+        {
+          "type": "item",
+          "weight": 5,
+          "name": "minecraft:iron_shovel",
+          "entryName": "minecraft:iron_shovel#7"
+        }
+      ],
+      "name": "pool0"
+    }
+  ]
+}

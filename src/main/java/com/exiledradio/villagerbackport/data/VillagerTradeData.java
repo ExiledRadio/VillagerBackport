@@ -44,7 +44,6 @@ public final class VillagerTradeData {
     private static final String LAST_RESTOCK = "LastRestock";
     private static final String RESTOCKS_TODAY = "RestocksToday";
     private static final String LAST_DAY_CHECK = "LastDayCheck";
-    private static final String LAST_CATCH_UP = "LastCatchUpDay";
     private static final String DEMAND_REPAIRED = "DemandRepaired";
     private static final String XP = "Xp";
     private static final String APPLIED_LEVEL = "AppliedLevel";
@@ -52,6 +51,7 @@ public final class VillagerTradeData {
     private static final String TRADES = "Trades";
 
     private static final String TRADE_BASE = "Base";
+    private static final String TRADE_BASE_SECOND = "BaseSecond";
     private static final String TRADE_DEMAND = "Demand";
     private static final String TRADE_USES = "Uses";
 
@@ -138,22 +138,6 @@ public final class VillagerTradeData {
         root(villager).setLong(LAST_DAY_CHECK, worldTime);
     }
 
-    /**
-     * @return the day number this villager last settled its unused restocks on, or -1 for never
-     *
-     * <p>Deliberately a day number rather than a flag. Settling demand is destructive - it clears
-     * stock and sheds demand - so it must happen on the edge of a day turning and not once per check
-     * for as long as the day is still new.
-     */
-    public static long getLastCatchUpDay(EntityVillager villager) {
-        NBTTagCompound tag = root(villager);
-        return tag.hasKey(LAST_CATCH_UP, TAG_ANY_NUMBER) ? tag.getLong(LAST_CATCH_UP) : -1L;
-    }
-
-    public static void setLastCatchUpDay(EntityVillager villager, long day) {
-        root(villager).setLong(LAST_CATCH_UP, day);
-    }
-
     /** @return true if this villager's demand has been checked over after the 0.49 catch-up bug. */
     public static boolean isDemandRepaired(EntityVillager villager) {
         return root(villager).getBoolean(DEMAND_REPAIRED);
@@ -230,6 +214,30 @@ public final class VillagerTradeData {
 
     public static void setBaseCount(EntityVillager villager, String key, int baseCount) {
         trade(villager, key).setInteger(TRADE_BASE, baseCount);
+    }
+
+    public static void clearBaseCount(EntityVillager villager, String key) {
+        trade(villager, key).removeTag(TRADE_BASE);
+    }
+
+    /**
+     * @return the base count of the trade's <em>second</em> cost stack, or -1 if never recorded.
+     *
+     * <p>Kept under its own name so it can never be mistaken for a first-stack figure - see
+     * {@code PriceEngine.pricedStack} for which trades are priced on their second stack.
+     */
+    public static int getSecondBaseCount(EntityVillager villager, String key) {
+        NBTTagCompound tag = trade(villager, key);
+        return tag.hasKey(TRADE_BASE_SECOND, TAG_ANY_NUMBER) ? tag.getInteger(TRADE_BASE_SECOND) : -1;
+    }
+
+    public static void setSecondBaseCount(EntityVillager villager, String key, int baseCount) {
+        trade(villager, key).setInteger(TRADE_BASE_SECOND, baseCount);
+    }
+
+    /** @return true if this trade has a demand figure at all, as opposed to never having been seen */
+    public static boolean hasDemand(EntityVillager villager, String key) {
+        return trade(villager, key).hasKey(TRADE_DEMAND, TAG_ANY_NUMBER);
     }
 
     public static int getDemand(EntityVillager villager, String key) {

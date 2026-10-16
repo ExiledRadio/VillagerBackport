@@ -125,23 +125,27 @@ public class PacketRefillTrade implements IMessage {
             ContainerMerchant container = (ContainerMerchant) player.openContainer;
             InventoryMerchant inventory = container.getMerchantInventory();
 
-            // The trade is ready to go, so there is nothing to do and nothing to say.
-            //
-            // This is the whole difference between a refill that helps and one that fights the
-            // player. Holding the key down asks this question many times a second; answering it by
-            // moving items and re-sending the window each time overwrites whatever the client had
-            // predicted for the click it just made, so the click appears to do nothing at all. A
-            // refill that keeps quiet unless the trade actually cannot proceed can never do that.
-            if (!inventory.getStackInSlot(2).isEmpty()) {
-                return;
-            }
-
             MerchantRecipeList recipes = recipesOf(inventory, player);
             if (recipes == null || index < 0 || index >= recipes.size()) {
                 return;
             }
 
             MerchantRecipe recipe = recipes.get(index);
+
+            // This very trade is loaded and ready to go, so there is nothing to do and nothing to
+            // say.
+            //
+            // This is the whole difference between a refill that helps and one that fights the
+            // player. Holding the key down asks this question many times a second; answering it by
+            // moving items and re-sending the window each time overwrites whatever the client had
+            // predicted for the click it just made, so the click appears to do nothing at all.
+            //
+            // It has to be this trade, though. 1.12.2 fills the result slot whenever the loaded
+            // items pay for any trade at all, so testing only "is the result slot full" left a click
+            // on trade B doing nothing while trade A's items sat in the slots. The game swaps.
+            if (!inventory.getStackInSlot(2).isEmpty() && loadedFor(inventory, recipe)) {
+                return;
+            }
 
             // 1.14's moveFromInventoryToPaymentSlot, in order: empty both slots back to the player,
             // give up entirely if either will not fit, and only load the cost if both came away
@@ -233,12 +237,16 @@ public class PacketRefillTrade implements IMessage {
                 return true;
             }
 
-            if (!player.inventory.addItemStackToInventory(held.copy())) {
-                return false;
-            }
+            // Whatever does not fit stays in the slot. addItemStackToInventory answers true when
+            // any part of the stack went in, so treating that as "all of it" and clearing the slot
+            // deleted the remainder - which is what this did, to a player with a nearly full
+            // inventory, every time they changed trade. 1.14's mergeItemStack leaves the rest where
+            // it was and the move is abandoned, and so does this.
+            ItemStack rest = held.copy();
+            player.inventory.addItemStackToInventory(rest);
 
-            inventory.setInventorySlotContents(slot, ItemStack.EMPTY);
-            return true;
+            inventory.setInventorySlotContents(slot, rest.isEmpty() ? ItemStack.EMPTY : rest);
+            return rest.isEmpty();
         }
 
         /**
@@ -331,10 +339,33 @@ public class PacketRefillTrade implements IMessage {
             return null;
         }
 
-        /** The item and its damage and tags, ignoring how many - what a trade actually matches on. */
+        /**
+         * The item and its damage, ignoring how many - what a trade actually matches on.
+         *
+         * <p>Tags only matter where the trade asks for some. A trade wanting plain paper takes
+         * renamed paper, and an enchanted sword can be sold where a sword is wanted: the game ignores
+         * an item's extra data when a villager buys it. This is the same test 1.12.2 applies to the
+         * trade itself, so the slots are only ever loaded with something the trade will accept.
+         */
         private static boolean matches(ItemStack wanted, ItemStack candidate) {
             return ItemStack.areItemsEqual(wanted, candidate)
-                    && ItemStack.areItemStackTagsEqual(wanted, candidate);
+                    && (!wanted.hasTagCompound() || candidate.hasTagCompound()
+                        && net.minecraft.nbt.NBTUtil.areNBTEquals(
+                                wanted.getTagCompound(), candidate.getTagCompound(), false));
+        }
+
+        /** @return true if the payment slots already hold this trade's items, in either order */
+        private static boolean loadedFor(InventoryMerchant inventory, MerchantRecipe recipe) {
+            ItemStack a = inventory.getStackInSlot(0);
+            ItemStack b = inventory.getStackInSlot(1);
+            ItemStack first = recipe.getItemToBuy();
+            ItemStack second = recipe.getSecondItemToBuy();
+
+            return pays(a, first) && pays(b, second) || pays(b, first) && pays(a, second);
+        }
+
+        private static boolean pays(ItemStack held, ItemStack wanted) {
+            return wanted.isEmpty() ? held.isEmpty() : !held.isEmpty() && matches(wanted, held);
         }
     }
 }

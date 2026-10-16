@@ -1,0 +1,139 @@
+{
+  "pools": [
+    {
+      "rolls": {
+        "min": 3.0,
+        "max": 8.0
+      },
+      "entries": [
+        {
+          "type": "item",
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 3.0
+              }
+            }
+          ],
+          "name": "minecraft:gold_nugget",
+          "entryName": "minecraft:gold_nugget#0"
+        },
+        {
+          "type": "item",
+          "weight": 5,
+          "name": "minecraft:tallgrass",
+          "functions": [
+            {
+              "function": "set_data",
+              "data": 1
+            }
+          ],
+          "entryName": "minecraft:tallgrass#1"
+        },
+        {
+          "type": "item",
+          "weight": 5,
+          "name": "minecraft:double_plant",
+          "functions": [
+            {
+              "function": "set_data",
+              "data": 2
+            }
+          ],
+          "entryName": "minecraft:double_plant#2"
+        },
+        {
+          "type": "item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              }
+            }
+          ],
+          "name": "minecraft:bread",
+          "entryName": "minecraft:bread#3"
+        },
+        {
+          "type": "item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 5.0
+              }
+            }
+          ],
+          "name": "minecraft:wheat_seeds",
+          "entryName": "minecraft:wheat_seeds#4"
+        },
+        {
+          "type": "item",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              }
+            }
+          ],
+          "name": "minecraft:emerald",
+          "entryName": "minecraft:emerald#5"
+        },
+        {
+          "type": "item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 2.0
+              }
+            },
+            {
+              "function": "set_data",
+              "data": 4
+            }
+          ],
+          "name": "minecraft:sapling",
+          "entryName": "minecraft:sapling#6"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:saddle",
+          "entryName": "minecraft:saddle#7"
+        },
+        {
+          "type": "item",
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 2.0
+              }
+            }
+          ],
+          "name": "minecraft:torch",
+          "entryName": "minecraft:torch#8"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:bucket",
+          "entryName": "minecraft:bucket#9"
+        }
+      ],
+      "name": "pool0"
+    }
+  ]
+}

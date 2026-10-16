@@ -84,10 +84,15 @@ public class LayerVillagerSkin implements LayerRenderer<EntityVillager> {
         // No badge without a job. The badge is a rank within a profession, so wearing one while
         // unemployed reads as a villager that has a trade when it has none - and 1.14 never shows
         // one on an unemployed villager either.
+        //
+        // Nor on a nitwit, which wears its own outfit but has no rank to show. 1.14.4 drew one on
+        // nitwits anyway; later versions stopped, and a nitwit with a stone badge reads as a novice
+        // in something rather than as the villager who does nothing.
         int level = VillagerLevelCache.get(villager);
         boolean employed = VillagerLevelCache.career(villager) > 0;
 
         ResourceLocation badge = ModConfig.display.showLevelBadge && employed && !villager.isChild()
+                && !VillagerSkin.isNitwit(villager)
                 ? VillagerSkin.badgeFor(level)
                 : null;
 

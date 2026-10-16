@@ -1,6 +1,7 @@
 package com.exiledradio.villagerbackport.village;
 
 import com.exiledradio.villagerbackport.ModConfig;
+import com.exiledradio.villagerbackport.compat.FutureMc;
 import com.exiledradio.villagerbackport.VillagerBackport;
 import com.exiledradio.villagerbackport.block.BlockWorkstation;
 
@@ -183,7 +184,7 @@ public final class StructureWorkstations implements IWorldGenerator {
                 for (String name : parts[2].split(",")) {
                     Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(name.trim()));
                     if (block != null) {
-                        replacements.add(block);
+                        replacements.add(FutureMc.preferred(block));
                     }
                 }
             }
@@ -327,6 +328,7 @@ public final class StructureWorkstations implements IWorldGenerator {
         if (block == null) {
             return;
         }
+        block = FutureMc.preferred(block);
 
         int allowed = Math.min(among.size() / needed, limit);
         List<BlockPos> placed = new ArrayList<BlockPos>();

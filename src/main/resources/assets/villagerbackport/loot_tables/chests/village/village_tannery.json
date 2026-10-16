@@ -1,0 +1,85 @@
+{
+  "pools": [
+    {
+      "rolls": {
+        "min": 1.0,
+        "max": 5.0
+      },
+      "entries": [
+        {
+          "type": "item",
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 3.0
+              }
+            }
+          ],
+          "name": "minecraft:leather",
+          "entryName": "minecraft:leather#0"
+        },
+        {
+          "type": "item",
+          "weight": 2,
+          "name": "minecraft:leather_chestplate",
+          "entryName": "minecraft:leather_chestplate#1"
+        },
+        {
+          "type": "item",
+          "weight": 2,
+          "name": "minecraft:leather_boots",
+          "entryName": "minecraft:leather_boots#2"
+        },
+        {
+          "type": "item",
+          "weight": 2,
+          "name": "minecraft:leather_helmet",
+          "entryName": "minecraft:leather_helmet#3"
+        },
+        {
+          "type": "item",
+          "weight": 5,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              }
+            }
+          ],
+          "name": "minecraft:bread",
+          "entryName": "minecraft:bread#4"
+        },
+        {
+          "type": "item",
+          "weight": 2,
+          "name": "minecraft:leather_leggings",
+          "entryName": "minecraft:leather_leggings#5"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:saddle",
+          "entryName": "minecraft:saddle#6"
+        },
+        {
+          "type": "item",
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              }
+            }
+          ],
+          "name": "minecraft:emerald",
+          "entryName": "minecraft:emerald#7"
+        }
+      ],
+      "name": "pool0"
+    }
+  ]
+}

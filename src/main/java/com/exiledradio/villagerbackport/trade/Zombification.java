@@ -128,6 +128,12 @@ public final class Zombification {
             if (snapshot.matches(zombie)) {
                 zombie.getEntityData().setTag(CARRIED, snapshot.data);
                 it.remove();
+
+                // One a player has traded with stays put until it is cured, as in the game, so a
+                // villager zombified on purpose for the cure discount is still there to cure.
+                if (snapshot.data.getCompoundTag(ROOT).getInteger("Xp") > 0) {
+                    zombie.enablePersistence();
+                }
                 return;
             }
         }

@@ -45,8 +45,6 @@ public final class HomeSite {
     private static final String AWAKE_UNTIL = "AwakeUntil";
 
     /** How long a villager stays up after a player deliberately turns it out. */
-    private static final int DISTURBED_TICKS = 200;
-
     private static final int TAG_ANY_NUMBER = 99;
 
     private HomeSite() {
@@ -99,11 +97,36 @@ public final class HomeSite {
         }
 
         if (!isBed(villager.world.getBlockState(pos))) {
-            clear(villager);
+            evict(villager, pos);
             return null;
         }
 
         return pos;
+    }
+
+    /**
+     * Drops the claim on a bed that is no longer there, getting the villager up first if it was in it.
+     *
+     * <p>Clearing the claim takes the sleeping flag with it, and the sleeping goal reads that flag to
+     * decide whether there is anyone to wake. So a villager whose bed was broken underneath it was
+     * never woken at all: gravity stayed off, and no client was told, which left it lying in mid-air
+     * turned to face a bed that had gone. Waking it here, while the bed's position is still known,
+     * is what lets it drop to the floor and stand up.
+     */
+    private static void evict(EntityVillager villager, BlockPos bed) {
+        boolean wasSleeping = isSleeping(villager);
+
+        if (wasSleeping) {
+            setSleeping(villager, false);
+            villager.setNoGravity(false);
+        }
+
+        clear(villager);
+
+        if (wasSleeping && !villager.world.isRemote) {
+            SleepSync.broadcastAwake(villager, bed);
+            VillageDebug.say(villager, "sleep: bed was broken");
+        }
     }
 
     /** @return true if this is the head half of a bed - the half a villager sleeps in. */
@@ -153,23 +176,11 @@ public final class HomeSite {
     }
 
     /**
-     * Turns a villager out of bed and keeps it out for a while.
-     *
-     * <p>Called when a player wants the bed - or the villager - for something else. The delay is the
-     * point: clearing the flag alone would have the sleeping goal put it straight back to bed on the
-     * next tick, which from the outside looks like the villager ignoring you.
-     */
-    public static void disturb(EntityVillager villager) {
-        disturb(villager, DISTURBED_TICKS);
-    }
-
-    /**
      * Turns a villager out of bed and keeps it out for a given time.
      *
-     * <p>Two callers want different numbers. A player right-clicking wants the bed, so the villager
-     * stays up long enough for them to have it. A villager shoved out by the crowd is 1.14's case,
-     * and 1.14 gives it forty ticks - long enough not to climb straight back in mid-shove, short
-     * enough that the village settles again once everyone stops pushing.
+     * <p>A villager shoved out by the crowd is 1.14's case, and 1.14 gives it forty ticks - long
+     * enough not to climb straight back in mid-shove, short enough that the village settles again
+     * once everyone stops pushing.
      */
     public static void disturb(EntityVillager villager, int ticks) {
         if (!isSleeping(villager)) {
@@ -207,6 +218,23 @@ public final class HomeSite {
         }
 
         return null;
+    }
+
+    /**
+     * @return true if somebody other than this villager is lying in its bed
+     *
+     * <p>A player in the bed is the block's own occupied flag, which 1.12.2 sets as a player lies
+     * down and clears as they get up. Another villager is this mod's sleeping flag, since villagers
+     * do not touch the block.
+     */
+    public static boolean isOccupiedByOther(EntityVillager villager, BlockPos bed) {
+        IBlockState state = villager.world.getBlockState(bed);
+        if (state.getBlock() instanceof BlockBed && state.getValue(BlockBed.OCCUPIED)) {
+            return true;
+        }
+
+        EntityVillager sleeper = sleeperIn(villager.world, bed);
+        return sleeper != null && sleeper != villager;
     }
 
     /** @return true if the villager is close enough to its bed to get into it. */

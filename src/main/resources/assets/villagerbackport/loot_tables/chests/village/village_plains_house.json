@@ -1,0 +1,123 @@
+{
+  "pools": [
+    {
+      "rolls": {
+        "min": 3.0,
+        "max": 8.0
+      },
+      "entries": [
+        {
+          "type": "item",
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 3.0
+              }
+            }
+          ],
+          "name": "minecraft:gold_nugget",
+          "entryName": "minecraft:gold_nugget#0"
+        },
+        {
+          "type": "item",
+          "weight": 2,
+          "name": "minecraft:yellow_flower",
+          "entryName": "minecraft:yellow_flower#1"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:red_flower",
+          "entryName": "minecraft:red_flower#2"
+        },
+        {
+          "type": "item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 7.0
+              }
+            }
+          ],
+          "name": "minecraft:potato",
+          "entryName": "minecraft:potato#3"
+        },
+        {
+          "type": "item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              }
+            }
+          ],
+          "name": "minecraft:bread",
+          "entryName": "minecraft:bread#4"
+        },
+        {
+          "type": "item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 5.0
+              }
+            }
+          ],
+          "name": "minecraft:apple",
+          "entryName": "minecraft:apple#5"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:book",
+          "entryName": "minecraft:book#6"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:feather",
+          "entryName": "minecraft:feather#7"
+        },
+        {
+          "type": "item",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 4.0
+              }
+            }
+          ],
+          "name": "minecraft:emerald",
+          "entryName": "minecraft:emerald#8"
+        },
+        {
+          "type": "item",
+          "weight": 5,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 2.0
+              }
+            }
+          ],
+          "name": "minecraft:sapling",
+          "entryName": "minecraft:sapling#9"
+        }
+      ],
+      "name": "pool0"
+    }
+  ]
+}

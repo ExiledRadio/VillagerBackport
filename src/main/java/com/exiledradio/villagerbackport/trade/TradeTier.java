@@ -44,6 +44,13 @@ public final class TradeTier {
             return 1;
         }
 
+        // A villager built from 1.14's table recorded where each level ended, since a level there
+        // adds two trades drawn from a pool rather than a fixed list.
+        int recorded = TradeTables.tierOf(villager, recipeIndex);
+        if (recorded > 0) {
+            return recorded;
+        }
+
         VillagerRegistry.VillagerCareer career = careerOf(villager);
         if (career == null) {
             return 1;

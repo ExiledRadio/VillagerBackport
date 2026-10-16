@@ -47,6 +47,15 @@ public final class Employment {
     private static final String ROOT = "villagerbackport";
     private static final String SEEN = "EmploymentChecked";
 
+    /**
+     * Marks a real nitwit, as opposed to an unemployed villager wearing the nitwit profession.
+     *
+     * <p>Both are the nitwit profession in 1.12.2, and the career field cannot tell them apart:
+     * opening any nitwit's screen has vanilla give it the nitwit career. So the difference is kept
+     * here, decided once when the villager is first seen.
+     */
+    private static final String REAL_NITWIT = "Nitwit";
+
     private static final int TAG_COMPOUND = 10;
 
     /** 1.12.2's nitwit, which has no trades and stands in for unemployment. */
@@ -59,12 +68,32 @@ public final class Employment {
         return VillagerTradeData.root(villager);
     }
 
-    /** @return true if this villager has no job. */
+    /**
+     * @return true if this villager has no job and could take one.
+     *
+     * <p>A real nitwit is not unemployed. In 1.14 it is a profession of its own that never takes a
+     * job, never loses one, and never counts towards a golem - see {@link #isNitwit}.
+     */
     public static boolean isUnemployed(EntityVillager villager) {
-        return VillagerAccess.getCareerId(villager) <= 0 || isNitwit(villager);
+        if (isNitwit(villager)) {
+            return false;
+        }
+
+        return VillagerAccess.getCareerId(villager) <= 0 || hasNitwitProfession(villager);
     }
 
-    private static boolean isNitwit(EntityVillager villager) {
+    /**
+     * @return true if this villager is a nitwit: 1.14's villager that never works.
+     *
+     * <p>1.14's {@code AssignProfessionTask} only hands a job to a villager whose profession is
+     * {@code NONE}, so a nitwit never takes one; its golem test excludes {@code NITWIT} by name; and
+     * it has no trades, so it never gains the experience a rank needs.
+     */
+    public static boolean isNitwit(EntityVillager villager) {
+        return root(villager).getBoolean(REAL_NITWIT);
+    }
+
+    private static boolean hasNitwitProfession(EntityVillager villager) {
         VillagerRegistry.VillagerProfession profession = villager.getProfessionForge();
         return profession != null && NITWIT.equals(profession.getRegistryName());
     }
@@ -86,6 +115,19 @@ public final class Employment {
             return;
         }
         tag.setBoolean(SEEN, true);
+
+        // A grown villager that arrived as a nitwit stays one. Villages are built with a few nitwits
+        // among the unemployed, and 1.12.2's village generation rolls nitwit as one of its
+        // professions, so keeping the roll is where a village's nitwits come from - and from curing
+        // a zombie villager that was one.
+        //
+        // Never for a child: babies are always born unemployed, and 1.12.2 rolls its newborns a
+        // random profession that has to be undone, not honoured. Nor for a villager a player made
+        // from an egg or a bare /summon, which is always unemployed - see SpawnSource.
+        if (!villager.isChild() && hasNitwitProfession(villager) && !SpawnSource.isPlayerMade(villager)) {
+            becomeNitwit(villager);
+            return;
+        }
 
         // Anything already earned means this villager predates the mod and keeps what it has.
         if (VillagerTradeData.getXp(villager) > 0 || VillagerAccess.getBuyingList(villager) != null) {
@@ -142,25 +184,14 @@ public final class Employment {
     /**
      * Builds the trades a new hire starts with, without going through vanilla.
      *
-     * <p>The career's own tier-one entries, asked to add themselves to a fresh list - exactly what
-     * {@code populateBuyingList} would do, minus the career re-roll that makes it unusable here.
+     * <p>Tier one of the trade table new villagers use - 1.14's, or the career's own registered
+     * trades, which is what {@code populateBuyingList} would add minus the career re-roll that makes
+     * it unusable here.
      */
     private static void buildFirstTier(EntityVillager villager,
                                        VillagerRegistry.VillagerProfession profession, int careerId) {
-        MerchantRecipeList list = new MerchantRecipeList();
-
-        try {
-            List<EntityVillager.ITradeList> trades =
-                    VillagerAccess.getCareers(profession).get(careerId).getTrades(0);
-
-            if (trades != null) {
-                for (EntityVillager.ITradeList trade : trades) {
-                    trade.addMerchantRecipe(villager, list, villager.getRNG());
-                }
-            }
-        } catch (RuntimeException e) {
-            VillagerBackport.LOGGER.warn("Could not build starting trades for a new villager job.", e);
-        }
+        // From whichever table new trades come from - see TradeTables.
+        MerchantRecipeList list = com.exiledradio.villagerbackport.trade.TradeTables.buildFirstTier(villager);
 
         VillagerAccess.setBuyingList(villager, list);
 
@@ -180,8 +211,48 @@ public final class Employment {
      * by breeding, by another mod, or by vanilla's own spawn path - and the job it is not old enough
      * to do should not survive that.
      */
+    /**
+     * Makes this villager a real nitwit: the nitwit outfit, no job, no trades, and no badge.
+     *
+     * <p>The career is set to the nitwit's own so the client is sent something to dress it in. With
+     * a career of zero it would be drawn exactly like an unemployed villager, which is the one thing
+     * 1.14 makes a point of not doing.
+     */
+    private static void becomeNitwit(EntityVillager villager) {
+        root(villager).setBoolean(REAL_NITWIT, true);
+
+        if (VillagerAccess.getCareerId(villager) <= 0) {
+            VillagerAccess.setCareerId(villager, 1);
+        }
+        VillagerAccess.setCareerLevel(villager, 1);
+        VillagerTradeData.setAppliedLevel(villager, 1);
+
+        com.exiledradio.villagerbackport.trade.LevelSyncHandler.broadcastJobChange(villager);
+    }
+
+    /**
+     * Keeps a child out of work, and settles it as unemployed for good.
+     *
+     * <p>1.12.2 rolls every newborn a random profession, one time in six a nitwit. Marking the child
+     * as seen here matters as much as taking the job away: {@link #initialise} only ever runs on grown
+     * villagers, so a child left unmarked was first looked at the day it grew up - when its nitwit roll
+     * made it look like a villager that had arrived as one, and it was kept a nitwit. Bred villagers
+     * are never nitwits in the game.
+     *
+     * <p>A child that already is a real nitwit - a cured baby zombie villager that was one - stays one.
+     */
     public static void keepChildUnemployed(EntityVillager villager) {
-        if (!ModConfig.jobs.professionsFromWorkstations || isUnemployed(villager)) {
+        if (!ModConfig.jobs.professionsFromWorkstations) {
+            return;
+        }
+
+        root(villager).setBoolean(SEEN, true);
+
+        if (isNitwit(villager)) {
+            return;
+        }
+
+        if (isUnemployed(villager) && VillagerAccess.getCareerId(villager) <= 0) {
             return;
         }
 
@@ -201,6 +272,7 @@ public final class Employment {
         }
 
         villager.setProfession(nitwit);
+        root(villager).removeTag(REAL_NITWIT);
         VillagerAccess.setCareerId(villager, 0);
         VillagerAccess.setCareerLevel(villager, 0);
         VillagerAccess.clearBuyingList(villager);
@@ -217,7 +289,8 @@ public final class Employment {
      * finds another workstation.
      */
     public static boolean shouldLoseJob(EntityVillager villager) {
-        if (!ModConfig.jobs.professionsFromWorkstations || isUnemployed(villager)) {
+        // A nitwit has no job to lose.
+        if (!ModConfig.jobs.professionsFromWorkstations || isUnemployed(villager) || isNitwit(villager)) {
             return false;
         }
 

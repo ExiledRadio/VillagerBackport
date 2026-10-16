@@ -41,8 +41,6 @@ public final class JobSite {
     private static final String SITE_Z = "JobSiteZ";
 
     /** When the claim was staked, and whether the villager ever actually got there. */
-    private static final String SITE_SINCE = "JobSiteSince";
-    private static final String SITE_REACHED = "JobSiteReached";
 
     private static final int TAG_ANY_NUMBER = 99;
     private static final int TAG_COMPOUND = 10;
@@ -69,8 +67,6 @@ public final class JobSite {
         tag.setInteger(SITE_X, pos.getX());
         tag.setInteger(SITE_Y, pos.getY());
         tag.setInteger(SITE_Z, pos.getZ());
-        tag.setLong(SITE_SINCE, villager.world.getTotalWorldTime());
-        tag.setBoolean(SITE_REACHED, false);
     }
 
     public static void clear(EntityVillager villager) {
@@ -78,35 +74,6 @@ public final class JobSite {
         tag.removeTag(SITE_X);
         tag.removeTag(SITE_Y);
         tag.removeTag(SITE_Z);
-        tag.removeTag(SITE_SINCE);
-        tag.removeTag(SITE_REACHED);
-    }
-
-    /** Records that the villager has stood at its workstation, so the claim is its for keeps. */
-    public static void markReached(EntityVillager villager) {
-        root(villager).setBoolean(SITE_REACHED, true);
-    }
-
-    /**
-     * @return true if this claim was staked long ago and never actually reached
-     *
-     * <p>What this guards against is a villager that claims a workstation it cannot get to and then
-     * stops looking, because holding a claim is what stops it searching. Left alone that is
-     * permanent: a workstation put down right beside it would never be noticed. So a claim that has
-     * not been reached expires, and the villager goes back to looking.
-     *
-     * <p>Only ever applies before the first arrival. Once a villager has stood at its workstation the
-     * claim is kept however far it wanders afterwards - villagers have their own lives, and 1.14 does
-     * not take a job away for going for a walk.
-     */
-    public static boolean isUnreachedFor(EntityVillager villager, int ticks) {
-        NBTTagCompound tag = root(villager);
-
-        if (tag.getBoolean(SITE_REACHED)) {
-            return false;
-        }
-
-        return villager.world.getTotalWorldTime() - tag.getLong(SITE_SINCE) > ticks;
     }
 
     /**

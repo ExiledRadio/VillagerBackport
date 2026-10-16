@@ -11,7 +11,10 @@ import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
+import java.util.WeakHashMap;
 
 /**
  * Notices completed trades and keeps per-trade state in step with them.
@@ -34,6 +37,18 @@ import java.util.Set;
  * the next reading starts from a correct baseline.
  */
 public final class TradeTracker {
+
+    /**
+     * What one trade adds to the TRADING opinion of the player who made it. 4, from the wiki's gossip
+     * table; 1.14's code added 2. It still caps at 25, about one emerald off.
+     */
+    private static final int TRADING_GOSSIP = 4;
+
+    /** The entity status both versions turn into green VILLAGER_HAPPY particles. */
+    private static final byte HAPPY_PARTICLES = 14;
+
+    /** Who last had each villager's trade screen open. Weak, so a villager that is gone is dropped. */
+    private static final Map<EntityVillager, UUID> LAST_CUSTOMER = new WeakHashMap<EntityVillager, UUID>();
 
     private TradeTracker() {
     }
@@ -64,6 +79,14 @@ public final class TradeTracker {
 
         Set<String> liveKeys = new HashSet<String>();
         int xpGained = 0;
+        int tradesMade = 0;
+
+        // Remembered while the screen is open, because the poll that notices the last trade can
+        // land just after the player has closed it - see the TRADING gossip below.
+        EntityPlayer customer = villager.getCustomer();
+        if (customer != null) {
+            LAST_CUSTOMER.put(villager, customer.getUniqueID());
+        }
 
         for (int index = 0; index < recipes.size(); index++) {
             MerchantRecipe recipe = recipes.get(index);
@@ -82,9 +105,16 @@ public final class TradeTracker {
             // than trying to interpret it.
             int delta = uses - lastSeen;
             if (delta > 0) {
+                int counted = countedTrades(recipe, lastSeen, delta);
 
-                xpGained += countedTrades(recipe, lastSeen, delta)
-                        * TradeXp.forTrade(recipe, TradeTier.forIndex(villager, index));
+                tradesMade += counted;
+                xpGained += counted * TradeXp.forTrade(recipe, TradeTier.forIndex(villager, index));
+
+                // The game marks a trade selling out with the same green sparkle as a new trade
+                // appearing, so a player can see which one just ran dry.
+                if (lastSeen < recipe.getMaxTradeUses() && uses >= recipe.getMaxTradeUses()) {
+                    villager.world.setEntityState(villager, HAPPY_PARTICLES);
+                }
             }
 
             if (delta != 0) {
@@ -105,14 +135,25 @@ public final class TradeTracker {
         if (xpGained > 0) {
             VillagerTradeData.setXp(villager, VillagerTradeData.getXp(villager) + xpGained);
             pushToCustomer(villager, recipes);
+        }
 
-            // 1.14 raises TRADING gossip by 2 for the player it just traded with, from the same tick
-            // that fires the happy particles. It caps at 25, so trading your way into a villager's
-            // good books is worth about one emerald off and no more - being liked is a courtesy
-            // here, not a business model.
-            EntityPlayer customer = villager.getCustomer();
-            if (customer != null) {
-                Gossip.add(villager, customer.getUniqueID(), GossipType.TRADING, 2);
+        if (tradesMade > 0) {
+            // 1.14 decides whether a trade has earned a level-up at the moment of the trade, and
+            // nowhere else. See LevelGate.noteTrade.
+            LevelGate.noteTrade(villager);
+
+            // Each trade raises the TRADING opinion of the player who made it. It caps at 25, so
+            // trading your way into a villager's good books is worth about one emerald off and no
+            // more - being liked is a courtesy here, not a business model.
+            //
+            // For any trade, whether or not it paid the villager experience, and for the player who
+            // made it even if the screen has closed since: 1.14 holds on to the last customer for
+            // exactly this.
+            //
+            // Per trade, not per batch: a shift-click that buys five times is five trades.
+            UUID who = customer != null ? customer.getUniqueID() : LAST_CUSTOMER.get(villager);
+            if (who != null) {
+                Gossip.add(villager, who, GossipType.TRADING, TRADING_GOSSIP * tradesMade);
             }
         }
 

@@ -87,6 +87,9 @@ public final class LayerInstaller {
         // there is no second pass to order against the first.
         layers.add((LayerRenderer) new LayerVillagerSkin(living));
 
+        // What a villager holds up to show a player its trades. See ShowWares.
+        layers.add((LayerRenderer) new LayerVillagerHeldItem());
+
         // Only now that a villager is actually being rendered is it safe to blank the vanilla
         // textures: the texture manager is up and every mod has finished registering professions.
         VanillaSkinSuppressor.apply();

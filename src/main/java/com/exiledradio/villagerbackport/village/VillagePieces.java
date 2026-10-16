@@ -1,6 +1,5 @@
 package com.exiledradio.villagerbackport.village;
 
-import com.exiledradio.villagerbackport.ModConfig;
 import com.exiledradio.villagerbackport.VillagerBackport;
 
 import net.minecraft.util.EnumFacing;
@@ -16,7 +15,6 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * Registers this mod's village buildings with vanilla village generation.
@@ -65,7 +63,7 @@ public final class VillagePieces {
     }
 
     /**
-     * Makes the pieces known, both to the save format and to village generation.
+     * Makes the pieces known to the save format.
      *
      * <p>The save names are prefixed because they share a namespace with every other mod's village
      * pieces, and a collision would have one mod's building loaded as another's.
@@ -75,22 +73,10 @@ public final class VillagePieces {
         MapGenStructureIO.registerStructureComponent(VillageMarketStall.class, "VBP:Stall");
         MapGenStructureIO.registerStructureComponent(VillageMeetingPoint.class, "VBP:MeetingPoint");
 
-        if (!ModConfig.villages.enabled) {
-            VillagerBackport.LOGGER.info(
-                    "Village workstation buildings are disabled; villages will generate as vanilla.");
-            return;
-        }
-
+        // The workshops, stalls and bell squares this mod used to add are no longer built - 1.14 never
+        // had them, and its own villages put the workstations inside the houses. They stay registered
+        // above so villages already saved with them still load.
         stabiliseHandlerOrder();
-
-        VillagerRegistry.instance().registerVillageCreationHandler(new WorkshopHandler());
-        VillagerRegistry.instance().registerVillageCreationHandler(new StallHandler());
-
-        if (ModConfig.villages.meetingPointWeight > 0) {
-            VillagerRegistry.instance().registerVillageCreationHandler(new MeetingPointHandler());
-        }
-
-        VillagerBackport.LOGGER.info("Registered village workstation buildings.");
     }
 
     /**
@@ -161,74 +147,4 @@ public final class VillagePieces {
      * The enclosed workshop: a real house, so it is allowed to be as common as vanilla's own small
      * houses and to scale with the village.
      */
-    private static class WorkshopHandler implements VillagerRegistry.IVillageCreationHandler {
-
-        @Override
-        public StructureVillagePieces.PieceWeight getVillagePieceWeight(Random random, int size) {
-            // Nothing is drawn from `random` - see the note on this class.
-            return new StructureVillagePieces.PieceWeight(VillageWorkshop.class,
-                    ModConfig.villages.workshopWeight,
-                    Math.max(1, ModConfig.villages.workshopLimit + size));
-        }
-
-        @Override
-        public Class<?> getComponentClass() {
-            return VillageWorkshop.class;
-        }
-
-        @Override
-        public StructureVillagePieces.Village buildComponent(
-                StructureVillagePieces.PieceWeight piece, StructureVillagePieces.Start start,
-                List<StructureComponent> pieces, Random random,
-                int x, int y, int z, EnumFacing facing, int type) {
-            return VillageWorkshop.createPiece(start, pieces, random, x, y, z, facing, type);
-        }
-    }
-
-    /** The open stall: smaller and cheaper, and adds no door, so it fills a village in rather than out. */
-    private static class StallHandler implements VillagerRegistry.IVillageCreationHandler {
-
-        @Override
-        public StructureVillagePieces.PieceWeight getVillagePieceWeight(Random random, int size) {
-            return new StructureVillagePieces.PieceWeight(VillageMarketStall.class,
-                    ModConfig.villages.stallWeight,
-                    Math.max(1, ModConfig.villages.stallLimit + size));
-        }
-
-        @Override
-        public Class<?> getComponentClass() {
-            return VillageMarketStall.class;
-        }
-
-        @Override
-        public StructureVillagePieces.Village buildComponent(
-                StructureVillagePieces.PieceWeight piece, StructureVillagePieces.Start start,
-                List<StructureComponent> pieces, Random random,
-                int x, int y, int z, EnumFacing facing, int type) {
-            return VillageMarketStall.createPiece(start, pieces, random, x, y, z, facing, type);
-        }
-    }
-
-    /** The bell square. Weighted high so it is taken early, limited to one so it stays a landmark. */
-    private static class MeetingPointHandler implements VillagerRegistry.IVillageCreationHandler {
-
-        @Override
-        public StructureVillagePieces.PieceWeight getVillagePieceWeight(Random random, int size) {
-            return new StructureVillagePieces.PieceWeight(VillageMeetingPoint.class,
-                    ModConfig.villages.meetingPointWeight, 1);
-        }
-
-        @Override
-        public Class<?> getComponentClass() {
-            return VillageMeetingPoint.class;
-        }
-
-        @Override
-        public StructureVillagePieces.Village buildComponent(
-                StructureVillagePieces.PieceWeight piece, StructureVillagePieces.Start start,
-                List<StructureComponent> pieces, Random random,
-                int x, int y, int z, EnumFacing facing, int type) {
-            return VillageMeetingPoint.createPiece(start, pieces, random, x, y, z, facing, type);
-        }
-    }
 }

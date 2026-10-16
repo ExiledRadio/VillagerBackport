@@ -1,0 +1,175 @@
+{
+  "pools": [
+    {
+      "rolls": {
+        "min": 3.0,
+        "max": 8.0
+      },
+      "entries": [
+        {
+          "type": "item",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 3.0
+              }
+            }
+          ],
+          "name": "minecraft:diamond",
+          "entryName": "minecraft:diamond#0"
+        },
+        {
+          "type": "item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 5.0
+              }
+            }
+          ],
+          "name": "minecraft:iron_ingot",
+          "entryName": "minecraft:iron_ingot#1"
+        },
+        {
+          "type": "item",
+          "weight": 5,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 3.0
+              }
+            }
+          ],
+          "name": "minecraft:gold_ingot",
+          "entryName": "minecraft:gold_ingot#2"
+        },
+        {
+          "type": "item",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 3.0
+              }
+            }
+          ],
+          "name": "minecraft:bread",
+          "entryName": "minecraft:bread#3"
+        },
+        {
+          "type": "item",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 3.0
+              }
+            }
+          ],
+          "name": "minecraft:apple",
+          "entryName": "minecraft:apple#4"
+        },
+        {
+          "type": "item",
+          "weight": 5,
+          "name": "minecraft:iron_pickaxe",
+          "entryName": "minecraft:iron_pickaxe#5"
+        },
+        {
+          "type": "item",
+          "weight": 5,
+          "name": "minecraft:iron_sword",
+          "entryName": "minecraft:iron_sword#6"
+        },
+        {
+          "type": "item",
+          "weight": 5,
+          "name": "minecraft:iron_chestplate",
+          "entryName": "minecraft:iron_chestplate#7"
+        },
+        {
+          "type": "item",
+          "weight": 5,
+          "name": "minecraft:iron_helmet",
+          "entryName": "minecraft:iron_helmet#8"
+        },
+        {
+          "type": "item",
+          "weight": 5,
+          "name": "minecraft:iron_leggings",
+          "entryName": "minecraft:iron_leggings#9"
+        },
+        {
+          "type": "item",
+          "weight": 5,
+          "name": "minecraft:iron_boots",
+          "entryName": "minecraft:iron_boots#10"
+        },
+        {
+          "type": "item",
+          "weight": 5,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 3.0,
+                "max": 7.0
+              }
+            }
+          ],
+          "name": "minecraft:obsidian",
+          "entryName": "minecraft:obsidian#11"
+        },
+        {
+          "type": "item",
+          "weight": 5,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 3.0,
+                "max": 7.0
+              }
+            }
+          ],
+          "name": "minecraft:sapling",
+          "entryName": "minecraft:sapling#12"
+        },
+        {
+          "type": "item",
+          "weight": 3,
+          "name": "minecraft:saddle",
+          "entryName": "minecraft:saddle#13"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:iron_horse_armor",
+          "entryName": "minecraft:iron_horse_armor#14"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:golden_horse_armor",
+          "entryName": "minecraft:golden_horse_armor#15"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:diamond_horse_armor",
+          "entryName": "minecraft:diamond_horse_armor#16"
+        }
+      ],
+      "name": "pool0"
+    }
+  ]
+}
