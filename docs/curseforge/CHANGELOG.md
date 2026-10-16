@@ -1,3 +1,28 @@
+# 2.1.0
+
+Three more things modern villagers do, and a fix.
+
+## New: a villager's day
+
+*   **Villagers gather at the bell** from 15:00 to 17:00, as in 1.14. Grown villagers head for the nearest bell within 48 blocks, drift around near it and walk up to each other to mingle, which is when gossip spreads fastest. Without a bell in reach they carry on wandering.
+*   **Babies play** from 09:00 to 12:00 and 16:00 to 18:00: they chase each other around in games of tag and bounce on beds. This replaces 1.12.2's baby play, which had them follow each other at any hour.
+*   Both can be turned off in `homes` (`gatherAtBell`, `babiesPlay`), and the gathering times changed.
+
+## New: map locking
+
+Put a map and a glass pane in the cartography table to get a locked copy, as in 1.14. It never changes again, however much the land it shows does, while the map you put in keeps updating. Copies of a locked map are locked too, and a locked map cannot be zoomed or locked again. It says "Locked" under its name. The one difference from 1.14: a locked map does not show your own position marker.
+
+## Fixed
+
+*   **A villager could turn invisible, leaving only its shadow,** when its 1.14 skin could not be loaded. It now falls back to its 1.12.2 skin instead.
+*   When that happened, the game tried again on every frame and could fill the log with thousands of warnings a minute. It now tries once.
+
+## Settings
+
+New in `homes`: `gatherAtBell`, `gatherStartTime`, `gatherEndTime` and `babiesPlay`. They are written to your config automatically.
+
+***
+
 # 2.0.0
 
 The biggest update yet: 1.14's villages and 1.14's trades. The mod still needs nothing else to run, and now also uses items from other backport mods when you have them.
@@ -33,16 +58,6 @@ Villagers sell what they sell in 1.14, at 1.14's prices and stock. Each level of
 *   Prefer the old trades? Set `trades.table` to `LEGACY`.
 *   The cartographer sells one of the four banner patterns this mod adds in place of 1.14's globe pattern, which 1.12.2 has no pattern for.
 
-## New: a villager's day
-
-*   **Villagers gather at the bell** from 15:00 to 17:00, as in 1.14. Grown villagers head for the nearest bell within 48 blocks, drift around near it and walk up to each other to mingle, which is when gossip spreads fastest. Without a bell in reach they carry on wandering.
-*   **Babies play** from 09:00 to 12:00 and 16:00 to 18:00: they chase each other around in games of tag and bounce on beds. This replaces 1.12.2's baby play, which had them follow each other at any hour.
-*   Both can be turned off in `homes` (`gatherAtBell`, `babiesPlay`), and the gathering times changed.
-
-## New: map locking
-
-Put a map and a glass pane in the cartography table to get a locked copy, as in 1.14. It never changes again, however much the land it shows does, while the map you put in keeps updating. Copies of a locked map are locked too, and a locked map cannot be zoomed or locked again. It says "Locked" under its name. The one difference from 1.14: a locked map does not show your own position marker.
-
 ## New: works with other backports
 
 Nothing here needs another mod. When one is installed, its items join the trades where the real game has them, and leave nothing behind when it is not:
@@ -69,7 +84,7 @@ A mod that brings its own village generator, such as Village Names, keeps its vi
 
 ## Settings
 
-New: `trades` (`table`, `rebuildUntradedVillagers`), `villages` (`style`, `legacyHouseWorkstations`), and in `homes` `gatherAtBell`, `gatherStartTime`, `gatherEndTime` and `babiesPlay`. Both are written to your config automatically. Gone: the `structures` section and the workshop, stall and meeting point settings in `villages`.
+New: `trades` (`table`, `rebuildUntradedVillagers`) and `villages` (`style`, `legacyHouseWorkstations`). Both are written to your config automatically. Gone: the `structures` section and the workshop, stall and meeting point settings in `villages`.
 
 ***
 
