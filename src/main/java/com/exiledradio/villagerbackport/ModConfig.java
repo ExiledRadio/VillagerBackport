@@ -686,6 +686,32 @@ public final class ModConfig {
     public static final class Homes {
 
         @Config.Comment({
+                "Grown villagers gather at the village bell in the afternoon, as in 1.14.",
+                "",
+                "They head for the nearest bell within 48 blocks, drift around near it and walk up",
+                "to each other to mingle, which is also when gossip spreads fastest. A villager with",
+                "no bell in reach carries on wandering."
+        })
+        public boolean gatherAtBell = true;
+
+        @Config.Comment("When the gathering starts, in ticks of the day. 1.14's value is 9000 (15:00).")
+        @Config.RangeInt(min = 0, max = 23999)
+        public int gatherStartTime = 9000;
+
+        @Config.Comment("When the gathering ends, in ticks of the day. 1.14's value is 11000 (17:00).")
+        @Config.RangeInt(min = 0, max = 23999)
+        public int gatherEndTime = 11000;
+
+        @Config.Comment({
+                "Baby villagers play, as in 1.14: from 09:00 to 12:00 and 16:00 to 18:00 they chase",
+                "each other around the village and bounce on beds.",
+                "",
+                "Replaces 1.12.2's own baby play, which had them follow each other at any hour."
+        })
+        public boolean babiesPlay = true;
+
+
+        @Config.Comment({
                 "Master switch for beds. When false nothing here happens and villagers behave as",
                 "1.12.2 built them: doors decide the village, and nobody sleeps."
         })

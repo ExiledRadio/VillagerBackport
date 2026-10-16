@@ -69,11 +69,18 @@ public final class WorkstationIndex {
 
         final List<BlockPos> workstations;
         final List<BlockPos> beds;
+        /** Bells: 1.14's meeting points, where villagers gather in the afternoon. */
+        final List<BlockPos> bells;
         final long builtAt;
 
         Entry(List<BlockPos> workstations, List<BlockPos> beds, long builtAt) {
+            this(workstations, beds, new ArrayList<BlockPos>(), builtAt);
+        }
+
+        Entry(List<BlockPos> workstations, List<BlockPos> beds, List<BlockPos> bells, long builtAt) {
             this.workstations = workstations;
             this.beds = beds;
+            this.bells = bells;
             this.builtAt = builtAt;
         }
 
@@ -83,8 +90,8 @@ public final class WorkstationIndex {
 
         Entry with(boolean bed, List<BlockPos> replacement) {
             return bed
-                    ? new Entry(this.workstations, replacement, this.builtAt)
-                    : new Entry(replacement, this.beds, this.builtAt);
+                    ? new Entry(this.workstations, replacement, this.bells, this.builtAt)
+                    : new Entry(replacement, this.beds, this.bells, this.builtAt);
         }
     }
 
@@ -126,10 +133,22 @@ public final class WorkstationIndex {
         return in(world, chunkX, chunkZ, true);
     }
 
+    /** @return the bells in this chunk, or an empty list if it is not loaded */
+    public static List<BlockPos> bellsIn(World world, int chunkX, int chunkZ) {
+        Entry entry = entry(world, chunkX, chunkZ);
+        return entry == null ? Collections.<BlockPos>emptyList() : entry.bells;
+    }
+
     private static List<BlockPos> in(World world, int chunkX, int chunkZ, boolean bed) {
+        Entry entry = entry(world, chunkX, chunkZ);
+        return entry == null ? Collections.<BlockPos>emptyList() : entry.of(bed);
+    }
+
+    @Nullable
+    private static Entry entry(World world, int chunkX, int chunkZ) {
         Chunk chunk = world.getChunkProvider().getLoadedChunk(chunkX, chunkZ);
         if (chunk == null) {
-            return Collections.emptyList();
+            return null;
         }
 
         Map<Long, Entry> chunks = chunksIn(world);
@@ -138,20 +157,21 @@ public final class WorkstationIndex {
         long now = world.getTotalWorldTime();
 
         if (entry != null && now - entry.builtAt < REBUILD_AFTER) {
-            return entry.of(bed);
+            return entry;
         }
 
         // Both kinds come out of one pass. Reading a chunk is the expensive part and it is the same
         // read either way, so scanning twice to answer two questions would be paying double.
         entry = scan(chunk, now);
         chunks.put(key, entry);
-        return entry.of(bed);
+        return entry;
     }
 
     /** Reads a chunk once. Sections it has nothing in are skipped whole, which is most of a column. */
     private static Entry scan(Chunk chunk, long now) {
         List<BlockPos> found = new ArrayList<BlockPos>();
         List<BlockPos> beds = new ArrayList<BlockPos>();
+        List<BlockPos> bells = new ArrayList<BlockPos>();
         int baseX = chunk.x << 4;
         int baseZ = chunk.z << 4;
 
@@ -174,13 +194,22 @@ public final class WorkstationIndex {
                             found.add(new BlockPos(baseX + x, baseY + y, baseZ + z));
                         } else if (isBedHead(state)) {
                             beds.add(new BlockPos(baseX + x, baseY + y, baseZ + z));
+                        } else if (isBell(state)) {
+                            bells.add(new BlockPos(baseX + x, baseY + y, baseZ + z));
                         }
                     }
                 }
             }
         }
 
-        return new Entry(found, beds, now);
+        return new Entry(found, beds, bells, now);
+    }
+
+    /** @return true if this is a bell - this mod's, or Future MC's twin of it. */
+    static boolean isBell(IBlockState state) {
+        net.minecraft.util.ResourceLocation name = state.getBlock().getRegistryName();
+        return name != null && "bell".equals(name.getPath())
+                && ("villagerbackport".equals(name.getNamespace()) || "futuremc".equals(name.getNamespace()));
     }
 
     /** @return true if this is the head half of a bed, the half a villager calls home. */
@@ -280,6 +309,11 @@ public final class WorkstationIndex {
      * Both handlers run last, so a placement or a break another mod goes on to cancel is not one we
      * ever hear about - Forge does not deliver a cancelled event unless asked to.
      */
+    /** Drops a chunk's entry so it is read again next time; bells are rare enough not to patch in place. */
+    private static void forget(World world, BlockPos pos) {
+        chunksIn(world).remove(ChunkPos.asLong(pos.getX() >> 4, pos.getZ() >> 4));
+    }
+
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onBlockPlaced(BlockEvent.PlaceEvent event) {
         if (event.getWorld().isRemote) {
@@ -295,6 +329,8 @@ public final class WorkstationIndex {
         } else if (JobSiteRegistry.isWorkstation(placed.getBlock())) {
             apply(event.getWorld(), event.getPos(), true, false);
             JobSiteClaims.onWorkstationPlaced(event.getWorld(), event.getPos());
+        } else if (isBell(placed)) {
+            forget(event.getWorld(), event.getPos());
         }
     }
 
@@ -313,6 +349,8 @@ public final class WorkstationIndex {
         } else if (JobSiteRegistry.isWorkstation(broken.getBlock())) {
             apply(event.getWorld(), event.getPos(), false, false);
             JobSiteClaims.onWorkstationBroken(event.getWorld(), event.getPos());
+        } else if (isBell(broken)) {
+            forget(event.getWorld(), event.getPos());
         }
     }
 }

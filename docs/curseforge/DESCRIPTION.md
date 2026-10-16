@@ -44,7 +44,7 @@ Villagers with a job go to work every day. During work hours they keep returning
 | <strong>Lectern</strong> |Librarian |Holds a book anyone can read, page by page |
 | <strong>Composter</strong> |Farmer |Turns crops into bone meal, hopper in the top, out the bottom |
 | <strong>Barrel</strong> |Fisherman |A chest that opens with a block on top |
-| <strong>Cartography table</strong> |Cartographer |Copies and zooms maps without eight paper |
+| <strong>Cartography table</strong> |Cartographer |Copies and zooms maps without eight paper, and locks them with a glass pane |
 | <strong>Fletching table</strong> |Fletcher |Cuts wood the way a stonecutter cuts stone |
 | <strong>Smithing table</strong> |Toolsmith |Nothing, same as 1.14 |
 | <strong>Loom</strong> |Shepherd |Applies banner patterns for one dye |
@@ -54,7 +54,7 @@ Villagers with a job go to work every day. During work hours they keep returning
 | <strong>Stonecutter</strong> |Mason |Cuts stone with no offcuts |
 | <strong>Brewing stand / Cauldron</strong> |Cleric / Leatherworker |The two 1.12.2 already had |
 
-The bell is not a job site. Ring it and every villager in range glows through walls for a few seconds. The lantern is not one either: it lights the village, standing on a block or hanging under one.
+The bell is not a job site. It is the village's meeting point, where villagers gather in the afternoon, and ringing it makes every villager in range glow through walls for a few seconds. The lantern is not one either: it lights the village, standing on a block or hanging under one.
 
 **Nitwits** are their own thing again: the green-robed villager that never takes a job and wears no level badge. They come from village generation and from curing zombie villagers that were nitwits. Villagers from spawn eggs and babies always start out unemployed.
 
@@ -94,6 +94,8 @@ Each does in 1.12.2 what it does in 1.14, apart from the fletching table, which 
 The fletching table here is a stonecutter for wood. A log becomes planks, planks become stairs and slabs, without the offcuts a crafting grid charges you. That is this mod's own addition, not something 1.14 does.
 
 Both saws read the crafting recipes already installed and work out what can be cut from them, so a pack with Chisel or Quark gets its blocks in both. The composter reads the ore dictionary the same way.
+
+**Locking a map** works as in 1.14: put a map and a glass pane in the cartography table and you get a locked copy that never changes again, however much the land it shows does. The map you put in keeps updating as before. Copies of a locked map are locked too. A locked map does not show your own position marker, which is the one thing that differs from 1.14.
 
 Rerolling a librarian means breaking and replacing its lectern until the book is one you want. The roll is reported in chat as it happens, so you do not have to open the trade screen to check.
 
@@ -148,6 +150,12 @@ Curing is the biggest discount in the mod, and most of it never fades. Curing th
 
 ***
 
+## A villager's day
+
+Villagers keep 1.14's daily schedule. Work runs from 08:00 to 15:00. From 15:00 to 17:00 grown villagers **gather at the bell**: they head for the nearest bell within 48 blocks, drift around near it and walk up to each other to mingle, which is when gossip gets round the village fastest. At dusk they go to bed.
+
+**Babies play** from 09:00 to 12:00 and again from 16:00 to 18:00. They chase each other around the village in games of tag and bounce on beds.
+
 ## Beds and sleep
 
 A villager claims a bed up to 48 blocks away and sleeps in it from dusk to dawn. Sleeping villagers lie in the bed with a small hitbox on the pillow. Right-click a sleeping villager or its bed to wake it; it lies back down a couple of seconds later if the bed is still free. To take a villager's bed, wake it and sleep there yourself, and it will find another. A villager with no bed waits indoors until morning.
@@ -200,8 +208,6 @@ No raids and no pillagers. This backports the villager and the village, and 1.14
 *   Illagers, pillager patrols, outposts, ravagers
 *   Bad Omen, and the Hero of the Village discount
 *   Wandering traders and their llamas
-*   Map locking, which 1.12.2's map data has nowhere to store
-*   Gathering at the bell in the afternoon, and babies' play time
 
 1.14's bell exists to make raiders glow. With no raids to warn of, ours highlights villagers.
 

@@ -40,6 +40,7 @@ public final class ClientSetup {
 
     public static void init() {
         MinecraftForge.EVENT_BUS.register(new MerchantOverlay());
+        MinecraftForge.EVENT_BUS.register(new MapLockTooltip());
         MinecraftForge.EVENT_BUS.register(new LayerInstaller());
         MinecraftForge.EVENT_BUS.register(new VillagerLevelCache());
         MinecraftForge.EVENT_BUS.register(new SleepCache());

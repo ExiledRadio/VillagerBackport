@@ -2,7 +2,9 @@ package com.exiledradio.villagerbackport.block;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
@@ -27,10 +29,9 @@ import net.minecraft.world.storage.MapData;
  * is exactly the relationship 1.14's table has to its own crafting recipes.
  *
  * <h2>Locking</h2>
- * 1.14's third operation - a glass pane to lock a map so it stops updating - is not here. Locking
- * lives on a {@code locked} field that 1.12.2's {@code MapData} does not have, and the update it
- * would need to suppress happens inside {@code ItemMap.onUpdate}, which has no hook. Adding it would
- * mean patching a vanilla class, which this mod does not do anywhere else.
+ * 1.14's third operation, a glass pane to lock a map so it never changes again, works too. 1.12.2
+ * has no locked flag to set, so see {@link MapLocking} for how it is done without one. A locked map
+ * cannot be zoomed or locked again.
  */
 public class ContainerCartographyTable extends Container {
 
@@ -94,10 +95,14 @@ public class ContainerCartographyTable extends Container {
             return;
         }
 
+        boolean locked = MapLocking.isLocked(map, Items.FILLED_MAP.getMapData(map, this.world));
+
         if (modifier.getItem() == Items.MAP) {
             setResult(copyOf(map));
         } else if (modifier.getItem() == Items.PAPER) {
-            setResult(canZoom(map) ? zoomedOut(map) : ItemStack.EMPTY);
+            setResult(!locked && canZoom(map) ? zoomedOut(map) : ItemStack.EMPTY);
+        } else if (modifier.getItem() == Item.getItemFromBlock(Blocks.GLASS_PANE)) {
+            setResult(locked ? ItemStack.EMPTY : MapLocking.lockRequest(map));
         } else {
             setResult(ItemStack.EMPTY);
         }
@@ -227,7 +232,7 @@ public class ContainerCartographyTable extends Container {
         }
     }
 
-    /** Empty maps to copy onto, or paper to widen with. */
+    /** Empty maps to copy onto, paper to widen with, or a glass pane to lock behind. */
     private static class ModifierSlot extends Slot {
 
         ModifierSlot(IInventory inventory, int index, int x, int y) {
@@ -236,7 +241,8 @@ public class ContainerCartographyTable extends Container {
 
         @Override
         public boolean isItemValid(ItemStack stack) {
-            return stack.getItem() == Items.MAP || stack.getItem() == Items.PAPER;
+            return stack.getItem() == Items.MAP || stack.getItem() == Items.PAPER
+                    || stack.getItem() == Item.getItemFromBlock(Blocks.GLASS_PANE);
         }
     }
 
@@ -257,6 +263,7 @@ public class ContainerCartographyTable extends Container {
             // A zoom is only a request until this runs: onCreated is where vanilla reads the tag and
             // allocates the wider map. A copy carries no such tag, so the call does nothing to it.
             stack.getItem().onCreated(stack, ContainerCartographyTable.this.world, player);
+            MapLocking.complete(stack, ContainerCartographyTable.this.world);
 
             // One of each, whichever operation it was - a copy hands the original back as part of the
             // result rather than leaving it in the slot.

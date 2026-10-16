@@ -41,6 +41,15 @@ public final class JobSiteAttacher {
     /** Where vanilla puts mating, and where its replacement goes. */
     private static final int MATE_PRIORITY = 6;
 
+    /**
+     * The afternoon gathering at the bell. Ahead of wandering and of work - the two never overlap in
+     * time, gathering starts when the working day ends - and behind sleep and fleeing.
+     */
+    private static final int GATHER_PRIORITY = 7;
+
+    /** Where 1.12.2 kept its own baby play goal, which this replaces. */
+    private static final int PLAY_PRIORITY = 8;
+
     /** Where 1.12.2 kept its own fleeing goals, above sleep. */
     private static final int PANIC_PRIORITY = 1;
 
@@ -88,6 +97,19 @@ public final class JobSiteAttacher {
             if (ModConfig.homes.enabled && ModConfig.homes.bedsForBreeding
                     && !hasBreedGoal(villager)) {
                 replaceMatingGoal(villager);
+            }
+
+            if (ModConfig.homes.enabled && ModConfig.homes.gatherAtBell && !hasGoal(villager,
+                    com.exiledradio.villagerbackport.home.EntityAIGatherAtBell.class)) {
+                villager.tasks.addTask(GATHER_PRIORITY,
+                        new com.exiledradio.villagerbackport.home.EntityAIGatherAtBell(villager));
+            }
+
+            if (ModConfig.homes.enabled && ModConfig.homes.babiesPlay && !hasGoal(villager,
+                    com.exiledradio.villagerbackport.home.EntityAIBabyPlay.class)) {
+                removeVanillaPlay(villager);
+                villager.tasks.addTask(PLAY_PRIORITY,
+                        new com.exiledradio.villagerbackport.home.EntityAIBabyPlay(villager));
             }
 
             // Older versions raised this permanently, which made every path a villager computed -
@@ -153,6 +175,17 @@ public final class JobSiteAttacher {
                 new java.util.ArrayList<EntityAITasks.EntityAITaskEntry>(villager.tasks.taskEntries)) {
 
             if (entry.action instanceof net.minecraft.entity.ai.EntityAIMoveIndoors) {
+                villager.tasks.removeTask(entry.action);
+            }
+        }
+    }
+
+    /** Takes off 1.12.2's baby play goal, which the 1.14 one replaces. */
+    private void removeVanillaPlay(EntityVillager villager) {
+        for (EntityAITasks.EntityAITaskEntry entry :
+                new java.util.ArrayList<EntityAITasks.EntityAITaskEntry>(villager.tasks.taskEntries)) {
+
+            if (entry.action instanceof net.minecraft.entity.ai.EntityAIPlay) {
                 villager.tasks.removeTask(entry.action);
             }
         }

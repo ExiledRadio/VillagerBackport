@@ -25,8 +25,7 @@ import javax.annotation.Nullable;
  * copying, and a larger sheet with the map shrunk into the middle of it when zooming out. It is the
  * clearest part of 1.14's table, since it shows what you are about to get before you pay for it.
  *
- * <p>1.14's third layout, for locking a map behind a glass pane, is absent along with the operation
- * itself - see the note on {@link ContainerCartographyTable}.
+ * <p>1.14's third layout, for locking a map behind a glass pane, draws its padlock over the preview.
  */
 @SideOnly(Side.CLIENT)
 public class GuiCartographyTable extends GuiContainer {
@@ -72,18 +71,27 @@ public class GuiCartographyTable extends GuiContainer {
                 .getStack().getItem();
         boolean copying = modifier == Items.MAP;
         boolean zooming = modifier == Items.PAPER;
+        boolean locking = modifier == Item.getItemFromBlock(net.minecraft.init.Blocks.GLASS_PANE);
 
         MapData map = mapData();
         boolean refused = false;
 
-        // Paper on a map that cannot get any wider produces nothing, so the crossed-out marker beside
-        // the result slot is drawn for the same reason the grindstone draws its own.
-        if (zooming && map != null && map.scale >= MAX_SCALE) {
+        // A locked map cannot be zoomed or locked again; 1.14 shows the same crossed-out marker.
+        ItemStack mapStack = this.inventorySlots.getSlot(ContainerCartographyTable.SLOT_MAP).getStack();
+        if ((zooming || locking) && !mapStack.isEmpty()
+                && com.exiledradio.villagerbackport.block.MapLocking.isLocked(mapStack, null)) {
             refused = true;
             drawTexturedModalRect(this.guiLeft + 35, this.guiTop + 31, 226, 132, 28, 21);
         }
 
-        drawPreview(map, copying, zooming && !refused);
+        // Paper on a map that cannot get any wider produces nothing, so the crossed-out marker beside
+        // the result slot is drawn for the same reason the grindstone draws its own.
+        if (!refused && zooming && map != null && map.scale >= MAX_SCALE) {
+            refused = true;
+            drawTexturedModalRect(this.guiLeft + 35, this.guiTop + 31, 226, 132, 28, 21);
+        }
+
+        drawPreview(map, copying, zooming && !refused, locking && !refused);
     }
 
     @Nullable
@@ -102,7 +110,7 @@ public class GuiCartographyTable extends GuiContainer {
      * zooming out looks like; copying draws two sheets offset from each other, the second nudged
      * forward so it reads as being on top rather than fighting with the first.
      */
-    private void drawPreview(@Nullable MapData map, boolean copying, boolean zooming) {
+    private void drawPreview(@Nullable MapData map, boolean copying, boolean zooming, boolean locking) {
         int x = this.guiLeft;
         int y = this.guiTop;
 
@@ -118,6 +126,14 @@ public class GuiCartographyTable extends GuiContainer {
             GlStateManager.translate(0.0F, 0.0F, 1.0F);
             drawTexturedModalRect(x + 67, y + 29, 176, 132, 50, 66);
             drawMap(map, x + 70, y + 32, 0.34F);
+            GlStateManager.popMatrix();
+        } else if (locking) {
+            // The map with 1.14's padlock drawn over its corner.
+            drawTexturedModalRect(x + 67, y + 13, 176, 0, 66, 66);
+            drawMap(map, x + 71, y + 17, 0.45F);
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(0.0F, 0.0F, 1.0F);
+            drawTexturedModalRect(x + 66, y + 12, 0, this.ySize, 66, 66);
             GlStateManager.popMatrix();
         } else {
             drawTexturedModalRect(x + 67, y + 13, 176, 0, 66, 66);
