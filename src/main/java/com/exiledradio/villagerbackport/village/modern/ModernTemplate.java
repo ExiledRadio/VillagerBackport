@@ -77,7 +77,8 @@ public final class ModernTemplate {
         @Nullable
         IBlockState state() {
             if (!this.resolved) {
-                this.state = resolve(this.names, this.props);
+                IBlockState backport = BackportBlocks.resolve(this.source, this.sourceProps, this.props);
+                this.state = backport != null ? backport : resolve(this.names, this.props);
                 this.resolved = true;
             }
             return this.state;

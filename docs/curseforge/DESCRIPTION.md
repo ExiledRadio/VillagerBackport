@@ -20,7 +20,7 @@ Villages are 1.14's villages: plains, desert, savanna, taiga and snowy, built fr
 
 The workstations are inside the houses where 1.14 puts them, so a village has its librarian's lectern and its butcher's smoker from the start. Workstations come only from the buildings, as in the real game; nothing else in the world is turned into one.
 
-*   Blocks 1.12.2 does not have are swapped for the closest it does: stripped logs become logs, blue ice becomes packed ice, smooth sandstone becomes cut sandstone. Lanterns are a block of their own.
+*   Blocks 1.12.2 does not have are swapped for the closest it does: stripped logs become logs, blue ice becomes packed ice, smooth sandstone becomes cut sandstone. When Future MC, Quark or Oceanic Expanse adds the real block, the village is built with that instead. Lanterns are a block of their own.
 *   Village chests carry 1.14's loot.
 *   Houses sit on the ground they were planned for. The terrain inside each building is cleared and the ground under it filled in, so a house on a slope is neither half buried nor standing on stilts.
 *   Streets that cross water become plank bridges in the village's own wood, as in the real game.
@@ -189,6 +189,8 @@ Without them the trade is simply left out of the draw, and the master librarian 
 
 **Future MC** adds many of the same blocks. Both sets give villagers jobs, so a fisherman takes either barrel, and one of each pair is hidden from the creative menu, JEI and crafting so you are not shown two of everything. Choose which with `compat.futureMcDuplicates`. Future MC's smithing table is always the one kept, since it upgrades gear to netherite.
 
+**Future MC, Quark and Oceanic Expanse** also give 1.14 villages their real blocks: smooth sandstone, blue ice, the new walls, stairs and slabs, and spruce, jungle and acacia trapdoors, buttons, pressure plates and signs. Without them villages use 1.12.2's closest blocks.
+
 **Farmer's Future Delight's** Caves & Cliffs world type gets 1.14 villages built on its 1.18-style terrain, anywhere from y -64 to 319.
 
 **Village Names** and any other mod that brings its own village generator keep their villages.
@@ -223,7 +225,7 @@ No raids and no pillagers. This backports the villager and the village, and 1.14
 
 ![The config screen](https://media.forgecdn.net/attachments/1900/416/config-png.png)
 
-*   `villages`: 1.14's villages or 1.12.2's, and workstations for 1.12.2's houses
+*   `villages`: 1.14's villages or 1.12.2's, real 1.14 blocks from backport mods, and workstations for 1.12.2's houses
 *   `trades`: 1.14's trades or 1.12.2's, and whether untraded villagers switch over
 *   `restock`: how many per day, the gap between them, working hours, sounds
 *   `pricing`: demand multipliers, gossip, stock, experience, level gating

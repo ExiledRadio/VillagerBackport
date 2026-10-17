@@ -18,6 +18,16 @@ Put a map and a glass pane in the cartography table to get a locked copy, as in 
 
 In any other world generator that builds its own terrain, which this mod cannot plan villages on, villages now stay 1.12.2's (with their workstations) rather than coming out at the wrong height.
 
+## New: real 1.14 blocks from your backport mods
+
+1.14 villages are built with the real 1.14 block whenever a backport mod you have installed adds it, rather than 1.12.2's closest block. Without those mods villages look exactly as before.
+
+*   **Future MC:** smooth sandstone, smooth stone, sandstone and diorite walls, spruce trapdoors and signs, campfires.
+*   **Quark:** smooth sandstone slabs, diorite and granite stairs and slabs, sandstone walls, and spruce, jungle and acacia trapdoors, buttons and pressure plates.
+*   **Oceanic Expanse:** blue ice, also mixed into the ice piles beside snowy villages as in 1.14, and sea pickles.
+
+Stripped logs are ready for Future MC too, but its current version (0.2.21) does not add them yet, so they stay plain logs for now. Turn `villages.backportBlocks` off to keep 1.12.2's blocks even with these mods installed.
+
 ## Fixed
 
 *   **A villager could turn invisible, leaving only its shadow,** when its 1.14 skin could not be loaded. It now falls back to its 1.12.2 skin instead.
@@ -26,7 +36,7 @@ In any other world generator that builds its own terrain, which this mod cannot 
 
 ## Settings
 
-New in `homes`: `gatherAtBell`, `gatherStartTime`, `gatherEndTime` and `babiesPlay`. They are written to your config automatically.
+New in `homes`: `gatherAtBell`, `gatherStartTime`, `gatherEndTime` and `babiesPlay`. New in `villages`: `backportBlocks`. They are written to your config automatically.
 
 ***
 

@@ -443,11 +443,13 @@ public final class ModConfig {
                 "MODERN: 1.14's villages, built from 1.14's own structure files - plains, desert,",
                 "savanna, taiga and snowy villages, with the workstations, beds and bells inside the",
                 "houses where 1.14 puts them, and the occasional abandoned zombie village. Blocks",
-                "1.12.2 does not have are swapped for the nearest it does.",
+                "1.12.2 does not have are swapped for the nearest it does, unless a backport mod",
+                "adds them (see backportBlocks).",
                 "LEGACY: 1.12.2's villages, with workstations put into the existing houses.",
                 "",
-                "MODERN needs the vanilla overworld generator to lay a village out. In a world made",
-                "by another generator villages stay LEGACY.",
+                "MODERN needs a world generator it can lay a village out on: vanilla's, or Farmer's",
+                "Future Delight's Caves & Cliffs world type. In a world made by another generator",
+                "villages stay LEGACY.",
                 "",
                 "Only affects villages generated after the change. Villages already on disk keep",
                 "the layout they were generated with."
@@ -455,6 +457,23 @@ public final class ModConfig {
         @Config.RequiresMcRestart
         public com.exiledradio.villagerbackport.village.modern.MapGenModernVillage.Style style =
                 com.exiledradio.villagerbackport.village.modern.MapGenModernVillage.Style.MODERN;
+
+        @Config.Comment({
+                "Build MODERN villages with the real 1.14 blocks when a backport mod adds them, rather",
+                "than 1.12.2's nearest block.",
+                "",
+                "Future MC: stripped logs and wood, blue ice, smooth sandstone and its slabs, smooth",
+                "stone, sandstone, diorite and granite walls, diorite slabs, and spruce, jungle and",
+                "acacia trapdoors and signs.",
+                "Quark: the same smooth sandstone, slabs, walls and trapdoors, diorite and granite",
+                "stairs, and spruce, jungle and acacia buttons and pressure plates.",
+                "Oceanic Expanse: blue ice and sea pickles.",
+                "",
+                "With none of them installed nothing changes. Turn this off to keep 1.12.2's blocks",
+                "even with them installed."
+        })
+        @Config.RequiresMcRestart
+        public boolean backportBlocks = true;
 
         @Config.Comment({
                 "In LEGACY villages, put workstations into the houses as they generate: a lectern in",

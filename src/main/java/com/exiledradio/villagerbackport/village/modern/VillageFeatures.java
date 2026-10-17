@@ -8,6 +8,7 @@ import net.minecraft.block.BlockTallGrass;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -80,8 +81,9 @@ final class VillageFeatures {
                 case SNOW:
                     return Blocks.SNOW.getDefaultState();
                 default:
-                    // 1.14 mixes in blue ice, which 1.12.2 does not have.
-                    return Blocks.PACKED_ICE.getDefaultState();
+                    // 1.14 makes one block in three blue ice, which 1.12.2 only has from a backport mod.
+                    IBlockState blue = BackportBlocks.resolve("minecraft:blue_ice", new NBTTagCompound(), new NBTTagCompound());
+                    return blue != null && random.nextInt(3) == 0 ? blue : Blocks.PACKED_ICE.getDefaultState();
             }
         }
     }
