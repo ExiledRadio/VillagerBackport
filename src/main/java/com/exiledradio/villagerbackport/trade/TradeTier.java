@@ -58,7 +58,8 @@ public final class TradeTier {
 
         int cumulative = 0;
         for (int tier = 0; tier < MAX_TIERS_SCANNED; tier++) {
-            List<EntityVillager.ITradeList> trades = career.getTrades(tier);
+            List<EntityVillager.ITradeList> trades =
+                    com.exiledradio.villagerbackport.compat.JeiTradeLists.registeredTrades(career, tier);
             if (trades == null) {
                 break;
             }

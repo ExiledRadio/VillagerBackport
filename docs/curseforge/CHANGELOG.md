@@ -16,6 +16,7 @@ Put a map and a glass pane in the cartography table to get a locked copy, as in 
 
 *   **A villager could turn invisible, leaving only its shadow,** when its 1.14 skin could not be loaded. It now falls back to its 1.12.2 skin instead.
 *   When that happened, the game tried again on every frame and could fill the log with thousands of warnings a minute. It now tries once.
+*   **JEI Villagers showed 1.12.2's trades** rather than the 1.14 trades villagers now sell. It now lists the 1.14 trades, along with any from backport mods you have installed. With `trades.table` set to `LEGACY` it lists 1.12.2's, as before.
 
 ## Settings
 

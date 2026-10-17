@@ -123,6 +123,10 @@ public final class VillagerBackport {
      */
     @Mod.EventHandler
     public void serverStarting(net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent event) {
+        // Belt and braces: if another JEI plugin crashed JEI's startup, its runtime never arrived and
+        // the careers' own trades were never put back. No world may build trades from the 1.14 view.
+        com.exiledradio.villagerbackport.compat.JeiTradeLists.restore();
+
         com.exiledradio.villagerbackport.block.StonecutterRecipes.invalidate();
     }
 

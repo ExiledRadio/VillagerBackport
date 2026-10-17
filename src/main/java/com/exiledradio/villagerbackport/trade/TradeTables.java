@@ -135,7 +135,16 @@ public final class TradeTables {
             return;
         }
 
-        VillagerAccess.unlockTier(villager, tier);
+        // The career's registered trades for this level, appended as vanilla's populateBuyingList
+        // would - but read through JeiTradeLists rather than through vanilla, so they are always
+        // 1.12.2's own. A career with nothing registered for the level adds nothing, as vanilla does.
+        MerchantRecipeList list = VillagerAccess.getBuyingList(villager);
+        if (list == null) {
+            VillagerAccess.unlockTier(villager, tier);
+            return;
+        }
+        addLegacyTier(villager, tier, list);
+        VillagerAccess.setCareerLevel(villager, tier);
     }
 
     /**
@@ -229,7 +238,8 @@ public final class TradeTables {
         int level = Math.max(1, VillagerTradeData.getAppliedLevel(villager));
         int count = 0;
         for (int tier = 0; tier < level; tier++) {
-            List<EntityVillager.ITradeList> trades = career.getTrades(tier);
+            List<EntityVillager.ITradeList> trades =
+                    com.exiledradio.villagerbackport.compat.JeiTradeLists.registeredTrades(career, tier);
             if (trades == null) {
                 break;
             }
@@ -245,7 +255,8 @@ public final class TradeTables {
             return;
         }
         try {
-            List<EntityVillager.ITradeList> trades = career.getTrades(tier - 1);
+            List<EntityVillager.ITradeList> trades =
+                    com.exiledradio.villagerbackport.compat.JeiTradeLists.registeredTrades(career, tier - 1);
             if (trades != null) {
                 for (EntityVillager.ITradeList trade : trades) {
                     trade.addMerchantRecipe(villager, list, villager.getRNG());

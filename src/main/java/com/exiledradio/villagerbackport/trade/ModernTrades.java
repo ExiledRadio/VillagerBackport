@@ -83,9 +83,13 @@ public final class ModernTrades {
         /** @return false when the item this trade needs does not exist in this game */
         boolean available();
 
-        /** @return the trade, or null if it cannot be made here (a map to a structure that does not exist) */
+        /**
+         * @param villager the villager, or null when another mod asks for an example of the trade
+         *                 (JEI Villagers does, with a stand-in merchant)
+         * @return the trade, or null if it cannot be made here (a map to a structure that does not exist)
+         */
         @Nullable
-        MerchantRecipe offer(EntityVillager villager, Random random);
+        MerchantRecipe offer(@Nullable EntityVillager villager, Random random);
     }
 
     /** @return true if the career has a 1.14 table */
@@ -97,6 +101,38 @@ public final class ModernTrades {
     public static int levels(String careerKey) {
         Trade[][] tiers = TABLES.get(careerKey);
         return tiers == null ? 0 : tiers.length;
+    }
+
+    /**
+     * @return the career's 1.14 table in the shape Forge's careers use, every pool entry as its own
+     * trade, for mods that read careers to list what villagers sell. Null if the career has no table.
+     */
+    @Nullable
+    public static List<List<EntityVillager.ITradeList>> asCareerTrades(String careerKey) {
+        Trade[][] tiers = TABLES.get(careerKey);
+        if (tiers == null) {
+            return null;
+        }
+        List<List<EntityVillager.ITradeList>> out = new ArrayList<List<EntityVillager.ITradeList>>();
+        for (Trade[] tier : tiers) {
+            List<EntityVillager.ITradeList> level = new ArrayList<EntityVillager.ITradeList>();
+            for (final Trade trade : tier) {
+                if (!trade.available()) {
+                    continue;
+                }
+                level.add(new EntityVillager.ITradeList() {
+                    @Override
+                    public void addMerchantRecipe(net.minecraft.entity.IMerchant merchant, MerchantRecipeList list, Random random) {
+                        MerchantRecipe recipe = trade.offer(merchant instanceof EntityVillager ? (EntityVillager) merchant : null, random);
+                        if (recipe != null) {
+                            list.add(recipe);
+                        }
+                    }
+                });
+            }
+            out.add(level);
+        }
+        return out;
     }
 
     /**
@@ -392,6 +428,9 @@ public final class ModernTrades {
         return new Fixed() {
             @Override
             public MerchantRecipe offer(EntityVillager villager, Random random) {
+                if (villager == null) {
+                    return null;
+                }
                 net.minecraft.world.World world = villager.world;
                 BlockPos target = world.findNearestStructure(structure, new BlockPos(villager), true);
                 if (target == null) {
@@ -507,8 +546,11 @@ public final class ModernTrades {
         return new Fixed() {
             @Override
             public MerchantRecipe offer(EntityVillager villager, Random random) {
-                Biome biome = villager.world.getBiome(new BlockPos(villager));
                 Item boat = Items.BOAT;
+                if (villager == null) {
+                    return recipe(new ItemStack(boat), ItemStack.EMPTY, new ItemStack(Items.EMERALD), STOCK);
+                }
+                Biome biome = villager.world.getBiome(new BlockPos(villager));
                 if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP)) {
                     boat = Items.DARK_OAK_BOAT;
                 } else if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SAVANNA)) {

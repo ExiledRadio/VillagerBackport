@@ -191,6 +191,8 @@ Without them the trade is simply left out of the draw, and the master librarian 
 
 **Village Names** and any other mod that brings its own village generator keep their villages.
 
+**JEI Villagers** lists the 1.14 trades villagers actually sell, including any from the backport mods above.
+
 ***
 
 ## Commands

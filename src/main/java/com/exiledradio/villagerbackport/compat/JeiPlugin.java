@@ -20,6 +20,21 @@ import net.minecraft.item.ItemStack;
 @JEIPlugin
 public final class JeiPlugin implements IModPlugin {
 
+    /**
+     * Runs for every plugin before any plugin's {@code register}, which is where JEI Villagers reads
+     * the careers' trades. See {@link JeiTradeLists}.
+     */
+    @Override
+    public void registerCategories(mezz.jei.api.recipe.IRecipeCategoryRegistration registry) {
+        JeiTradeLists.swapIn();
+    }
+
+    /** Every plugin has registered by now, so the careers' own trades go back. */
+    @Override
+    public void onRuntimeAvailable(mezz.jei.api.IJeiRuntime runtime) {
+        JeiTradeLists.restore();
+    }
+
     @Override
     public void register(IModRegistry registry) {
         IIngredientBlacklist blacklist = registry.getJeiHelpers().getIngredientBlacklist();
