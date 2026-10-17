@@ -168,13 +168,19 @@ public class MapGenModernVillage extends MapGenVillage {
         if (placed && ModConfig.villages.legacyHouseWorkstations) {
             int x = (chunk.x << 4) + 8;
             int z = (chunk.z << 4) + 8;
-            net.minecraft.world.gen.structure.StructureBoundingBox area =
-                    new net.minecraft.world.gen.structure.StructureBoundingBox(x, z, x + 15, z + 15);
-            for (StructureStart start : this.structureMap.values()) {
-                if (!(start instanceof ModernVillageStart) && start.isSizeableStructure()
-                        && start.getBoundingBox().intersectsWith(area)) {
-                    com.exiledradio.villagerbackport.village.LegacyHouseWorkstations.furnish(world, start, area);
+            try (AutoCloseable scope = WorldHeights.enterFullHeight()) {
+                // Inside the scope, so the range asked for is the full one.
+                net.minecraft.world.gen.structure.StructureBoundingBox area =
+                        new net.minecraft.world.gen.structure.StructureBoundingBox(x, WorldHeights.minY(world), z,
+                                x + 15, WorldHeights.maxYExclusive(world) - 1, z + 15);
+                for (StructureStart start : this.structureMap.values()) {
+                    if (!(start instanceof ModernVillageStart) && start.isSizeableStructure()
+                            && start.getBoundingBox().intersectsWith(area)) {
+                        com.exiledradio.villagerbackport.village.LegacyHouseWorkstations.furnish(world, start, area);
+                    }
                 }
+            } catch (Exception e) {
+                VillagerBackport.LOGGER.warn("Could not furnish a 1.12.2 village with workstations.", e);
             }
         }
         return placed;

@@ -1,6 +1,6 @@
 # 2.1.0
 
-Three more things modern villagers do, and a fix.
+Three more things modern villagers do, support for Farmer's Future Delight's Caves & Cliffs worlds, and fixes.
 
 ## New: a villager's day
 
@@ -11,6 +11,12 @@ Three more things modern villagers do, and a fix.
 ## New: map locking
 
 Put a map and a glass pane in the cartography table to get a locked copy, as in 1.14. It never changes again, however much the land it shows does, while the map you put in keeps updating. Copies of a locked map are locked too, and a locked map cannot be zoomed or locked again. It says "Locked" under its name. The one difference from 1.14: a locked map does not show your own position marker.
+
+## New: Farmer's Future Delight's Caves & Cliffs worlds
+
+1.14 villages now generate properly in Farmer's Future Delight's extended-height Caves & Cliffs world type. That world's terrain is 1.18's, so villages are planned on its real terrain rather than on 1.12.2's, and houses sit on the ground on its hills and mountains. Villages can now be built anywhere from y -64 to 319.
+
+In any other world generator that builds its own terrain, which this mod cannot plan villages on, villages now stay 1.12.2's (with their workstations) rather than coming out at the wrong height.
 
 ## Fixed
 

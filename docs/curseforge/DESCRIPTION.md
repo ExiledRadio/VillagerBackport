@@ -25,7 +25,7 @@ The workstations are inside the houses where 1.14 puts them, so a village has it
 *   Houses sit on the ground they were planned for. The terrain inside each building is cleared and the ground under it filled in, so a house on a slope is neither half buried nor standing on stilts.
 *   Streets that cross water become plank bridges in the village's own wood, as in the real game.
 
-1.14 villages need the vanilla overworld generator to plan them. In a world made by another generator, or with `villages.style` set to `LEGACY`, villages are 1.12.2's, and each building gets the workstation its trade needs: a lectern in the library, a smoker in the butcher's, a blast furnace, smithing table and grindstone at the blacksmith's, a brewing stand in the church, a composter on each field, a bell at the well and one at random in each small house.
+1.14 villages need a world generator whose terrain they can plan on: vanilla's, or Farmer's Future Delight's Caves & Cliffs world type. In a world made by another generator, or with `villages.style` set to `LEGACY`, villages are 1.12.2's, and each building gets the workstation its trade needs: a lectern in the library, a smoker in the butcher's, a blast furnace, smithing table and grindstone at the blacksmith's, a brewing stand in the church, a composter on each field, a bell at the well and one at random in each small house.
 
 `/locate village_plains`, `village_desert`, `village_savanna`, `village_taiga` or `village_snowy` finds the nearest village of that kind.
 
@@ -188,6 +188,8 @@ Nothing here needs another mod. When one of these is installed, its items join t
 Without them the trade is simply left out of the draw, and the master librarian sells a name tag as in 1.14. Butchers and leatherworkers have fewer trades at the top levels without these mods.
 
 **Future MC** adds many of the same blocks. Both sets give villagers jobs, so a fisherman takes either barrel, and one of each pair is hidden from the creative menu, JEI and crafting so you are not shown two of everything. Choose which with `compat.futureMcDuplicates`. Future MC's smithing table is always the one kept, since it upgrades gear to netherite.
+
+**Farmer's Future Delight's** Caves & Cliffs world type gets 1.14 villages built on its 1.18-style terrain, anywhere from y -64 to 319.
 
 **Village Names** and any other mod that brings its own village generator keep their villages.
 

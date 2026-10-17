@@ -41,13 +41,22 @@ public final class TerrainHeights {
     private static final Map<World, TerrainHeights> SAMPLERS = new WeakHashMap<World, TerrainHeights>();
     private static final Map<World, Boolean> UNSUPPORTED = new WeakHashMap<World, Boolean>();
 
+    @Nullable
     private final ChunkGeneratorOverworld generator;
+
+    /** Set instead of {@link #generator} in a Farmer's Future Delight Caves &amp; Cliffs world. */
+    @Nullable
+    private final FfdTerrain ffd;
 
     /** Column heights per chunk, kept only for one village's layout. */
     private final Map<Long, int[]> heights = new HashMap<Long, int[]>();
 
-    private TerrainHeights(ChunkGeneratorOverworld generator) {
+    /** Single columns, for {@link #ffd}. */
+    private final Map<Long, Integer> columns = new HashMap<Long, Integer>();
+
+    private TerrainHeights(@Nullable ChunkGeneratorOverworld generator, @Nullable FfdTerrain ffd) {
         this.generator = generator;
+        this.ffd = ffd;
     }
 
     /** @return a sampler for this world, or null if its terrain cannot be predicted */
@@ -56,6 +65,7 @@ public final class TerrainHeights {
         TerrainHeights sampler = SAMPLERS.get(world);
         if (sampler != null) {
             sampler.heights.clear();
+            sampler.columns.clear();
             return sampler;
         }
         if (UNSUPPORTED.containsKey(world) || !(world instanceof WorldServer)) {
@@ -63,8 +73,26 @@ public final class TerrainHeights {
         }
 
         IChunkGenerator live = ((WorldServer) world).getChunkProvider().chunkGenerator;
+
+        if (FfdTerrain.handles(live)) {
+            FfdTerrain terrain = new FfdTerrain(live);
+            if (terrain.usable()) {
+                sampler = new TerrainHeights(null, terrain);
+                SAMPLERS.put(world, sampler);
+                return sampler;
+            }
+            UNSUPPORTED.put(world, Boolean.TRUE);
+            return null;
+        }
+
         ChunkGeneratorOverworld copy = null;
-        if (live instanceof ChunkGeneratorOverworld) {
+        if (live instanceof ChunkGeneratorOverworld && reshapesTerrain(live.getClass())) {
+            // A subclass that builds its chunks its own way but still answers vanilla's noise would
+            // give vanilla's heights for terrain that is not vanilla's: houses buried or floating.
+            // 1.12.2's villages, which measure the ground as they build, are the better answer there.
+            VillagerBackport.LOGGER.info("World generator {} builds its own terrain, so 1.14 villages cannot be "
+                    + "laid out in it. Villages there stay 1.12.2's.", live.getClass().getName());
+        } else if (live instanceof ChunkGeneratorOverworld) {
             try {
                 Constructor<? extends IChunkGenerator> ctor = live.getClass()
                         .getConstructor(World.class, long.class, boolean.class, String.class);
@@ -83,7 +111,7 @@ public final class TerrainHeights {
             UNSUPPORTED.put(world, Boolean.TRUE);
             return null;
         }
-        sampler = new TerrainHeights(copy);
+        sampler = new TerrainHeights(copy, null);
         SAMPLERS.put(world, sampler);
         return sampler;
     }
@@ -93,6 +121,17 @@ public final class TerrainHeights {
      * water included.
      */
     public int height(int x, int z) {
+        if (this.ffd != null) {
+            // Its surface scan costs far more than vanilla's, and a layout asks about only a few
+            // columns per chunk, so columns are cached one at a time rather than a chunk at a time.
+            long key = ((long) x << 32) ^ (z & 0xFFFFFFFFL);
+            Integer known = this.columns.get(key);
+            if (known == null) {
+                known = this.ffd.height(x, z);
+                this.columns.put(key, known);
+            }
+            return known;
+        }
         int chunkX = x >> 4;
         int chunkZ = z >> 4;
         long key = ((long) chunkX << 32) ^ (chunkZ & 0xFFFFFFFFL);
@@ -102,6 +141,27 @@ public final class TerrainHeights {
             this.heights.put(key, column);
         }
         return column[(z & 15) << 4 | (x & 15)];
+    }
+
+    /**
+     * @return true if a generator class below the vanilla one makes chunks its own way while leaving
+     * the vanilla noise in place - so copying it would answer with heights its terrain does not have
+     */
+    private static boolean reshapesTerrain(Class<?> type) {
+        boolean makesChunks = false;
+        boolean shapesNoise = false;
+        for (Class<?> c = type; c != null && c != ChunkGeneratorOverworld.class; c = c.getSuperclass()) {
+            for (java.lang.reflect.Method m : c.getDeclaredMethods()) {
+                String name = m.getName();
+                if (("generateChunk".equals(name) || "func_185932_a".equals(name)) && m.getParameterTypes().length == 2) {
+                    makesChunks = true;
+                }
+                if (("setBlocksInChunk".equals(name) || "func_185976_a".equals(name)) && m.getParameterTypes().length == 3) {
+                    shapesNoise = true;
+                }
+            }
+        }
+        return makesChunks && !shapesNoise;
     }
 
     private int[] sample(int chunkX, int chunkZ) {

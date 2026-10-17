@@ -132,9 +132,14 @@ public class ModernVillagePiece extends StructureComponent {
 
     @Override
     public boolean addComponentParts(World world, Random random, StructureBoundingBox area) {
-        try {
-            place(element(), world, random, area);
-        } catch (RuntimeException e) {
+        // The full height range, whatever the world's: Forge hands a structure each chunk clipped to
+        // y 1 and up, and Farmer's Future Delight places structures inside a scope clipped to 0-255,
+        // while 1.14 terrain can put a village above or below either. See WorldHeights.
+        try (AutoCloseable scope = WorldHeights.enterFullHeight()) {
+            StructureBoundingBox full = new StructureBoundingBox(area.minX, WorldHeights.minY(world), area.minZ,
+                    area.maxX, WorldHeights.maxYExclusive(world) - 1, area.maxZ);
+            place(element(), world, random, full);
+        } catch (Exception e) {
             // A broken piece must never take the chunk down with it.
             VillagerBackport.LOGGER.warn("Could not place village piece {} #{}.", this.poolName, this.elementIndex, e);
         }
@@ -234,8 +239,9 @@ public class ModernVillagePiece extends StructureComponent {
      */
     static int surface(World world, int x, int z) {
         net.minecraft.world.chunk.Chunk chunk = world.getChunk(x >> 4, z >> 4);
-        BlockPos.MutableBlockPos at = new BlockPos.MutableBlockPos(x, chunk.getTopFilledSegment() + 15, z);
-        while (at.getY() > 0) {
+        int bottom = WorldHeights.minY(world);
+        BlockPos.MutableBlockPos at = new BlockPos.MutableBlockPos(x, WorldHeights.topOfFilledSections(world, chunk), z);
+        while (at.getY() >= bottom) {
             IBlockState state = chunk.getBlockState(at);
             Material m = state.getMaterial();
             if ((m.blocksMovement() || m.isLiquid()) && !state.getBlock().isLeaves(state, world, at)
@@ -244,7 +250,7 @@ public class ModernVillagePiece extends StructureComponent {
             }
             at.setY(at.getY() - 1);
         }
-        return 0;
+        return bottom;
     }
 
     /**
@@ -259,12 +265,14 @@ public class ModernVillagePiece extends StructureComponent {
     private static void setWithoutSupportCheck(World world, BlockPos at, IBlockState state) {
         net.minecraft.world.chunk.Chunk chunk = world.getChunk(at);
         net.minecraft.world.chunk.storage.ExtendedBlockStorage[] storage = chunk.getBlockStorageArray();
-        int section = at.getY() >> 4;
+        // Which slot holds this height is the world's business: Farmer's Future Delight files y -64
+        // to -1 after 255, not before 0.
+        int section = WorldHeights.storageIndex(world, at.getY());
         if (section < 0 || section >= storage.length) {
             return;
         }
         if (storage[section] == net.minecraft.world.chunk.Chunk.NULL_BLOCK_STORAGE) {
-            storage[section] = new net.minecraft.world.chunk.storage.ExtendedBlockStorage(section << 4,
+            storage[section] = new net.minecraft.world.chunk.storage.ExtendedBlockStorage(at.getY() >> 4 << 4,
                     world.provider.hasSkyLight());
         }
         storage[section].set(at.getX() & 15, at.getY() & 15, at.getZ() & 15, state);
@@ -303,7 +311,8 @@ public class ModernVillagePiece extends StructureComponent {
             filler = Blocks.DIRT.getDefaultState();
         }
         BlockPos at = foundation.down();
-        for (int i = 0; i < MAX_FOUNDATION && at.getY() > 0; i++) {
+        int bottom = WorldHeights.minY(world);
+        for (int i = 0; i < MAX_FOUNDATION && at.getY() > bottom; i++) {
             IBlockState existing = world.getBlockState(at);
             Material m = existing.getMaterial();
             if (m.isSolid() && m != Material.LEAVES && m != Material.PLANTS && m != Material.WOOD) {
