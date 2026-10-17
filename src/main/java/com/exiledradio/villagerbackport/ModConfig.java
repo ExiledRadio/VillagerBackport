@@ -447,9 +447,9 @@ public final class ModConfig {
                 "adds them (see backportBlocks).",
                 "LEGACY: 1.12.2's villages, with workstations put into the existing houses.",
                 "",
-                "MODERN needs a world generator it can lay a village out on: vanilla's, or Farmer's",
-                "Future Delight's Caves & Cliffs world type. In a world made by another generator",
-                "villages stay LEGACY.",
+                "MODERN needs a world generator it can lay a village out on: vanilla's, Farmer's",
+                "Future Delight's Caves & Cliffs world type, or Caves Not Cliffs. In a world made by",
+                "another generator villages stay LEGACY.",
                 "",
                 "Only affects villages generated after the change. Villages already on disk keep",
                 "the layout they were generated with."

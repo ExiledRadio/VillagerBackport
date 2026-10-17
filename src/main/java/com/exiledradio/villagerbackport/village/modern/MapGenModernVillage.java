@@ -123,7 +123,12 @@ public class MapGenModernVillage extends MapGenVillage {
         net.minecraft.world.gen.IChunkGenerator generator =
                 ((net.minecraft.world.WorldServer) world).getChunkProvider().chunkGenerator;
         if (!(generator instanceof net.minecraft.world.gen.ChunkGeneratorOverworld)) {
-            return null;
+            // Caves Not Cliffs builds the terrain itself and keeps a vanilla overworld generator
+            // inside only for its structures, villages among them.
+            generator = innerStructureGenerator(generator);
+            if (generator == null) {
+                return null;
+            }
         }
         try {
             Field field = ReflectionHelper.findField(net.minecraft.world.gen.ChunkGeneratorOverworld.class,
@@ -131,6 +136,24 @@ public class MapGenModernVillage extends MapGenVillage {
             field.setAccessible(true);
             Object village = field.get(generator);
             return village instanceof MapGenModernVillage ? (MapGenModernVillage) village : null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /** @return the vanilla overworld generator a terrain mod keeps for its structures, or null */
+    @javax.annotation.Nullable
+    private static net.minecraft.world.gen.IChunkGenerator innerStructureGenerator(
+            @javax.annotation.Nullable net.minecraft.world.gen.IChunkGenerator outer) {
+        if (outer == null) {
+            return null;
+        }
+        try {
+            Field field = outer.getClass().getDeclaredField("structureGenerator");
+            field.setAccessible(true);
+            Object inner = field.get(outer);
+            return inner instanceof net.minecraft.world.gen.ChunkGeneratorOverworld
+                    ? (net.minecraft.world.gen.IChunkGenerator) inner : null;
         } catch (Exception e) {
             return null;
         }

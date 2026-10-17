@@ -1,6 +1,6 @@
 # 2.1.0
 
-Three more things modern villagers do, support for Farmer's Future Delight's Caves & Cliffs worlds, and fixes.
+Three more things modern villagers do, support for Caves & Cliffs worlds from Farmer's Future Delight and Caves Not Cliffs, and fixes.
 
 ## New: a villager's day
 
@@ -12,9 +12,11 @@ Three more things modern villagers do, support for Farmer's Future Delight's Cav
 
 Put a map and a glass pane in the cartography table to get a locked copy, as in 1.14. It never changes again, however much the land it shows does, while the map you put in keeps updating. Copies of a locked map are locked too, and a locked map cannot be zoomed or locked again. It says "Locked" under its name. The one difference from 1.14: a locked map does not show your own position marker.
 
-## New: Farmer's Future Delight's Caves & Cliffs worlds
+## New: Caves & Cliffs worlds
 
-1.14 villages now generate properly in Farmer's Future Delight's extended-height Caves & Cliffs world type. That world's terrain is 1.18's, so villages are planned on its real terrain rather than on 1.12.2's, and houses sit on the ground on its hills and mountains. Villages can now be built anywhere from y -64 to 319.
+1.14 villages now generate properly in 1.18-style worlds from **Farmer's Future Delight** (its Caves & Cliffs world type) and **Caves Not Cliffs [Backported]**. Their terrain is 1.18's, so villages are planned on the real terrain rather than on 1.12.2's, and houses sit on the ground on their hills and mountains. Villages can now be built anywhere from y -64 to 319, and `/locate village_plains` and the rest work in these worlds too.
+
+Villagers in these worlds also find workstations, beds and bells below y 0 at their real height. Before, the mod looked for them in the wrong place.
 
 In any other world generator that builds its own terrain, which this mod cannot plan villages on, villages now stay 1.12.2's (with their workstations) rather than coming out at the wrong height.
 

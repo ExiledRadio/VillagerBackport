@@ -25,7 +25,7 @@ The workstations are inside the houses where 1.14 puts them, so a village has it
 *   Houses sit on the ground they were planned for. The terrain inside each building is cleared and the ground under it filled in, so a house on a slope is neither half buried nor standing on stilts.
 *   Streets that cross water become plank bridges in the village's own wood, as in the real game.
 
-1.14 villages need a world generator whose terrain they can plan on: vanilla's, or Farmer's Future Delight's Caves & Cliffs world type. In a world made by another generator, or with `villages.style` set to `LEGACY`, villages are 1.12.2's, and each building gets the workstation its trade needs: a lectern in the library, a smoker in the butcher's, a blast furnace, smithing table and grindstone at the blacksmith's, a brewing stand in the church, a composter on each field, a bell at the well and one at random in each small house.
+1.14 villages need a world generator whose terrain they can plan on: vanilla's, Farmer's Future Delight's Caves & Cliffs world type, or Caves Not Cliffs. In a world made by another generator, or with `villages.style` set to `LEGACY`, villages are 1.12.2's, and each building gets the workstation its trade needs: a lectern in the library, a smoker in the butcher's, a blast furnace, smithing table and grindstone at the blacksmith's, a brewing stand in the church, a composter on each field, a bell at the well and one at random in each small house.
 
 `/locate village_plains`, `village_desert`, `village_savanna`, `village_taiga` or `village_snowy` finds the nearest village of that kind.
 
@@ -191,7 +191,7 @@ Without them the trade is simply left out of the draw, and the master librarian 
 
 **Future MC, Quark and Oceanic Expanse** also give 1.14 villages their real blocks: smooth sandstone, blue ice, the new walls, stairs and slabs, and spruce, jungle and acacia trapdoors, buttons, pressure plates and signs. Without them villages use 1.12.2's closest blocks.
 
-**Farmer's Future Delight's** Caves & Cliffs world type gets 1.14 villages built on its 1.18-style terrain, anywhere from y -64 to 319.
+**Farmer's Future Delight's** Caves & Cliffs world type and **Caves Not Cliffs** both get 1.14 villages built on their 1.18-style terrain, anywhere from y -64 to 319.
 
 **Village Names** and any other mod that brings its own village generator keep their villages.
 

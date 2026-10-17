@@ -23,7 +23,7 @@ import java.lang.reflect.Method;
  * estimate modern Minecraft itself plans structures with - is used instead: less exact, never wrong
  * by much.
  */
-final class FfdTerrain {
+final class FfdTerrain implements ColumnTerrain {
 
     static final String GENERATOR = "xy177.farmersfuturedelight.common.world.ChunkGeneratorExtended";
 
@@ -77,7 +77,8 @@ final class FfdTerrain {
     }
 
     /** 1.14's {@code WORLD_SURFACE_WG}: one above the top block of the bare terrain, water included. */
-    int height(int x, int z) {
+    @Override
+    public int height(int x, int z) {
         if (this.exact) {
             try {
                 Object sample = this.terrainSample.invoke(this.generator, x >> 4, z >> 4);

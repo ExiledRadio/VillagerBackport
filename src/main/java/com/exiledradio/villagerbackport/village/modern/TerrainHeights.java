@@ -34,7 +34,9 @@ import java.util.WeakHashMap;
  * using them when a village is laid out.
  *
  * <p>Only possible when the world uses the vanilla overworld generator (or a subclass that can be
- * built the same way). Anywhere else there is no sampler, and villages there stay 1.12.2's.
+ * built the same way), or a 1.18 terrain mod this can read: Farmer's Future Delight's Caves &amp;
+ * Cliffs world type ({@link FfdTerrain}) or Caves Not Cliffs ({@link CncTerrain}). Anywhere else there
+ * is no sampler, and villages there stay 1.12.2's.
  */
 public final class TerrainHeights {
 
@@ -44,19 +46,22 @@ public final class TerrainHeights {
     @Nullable
     private final ChunkGeneratorOverworld generator;
 
-    /** Set instead of {@link #generator} in a Farmer's Future Delight Caves &amp; Cliffs world. */
+    /**
+     * Set instead of {@link #generator} where another mod builds the terrain and can say where its
+     * surface is: Farmer's Future Delight's Caves &amp; Cliffs world type, or Caves Not Cliffs.
+     */
     @Nullable
-    private final FfdTerrain ffd;
+    private final ColumnTerrain external;
 
     /** Column heights per chunk, kept only for one village's layout. */
     private final Map<Long, int[]> heights = new HashMap<Long, int[]>();
 
-    /** Single columns, for {@link #ffd}. */
+    /** Single columns, for {@link #external}. */
     private final Map<Long, Integer> columns = new HashMap<Long, Integer>();
 
-    private TerrainHeights(@Nullable ChunkGeneratorOverworld generator, @Nullable FfdTerrain ffd) {
+    private TerrainHeights(@Nullable ChunkGeneratorOverworld generator, @Nullable ColumnTerrain external) {
         this.generator = generator;
-        this.ffd = ffd;
+        this.external = external;
     }
 
     /** @return a sampler for this world, or null if its terrain cannot be predicted */
@@ -73,6 +78,13 @@ public final class TerrainHeights {
         }
 
         IChunkGenerator live = ((WorldServer) world).getChunkProvider().chunkGenerator;
+
+        CncTerrain cnc = CncTerrain.of(world);
+        if (cnc != null) {
+            sampler = new TerrainHeights(null, cnc);
+            SAMPLERS.put(world, sampler);
+            return sampler;
+        }
 
         if (FfdTerrain.handles(live)) {
             FfdTerrain terrain = new FfdTerrain(live);
@@ -121,13 +133,13 @@ public final class TerrainHeights {
      * water included.
      */
     public int height(int x, int z) {
-        if (this.ffd != null) {
-            // Its surface scan costs far more than vanilla's, and a layout asks about only a few
+        if (this.external != null) {
+            // Their surface scans cost far more than vanilla's, and a layout asks about only a few
             // columns per chunk, so columns are cached one at a time rather than a chunk at a time.
             long key = ((long) x << 32) ^ (z & 0xFFFFFFFFL);
             Integer known = this.columns.get(key);
             if (known == null) {
-                known = this.ffd.height(x, z);
+                known = this.external.height(x, z);
                 this.columns.put(key, known);
             }
             return known;

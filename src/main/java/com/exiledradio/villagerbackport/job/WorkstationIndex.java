@@ -183,7 +183,9 @@ public final class WorkstationIndex {
                 continue;
             }
 
-            int baseY = index << 4;
+            // The section knows its own height. Its slot only matches y / 16 in vanilla's layout:
+            // Farmer's Future Delight files y below 0 after 255, and Cave Biomes API shifts every slot.
+            int baseY = section.getYLocation();
 
             for (int y = 0; y < 16; y++) {
                 for (int x = 0; x < 16; x++) {
