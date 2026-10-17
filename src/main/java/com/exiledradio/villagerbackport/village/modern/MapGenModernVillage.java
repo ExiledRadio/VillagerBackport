@@ -135,6 +135,10 @@ public class MapGenModernVillage extends MapGenVillage {
                     "villageGenerator", "field_186005_x");
             field.setAccessible(true);
             Object village = field.get(generator);
+            if (!(village instanceof MapGenModernVillage) && village != null) {
+                Wrapped wrapped = Wrapped.in(village);
+                village = wrapped == null ? null : wrapped.generator();
+            }
             return village instanceof MapGenModernVillage ? (MapGenModernVillage) village : null;
         } catch (Exception e) {
             return null;
@@ -237,9 +241,77 @@ public class MapGenModernVillage extends MapGenVillage {
     public static final class Swap {
         @SubscribeEvent(priority = EventPriority.LOW)
         public void onInitMapGen(InitMapGenEvent event) {
-            if (event.getType() == InitMapGenEvent.EventType.VILLAGE && event.getNewGen() != null
-                    && event.getNewGen().getClass() == MapGenVillage.class) {
+            if (event.getType() != InitMapGenEvent.EventType.VILLAGE || event.getNewGen() == null) {
+                return;
+            }
+            if (event.getNewGen().getClass() == MapGenVillage.class) {
                 event.setNewGen(new MapGenModernVillage((MapGenVillage) event.getNewGen()));
+                return;
+            }
+            // Recurrent Complex (with its decorationHacks on, as RLCraft has it) wraps the vanilla
+            // generator in a hook that can put its own structures in a village's place, and keeps the
+            // generator it wrapped. Swapping that one keeps the hook and makes the villages 1.14's.
+            Wrapped wrapped = Wrapped.in(event.getNewGen());
+            if (wrapped != null && wrapped.generator().getClass() == MapGenVillage.class) {
+                wrapped.replace(new MapGenModernVillage((MapGenVillage) wrapped.generator()));
+                VillagerBackport.LOGGER.info("Building 1.14 villages inside {}'s village generator.",
+                        event.getNewGen().getClass().getName());
+            }
+        }
+    }
+
+    /**
+     * A generator another mod has wrapped: the wrapper holds a hook object with a public
+     * {@code base} field naming the generator it stands in front of.
+     */
+    private static final class Wrapped {
+        private final Object hook;
+        private final Field base;
+
+        private Wrapped(Object hook, Field base) {
+            this.hook = hook;
+            this.base = base;
+        }
+
+        @javax.annotation.Nullable
+        static Wrapped in(Object wrapper) {
+            for (Class<?> c = wrapper.getClass(); c != null && c != MapGenVillage.class; c = c.getSuperclass()) {
+                for (Field field : c.getDeclaredFields()) {
+                    if (java.lang.reflect.Modifier.isStatic(field.getModifiers()) || field.getType().isPrimitive()) {
+                        continue;
+                    }
+                    try {
+                        field.setAccessible(true);
+                        Object hook = field.get(wrapper);
+                        if (hook == null) {
+                            continue;
+                        }
+                        Field base = hook.getClass().getField("base");
+                        if (net.minecraft.world.gen.structure.MapGenStructure.class.isAssignableFrom(base.getType())
+                                && base.get(hook) != null) {
+                            return new Wrapped(hook, base);
+                        }
+                    } catch (NoSuchFieldException | IllegalAccessException | RuntimeException ignored) {
+                        // Not a hook.
+                    }
+                }
+            }
+            return null;
+        }
+
+        Object generator() {
+            try {
+                return this.base.get(this.hook);
+            } catch (IllegalAccessException e) {
+                return null;
+            }
+        }
+
+        void replace(MapGenVillage generator) {
+            try {
+                this.base.set(this.hook, generator);
+            } catch (IllegalAccessException e) {
+                VillagerBackport.LOGGER.warn("Could not put 1.14 villages inside a wrapped village generator.", e);
             }
         }
     }
