@@ -112,6 +112,14 @@ public final class VillagerBackport {
     @Mod.EventHandler
     public void postInit(net.minecraftforge.fml.common.event.FMLPostInitializationEvent event) {
         com.exiledradio.villagerbackport.compat.FutureMc.removeLateRecipes();
+        com.exiledradio.villagerbackport.block.CropSounds.apply();
+        com.exiledradio.villagerbackport.block.SmithingUpgrades.registerIngots();
+    }
+
+    /** Every mod's recipes are in by now, so the smithing table's upgrades can be gathered. */
+    @Mod.EventHandler
+    public void loadComplete(net.minecraftforge.fml.common.event.FMLLoadCompleteEvent event) {
+        com.exiledradio.villagerbackport.block.SmithingUpgrades.isActive();
     }
 
     /**

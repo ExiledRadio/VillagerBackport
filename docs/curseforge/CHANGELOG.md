@@ -1,44 +1,139 @@
-# 2.1.0
+# 2.1.1
 
-Three more things modern villagers do, support for Caves & Cliffs worlds from Farmer's Future Delight and Caves Not Cliffs, and fixes.
+1.14 villages in Realistic Terrain Generation worlds, and fixes for playing alongside Future MC.
 
-## New: a villager's day
+## New: 1.14 villages in Realistic Terrain Generation worlds
 
-*   **Villagers gather at the bell** from 15:00 to 17:00, as in 1.14. Grown villagers head for the nearest bell within 48 blocks, drift around near it and walk up to each other to mingle, which is when gossip spreads fastest. Without a bell in reach they carry on wandering.
-*   **Babies play** from 09:00 to 12:00 and 16:00 to 18:00: they chase each other around in games of tag and bounce on beds. This replaces 1.12.2's baby play, which had them follow each other at any hour.
-*   Both can be turned off in `homes` (`gatherAtBell`, `babiesPlay`), and the gathering times changed.
+Worlds made with **Realistic Terrain Generation**'s world type now get 1.14 villages. Until now this mod couldn't plan a village on RTG's terrain, so those worlds were left with 1.12.2's villages.
 
-## New: map locking
-
-Put a map and a glass pane in the cartography table to get a locked copy, as in 1.14. It never changes again, however much the land it shows does, while the map you put in keeps updating. Copies of a locked map are locked too, and a locked map cannot be zoomed or locked again. It says "Locked" under its name. The one difference from 1.14: a locked map does not show your own position marker.
-
-## New: Caves & Cliffs worlds
-
-1.14 villages now generate properly in 1.18-style worlds from **Farmer's Future Delight** (its Caves & Cliffs world type) and **Caves Not Cliffs [Backported]**. Their terrain is 1.18's, so villages are planned on the real terrain rather than on 1.12.2's, and houses sit on the ground on their hills and mountains. Villages can now be built anywhere from y -64 to 319, and `/locate village_plains` and the rest work in these worlds too.
-
-Villagers in these worlds also find workstations, beds and bells below y 0 at their real height. Before, the mod looked for them in the wrong place.
-
-In any other world generator that builds its own terrain, which this mod cannot plan villages on, villages now stay 1.12.2's (with their workstations) rather than coming out at the wrong height.
-
-## New: real 1.14 blocks from your backport mods
-
-1.14 villages are built with the real 1.14 block whenever a backport mod you have installed adds it, rather than 1.12.2's closest block. Without those mods villages look exactly as before.
-
-*   **Future MC:** smooth sandstone, smooth stone, sandstone and diorite walls, spruce trapdoors and signs, campfires.
-*   **Quark:** smooth sandstone slabs, diorite and granite stairs and slabs, sandstone walls, and spruce, jungle and acacia trapdoors, buttons and pressure plates.
-*   **Oceanic Expanse:** blue ice, also mixed into the ice piles beside snowy villages as in 1.14, and sea pickles.
-
-Stripped logs are ready for Future MC too, but its current version (0.2.21) does not add them yet, so they stay plain logs for now. Turn `villages.backportBlocks` off to keep 1.12.2's blocks even with these mods installed.
+*   They are planned on RTG's real terrain, so houses sit properly on its hills.
+*   `/locate village_plains` and the other village types work in RTG worlds too.
+*   Villages already in your world stay as they are.
 
 ## Fixed
 
-*   **A villager could turn invisible, leaving only its shadow,** when its 1.14 skin could not be loaded. It now falls back to its 1.12.2 skin instead.
-*   When that happened, the game tried again on every frame and could fill the log with thousands of warnings a minute. It now tries once.
-*   **JEI Villagers showed 1.12.2's trades** rather than the 1.14 trades villagers now sell. It now lists the 1.14 trades, along with any from backport mods you have installed. With `trades.table` set to `LEGACY` it lists 1.12.2's, as before.
+*   **Villages were still built with this mod's workstations, bells and lanterns when `compat.futureMcDuplicates` was set to `KEEP_FUTURE_MC`.** Both 1.14 villages and the workstations added to 1.12.2's houses now use Future MC's blocks in that case, keeping how each block faces and whether lanterns and bells hang.
+*   **The smithing table ignored Future MC's smithing recipes, including ones added with CraftTweaker, unless a netherite ingot existed.** With Future MC's netherite turned off and no other netherite mod, the table found nothing to do, so it never opened. It now reads Future MC's recipes either way and takes them exactly as written, so a recipe can now make any item, in any amount.
+
+Without Future MC or a netherite mod there is still nothing to upgrade, so the smithing table still does nothing, just as in 1.14.
+
+***
+
+# 2.1.0
+
+A big one. The smithing table now upgrades diamond gear to netherite, farmers work the way they do in modern Minecraft, and villagers gather at the bell, play, wear their hats and shake their heads at you. 1.14 villages now generate in RLCraft, RLCraft Dregora and Caves & Cliffs worlds, with waystones and other mods' buildings mixed in, and they are built from your backport mods' real 1.14 blocks wherever those mods provide them.
+
+## Before you update an existing world
+
+*   **Nothing has been removed.** Your settings carry over, and the new ones are added to your config automatically.
+*   **Village changes only apply to new chunks.** Villages that have already generated keep the blocks they were built with, so in a pregenerated world only the land beyond the pregenerated area gets the new villages.
+*   **Farmers now farm only during work hours, and only the fields around their composter.** A field with no farmer's composter nearby will no longer be tended. Put a composter beside it, or turn off `jobs.modernFarming` to farm the old way.
+*   **If you have Future MC, this mod's smithing table now replaces Future MC's**, just as the other shared blocks already did. Future MC's table loses its crafting recipe and its JEI page, but any you have already placed keep working. If you would rather keep Future MC's, set `compat.futureMcDuplicates` to `KEEP_FUTURE_MC`.
+
+## New: netherite upgrades at the smithing table
+
+With a netherite mod installed, the smithing table works as it does in 1.16: put in a diamond item and a netherite ingot, and take out the netherite version. Enchantments, names and damage all carry over, which none of the netherite mods' own tables or crafting recipes manage. Without a netherite mod the table does nothing, just as in 1.14.
+
+*   **Works with most 1.12.2 netherite mods.** The table reads the upgrades straight from each mod: Future MC, Spartan Netherite (every Spartan weapon and shield), Netherite Mod, Complete 1.16 Nether Overhaul, Netherite Stuff, NetherUpdate, NetheritePlusMOD [ESP], Netherites But 1.12.2, Nether+ and others.
+*   **Running two netherite mods?** Each mod's ingot makes that mod's own gear.
+*   **JEI** shows every upgrade.
+*   **Every netherite ingot gets the `ingotNetherite` ore dictionary name**, so mods that look for it, such as Spartan Netherite, work with whichever netherite mod you have.
+*   **It replaces Future MC's smithing table** when both are installed. Because it reads Future MC's smithing recipes, including any added with CraftTweaker, it does everything Future MC's table did and handles every other netherite mod's gear as well.
+*   **Settings** in `workstations`: `netheriteUpgrades` turns the feature off. `netheriteNameMatching` stops the table guessing upgrades from item names, which it does for mods that only craft their netherite gear from scratch. `removeCraftingUpgrades` removes the netherite mods' own crafting-grid upgrades, making the table the only way to upgrade, as in 1.16.
+
+## New: farmers work like modern farmers
+
+*   **They tend their own fields, during work hours.** A farmer works the farmland within 10 blocks of its composter from 08:00 to 15:00, as in 1.14. In 1.12.2 it farmed whatever field it happened to be near, all night included. Set the reach with `jobs.farmRadius`.
+*   **They keep harvesting** as long as they have room for the crop, instead of stopping once they have "enough" food like 1.12.2's farmers did, and they look for work more often.
+*   **They bake bread** whenever they visit their composter, turning 3 wheat into 1 loaf, up to 3 loaves a visit. Bread is the food villagers share to breed, so a village with a farmer and a wheat field keeps growing.
+*   **They compost their spare seeds**, as farmers have done since 1.16. A farmer keeps 10 of each kind for replanting and puts the rest in its composter. Once the composter is full, the farmer empties it on its next visit and leaves the bone meal on the ground for you.
+*   **Settings** in `jobs`: `modernFarming` (turn it off to farm as in 1.12.2), `farmRadius`, `farmersBakeBread` and `farmersCompost`.
+
+## New: a villager's day
+
+*   **Villagers gather at the bell** from 15:00 to 17:00, as in 1.14. Adults head for the nearest bell within 48 blocks, mill about around it and stop to chat with each other, which is when gossip spreads fastest. With no bell in reach, they simply carry on with their day.
+*   **Babies play** from 09:00 to 12:00 and again from 16:00 to 18:00, chasing each other in games of tag and bouncing on beds. This replaces 1.12.2's version, where babies trailed after each other at any hour.
+*   **Villagers shake their heads** when you try to trade with one that has nothing to sell (a baby, a nitwit or a villager without a job), just as they do in 1.14. Every click gets its own "no", so holding the button down keeps them shaking.
+*   You can turn off the gathering and the playing in `homes` (`gatherAtBell`, `babiesPlay`), and change the gathering hours there too.
+
+## New: map locking
+
+Put a map and a glass pane in the cartography table to get a locked copy, as in 1.14. The copy never changes again, however much the land it shows does, while the original keeps updating. Copies of a locked map are locked too, a locked map can't be zoomed or locked again, and it says "Locked" under its name. The only difference from 1.14 is that a locked map doesn't show your own position marker.
+
+## New: hanging bells
+
+The bell now has all four of 1.14's mountings: on a floor stand, hanging from a ceiling, hanging from a wall, or slung between two walls. As in 1.14, the face you place it against decides which, and 1.14 villages hang their bells from beams wherever 1.14 does. Bells you have already placed stay on their stands.
+
+## New: crop sounds
+
+Crops now sound the way they do in 1.14. Planting seeds makes a soft rustle where 1.12.2 was silent, and breaking or harvesting a crop gives a crunch instead of the grass sound. Farmer villagers make the planting sound too as they replant their fields.
+
+Wheat, carrots, potatoes, beetroot and other mods' crops all get the new sounds. Pumpkin and melon stems keep their wooden sound but gain the planting sound, and nether wart gets sounds of its own. Turn them off with `sounds.cropSounds`.
+
+## New: 1.14 villages in Open Terrain Generator worlds (RLCraft Dregora)
+
+Worlds made by **Open Terrain Generator**, RLCraft Dregora's among them, now get 1.14 villages. Until now this mod couldn't plan a village on OTG's terrain, so those worlds were left with 1.12.2's villages.
+
+*   Villages appear wherever the world's own settings put them, with the same spacing and only in the biomes its preset allows. Each biome's village style becomes the matching 1.14 type: sandstone becomes desert, savanna stays savanna, taiga stays taiga, and wood becomes plains. In snowy biomes, wood and taiga villages become 1.14's snowy villages.
+*   They are planned on OTG's real terrain, so houses sit properly on its hills.
+*   `/locate village_plains` and the other village types work in these worlds.
+*   Villages already in your world stay as they are, and anywhere a 1.14 village can't be laid out, OTG builds its own village instead.
+*   Waystones, Recurrent Complex, Bountiful and other mods' village buildings join these villages just as they do anywhere else.
+*   Dregora's own structures don't know where villages are, so now and then one may overlap a village, as they already can with OTG's villages.
+*   With `villages.style` set to `LEGACY`, OTG worlds keep OTG's own villages.
+
+## New: Caves & Cliffs worlds
+
+1.14 villages now generate properly in the 1.18-style worlds of **Farmer's Future Delight** (its Caves & Cliffs world type) and **Caves Not Cliffs [Backported]**. Villages are planned on these worlds' real 1.18 terrain rather than on 1.12.2's, so houses sit on the ground across their hills and mountains. Villages can now be built anywhere from y -64 to 319, and `/locate village_plains` and the rest work here too.
+
+Villagers in these worlds also find workstations, beds and bells below y 0 at their real height. Before, the mod looked for them in the wrong place.
+
+In any other world generator that builds its own terrain, which this mod can't plan villages on, villages now stay 1.12.2's (with their workstations) instead of generating at the wrong height.
+
+## New: other mods' village buildings in 1.14 villages
+
+Mods that add buildings to villages now add them to 1.14 villages as well. Until now a 1.14 village was built only from 1.14's own buildings, so in RLCraft it had no waystone and none of RLCraft's village houses.
+
+*   **Waystones:** the village waystone goes by the town centre, near the bell, whenever Waystones rolls one for that village. RLCraft sets that to every village.
+*   **Recurrent Complex**, and through it **RLCraft's** village buildings: the inn, library, blacksmith, farmhouse, vineyard, Three Towers and the rest, along with Recurrent Complex's own buildings such as its marketplace.
+*   **Any other mod** that adds village buildings the standard way.
+
+These buildings go on free plots beside the streets, but only where the ground is dry, fairly level and close to the street's height. A village gets about as many as a 1.12.2 village of the same size would, and never more than 10 (the waystone doesn't count towards that). Each one is the mod's own building, built exactly as it would be in a 1.12.2 village, chests, loot and villagers included.
+
+Settings in `villages`: `modPieces` turns the feature off, `maxModPieces` sets the most a village can get, `waystoneNearBell` lets the waystone go anywhere in the village, and `modPieceExclusions` leaves out a whole mod (`reccomplex`) or a single building (`reccomplex:P_VillageInn`). The first time a 1.14 village generates, the log lists every building on offer under those names.
+
+## New: real 1.14 blocks from your backport mods
+
+1.14 villages are now built with the real 1.14 block whenever a backport mod you have installed adds it, instead of 1.12.2's closest match. Without these mods, villages look exactly as they did before.
+
+*   **Future MC:** stripped logs and wood, smooth sandstone, smooth stone, blue ice, sandstone and diorite walls, spruce trapdoors and signs, and campfires.
+*   **Quark:** smooth sandstone slabs, diorite and granite stairs and slabs, sandstone walls, and spruce, jungle and acacia trapdoors, buttons and pressure plates.
+*   **Oceanic Expanse:** blue ice, which is also mixed into the ice piles beside snowy villages as in 1.14, and sea pickles.
+*   **Farmer's Future Delight:** stripped logs and wood.
+
+With Oceanic Expanse installed, Future MC leaves out its stripped logs and blue ice unless you turn off the `Oceanic Expanse` option in Future MC's own config. Villages then take their stripped logs from Farmer's Future Delight if you have it, and their blue ice from Oceanic Expanse.
+
+Turn off `villages.backportBlocks` to keep 1.12.2's blocks even with these mods installed.
+
+## Fixed
+
+*   **RLCraft, and other packs that run Recurrent Complex with its decoration hacks on, still generated 1.12.2 villages.** Recurrent Complex wrapped the village generator before this mod could replace it, so the replacement never happened. These packs now get 1.14 villages, and `/locate` finds every village type. In a world whose generator builds terrain this mod can't plan villages on, `/locate` now tells you so and names the generator.
+*   **Villagers were missing their hats.** 1.14's outfits draw every hat, from the farmer's straw hat to the desert villager's head wrap, on a part of the head the 1.12.2 villager model doesn't have, so none of them ever showed. Villagers now wear them, and a profession's hat covers the biome's as in 1.14, so a snowy farmer wears just the straw hat rather than both.
+*   **1.14 villages didn't show up on Antique Atlas maps**, because the atlas only recognises 1.12.2's village buildings. 1.14 villages are now drawn with the closest atlas tile for each building (houses, the library, smithy, church, fields, the town centre's well and the lamp posts), and get a village marker when the atlas is set to add them. Villages you have already found appear the next time you load the world.
+*   **A villager could turn invisible, leaving only its shadow,** if its 1.14 skin failed to load. It now falls back to its 1.12.2 skin instead. The game also used to retry on every frame when this happened, which could fill the log with thousands of warnings a minute; it now tries just once.
+*   **JEI Villagers showed 1.12.2's trades** instead of the 1.14 trades villagers actually sell. It now lists the 1.14 trades, plus any from backport mods you have installed. With `trades.table` set to `LEGACY` it lists 1.12.2's trades, as before.
 
 ## Settings
 
-New in `homes`: `gatherAtBell`, `gatherStartTime`, `gatherEndTime` and `babiesPlay`. New in `villages`: `backportBlocks`. They are written to your config automatically.
+All new, and added to your config automatically:
+
+*   `homes`: `gatherAtBell`, `gatherStartTime`, `gatherEndTime`, `babiesPlay`
+*   `villages`: `backportBlocks`, `modPieces`, `maxModPieces`, `waystoneNearBell`, `modPieceExclusions`
+*   `jobs`: `modernFarming`, `farmRadius`, `farmersBakeBread`, `farmersCompost`
+*   `workstations`: `netheriteUpgrades`, `netheriteNameMatching`, `removeCraftingUpgrades`
+*   `sounds` (a new section): `cropSounds`
+
+`compat.futureMcDuplicates` now covers the smithing table too.
 
 ***
 

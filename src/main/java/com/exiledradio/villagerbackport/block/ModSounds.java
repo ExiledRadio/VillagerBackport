@@ -52,6 +52,21 @@ public final class ModSounds {
     /** A page turning, heard by everyone near the lectern rather than only the reader. */
     public static SoundEvent bookPageTurn;
 
+    /** The hammering at a smithing table as gear is upgraded. 1.16's own three samples. */
+    public static SoundEvent smithingTableUse;
+
+    /** Seeds going into farmland. 1.12.2 plants in silence. */
+    public static SoundEvent cropPlant;
+
+    /** A crop being broken or harvested, in place of 1.12.2's grass. */
+    public static SoundEvent cropBreak;
+
+    /** Nether wart going into soul sand. */
+    public static SoundEvent netherWartPlant;
+
+    /** Nether wart being broken, the planting samples pitched down. */
+    public static SoundEvent netherWartBreak;
+
     private ModSounds() {
     }
 
@@ -66,6 +81,11 @@ public final class ModSounds {
         loomTakeResult = create(event, "ui.loom.take_result");
         bookPut = create(event, "item.book.put");
         bookPageTurn = create(event, "item.book.page_turn");
+        smithingTableUse = create(event, "block.smithing_table.use");
+        cropPlant = create(event, "item.crop.plant");
+        cropBreak = create(event, "block.crop.break");
+        netherWartPlant = create(event, "item.nether_wart.plant");
+        netherWartBreak = create(event, "block.nether_wart.break");
     }
 
     private static SoundEvent create(RegistryEvent.Register<SoundEvent> event, String name) {

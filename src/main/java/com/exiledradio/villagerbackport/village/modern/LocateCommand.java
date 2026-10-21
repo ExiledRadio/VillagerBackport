@@ -72,7 +72,7 @@ public class LocateCommand extends CommandBase {
         if (type != null) {
             MapGenModernVillage villages = MapGenModernVillage.of(world);
             if (villages == null) {
-                throw new CommandException("commands.villagerbackport.locate.nomodern");
+                throw whyNoModernVillages(world);
             }
             name = args[0].toLowerCase(Locale.ROOT);
             found = villages.findNearest(world, from, type, MAX_RINGS);
@@ -146,5 +146,41 @@ public class LocateCommand extends CommandBase {
             options.add("village_" + t.name().toLowerCase(Locale.ROOT));
         }
         return getListOfStringsMatchingLastWord(args, options);
+    }
+
+    /**
+     * Says why this world has no 1.14 villages to locate, so a player in a world with its own terrain
+     * generator (Dregora's OTG, say) learns that is the reason rather than suspecting the mod.
+     */
+    private static CommandException whyNoModernVillages(World world) {
+        if (com.exiledradio.villagerbackport.ModConfig.villages.style != MapGenModernVillage.Style.MODERN) {
+            return new CommandException("commands.villagerbackport.locate.legacy");
+        }
+        if (world instanceof net.minecraft.world.WorldServer) {
+            net.minecraft.world.gen.IChunkGenerator generator =
+                    ((net.minecraft.world.WorldServer) world).getChunkProvider().chunkGenerator;
+            if (generator != null && !(generator instanceof net.minecraft.world.gen.ChunkGeneratorOverworld)) {
+                return new CommandException("commands.villagerbackport.locate.othergen", ownerOf(generator.getClass(), world));
+            }
+        }
+        return new CommandException("commands.villagerbackport.locate.nomodern");
+    }
+
+    /**
+     * @return the name of the mod a generator comes from, or for one of vanilla's own (a superflat
+     * world, say) the world type's name
+     */
+    private static String ownerOf(Class<?> type, World world) {
+        try {
+            java.io.File source = ModVillagePieces.jarOf(type);
+            for (net.minecraftforge.fml.common.ModContainer mod : net.minecraftforge.fml.common.Loader.instance().getModList()) {
+                if (mod.getSource() != null && source.equals(mod.getSource().getCanonicalFile())) {
+                    return mod.getName();
+                }
+            }
+        } catch (Exception | LinkageError e) {
+            // Fall through to the class name.
+        }
+        return '"' + world.getWorldType().getName() + '"';
     }
 }

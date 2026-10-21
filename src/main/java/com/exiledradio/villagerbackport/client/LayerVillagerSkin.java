@@ -50,6 +50,7 @@ public class LayerVillagerSkin implements LayerRenderer<EntityVillager> {
         }
 
         ResourceLocation skin = skinFor(villager);
+        boolean modern = skin != null;
         if (skin == null && VillagerSkin.isVanillaProfession(villager)) {
             // The 1.14 skin could not be built - a texture missing from a resource pack, or the jar
             // replaced underneath a running game. The vanilla skin underneath has been blanked, so
@@ -67,7 +68,23 @@ public class LayerVillagerSkin implements LayerRenderer<EntityVillager> {
         }
 
         this.renderer.bindTexture(skin);
+        // 1.14's head shake. The 1.12.2 model sets the head's pitch as it renders, so the shake's
+        // bowed head is handed in as the pitch; it never touches the roll, which is set beforehand.
+        net.minecraft.client.model.ModelRenderer head = model instanceof net.minecraft.client.model.ModelVillager
+                ? ((net.minecraft.client.model.ModelVillager) model).villagerHead : null;
+        if (head != null) {
+            head.rotateAngleZ = HeadShake.roll(villager, ageInTicks);
+            headPitch = HeadShake.pitch(villager, headPitch);
+        }
         model.render(villager, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+        // The 1.12.2 model has nowhere to put a hat, so the hat is a box of its own on the head.
+        // Only on a 1.14 skin: the 1.12.2 fallback was never drawn for one.
+        if (modern) {
+            VillagerHat.render(model, scale);
+        }
+        if (head != null) {
+            head.rotateAngleZ = 0.0F;
+        }
     }
 
     /**
@@ -103,10 +120,15 @@ public class LayerVillagerSkin implements LayerRenderer<EntityVillager> {
                 ? VillagerSkin.badgeFor(level)
                 : null;
 
-        String key = VillagerSkin.name(type) + "_" + VillagerSkin.name(profession)
-                + "_" + (badge == null ? "none" : VillagerSkin.name(badge));
+        // A biome hat under a profession's is hidden, as 1.14 does - a snowy farmer wears the straw
+        // hat rather than both at once.
+        boolean typeHat = VillagerSkinComposer.typeHatShows(type, profession);
 
-        return VillagerSkinComposer.compose(key, VillagerSkin.BASE, type, profession, badge);
+        String key = VillagerSkin.name(type) + "_" + VillagerSkin.name(profession)
+                + "_" + (badge == null ? "none" : VillagerSkin.name(badge)) + (typeHat ? "" : "_hatless");
+
+        return VillagerSkinComposer.compose(key, typeHat ? null : type,
+                VillagerSkin.BASE, type, profession, badge);
     }
 
     /**

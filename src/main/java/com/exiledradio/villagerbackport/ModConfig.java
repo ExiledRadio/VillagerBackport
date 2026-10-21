@@ -52,6 +52,10 @@ public final class ModConfig {
     @Config.Comment("Getting along with other mods that add the same blocks.")
     public static final Compat compat = new Compat();
 
+    @Config.LangKey("config.villagerbackport.sounds")
+    @Config.Comment("1.14 sounds for vanilla blocks.")
+    public static final Sounds sounds = new Sounds();
+
     private ModConfig() {
     }
 
@@ -394,6 +398,36 @@ public final class ModConfig {
         })
         public boolean extendPathfindingRange = true;
 
+        @Config.Comment({
+                "Farmers farm by 1.14's rules: during work hours only, on the farmland around their",
+                "composter, harvesting whenever they have room for the crop.",
+                "",
+                "Off, they farm as in 1.12.2: at any hour, any field within 16 blocks of wherever",
+                "they stand, and only until they have 'enough' food."
+        })
+        public boolean modernFarming = true;
+
+        @Config.Comment({
+                "How far from its composter a farmer farms, in blocks, with modernFarming on.",
+                "1.14's farmers reach about 10."
+        })
+        @Config.RangeInt(min = 2, max = 48)
+        public int farmRadius = 10;
+
+        @Config.Comment({
+                "Farmers bake bread from wheat when they work at their composter, as in current",
+                "Minecraft: 3 wheat make 1 bread, up to 3 loaves a visit, and none once they carry",
+                "more than 36. Bread is what villagers share to breed."
+        })
+        public boolean farmersBakeBread = true;
+
+        @Config.Comment({
+                "Farmers compost the seeds they do not need when they work at their composter, as",
+                "in current Minecraft (added in 1.16): they keep 10 of each kind, compost up to 20",
+                "items a visit, and empty a full composter, leaving the bone meal on top of it."
+        })
+        public boolean farmersCompost = true;
+
         @Config.Comment("How fast a villager walks to work.")
         @Config.RangeDouble(min = 0.1D, max = 2.0D)
         public double walkSpeed = 0.6D;
@@ -447,9 +481,10 @@ public final class ModConfig {
                 "adds them (see backportBlocks).",
                 "LEGACY: 1.12.2's villages, with workstations put into the existing houses.",
                 "",
-                "MODERN needs a world generator it can lay a village out on: vanilla's, Farmer's",
-                "Future Delight's Caves & Cliffs world type, or Caves Not Cliffs. In a world made by",
-                "another generator villages stay LEGACY.",
+                "MODERN needs a world generator it can lay a village out on: vanilla's, Open Terrain",
+                "Generator's, Realistic Terrain Generation's, Farmer's Future Delight's Caves & Cliffs",
+                "world type, or Caves Not Cliffs. In a world made by another generator villages stay",
+                "LEGACY.",
                 "",
                 "Only affects villages generated after the change. Villages already on disk keep",
                 "the layout they were generated with."
@@ -474,6 +509,42 @@ public final class ModConfig {
         })
         @Config.RequiresMcRestart
         public boolean backportBlocks = true;
+
+        @Config.Comment({
+                "Put other mods' village buildings in 1.14 villages.",
+                "",
+                "Mods add buildings to 1.12.2 villages through Forge's village hook: RLCraft's",
+                "village houses (Recurrent Complex), Waystones' village waystone, and others. 1.14",
+                "villages are built from 1.14's own buildings, so without this they have none of",
+                "them. With it, those buildings are placed beside the village's streets, about as",
+                "many as they would make up in a 1.12.2 village of the same size.",
+                "",
+                "The log lists the pieces on offer, by the names modPieceExclusions takes, the first",
+                "time a 1.14 village is made."
+        })
+        public boolean modPieces = true;
+
+        @Config.Comment({
+                "Most other-mod buildings added to one 1.14 village. The waystone does not count."
+        })
+        @Config.RangeInt(min = 0, max = 64)
+        public int maxModPieces = 10;
+
+        @Config.Comment({
+                "Place Waystones' village waystone first, next to the town centre where the bell is,",
+                "whenever Waystones rolls one for the village (its own 'Generate in Villages' chance).",
+                "Off, it is just one more piece placed anywhere along the streets."
+        })
+        public boolean waystoneNearBell = true;
+
+        @Config.Comment({
+                "Other mods' village buildings to leave out of 1.14 villages.",
+                "",
+                "Each entry is a mod id ('reccomplex' leaves out all of Recurrent Complex's), a mod id",
+                "and piece class ('waystones:ComponentVillageWaystone'), or for Recurrent Complex a",
+                "structure ('reccomplex:P_VillageInn'). The log lists what is on offer."
+        })
+        public String[] modPieceExclusions = {};
 
         @Config.Comment({
                 "In LEGACY villages, put workstations into the houses as they generate: a lectern in",
@@ -523,6 +594,38 @@ public final class ModConfig {
                 "arguably more useful: it finds the one you were looking for."
         })
         public boolean bellHighlightsVillagers = true;
+
+        @Config.Comment({
+                "Upgrade diamond gear to netherite at the smithing table, as in 1.16, when a mod",
+                "that adds netherite is installed.",
+                "",
+                "Diamond item plus netherite ingot makes the netherite item, keeping its",
+                "enchantments, name and damage. The upgrades are read from the netherite mod",
+                "itself: Future MC's smithing recipes, Spartan Netherite, and crafting recipes",
+                "that upgrade a diamond item with an ingot, with a built-in list for mods that",
+                "hide theirs. Without a netherite mod the table does nothing, as in 1.14. Every",
+                "netherite ingot found is also given the 'ingotNetherite' ore dictionary name.",
+                "",
+                "With Future MC installed, its smithing recipes are read too, so this mod's table",
+                "does everything Future MC's does. Which of the two tables is kept follows",
+                "compat.futureMcDuplicates."
+        })
+        public boolean netheriteUpgrades = true;
+
+        @Config.Comment({
+                "Also guess upgrades from item names, for netherite mods that only craft netherite",
+                "gear from ingots and never offered an upgrade: 'diamond_sword' becomes",
+                "'netherite_sword', and the usual spellings of each piece are tried, in every mod",
+                "that adds a netherite ingot. Gives those items an upgrade path their own mod did",
+                "not have."
+        })
+        public boolean netheriteNameMatching = true;
+
+        @Config.Comment({
+                "Remove other mods' crafting-grid netherite upgrades (diamond item plus ingot in a",
+                "crafting table), so the smithing table is the only way, as in 1.16."
+        })
+        public boolean removeCraftingUpgrades = false;
 
         @Config.Comment("How far a bell reaches, in blocks. 1.14 uses 32.")
         @Config.RangeDouble(min = 4.0D, max = 128.0D)
@@ -679,7 +782,7 @@ public final class ModConfig {
         @Config.Comment({
                 "Which copy of each block stays visible when Future MC is installed too.",
                 "",
-                "Both mods add the same eleven blocks with the same recipes, which puts two of",
+                "Both mods add the same twelve blocks with the same recipes, which puts two of",
                 "everything in JEI and leaves two recipes competing for each crafting grid. This",
                 "picks one of each pair to keep:",
                 "",
@@ -691,9 +794,7 @@ public final class ModConfig {
                 "untouched, and villagers still take jobs at it. It loses its crafting recipe and",
                 "its place in JEI and the creative menu, and villages are no longer built with it.",
                 "",
-                "Two exceptions. The smithing table kept is always Future MC's, because theirs",
-                "upgrades to netherite and this mod's is decorative. And the lectern is never",
-                "hidden, because Future MC has none.",
+                "The lectern is never hidden, because Future MC has none.",
                 "",
                 "Does nothing unless Future MC is installed."
         })
@@ -802,6 +903,18 @@ public final class ModConfig {
                 "Off by default. Only players within 48 blocks are told."
         })
         public boolean debugMessages = false;
+    }
+
+    public static final class Sounds {
+
+        @Config.Comment({
+                "Give crops 1.14's sounds: a rustle when seeds are planted, by players and by farmer",
+                "villagers, and a crunch when a crop is broken.",
+                "",
+                "Wheat, carrots, potatoes and beetroot, pumpkin and melon stems, and nether wart, plus",
+                "any other mod's crop that still uses the plain plant sounds. Takes effect on restart."
+        })
+        public boolean cropSounds = true;
     }
 
     public static final class Display {

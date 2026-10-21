@@ -1,19 +1,64 @@
 {
   "variants": {
-    "facing=north": {
+    "attachment=floor,facing=north": {
       "model": "villagerbackport:bell"
     },
-    "facing=south": {
+    "attachment=floor,facing=south": {
       "model": "villagerbackport:bell",
       "y": 180
     },
-    "facing=west": {
+    "attachment=floor,facing=east": {
+      "model": "villagerbackport:bell",
+      "y": 90
+    },
+    "attachment=floor,facing=west": {
       "model": "villagerbackport:bell",
       "y": 270
     },
-    "facing=east": {
-      "model": "villagerbackport:bell",
+    "attachment=ceiling,facing=north": {
+      "model": "villagerbackport:bell_ceiling"
+    },
+    "attachment=ceiling,facing=south": {
+      "model": "villagerbackport:bell_ceiling",
+      "y": 180
+    },
+    "attachment=ceiling,facing=east": {
+      "model": "villagerbackport:bell_ceiling",
       "y": 90
+    },
+    "attachment=ceiling,facing=west": {
+      "model": "villagerbackport:bell_ceiling",
+      "y": 270
+    },
+    "attachment=single_wall,facing=east": {
+      "model": "villagerbackport:bell_wall"
+    },
+    "attachment=single_wall,facing=west": {
+      "model": "villagerbackport:bell_wall",
+      "y": 180
+    },
+    "attachment=single_wall,facing=south": {
+      "model": "villagerbackport:bell_wall",
+      "y": 90
+    },
+    "attachment=single_wall,facing=north": {
+      "model": "villagerbackport:bell_wall",
+      "y": 270
+    },
+    "attachment=double_wall,facing=east": {
+      "model": "villagerbackport:bell_between_walls"
+    },
+    "attachment=double_wall,facing=west": {
+      "model": "villagerbackport:bell_between_walls",
+      "y": 180
+    },
+    "attachment=double_wall,facing=north": {
+      "model": "villagerbackport:bell_between_walls",
+      "y": 90
+    },
+    "attachment=double_wall,facing=south": {
+      "model": "villagerbackport:bell_between_walls",
+      "y": 270
     }
   }
 }

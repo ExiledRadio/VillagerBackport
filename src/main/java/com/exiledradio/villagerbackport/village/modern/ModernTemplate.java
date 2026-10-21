@@ -71,6 +71,13 @@ public final class ModernTemplate {
             this.props = tag.getCompoundTag("Props");
             this.source = tag.getString("Src");
             this.sourceProps = tag.getCompoundTag("SrcProps");
+
+            // The structure files were converted before the bell knew how it hangs; 1.14's own
+            // property is still beside the converted ones, and the names are the same.
+            if ("minecraft:bell".equals(this.source) && this.sourceProps.hasKey("attachment")
+                    && !this.props.hasKey("attachment")) {
+                this.props.setString("attachment", this.sourceProps.getString("attachment"));
+            }
         }
 
         /** @return the state to place, or null for "place nothing" */
@@ -79,6 +86,15 @@ public final class ModernTemplate {
             if (!this.resolved) {
                 IBlockState backport = BackportBlocks.resolve(this.source, this.sourceProps, this.props);
                 this.state = backport != null ? backport : resolve(this.names, this.props);
+                // With Future MC's blocks kept, its barrel, lantern or bell goes in place of this
+                // mod's hidden one, keeping 1.14's own properties.
+                if (this.state != null) {
+                    java.util.Map<String, String> extra = new java.util.HashMap<String, String>();
+                    for (String key : this.sourceProps.getKeySet()) {
+                        extra.put(key, this.sourceProps.getString(key));
+                    }
+                    this.state = com.exiledradio.villagerbackport.compat.FutureMc.preferred(this.state, extra);
+                }
                 this.resolved = true;
             }
             return this.state;

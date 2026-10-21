@@ -70,7 +70,7 @@ public final class ModBlocks {
         add(event, "composter", new BlockComposter(wood, SoundType.WOOD, 0.6F));
         add(event, "cartography_table", new BlockCartographyTable(wood, SoundType.WOOD, 2.5F));
         add(event, "fletching_table", new BlockFletchingTable(wood, SoundType.WOOD, 2.5F));
-        add(event, "smithing_table", new BlockWorkstation(wood, SoundType.WOOD, 2.5F));
+        add(event, "smithing_table", new BlockSmithingTable(wood, SoundType.WOOD, 2.5F));
 
         // Cubes with a front face.
         add(event, "loom", new BlockLoom(wood, SoundType.WOOD, 2.5F));

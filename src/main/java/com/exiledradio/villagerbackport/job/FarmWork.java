@@ -18,6 +18,9 @@ import java.util.ArrayList;
  * up farming later on never started until the world was reloaded.
  *
  * <p>Checked on the villager's regular poll, so a change of job is picked up within a second.
+ *
+ * <p>A farmer's goal is this mod's {@link EntityAIFarm}, which farms by 1.14's rules - see there.
+ * One still holding 1.12.2's own goal has it swapped on the same poll.
  */
 public final class FarmWork {
 
@@ -36,16 +39,29 @@ public final class FarmWork {
         }
 
         boolean farmer = isFarmer(villager);
-        EntityAIHarvestFarmland goal = goalOf(villager);
+        boolean hasOurs = false;
 
-        if (farmer && goal == null) {
-            villager.tasks.addTask(PRIORITY, new EntityAIHarvestFarmland(villager, SPEED));
-        } else if (!farmer && goal != null) {
-            villager.tasks.removeTask(goal);
+        // Every farming goal, not just the first: 1.12.2 can hand a villager its own goal again
+        // later (it does on growing up and on loading), which would sit beside this one.
+        for (EntityAITasks.EntityAITaskEntry entry
+                : new ArrayList<EntityAITasks.EntityAITaskEntry>(villager.tasks.taskEntries)) {
+            if (entry.action instanceof EntityAIHarvestFarmland) {
+                villager.tasks.removeTask(entry.action);
+            } else if (entry.action instanceof EntityAIFarm) {
+                if (farmer && !hasOurs) {
+                    hasOurs = true;
+                } else {
+                    villager.tasks.removeTask(entry.action);
+                }
+            }
+        }
+
+        if (farmer && !hasOurs) {
+            villager.tasks.addTask(PRIORITY, new EntityAIFarm(villager, SPEED));
         }
     }
 
-    private static boolean isFarmer(EntityVillager villager) {
+    public static boolean isFarmer(EntityVillager villager) {
         if (Employment.isUnemployed(villager) || Employment.isNitwit(villager)) {
             return false;
         }
@@ -63,15 +79,5 @@ public final class FarmWork {
             // An out-of-range career, which a mod reassigning professions can cause.
             return false;
         }
-    }
-
-    private static EntityAIHarvestFarmland goalOf(EntityVillager villager) {
-        for (EntityAITasks.EntityAITaskEntry entry
-                : new ArrayList<EntityAITasks.EntityAITaskEntry>(villager.tasks.taskEntries)) {
-            if (entry.action instanceof EntityAIHarvestFarmland) {
-                return (EntityAIHarvestFarmland) entry.action;
-            }
-        }
-        return null;
     }
 }

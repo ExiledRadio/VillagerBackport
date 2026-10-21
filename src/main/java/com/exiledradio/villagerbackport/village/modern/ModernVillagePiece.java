@@ -66,6 +66,11 @@ public class ModernVillagePiece extends StructureComponent {
     private Rotation rotation;
 
     /** For loading from disk. */
+    /** @return the 1.14 pool this piece was drawn from, e.g. {@code village/plains/streets} */
+    String poolName() {
+        return this.poolName;
+    }
+
     public ModernVillagePiece() {
     }
 

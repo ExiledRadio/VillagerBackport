@@ -28,6 +28,7 @@ public class GuiHandler implements IGuiHandler {
     public static final int LECTERN = 4;
     public static final int LOOM = 5;
     public static final int FLETCHING = 6;
+    public static final int SMITHING = 7;
 
     @Override
     @Nullable
@@ -59,6 +60,10 @@ public class GuiHandler implements IGuiHandler {
         }
         if (id == LOOM) {
             return new com.exiledradio.villagerbackport.block.ContainerLoom(
+                    player.inventory, world, new BlockPos(x, y, z));
+        }
+        if (id == SMITHING) {
+            return new com.exiledradio.villagerbackport.block.ContainerSmithingTable(
                     player.inventory, world, new BlockPos(x, y, z));
         }
         return null;
@@ -93,6 +98,9 @@ public class GuiHandler implements IGuiHandler {
         }
         if (id == LOOM) {
             return loomScreen(player, world, new BlockPos(x, y, z));
+        }
+        if (id == SMITHING) {
+            return smithingScreen(player, world, new BlockPos(x, y, z));
         }
         return null;
     }
@@ -142,6 +150,12 @@ public class GuiHandler implements IGuiHandler {
     private Object loomScreen(EntityPlayer player, World world, BlockPos pos) {
         return new com.exiledradio.villagerbackport.client.GuiLoom(player.inventory,
                 new com.exiledradio.villagerbackport.block.ContainerLoom(
+                        player.inventory, world, pos));
+    }
+
+    private Object smithingScreen(EntityPlayer player, World world, BlockPos pos) {
+        return new com.exiledradio.villagerbackport.client.GuiSmithingTable(player.inventory,
+                new com.exiledradio.villagerbackport.block.ContainerSmithingTable(
                         player.inventory, world, pos));
     }
 

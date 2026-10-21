@@ -35,8 +35,8 @@ import java.util.WeakHashMap;
  *
  * <p>Only possible when the world uses the vanilla overworld generator (or a subclass that can be
  * built the same way), or a 1.18 terrain mod this can read: Farmer's Future Delight's Caves &amp;
- * Cliffs world type ({@link FfdTerrain}), Caves Not Cliffs ({@link CncTerrain}) or Realistic Terrain
- * Generation ({@link RtgTerrain}). Anywhere else there
+ * Cliffs world type ({@link FfdTerrain}), Caves Not Cliffs ({@link CncTerrain}), OTG ({@link OtgTerrain}) or
+ * Realistic Terrain Generation ({@link RtgTerrain}). Anywhere else there
  * is no sampler, and villages there stay 1.12.2's.
  */
 public final class TerrainHeights {
@@ -85,6 +85,17 @@ public final class TerrainHeights {
             sampler = new TerrainHeights(null, cnc);
             SAMPLERS.put(world, sampler);
             return sampler;
+        }
+
+        if (OtgTerrain.handles(live)) {
+            OtgTerrain terrain = OtgTerrain.of(world, live);
+            if (terrain != null) {
+                sampler = new TerrainHeights(null, terrain);
+                SAMPLERS.put(world, sampler);
+                return sampler;
+            }
+            UNSUPPORTED.put(world, Boolean.TRUE);
+            return null;
         }
 
         if (RtgTerrain.handles(live)) {
@@ -146,16 +157,36 @@ public final class TerrainHeights {
      */
     public int height(int x, int z) {
         if (this.external != null) {
-            // Their surface scans cost far more than vanilla's, and a layout asks about only a few
-            // columns per chunk, so columns are cached one at a time rather than a chunk at a time.
-            long key = ((long) x << 32) ^ (z & 0xFFFFFFFFL);
-            Integer known = this.columns.get(key);
-            if (known == null) {
-                known = this.external.height(x, z);
-                this.columns.put(key, known);
-            }
-            return known;
+            return externalHeight(x, z);
         }
+        return column(x, z) & HEIGHT_MASK;
+    }
+
+    /** @return true if the column's surface is water, as far as the generator can say */
+    public boolean isWater(int x, int z) {
+        if (this.external != null) {
+            return this.external.wet(x, z);
+        }
+        return (column(x, z) & WET) != 0;
+    }
+
+    /** Set on a sampled column whose top block is water. Heights here are 0-256, well below it. */
+    private static final int WET = 1 << 16;
+    private static final int HEIGHT_MASK = WET - 1;
+
+    private int externalHeight(int x, int z) {
+        // Their surface scans cost far more than vanilla's, and a layout asks about only a few
+        // columns per chunk, so columns are cached one at a time rather than a chunk at a time.
+        long key = ((long) x << 32) ^ (z & 0xFFFFFFFFL);
+        Integer known = this.columns.get(key);
+        if (known == null) {
+            known = this.external.height(x, z);
+            this.columns.put(key, known);
+        }
+        return known;
+    }
+
+    private int column(int x, int z) {
         int chunkX = x >> 4;
         int chunkZ = z >> 4;
         long key = ((long) chunkX << 32) ^ (chunkZ & 0xFFFFFFFFL);
@@ -198,7 +229,8 @@ public final class TerrainHeights {
                 while (y > 0 && primer.getBlockState(x, y, z).getMaterial() == Material.AIR) {
                     y--;
                 }
-                out[z << 4 | x] = y + 1;
+                boolean wet = primer.getBlockState(x, y, z).getMaterial().isLiquid();
+                out[z << 4 | x] = (y + 1) | (wet ? WET : 0);
             }
         }
         return out;

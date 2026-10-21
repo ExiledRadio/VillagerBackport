@@ -142,6 +142,8 @@ public final class LegacyHouseWorkstations {
         if (block == null || block == Blocks.AIR) {
             return;
         }
+        // Future MC's twin when that is the one kept.
+        block = com.exiledradio.villagerbackport.compat.FutureMc.preferred(block);
 
         IBlockState state = block.getDefaultState();
         EnumFacing front = piece.getCoordBaseMode() == null ? EnumFacing.NORTH : piece.getCoordBaseMode().getOpposite();

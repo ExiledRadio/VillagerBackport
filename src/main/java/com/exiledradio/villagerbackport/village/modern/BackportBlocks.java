@@ -17,8 +17,9 @@ import java.util.Map;
  *
  * <p>The structure files carry each block's 1.14 name beside the stand-in 1.12.2 block the converter
  * chose (stripped logs as logs, blue ice as packed ice, smooth sandstone as cut sandstone). When Future
- * MC, Oceanic Expanse or Quark is installed and has the 1.14 block, that block is placed instead. With
- * none of them, or with {@code villages.backportBlocks} off, the stand-ins are placed as before.
+ * MC, Oceanic Expanse, Quark or Farmer's Future Delight is installed and has the 1.14 block, that
+ * block is placed instead. With none of them, or with {@code villages.backportBlocks} off, the
+ * stand-ins are placed as before.
  *
  * <p>A backport block is given the 1.14 properties it understands, then the converted 1.12.2 ones (a
  * button's {@code facing} is only right in the converted form), then any fixed ones the table names.
@@ -33,8 +34,12 @@ final class BackportBlocks {
 
     static {
         for (String wood : WOODS) {
-            add("stripped_" + wood + "_log", "futuremc:stripped_" + wood + "_log");
-            add("stripped_" + wood + "_wood", "futuremc:stripped_" + wood + "_wood");
+            // Future MC leaves its stripped logs out when Oceanic Expanse is installed and its
+            // Oceanic Expanse option is on, so Farmer's Future Delight's are worth having as well.
+            add("stripped_" + wood + "_log", "futuremc:stripped_" + wood + "_log",
+                    "farmers_future_delight:stripped_" + wood + "_log");
+            add("stripped_" + wood + "_wood", "futuremc:stripped_" + wood + "_wood",
+                    "farmers_future_delight:stripped_" + wood + "_wood");
             if (!"oak".equals(wood)) {
                 // 1.12.2 has one trapdoor, button and pressure plate, all oak.
                 add(wood + "_trapdoor", "futuremc:" + wood + "_trapdoor", "quark:" + wood + "_trapdoor");

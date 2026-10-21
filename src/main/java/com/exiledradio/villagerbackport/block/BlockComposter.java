@@ -162,24 +162,57 @@ public class BlockComposter extends BlockWorkstation {
      * than doing it by hand - only tidier.
      */
     public static void compostFromHopper(World world, BlockPos pos, ItemStack stack) {
+        compostOne(world, pos, stack, true);
+    }
+
+    /**
+     * Composts one of this item without using it up - the caller does that, since a hopper and a
+     * villager hold their items differently.
+     *
+     * @param sound whether to play the fill sound now; a villager composting a handful plays it once
+     * @return true if the level rose
+     */
+    public static boolean compostOne(World world, BlockPos pos, ItemStack stack, boolean sound) {
         IBlockState state = world.getBlockState(pos);
         if (!(state.getBlock() instanceof BlockComposter)) {
-            return;
+            return false;
         }
 
         int level = state.getValue(LEVEL);
         if (level >= READY) {
-            return;
+            return false;
         }
 
         float chance = Compostables.chanceFor(stack);
         if (chance <= 0.0F) {
-            return;
+            return false;
         }
 
         if (level == 0 || world.rand.nextFloat() < chance) {
             world.setBlockState(pos, state.withProperty(LEVEL, Math.min(level + 1, READY)), 3);
-            world.playSound(null, pos, SoundEvents.BLOCK_GRASS_PLACE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            if (sound) {
+                playFill(world, pos);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public static void playFill(World world, BlockPos pos) {
+        world.playSound(null, pos, SoundEvents.BLOCK_GRASS_PLACE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+    }
+
+    /** @return true if the block here is a composter with bone meal ready */
+    public static boolean isReady(World world, BlockPos pos) {
+        IBlockState state = world.getBlockState(pos);
+        return state.getBlock() instanceof BlockComposter && state.getValue(LEVEL) == READY;
+    }
+
+    /** Empties a finished composter, the bone meal landing on top as when a player takes it. */
+    public static void takeBoneMeal(World world, BlockPos pos) {
+        IBlockState state = world.getBlockState(pos);
+        if (state.getBlock() instanceof BlockComposter && state.getValue(LEVEL) == READY) {
+            ((BlockComposter) state.getBlock()).harvest(world, pos, state);
         }
     }
 

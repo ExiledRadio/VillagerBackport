@@ -2,6 +2,7 @@ package com.exiledradio.villagerbackport.trade;
 
 import com.exiledradio.villagerbackport.home.HomeSite;
 import com.exiledradio.villagerbackport.job.Employment;
+import com.exiledradio.villagerbackport.network.NetworkHandler;
 
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Items;
@@ -12,8 +13,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.util.Map;
-import java.util.WeakHashMap;
 
 /**
  * The "no" a villager gives when it has nothing to trade.
@@ -22,16 +21,12 @@ import java.util.WeakHashMap;
  * head and making the villager's disagreeing noise. That covers nitwits, unemployed villagers and
  * babies. 1.12.2 does nothing at all for any of them, which reads as the click not having landed.
  *
- * <p>Only the sound is reproduced. The head shake is a model animation 1.12.2's villager has no
- * field or renderer support for. The 40 ticks it lasts are kept, though, because in 1.14 a shaking
- * villager ignores further clicks: so a player clicking repeatedly hears one "no", not one per click.
+ * <p>The head shake is drawn by the client ({@code HeadShake}), told by a packet, since 1.12.2's
+ * villager has no field to carry it. Every click answers, as in 1.14 and since: each one says no
+ * again and restarts the 40-tick shake, so holding the button down gives a steady string of "no"s
+ * and a head that keeps shaking until it is let go.
  */
 public final class RefusalHandler {
-
-    /** How long 1.14's head shake lasts, during which it will not say no again. */
-    private static final long SHAKE_TICKS = 40L;
-
-    private static final Map<EntityVillager, Long> LAST_REFUSED = new WeakHashMap<EntityVillager, Long>();
 
     @SubscribeEvent
     public void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
@@ -54,18 +49,12 @@ public final class RefusalHandler {
             return;
         }
 
-        long now = villager.world.getTotalWorldTime();
-        Long last = LAST_REFUSED.get(villager);
-        if (last != null && now >= last.longValue() && now < last.longValue() + SHAKE_TICKS) {
-            return;
-        }
-        LAST_REFUSED.put(villager, Long.valueOf(now));
-
         // A villager's own pitch: a little random, and higher for a child.
         float pitch = (villager.getRNG().nextFloat() - villager.getRNG().nextFloat()) * 0.2F
                 + (villager.isChild() ? 1.5F : 1.0F);
 
         villager.world.playSound(null, villager.posX, villager.posY, villager.posZ,
                 SoundEvents.ENTITY_VILLAGER_NO, SoundCategory.NEUTRAL, 1.0F, pitch);
+        NetworkHandler.sendVillagerShake(villager, 64.0D);
     }
 }

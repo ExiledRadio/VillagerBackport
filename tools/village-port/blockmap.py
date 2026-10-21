@@ -303,7 +303,8 @@ def map_state(full, props):
     if n == "composter":
         return one("villagerbackport:composter", {"level": props.get("level", "0")})
     if n == "bell":
-        return one("villagerbackport:bell", {"facing": props.get("facing", "north")})
+        return one("villagerbackport:bell", {"facing": props.get("facing", "north"),
+                                             "attachment": props.get("attachment", "floor")})
 
     # ---- pots
     pots = {"potted_cactus": ("minecraft:cactus", 0), "potted_dandelion": ("minecraft:yellow_flower", 0),

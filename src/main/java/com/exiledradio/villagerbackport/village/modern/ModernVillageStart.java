@@ -63,17 +63,40 @@ public class ModernVillageStart extends StructureStart {
             }
             return PLAINS;
         }
+
+        /**
+         * The kind an Open Terrain Generator biome config names ({@code VillageType}), or null for
+         * none. OTG has no snowy kind, so a snowy biome's wood or taiga village becomes 1.14's snowy.
+         */
+        @javax.annotation.Nullable
+        static Type ofOtg(String kind, @javax.annotation.Nullable Biome biome) {
+            boolean snowy = biome != null && BiomeDictionary.hasType(biome, BiomeDictionary.Type.SNOWY);
+            switch (kind.toLowerCase(java.util.Locale.ROOT)) {
+                case "wood":
+                    return snowy ? SNOWY : PLAINS;
+                case "taiga":
+                    return snowy ? SNOWY : TAIGA;
+                case "sandstone":
+                    return DESERT;
+                case "savanna":
+                    return SAVANNA;
+                default:
+                    return null;
+            }
+        }
     }
 
     /** For loading from disk. */
     public ModernVillageStart() {
     }
 
-    public ModernVillageStart(World world, Random random, int chunkX, int chunkZ, TerrainHeights heights) {
+    public ModernVillageStart(World world, Random random, int chunkX, int chunkZ, TerrainHeights heights, Type type,
+                              int size) {
         super(chunkX, chunkZ);
-        Biome biome = world.getBiomeProvider().getBiome(new BlockPos((chunkX << 4) + 9, 0, (chunkZ << 4) + 9));
-        Type type = Type.of(biome);
         new Assembler(heights, random, this.components).assemble(type.startPool(), new BlockPos(chunkX * 16, 0, chunkZ * 16));
+        // Other mods' village buildings - Recurrent Complex's houses, Waystones' waystone - on plots
+        // beside the streets. See ModVillagePieces.
+        ModVillagePieces.add(world, this.components, heights, chunkX, chunkZ, size);
         this.updateBoundingBox();
     }
 
@@ -81,6 +104,16 @@ public class ModernVillageStart extends StructureStart {
     @Override
     public boolean isSizeableStructure() {
         return !this.components.isEmpty();
+    }
+
+    /**
+     * Saves 1.12.2's "Valid" flag too. Mods that read villages from the saved data look for it -
+     * Antique Atlas treats a village without it as fake and erases what it drew there.
+     */
+    @Override
+    public void writeToNBT(net.minecraft.nbt.NBTTagCompound tag) {
+        super.writeToNBT(tag);
+        tag.setBoolean("Valid", isSizeableStructure());
     }
 
     // ---------------------------------------------------------------------------------------------

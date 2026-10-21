@@ -41,6 +41,7 @@ public final class NetworkHandler {
         channel.registerMessage(PacketRefillTrade.Handler.class, PacketRefillTrade.class, 3, Side.SERVER);
         channel.registerMessage(PacketVillagerSleep.Handler.class, PacketVillagerSleep.class, 4, Side.CLIENT);
         channel.registerMessage(PacketVillageOutline.Handler.class, PacketVillageOutline.class, 5, Side.CLIENT);
+        channel.registerMessage(PacketVillagerShake.Handler.class, PacketVillagerShake.class, 6, Side.CLIENT);
     }
 
     /**
@@ -124,6 +125,17 @@ public final class NetworkHandler {
         channel.sendToAllAround(
                 new PacketVillagerSleep(villager.getEntityId(), sleeping,
                         bed.getX(), bed.getY(), bed.getZ()),
+                new NetworkRegistry.TargetPoint(villager.world.provider.getDimension(),
+                        villager.posX, villager.posY, villager.posZ, range));
+    }
+
+    /** Tells everyone who can see a villager that it is shaking its head. See {@link PacketVillagerShake}. */
+    public static void sendVillagerShake(Entity villager, double range) {
+        if (channel == null) {
+            return;
+        }
+
+        channel.sendToAllAround(new PacketVillagerShake(villager.getEntityId()),
                 new NetworkRegistry.TargetPoint(villager.world.provider.getDimension(),
                         villager.posX, villager.posY, villager.posZ, range));
     }

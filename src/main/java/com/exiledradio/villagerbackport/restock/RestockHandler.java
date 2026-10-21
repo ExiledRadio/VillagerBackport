@@ -155,6 +155,12 @@ public final class RestockHandler {
                 WorkSounds.playFor(villager);
             }
 
+            // A farmer's use of its composter: bread and compost. See FarmerWork.
+            net.minecraft.util.math.BlockPos site = com.exiledradio.villagerbackport.job.JobSite.validated(villager);
+            if (site != null && com.exiledradio.villagerbackport.job.JobSite.isAtSite(villager)) {
+                com.exiledradio.villagerbackport.job.FarmerWork.atWorkstation(villager, site);
+            }
+
             INSTANCE.tick(villager);
         }
     }

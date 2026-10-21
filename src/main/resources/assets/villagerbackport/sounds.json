@@ -150,5 +150,244 @@
         "stream": false
       }
     ]
+  },
+  "item.crop.plant": {
+    "category": "block",
+    "subtitle": "subtitles.block.generic.place",
+    "sounds": [
+      {
+        "name": "villagerbackport:item/plant/crop1",
+        "volume": 0.45,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/crop2",
+        "volume": 0.45,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/crop3",
+        "volume": 0.45,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/crop4",
+        "volume": 0.45,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/crop5",
+        "volume": 0.45,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/crop6",
+        "volume": 0.45,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/crop1",
+        "volume": 0.45,
+        "pitch": 1.2,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/crop2",
+        "volume": 0.45,
+        "pitch": 1.2,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/crop3",
+        "volume": 0.45,
+        "pitch": 1.2,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/crop4",
+        "volume": 0.45,
+        "pitch": 1.2,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/crop5",
+        "volume": 0.45,
+        "pitch": 1.2,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/crop6",
+        "volume": 0.45,
+        "pitch": 1.2,
+        "stream": false
+      }
+    ]
+  },
+  "block.crop.break": {
+    "category": "block",
+    "subtitle": "subtitles.block.generic.break",
+    "sounds": [
+      {
+        "name": "villagerbackport:block/crop/break1",
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/crop/break2",
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/crop/break3",
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/crop/break4",
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/crop/break5",
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/crop/break6",
+        "volume": 0.9,
+        "stream": false
+      }
+    ]
+  },
+  "item.nether_wart.plant": {
+    "category": "block",
+    "subtitle": "subtitles.block.generic.place",
+    "sounds": [
+      {
+        "name": "villagerbackport:item/plant/netherwart1",
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/netherwart2",
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/netherwart3",
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/netherwart4",
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/netherwart5",
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/netherwart6",
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/netherwart1",
+        "volume": 0.9,
+        "pitch": 1.12,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/netherwart2",
+        "volume": 0.9,
+        "pitch": 1.12,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/netherwart3",
+        "volume": 0.9,
+        "pitch": 1.12,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/netherwart4",
+        "volume": 0.9,
+        "pitch": 1.12,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/netherwart5",
+        "volume": 0.9,
+        "pitch": 1.12,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/netherwart6",
+        "volume": 0.9,
+        "pitch": 1.12,
+        "stream": false
+      }
+    ]
+  },
+  "block.nether_wart.break": {
+    "category": "block",
+    "subtitle": "subtitles.block.generic.break",
+    "sounds": [
+      {
+        "name": "villagerbackport:item/plant/netherwart1",
+        "volume": 0.9,
+        "pitch": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/netherwart2",
+        "volume": 0.9,
+        "pitch": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/netherwart3",
+        "volume": 0.9,
+        "pitch": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/netherwart4",
+        "volume": 0.9,
+        "pitch": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/netherwart5",
+        "volume": 0.9,
+        "pitch": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/plant/netherwart6",
+        "volume": 0.9,
+        "pitch": 0.9,
+        "stream": false
+      }
+    ]
+  },
+  "block.smithing_table.use": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:block/smithing_table/smithing_table1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/smithing_table/smithing_table2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/smithing_table/smithing_table3",
+        "stream": false
+      }
+    ]
   }
 }

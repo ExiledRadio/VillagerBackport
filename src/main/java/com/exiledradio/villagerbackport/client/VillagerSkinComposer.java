@@ -56,9 +56,12 @@ public final class VillagerSkinComposer {
      * <p>Layers are applied in order and may be null, which skips them - a villager with no career
      * yet has no profession outfit to wear, and gets the plain biome clothing 1.14 gives an
      * unemployed villager.
+     *
+     * @param hatless the layer whose hat is hidden under another's, or null for none
      */
     @Nullable
-    public static ResourceLocation compose(String key, ResourceLocation... layers) {
+    public static ResourceLocation compose(String key, @Nullable ResourceLocation hatless,
+                                           ResourceLocation... layers) {
         ResourceLocation cached = CACHE.get(key);
         if (cached != null) {
             return cached;
@@ -69,7 +72,7 @@ public final class VillagerSkinComposer {
         if (FAILED.contains(key)) {
             return null;
         }
-        ResourceLocation built = build(key, layers);
+        ResourceLocation built = build(key, hatless, layers);
         if (built != null) {
             CACHE.put(key, built);
         } else {
@@ -79,7 +82,8 @@ public final class VillagerSkinComposer {
     }
 
     @Nullable
-    private static ResourceLocation build(String key, ResourceLocation[] layers) {
+    private static ResourceLocation build(String key, @Nullable ResourceLocation hatless,
+                                          ResourceLocation[] layers) {
         try {
             BufferedImage canvas = new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB);
             Graphics2D graphics = canvas.createGraphics();
@@ -91,6 +95,9 @@ public final class VillagerSkinComposer {
                 }
 
                 BufferedImage image = read(layer);
+                if (image != null && layer.equals(hatless)) {
+                    image = withoutHat(image);
+                }
                 if (image != null) {
                     // Default composite is source-over, which is exactly how the layers stack:
                     // transparent areas leave what is underneath showing.
@@ -112,6 +119,85 @@ public final class VillagerSkinComposer {
             VillagerBackport.LOGGER.error("Failed to compose villager skin '{}'", key, e);
             return null;
         }
+    }
+
+    /** 1.14's {@code VillagerMetadataSection.HatType}: how much of the head a layer's hat covers. */
+    public enum Hat {
+        NONE, PARTIAL, FULL
+    }
+
+    private static final Map<ResourceLocation, Hat> HATS = new HashMap<ResourceLocation, Hat>();
+
+    /**
+     * @return true if the biome outfit's hat shows, which is 1.14's rule: unless the profession wears
+     * a full hat, or a partial one over a biome hat that is not full itself
+     *
+     * <p>A snowy farmer wears the straw hat, not the fur hood under it; a snowy butcher keeps the hood
+     * and the butcher's cap is drawn over it.
+     */
+    public static boolean typeHatShows(@Nullable ResourceLocation type, @Nullable ResourceLocation profession) {
+        Hat professionHat = hatOf(profession);
+        return professionHat == Hat.NONE || professionHat == Hat.PARTIAL && hatOf(type) != Hat.FULL;
+    }
+
+    /**
+     * @return what a texture's {@code .mcmeta} says of its hat, as 1.14 reads it. No file, or no
+     * entry in it, means no hat.
+     *
+     * <p>Read by hand rather than through a metadata serializer: 1.12.2 has no "villager" section, and
+     * registering one would be global. Resource packs can still change it, since it goes through the
+     * resource manager like the texture does.
+     */
+    public static Hat hatOf(@Nullable ResourceLocation texture) {
+        if (texture == null) {
+            return Hat.NONE;
+        }
+        Hat known = HATS.get(texture);
+        if (known != null) {
+            return known;
+        }
+        Hat hat = Hat.NONE;
+        IResource resource = null;
+        try {
+            resource = Minecraft.getMinecraft().getResourceManager().getResource(
+                    new ResourceLocation(texture.getNamespace(), texture.getPath() + ".mcmeta"));
+            com.google.gson.JsonObject json = new com.google.gson.JsonParser().parse(
+                    new java.io.InputStreamReader(resource.getInputStream(), java.nio.charset.StandardCharsets.UTF_8))
+                    .getAsJsonObject();
+            if (json.has("villager") && json.getAsJsonObject("villager").has("hat")) {
+                String value = json.getAsJsonObject("villager").get("hat").getAsString();
+                hat = Hat.valueOf(value.toUpperCase(java.util.Locale.ROOT));
+            }
+        } catch (java.io.FileNotFoundException e) {
+            // No metadata is the usual case: most layers have no hat.
+        } catch (Exception e) {
+            VillagerBackport.LOGGER.warn("Unreadable villager hat metadata for {}", texture, e);
+        } finally {
+            if (resource != null) {
+                try {
+                    resource.getInputStream().close();
+                } catch (Exception ignored) {
+                    // Nothing useful to do if the stream will not close.
+                }
+            }
+        }
+        HATS.put(texture, hat);
+        return hat;
+    }
+
+    /**
+     * Clears the two hat boxes' areas, as 1.14 does by hiding them for that layer's pass: the hat at
+     * 32,0 (8x10x8) and the brim at 30,47 (16x16x1). Nothing else in the layout reaches either area.
+     */
+    private static BufferedImage withoutHat(BufferedImage image) {
+        BufferedImage copy = new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = copy.createGraphics();
+        graphics.drawImage(image, 0, 0, SIZE, SIZE, null);
+        graphics.setComposite(java.awt.AlphaComposite.Clear);
+        graphics.fillRect(32, 0, 32, 18);
+        graphics.fillRect(30, 47, 34, 17);
+        graphics.dispose();
+        return copy;
     }
 
     @Nullable
@@ -144,5 +230,6 @@ public final class VillagerSkinComposer {
     public static void clear() {
         CACHE.clear();
         FAILED.clear();
+        HATS.clear();
     }
 }
