@@ -35,7 +35,8 @@ import java.util.WeakHashMap;
  *
  * <p>Only possible when the world uses the vanilla overworld generator (or a subclass that can be
  * built the same way), or a 1.18 terrain mod this can read: Farmer's Future Delight's Caves &amp;
- * Cliffs world type ({@link FfdTerrain}) or Caves Not Cliffs ({@link CncTerrain}). Anywhere else there
+ * Cliffs world type ({@link FfdTerrain}), Caves Not Cliffs ({@link CncTerrain}) or Realistic Terrain
+ * Generation ({@link RtgTerrain}). Anywhere else there
  * is no sampler, and villages there stay 1.12.2's.
  */
 public final class TerrainHeights {
@@ -84,6 +85,17 @@ public final class TerrainHeights {
             sampler = new TerrainHeights(null, cnc);
             SAMPLERS.put(world, sampler);
             return sampler;
+        }
+
+        if (RtgTerrain.handles(live)) {
+            RtgTerrain terrain = RtgTerrain.of(world, live);
+            if (terrain != null) {
+                sampler = new TerrainHeights(null, terrain);
+                SAMPLERS.put(world, sampler);
+                return sampler;
+            }
+            UNSUPPORTED.put(world, Boolean.TRUE);
+            return null;
         }
 
         if (FfdTerrain.handles(live)) {

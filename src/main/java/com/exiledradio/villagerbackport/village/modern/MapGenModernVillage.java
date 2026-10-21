@@ -122,6 +122,21 @@ public class MapGenModernVillage extends MapGenVillage {
         }
         net.minecraft.world.gen.IChunkGenerator generator =
                 ((net.minecraft.world.WorldServer) world).getChunkProvider().chunkGenerator;
+        if (RtgTerrain.handles(generator)) {
+            // RTG keeps its village generator in a field of its own, built through Forge's event.
+            try {
+                Field field = generator.getClass().getDeclaredField("villageGenerator");
+                field.setAccessible(true);
+                Object village = field.get(generator);
+                if (!(village instanceof MapGenModernVillage) && village != null) {
+                    Wrapped wrapped = Wrapped.in(village);
+                    village = wrapped == null ? null : wrapped.generator();
+                }
+                return village instanceof MapGenModernVillage ? (MapGenModernVillage) village : null;
+            } catch (Exception e) {
+                return null;
+            }
+        }
         if (!(generator instanceof net.minecraft.world.gen.ChunkGeneratorOverworld)) {
             // Caves Not Cliffs builds the terrain itself and keeps a vanilla overworld generator
             // inside only for its structures, villages among them.

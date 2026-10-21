@@ -8,4 +8,9 @@ interface ColumnTerrain {
 
     /** 1.14's {@code WORLD_SURFACE_WG}: one above the top block of the bare terrain, water included. */
     int height(int x, int z);
+
+    /** @return true if the column's surface is water; generators that cannot say answer false */
+    default boolean wet(int x, int z) {
+        return false;
+    }
 }
