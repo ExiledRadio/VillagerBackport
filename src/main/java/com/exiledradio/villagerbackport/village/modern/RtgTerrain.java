@@ -12,7 +12,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
- * Terrain heights in a Realistic Terrain Generation world.
+ * Terrain heights in a Realistic Terrain Generation world - the original, or its fork Realistic
+ * Terrain Generation Unofficial, which keeps the same classes and landscape.
  *
  * <p>RTG works out a chunk's ground in two steps: a "landscape" of one height per column, from its
  * biomes' own noise, then a fill that puts stone up to that height and water up to sea level. Its

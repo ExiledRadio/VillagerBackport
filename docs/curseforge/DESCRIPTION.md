@@ -198,7 +198,7 @@ Without them, those trades are simply left out of the draw, and the master libra
 
 **Open Terrain Generator**, and with it **RLCraft Dregora**, gets 1.14 villages planned on its real terrain, in the biomes and at the spacing its preset sets.
 
-**Realistic Terrain Generation**'s world type gets 1.14 villages planned on its real terrain too.
+**Realistic Terrain Generation**'s world type, original or **Realistic Terrain Generation Unofficial**, gets 1.14 villages planned on its real terrain too.
 
 **Farmer's Future Delight's** Caves & Cliffs world type and **Caves Not Cliffs** both get 1.14 villages built on their 1.18-style terrain, anywhere from y -64 to 319.
 

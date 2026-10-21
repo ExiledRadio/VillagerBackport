@@ -4,7 +4,7 @@
 
 ## New: 1.14 villages in Realistic Terrain Generation worlds
 
-Worlds made with **Realistic Terrain Generation**'s world type now get 1.14 villages. Until now this mod couldn't plan a village on RTG's terrain, so those worlds were left with 1.12.2's villages.
+Worlds made with **Realistic Terrain Generation**'s world type now get 1.14 villages, with the original RTG or with its maintained fork **Realistic Terrain Generation Unofficial**. Until now this mod couldn't plan a village on RTG's terrain, so those worlds were left with 1.12.2's villages.
 
 *   They are planned on RTG's real terrain, so houses sit properly on its hills.
 *   `/locate village_plains` and the other village types work in RTG worlds too.
