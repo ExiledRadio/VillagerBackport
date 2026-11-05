@@ -32,6 +32,7 @@ import java.util.Locale;
  * <p>It also takes one 1.14 village type at a time - {@code village_plains}, {@code village_desert},
  * {@code village_savanna}, {@code village_taiga}, {@code village_snowy} - which later versions of the
  * game added. Those only find 1.14-style villages, so they need {@code villages.style = MODERN}.
+ * And {@code pillager_outpost}, for this mod's outposts.
  */
 public class LocateCommand extends CommandBase {
 
@@ -69,7 +70,14 @@ public class LocateCommand extends CommandBase {
         String name;
         BlockPos found;
 
-        if (type != null) {
+        if (MapGenOutpost.NAME.equalsIgnoreCase(args[0])) {
+            MapGenOutpost outposts = MapGenOutpost.of(world);
+            if (outposts == null) {
+                throw new CommandException("commands.villagerbackport.locate.nooutposts");
+            }
+            name = "pillager_outpost";
+            found = outposts.getNearestStructurePos(world, from, false);
+        } else if (type != null) {
             MapGenModernVillage villages = MapGenModernVillage.of(world);
             if (villages == null) {
                 throw whyNoModernVillages(world);
@@ -142,6 +150,7 @@ public class LocateCommand extends CommandBase {
         }
         List<String> options = new ArrayList<String>();
         Collections.addAll(options, VANILLA);
+        options.add("pillager_outpost");
         for (ModernVillageStart.Type t : ModernVillageStart.Type.values()) {
             options.add("village_" + t.name().toLowerCase(Locale.ROOT));
         }

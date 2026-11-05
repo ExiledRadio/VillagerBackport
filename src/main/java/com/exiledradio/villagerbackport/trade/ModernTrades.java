@@ -220,10 +220,10 @@ public final class ModernTrades {
                 level(buy(Items.STICK, 32, 16), sell(Items.ARROW, 1, 16, STOCK),
                         convert(new ItemStack(Blocks.GRAVEL, 10), 1, new ItemStack(Items.FLINT, 10), 12)),
                 level(buy(Items.FLINT, 26, 12), sell(Items.BOW, 2, 1, STOCK)),
-                level(buy(Items.STRING, 14, 16), optionalSell(3, 1, STOCK, "futuremc:crossbow", "crossbows:crossbow")),
+                level(buy(Items.STRING, 14, 16), optionalSell(3, 1, STOCK, "villagerbackport:crossbow", "futuremc:crossbow", "crossbows:crossbow")),
                 level(buy(Items.FEATHER, 24, 16), enchanted(Items.BOW, 2)),
                 level(buy(new ItemStack(Blocks.TRIPWIRE_HOOK, 8), 12),
-                        optionalEnchanted(3, "futuremc:crossbow", "crossbows:crossbow"),
+                        optionalEnchanted(3, "villagerbackport:crossbow", "futuremc:crossbow", "crossbows:crossbow"),
                         tippedArrows()));
 
         table("minecraft:librarian", "librarian",

@@ -1,0 +1,178 @@
+{
+  "pools": [
+    {
+      "rolls": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "entries": [],
+      "name": "pool0"
+    },
+    {
+      "rolls": {
+        "min": 2.0,
+        "max": 3.0
+      },
+      "entries": [
+        {
+          "type": "item",
+          "weight": 7,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 3.0,
+                "max": 5.0
+              }
+            }
+          ],
+          "name": "minecraft:wheat",
+          "entryName": "minecraft:wheat#0"
+        },
+        {
+          "type": "item",
+          "weight": 5,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 2.0,
+                "max": 5.0
+              }
+            }
+          ],
+          "name": "minecraft:potato",
+          "entryName": "minecraft:potato#1"
+        },
+        {
+          "type": "item",
+          "weight": 5,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 3.0,
+                "max": 5.0
+              }
+            }
+          ],
+          "name": "minecraft:carrot",
+          "entryName": "minecraft:carrot#2"
+        }
+      ],
+      "name": "pool1"
+    },
+    {
+      "rolls": {
+        "min": 1.0,
+        "max": 3.0
+      },
+      "entries": [
+        {
+          "type": "item",
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 2.0,
+                "max": 3.0
+              }
+            },
+            {
+              "function": "set_data",
+              "data": 1
+            }
+          ],
+          "name": "minecraft:log2",
+          "entryName": "minecraft:log2#0"
+        }
+      ],
+      "name": "pool2"
+    },
+    {
+      "rolls": {
+        "min": 2.0,
+        "max": 3.0
+      },
+      "entries": [
+        {
+          "type": "item",
+          "weight": 7,
+          "name": "minecraft:experience_bottle",
+          "entryName": "minecraft:experience_bottle#0"
+        },
+        {
+          "type": "item",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 6.0
+              }
+            }
+          ],
+          "name": "minecraft:string",
+          "entryName": "minecraft:string#1"
+        },
+        {
+          "type": "item",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 2.0,
+                "max": 7.0
+              }
+            }
+          ],
+          "name": "minecraft:arrow",
+          "entryName": "minecraft:arrow#2"
+        },
+        {
+          "type": "item",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 3.0
+              }
+            }
+          ],
+          "name": "minecraft:tripwire_hook",
+          "entryName": "minecraft:tripwire_hook#3"
+        },
+        {
+          "type": "item",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1.0,
+                "max": 3.0
+              }
+            }
+          ],
+          "name": "minecraft:iron_ingot",
+          "entryName": "minecraft:iron_ingot#4"
+        },
+        {
+          "type": "item",
+          "functions": [
+            {
+              "function": "enchant_randomly"
+            }
+          ],
+          "name": "minecraft:book",
+          "entryName": "minecraft:book#5"
+        }
+      ],
+      "name": "pool3"
+    }
+  ]
+}

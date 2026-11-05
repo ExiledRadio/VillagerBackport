@@ -45,10 +45,22 @@ public final class VillagerLevelCache {
      */
     private static final Map<Integer, Integer> CAREERS = new HashMap<Integer, Integer>();
 
+    /** Biome types, which decide the outfit under the profession's; see {@code VillagerTypes}. */
+    private static final Map<Integer, String> TYPES = new HashMap<Integer, String>();
+
     /** Called on the client thread when a level arrives from the server. */
-    public static void accept(int entityId, int level, int careerId) {
+    public static void accept(int entityId, int level, int careerId, int type) {
         LEVELS.put(entityId, level);
         CAREERS.put(entityId, careerId);
+        if (type >= 0 && type < com.exiledradio.villagerbackport.data.VillagerTypes.NAMES.length) {
+            TYPES.put(entityId, com.exiledradio.villagerbackport.data.VillagerTypes.NAMES[type]);
+        }
+    }
+
+    /** @return the villager's biome type, or null if the server has not said */
+    @javax.annotation.Nullable
+    public static String type(EntityVillager villager) {
+        return TYPES.get(villager.getEntityId());
     }
 
     /**
@@ -79,6 +91,7 @@ public final class VillagerLevelCache {
         if (event.getWorld().isRemote) {
             LEVELS.clear();
             CAREERS.clear();
+            TYPES.clear();
         }
     }
 }

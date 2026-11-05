@@ -20,3 +20,16 @@ Regenerates `src/main/resources/assets/villagerbackport/structures/village/` (st
 `blockmap.py` is the 1.14 to 1.12.2 block table. The converter reports any 1.14 block it has no
 mapping for; there should be none. Each converted palette entry keeps its original 1.14 name and
 properties beside the 1.12.2 ones, because 1.14's pool processors match on the 1.14 names.
+
+## Pillager outposts
+
+The same converter handles 1.14's outposts. Extract `data/minecraft/structures/pillager_outpost/` and
+`data/minecraft/loot_tables/chests/pillager_outpost.json` alongside the village data, parse the pools
+from `PillagerOutpostPieces.java` with `pools.parse_file` as above, and pass the kind:
+
+```
+python -I tools/village-port/convert.py v14/data/minecraft outpost_pools.json src/main/resources/assets/villagerbackport pillager_outpost
+```
+
+The chest's crossbow is dropped from the JSON and added at load time by `OutpostGenerator`, from
+whichever mod adds a crossbow.

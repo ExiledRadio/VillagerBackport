@@ -1,6 +1,8 @@
-"""Converts 1.14.4's village structures, pools and chest loot into the mod's resources.
+"""Converts 1.14.4's jigsaw structures, pools and chest loot into the mod's resources.
 
-usage: convert.py <v14 data root> <pools_raw.json> <mod resources/assets/villagerbackport>
+usage: convert.py <v14 data root> <pools_raw.json> <mod resources/assets/villagerbackport> [kind]
+
+kind is the structure folder: village (the default) or pillager_outpost.
 """
 import collections
 import glob
@@ -14,8 +16,9 @@ import blockmap
 from nbt import Tag, TagList, STRING, COMPOUND, INT, DOUBLE, FLOAT
 
 src_root, pools_path, out_root = sys.argv[1], sys.argv[2], sys.argv[3]
-struct_root = os.path.join(src_root, "structures", "village")
-out_struct = os.path.join(out_root, "structures", "village")
+kind = sys.argv[4] if len(sys.argv) > 4 else "village"
+struct_root = os.path.join(src_root, "structures", kind)
+out_struct = os.path.join(out_root, "structures", kind)
 
 unmapped = collections.Counter()
 skipped_entities = collections.Counter()
@@ -76,7 +79,7 @@ def convert_te(te14, extra):
     tid = te14.get("id")
     if "LootTable" in te14:
         lt = te14["LootTable"]
-        if lt.startswith("minecraft:chests/village/"):
+        if lt.startswith("minecraft:chests/" + kind):
             lt = "villagerbackport:" + lt[len("minecraft:"):]
         out["LootTable"] = lt
     if tid == "minecraft:sign":
@@ -208,6 +211,8 @@ def map_test(test, where):
 raw = json.load(open(pools_path))
 pools = {}
 for name, pool in raw.items():
+    if not name.startswith(kind + "/"):
+        continue
     elems = []
     for e in pool["elements"]:
         el = e["element"]
@@ -216,11 +221,14 @@ for name, pool in raw.items():
             if el["type"] == "single":
                 procs = []
                 for rules in el["processors"]:
+                    if isinstance(rules, dict):
+                        procs.append(rules)
+                        continue
                     procs.append([{"input": map_test(r["input"], "input"),
                                    "location": map_test(r["location"], "location"),
                                    "output": map_output(r["output"])} for r in rules])
                 el["processors"] = procs
-                if not os.path.exists(os.path.join(struct_root, el["location"][len("village/"):] + ".nbt")):
+                if not os.path.exists(os.path.join(struct_root, el["location"][len(kind + "/"):] + ".nbt")):
                     raise SystemExit("missing template " + el["location"])
             if el["type"] == "list":
                 for sub in el["elements"]:
@@ -249,8 +257,11 @@ ITEMS = {
     "smooth_stone": ("minecraft:stone_slab", 0), "stone_bricks": ("minecraft:stonebrick", 0),
     "snow_block": ("minecraft:snow", 0), "spruce_log": ("minecraft:log", 1), "spruce_sign": ("minecraft:sign", 0),
     "barrel": ("villagerbackport:barrel", 0),
+    "dark_oak_log": ("minecraft:log2", 1),
 }
-DROP = {"sweet_berries"}
+# Sweet berries do not exist in 1.12.2. The crossbow is added at load time instead, from whichever
+# mod adds one - this mod gives players no crossbow of its own.
+DROP = {"sweet_berries", "crossbow"}
 
 
 def convert_loot(path, dest):
@@ -288,9 +299,11 @@ def convert_loot(path, dest):
     json.dump(j, open(dest, "w"), indent=2)
 
 
-loot_src = os.path.join(src_root, "loot_tables", "chests", "village")
+loot_src = os.path.join(src_root, "loot_tables", "chests", kind)
 for f in glob.glob(os.path.join(loot_src, "*.json")):
-    convert_loot(f, os.path.join(out_root, "loot_tables", "chests", "village", os.path.basename(f)))
+    convert_loot(f, os.path.join(out_root, "loot_tables", "chests", kind, os.path.basename(f)))
+if os.path.isfile(loot_src + ".json"):
+    convert_loot(loot_src + ".json", os.path.join(out_root, "loot_tables", "chests", kind + ".json"))
 
 print("templates", count)
 print("unmapped", dict(unmapped))

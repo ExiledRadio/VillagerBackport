@@ -1,0 +1,26 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "minecraft:stone_pickaxe"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:stone_axe"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:stone_hoe"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:stone_shovel"
+        }
+      ],
+      "name": "gift"
+    }
+  ]
+}

@@ -91,16 +91,26 @@ public final class EntityAIShelterAtNight extends EntityAIBase {
 
     @Nullable
     private BlockPos findRoofed() {
-        World world = this.villager.world;
-        BlockPos origin = new BlockPos(this.villager);
+        return findRoofed(this.villager);
+    }
+
+    /**
+     * @return somewhere roofed within reach that this villager can actually walk to, or null
+     *
+     * <p>Also where a villager without a bed hides from a raid.
+     */
+    @Nullable
+    public static BlockPos findRoofed(EntityVillager villager) {
+        World world = villager.world;
+        BlockPos origin = new BlockPos(villager);
 
         for (int i = 0; i < TRIES; i++) {
             BlockPos probe = origin.add(
-                    this.villager.getRNG().nextInt(SEARCH * 2 + 1) - SEARCH,
-                    this.villager.getRNG().nextInt(SEARCH_HEIGHT * 2 + 1) - SEARCH_HEIGHT,
-                    this.villager.getRNG().nextInt(SEARCH * 2 + 1) - SEARCH);
+                    villager.getRNG().nextInt(SEARCH * 2 + 1) - SEARCH,
+                    villager.getRNG().nextInt(SEARCH_HEIGHT * 2 + 1) - SEARCH_HEIGHT,
+                    villager.getRNG().nextInt(SEARCH * 2 + 1) - SEARCH);
 
-            if (isRoofed(world, probe) && canStand(world, probe) && reaches(probe)) {
+            if (isRoofed(world, probe) && canStand(world, probe) && reaches(villager, probe)) {
                 return probe;
             }
         }
@@ -109,14 +119,14 @@ public final class EntityAIShelterAtNight extends EntityAIBase {
     }
 
     /** A path that actually gets there, not one that stops at the nearest wall. */
-    private boolean reaches(BlockPos target) {
-        net.minecraft.pathfinding.Path path = this.villager.getNavigator().getPathToPos(target);
+    private static boolean reaches(EntityVillager villager, BlockPos target) {
+        net.minecraft.pathfinding.Path path = villager.getNavigator().getPathToPos(target);
         net.minecraft.pathfinding.PathPoint end = path == null ? null : path.getFinalPathPoint();
         return end != null && Math.abs(end.x - target.getX()) <= 1
                 && Math.abs(end.y - target.getY()) <= 1 && Math.abs(end.z - target.getZ()) <= 1;
     }
 
-    private static boolean isRoofed(World world, BlockPos pos) {
+    public static boolean isRoofed(World world, BlockPos pos) {
         return world.isBlockLoaded(pos) && !world.canSeeSky(pos);
     }
 

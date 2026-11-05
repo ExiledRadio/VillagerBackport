@@ -84,7 +84,7 @@ public final class ForgiveCommand extends CommandBase {
     }
 
     /** @return the nearest villager the player's line of sight passes through, or null */
-    private static EntityVillager lookedAt(EntityPlayerMP player) {
+    static EntityVillager lookedAt(EntityPlayerMP player) {
         Vec3d eyes = player.getPositionEyes(1.0F);
         Vec3d end = eyes.add(player.getLookVec().scale(LOOK_REACH));
         AxisAlignedBB reach = player.getEntityBoundingBox().grow(LOOK_REACH);

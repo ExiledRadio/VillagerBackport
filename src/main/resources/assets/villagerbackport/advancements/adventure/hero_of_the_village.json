@@ -1,0 +1,27 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:banner",
+      "data": 15
+    },
+    "title": {
+      "translate": "advancements.villagerbackport.hero_of_the_village.title"
+    },
+    "description": {
+      "translate": "advancements.villagerbackport.hero_of_the_village.description"
+    },
+    "frame": "challenge",
+    "hidden": true
+  },
+  "parent": "minecraft:adventure/root",
+  "criteria": {
+    "hero": {
+      "trigger": "minecraft:effects_changed",
+      "conditions": {
+        "effects": {
+          "villagerbackport:hero_of_the_village": {}
+        }
+      }
+    }
+  }
+}

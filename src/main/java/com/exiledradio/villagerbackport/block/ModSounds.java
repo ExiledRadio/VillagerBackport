@@ -27,6 +27,33 @@ public final class ModSounds {
     /** The lingering tone that follows, and which the highlight lands on. */
     public static SoundEvent bellResonate;
 
+    /** The horn each raid wave arrives to, heard from up to 64 blocks. */
+    public static SoundEvent raidHorn;
+
+    /** Current Java's chimes for gaining Bad Omen and Raid Omen. */
+    public static SoundEvent badOmen;
+    public static SoundEvent raidOmen;
+
+    public static SoundEvent pillagerAmbient;
+    public static SoundEvent pillagerHurt;
+    public static SoundEvent pillagerDeath;
+    public static SoundEvent pillagerCelebrate;
+    public static SoundEvent ravagerAmbient;
+    public static SoundEvent ravagerHurt;
+    public static SoundEvent ravagerDeath;
+    public static SoundEvent ravagerStep;
+    public static SoundEvent ravagerAttack;
+    public static SoundEvent ravagerRoar;
+    public static SoundEvent ravagerStunned;
+    public static SoundEvent ravagerCelebrate;
+    public static SoundEvent crossbowShoot;
+    public static SoundEvent crossbowLoadingStart;
+    public static SoundEvent crossbowLoadingMiddle;
+    public static SoundEvent crossbowLoadingEnd;
+    /** The start of a load with Quick Charge I, II and III, in place of {@link #crossbowLoadingStart}. */
+    public static SoundEvent[] crossbowQuickCharge = new SoundEvent[3];
+    public static SoundEvent ominousBottleDispose;
+
     /** The grinding noise, one of three samples chosen at random. */
     public static SoundEvent grindstoneUse;
 
@@ -70,10 +97,43 @@ public final class ModSounds {
     private ModSounds() {
     }
 
+    /**
+     * 1.14's {@code entity.villager.work_*}: the sound each profession makes at its workstation, by
+     * 1.14's profession name.
+     */
+    public static final java.util.Map<String, SoundEvent> WORK = new java.util.HashMap<String, SoundEvent>();
+
+    /** 1.14's professions that have a work sound. */
+    private static final String[] WORKERS = {"armorer", "butcher", "cartographer", "cleric", "farmer", "fisherman",
+            "fletcher", "leatherworker", "librarian", "mason", "shepherd", "toolsmith", "weaponsmith"};
+
     @SubscribeEvent
     public static void register(RegistryEvent.Register<SoundEvent> event) {
         bellUse = create(event, "block.bell.use");
         bellResonate = create(event, "block.bell.resonate");
+        raidHorn = create(event, "event.raid.horn");
+        badOmen = create(event, "event.mob_effect.bad_omen");
+        raidOmen = create(event, "event.mob_effect.raid_omen");
+        pillagerAmbient = create(event, "entity.pillager.ambient");
+        pillagerHurt = create(event, "entity.pillager.hurt");
+        pillagerDeath = create(event, "entity.pillager.death");
+        pillagerCelebrate = create(event, "entity.pillager.celebrate");
+        ravagerAmbient = create(event, "entity.ravager.ambient");
+        ravagerHurt = create(event, "entity.ravager.hurt");
+        ravagerDeath = create(event, "entity.ravager.death");
+        ravagerStep = create(event, "entity.ravager.step");
+        ravagerAttack = create(event, "entity.ravager.attack");
+        ravagerRoar = create(event, "entity.ravager.roar");
+        ravagerStunned = create(event, "entity.ravager.stunned");
+        ravagerCelebrate = create(event, "entity.ravager.celebrate");
+        crossbowShoot = create(event, "item.crossbow.shoot");
+        crossbowLoadingStart = create(event, "item.crossbow.loading_start");
+        crossbowLoadingMiddle = create(event, "item.crossbow.loading_middle");
+        crossbowLoadingEnd = create(event, "item.crossbow.loading_end");
+        for (int level = 1; level <= 3; level++) {
+            crossbowQuickCharge[level - 1] = create(event, "item.crossbow.quick_charge_" + level);
+        }
+        ominousBottleDispose = create(event, "item.ominous_bottle.dispose");
         grindstoneUse = create(event, "block.grindstone.use");
         cartographyTableUse = create(event, "ui.cartography_table.take_result");
         stonecutterUse = create(event, "ui.stonecutter.take_result");
@@ -86,6 +146,9 @@ public final class ModSounds {
         cropBreak = create(event, "block.crop.break");
         netherWartPlant = create(event, "item.nether_wart.plant");
         netherWartBreak = create(event, "block.nether_wart.break");
+        for (String profession : WORKERS) {
+            WORK.put(profession, create(event, "entity.villager.work_" + profession));
+        }
     }
 
     private static SoundEvent create(RegistryEvent.Register<SoundEvent> event, String name) {

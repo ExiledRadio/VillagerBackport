@@ -170,6 +170,12 @@ public final class EntityAIBreedOnBeds extends EntityAIBase {
 
         child = event.getChild();
         child.setGrowingAge(-24000);
+        // 1.14's rule for the baby's biome type, settled before it enters the world.
+        if (child instanceof EntityVillager) {
+            com.exiledradio.villagerbackport.data.VillagerTypes.set((EntityVillager) child,
+                    com.exiledradio.villagerbackport.data.VillagerTypes.forBaby(this.villager, this.mate,
+                            this.villager.getRNG()));
+        }
         child.setLocationAndAngles(this.villager.posX, this.villager.posY, this.villager.posZ, 0.0F, 0.0F);
 
         this.world.spawnEntity(child);

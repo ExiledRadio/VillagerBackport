@@ -1,0 +1,41 @@
+{
+  "parent": "villagerbackport:item/crossbow_base",
+  "textures": {
+    "layer0": "villagerbackport:items/crossbow_standby"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "villagerbackport:pulling": 1
+      },
+      "model": "villagerbackport:item/crossbow_pulling_0"
+    },
+    {
+      "predicate": {
+        "villagerbackport:pulling": 1,
+        "villagerbackport:pull": 0.58
+      },
+      "model": "villagerbackport:item/crossbow_pulling_1"
+    },
+    {
+      "predicate": {
+        "villagerbackport:pulling": 1,
+        "villagerbackport:pull": 1.0
+      },
+      "model": "villagerbackport:item/crossbow_pulling_2"
+    },
+    {
+      "predicate": {
+        "villagerbackport:charged": 1
+      },
+      "model": "villagerbackport:item/crossbow_arrow"
+    },
+    {
+      "predicate": {
+        "villagerbackport:charged": 1,
+        "villagerbackport:firework": 1
+      },
+      "model": "villagerbackport:item/crossbow_firework"
+    }
+  ]
+}

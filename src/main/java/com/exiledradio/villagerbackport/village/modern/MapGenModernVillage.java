@@ -116,6 +116,22 @@ public class MapGenModernVillage extends MapGenVillage {
                 && this.world.getBiomeProvider().areBiomesViable(chunkX * 16 + 8, chunkZ * 16 + 8, 0, this.otgBiomes);
     }
 
+    /**
+     * @return true if a village starts in this chunk - what 1.14's outposts ask of every chunk within
+     *         ten of their own, to stay out of villages
+     */
+    public boolean startsAt(net.minecraft.world.World world, int chunkX, int chunkZ) {
+        if (this.world == null) {
+            this.world = world;
+        }
+        return canSpawnStructureAtCoords(chunkX, chunkZ);
+    }
+
+    /** @return the village grid spacing, in chunks */
+    public int spacing() {
+        return this.spacing;
+    }
+
     /** OTG saves its villages as "OTGVillage"; keeping the name keeps the villages already there. */
     @Override
     public String getStructureName() {
@@ -209,6 +225,19 @@ public class MapGenModernVillage extends MapGenVillage {
                 ((net.minecraft.world.WorldServer) world).getChunkProvider().chunkGenerator;
         if (OtgTerrain.handles(generator)) {
             return unwrap(otgVillageGenerator(generator));
+        }
+        if (FlatTerrain.handles(generator)) {
+            return unwrap(FlatTerrain.villageGenerator(generator));
+        }
+        if (BopTerrain.handles(generator)) {
+            // BOP keeps its village generator in a field of its own too, built through the event.
+            try {
+                Field field = generator.getClass().getDeclaredField("villageGenerator");
+                field.setAccessible(true);
+                return unwrap(field.get(generator));
+            } catch (Exception e) {
+                return null;
+            }
         }
         if (RtgTerrain.handles(generator)) {
             // RTG keeps its village generator in a field of its own, built through Forge's event.
@@ -384,6 +413,8 @@ public class MapGenModernVillage extends MapGenVillage {
             BiomeManager.addVillageBiome(Biomes.ICE_PLAINS, true);
         }
         MinecraftForge.TERRAIN_GEN_BUS.register(new MapGenModernVillage.Swap());
+        // Superflat builds its village generator without Forge's event; see FlatTerrain.
+        MinecraftForge.EVENT_BUS.register(new FlatTerrain.Swap());
     }
 
     public static final class Swap {

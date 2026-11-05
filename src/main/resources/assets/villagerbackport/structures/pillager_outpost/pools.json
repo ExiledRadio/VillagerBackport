@@ -1,0 +1,128 @@
+{
+ "pillager_outpost/base_plates": {
+  "elements": [
+   {
+    "element": {
+     "location": "pillager_outpost/base_plate",
+     "processors": [],
+     "projection": "rigid",
+     "type": "single"
+    },
+    "weight": 1
+   }
+  ],
+  "fallback": "empty",
+  "projection": "rigid"
+ },
+ "pillager_outpost/feature_plates": {
+  "elements": [
+   {
+    "element": {
+     "location": "pillager_outpost/feature_plate",
+     "processors": [],
+     "projection": "terrain_matching",
+     "type": "single"
+    },
+    "weight": 1
+   }
+  ],
+  "fallback": "empty",
+  "projection": "terrain_matching"
+ },
+ "pillager_outpost/features": {
+  "elements": [
+   {
+    "element": {
+     "location": "pillager_outpost/feature_cage1",
+     "processors": [],
+     "projection": "rigid",
+     "type": "single"
+    },
+    "weight": 1
+   },
+   {
+    "element": {
+     "location": "pillager_outpost/feature_cage2",
+     "processors": [],
+     "projection": "rigid",
+     "type": "single"
+    },
+    "weight": 1
+   },
+   {
+    "element": {
+     "location": "pillager_outpost/feature_logs",
+     "processors": [],
+     "projection": "rigid",
+     "type": "single"
+    },
+    "weight": 1
+   },
+   {
+    "element": {
+     "location": "pillager_outpost/feature_tent1",
+     "processors": [],
+     "projection": "rigid",
+     "type": "single"
+    },
+    "weight": 1
+   },
+   {
+    "element": {
+     "location": "pillager_outpost/feature_tent2",
+     "processors": [],
+     "projection": "rigid",
+     "type": "single"
+    },
+    "weight": 1
+   },
+   {
+    "element": {
+     "location": "pillager_outpost/feature_targets",
+     "processors": [],
+     "projection": "rigid",
+     "type": "single"
+    },
+    "weight": 1
+   },
+   {
+    "element": {
+     "projection": "rigid",
+     "type": "empty"
+    },
+    "weight": 6
+   }
+  ],
+  "fallback": "empty",
+  "projection": "rigid"
+ },
+ "pillager_outpost/towers": {
+  "elements": [
+   {
+    "element": {
+     "elements": [
+      {
+       "location": "pillager_outpost/watchtower",
+       "processors": [],
+       "type": "single"
+      },
+      {
+       "location": "pillager_outpost/watchtower_overgrown",
+       "processors": [
+        {
+         "integrity": 0.05
+        }
+       ],
+       "type": "single"
+      }
+     ],
+     "projection": "rigid",
+     "type": "list"
+    },
+    "weight": 1
+   }
+  ],
+  "fallback": "empty",
+  "projection": "rigid"
+ }
+}

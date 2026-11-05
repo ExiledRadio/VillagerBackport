@@ -27,18 +27,32 @@ already mixes into villager classes and both would be rewriting the same class.
 
 ## What this mod does and does not do
 
+The table above is from the first release, when the mod only fixed restocking. It has grown a long
+way since; this is what it touches now.
+
 Does not:
-- Register any block, item, entity, profession, career, or trade
-- Subclass or replace `EntityVillager`
-- Patch bytecode or apply Mixins
-- Fire or cancel `MerchantTradeOffersEvent` (several mods listen to it; we stay off it entirely)
-- Run any client-side logic
+- Subclass or replace `EntityVillager`, or replace any vanilla renderer (badges, outfits and held
+  items are layers added to whichever villager renderer is installed)
+- Patch bytecode or apply Mixins, anywhere
+- Replace vanilla's `ContainerMerchant` (the trade *screen* is swapped, the container is not)
+- Run anything in another mod's item code for a mob (pillagers only tag a crossbow as loaded)
 
 Does:
-- Listen to `LivingEvent.LivingUpdateEvent`, server-side only
-- Read two private fields on `EntityVillager` reflectively (`buyingList`, `timeUntilReset`)
-- Reset `uses` on recipes via `MerchantRecipe`'s own public NBT round-trip
-- Store four longs per villager in the entity's `ForgeData` tag under key `villagerbackport`
+- Register its own blocks (the twelve workstations, lantern), items (banner patterns, the ominous
+  bottle, the crossbow and a pillager-only stand-in), enchantments (Quick Charge, Multishot,
+  Piercing), entities (pillager, ravager, the crossbow's arrows and rocket), effects (Bad Omen, Raid
+  Omen, Hero of the Village), sounds, a career (mason), loot tables and advancements
+- Add AI goals to villagers (work, sleep, shelter, gather at the bell, breed on beds, panic, raids,
+  hero gifts) and remove the vanilla goals they replace (`EntityAIMoveIndoors`, `EntityAIVillagerMate`,
+  `EntityAIPlay`, `EntityAIAvoidEntity`)
+- Add raider goals to any mob that joins one of its raids, and swap its fight-back goal for one that
+  ignores other raiders
+- Generate 1.14 villages (by swapping `MapGenVillage` through `InitMapGenEvent`, only when it is
+  exactly vanilla's) and pillager outposts (from an `IWorldGenerator`)
+- Read and write villager fields reflectively (`buyingList`, `timeUntilReset`, `careerId`,
+  `careerLevel`) and keep its own data in each villager's `ForgeData` under `villagerbackport`
+- Listen to `MerchantTradeOffersEvent` at `LOWEST`, only to take Raids Backport's hero discount
+  off when this mod's pricing is in charge (see below)
 
 ## Second instance: RLCraft Dregora
 
@@ -62,6 +76,10 @@ correct against a reobfuscated client — and against Forge **2860** while compi
 confirming the binary-compatibility assumption in the gradle.properties ceiling note.
 
 ## Why the trade screen is an overlay
+
+*Superseded: since 0.4.0 the screen itself is replaced by a 1.14-style one, handed the same
+`ContainerMerchant` vanilla opened, so the container - and FermiumMixins' patch to it - is still
+untouched. Kept for the reasoning.*
 
 1.14 shows villager level as part of a redesigned merchant screen. Rebuilding that would mean a
 custom `Container` and `GuiScreen` opened in place of vanilla's — the one part of this feature with
@@ -106,6 +124,64 @@ Villager Tomes adds player-taught enchanted book trades to the same `buyingList`
 restock on the same rules as everything else with no special handling — worth testing together,
 since Tomes trades are intended to be permanent and the interaction with a use cap is worth
 confirming behaves the way you want.
+
+## Raids
+
+This mod runs raids of its own (`compat.raids=AUTO` without Raids Backport, or `OURS`). Raiders
+are any mob: membership is stored in the mob's Forge data (`RaidId`, `RaidWave`, `RaidLeader`
+under the `villagerbackport` tag) and three goals are added at priorities 3-5 that do nothing
+outside a raid, so a mod's own illager keeps its own AI. Which mob fills each of 1.14's five
+raider slots is a config list of registry names, first installed wins.
+
+This mod's crossbow (`compat.crossbow`) is only registered when neither Future MC (`futuremc`) nor
+Crossbows Backport (`crossbows`) is loaded, by default. Its recipe and its four advancements carry
+the `villagerbackport:crossbow` condition (named in both `recipes/_factories.json` and
+`advancements/_factories.json`, since Forge clears conditions before loading each), so they go
+with it. It stores its load in 1.14's `Charged` / `ChargedProjectiles` tags. Piercing needs arrows
+that do not stop at their first hit, so vanilla's arrow, tipped arrow and spectral arrow are fired
+as this mod's subclasses of them; another mod's arrow is made by its own item and does not pierce.
+Rockets are an entity of this mod's, as 1.12.2's rocket can only rise.
+
+Pillagers carry the first crossbow installed from `raids.crossbows` (this mod's, Future MC,
+Crossbows Backport, Spartan Weaponry) but never use it: the pillager times its load and fires its
+own arrows, and only sets the crossbow's loaded tag (`Charged`, or Spartan's `isLoaded`) so its
+model shows an arrow. No other crossbow mod's item code runs for a mob; this mod's crossbow makes
+the arrow, so its Piercing applies. With no crossbow at all (`compat.crossbow=OFF` and no mod),
+pillagers hold a pillager-only stand-in with no recipe, no creative tab and a drop chance of 0.
+
+Bad Omen from Deeper Depths (`deeperdepths:bad_omen`) and Raids Backport (`raids:bad_omen`) is
+accepted as well as this mod's. Deeper Depths only converts its own Bad Omen when Raids Backport
+is installed, so without it the two do not both act on one omen.
+
+## Raids Backport
+
+Raids Backport (smileycorp, modid `raids`) adds pillagers, ravagers and raids to 1.12.2. With
+`compat.raids=AUTO` (the default) this mod lives through its raids rather than adding raids of its
+own. It reads Raids Backport's state by reflection, so neither mod needs the other, and if a later
+version moves something the bridge logs one error and villagers simply ignore raids.
+
+Three things Raids Backport does would otherwise break against this mod. Each is handled here, with
+no Mixin:
+
+| Raids Backport does | Why it breaks here | What this mod does instead |
+|---|---|---|
+| Glows raiders when **Future MC's** bell rings | `compat.futureMcDuplicates=KEEP_OURS` hides that bell | Our bell reveals raiders itself, on 1.14's timing (resonance after 5 ticks, glow 40 later, 48 blocks) |
+| Hides villagers through a mixin on `EntityAIMoveIndoors` | We remove that goal for our sleep AI | `raid.EntityAIRaidResponse`: hide, gather and ring the bell, celebrate |
+| Stores the hero discount on `MerchantRecipe` and draws it on vanilla's `GuiMerchant` | We replace the trade screen, so the discount was charged but not shown, and it was taken from a price already including demand and reputation | Hero of the Village is a term in our `specialPrice`, from the base price as 1.14 has it. Raids Backport's discount is set to 0 in `MerchantTradeOffersEvent` at `LOWEST`, only while `pricing.demandPricing` is on |
+
+Gifts: Raids Backport's villagers give their own. This mod only gives gifts for careers it has
+nothing for, which is the mason.
+
+Raiders are recognised by registry name (`pillager`, `ravager`, `vindicator`/`vindication_illager`,
+`evoker`/`evocation_illager`, `illusioner`/`illusion_illager`, `witch`) whichever mod they come
+from, plus `raids.extraRaiders`. Villagers flee pillagers at 15 blocks and ravagers at 12, as in
+1.14. This replaces Raids Backport's own `EntityAIAvoidEntity`, which our panic AI removes along
+with vanilla's.
+
+Tested on a headless server with Raids Backport 1.1.5b, Crossbows Backport 1.1.1, Future MC 0.2.21
+and MixinBooter 11.18. Raids Backport needs Atlas Lib, and with only MixinBooter it failed to start
+(MixinExtras could not be found by Atlas Lib's loader). Adding Red Core, as RLCraft Revamped has,
+fixed it.
 
 ## Failure mode
 

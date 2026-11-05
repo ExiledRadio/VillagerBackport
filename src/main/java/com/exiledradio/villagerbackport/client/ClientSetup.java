@@ -47,8 +47,14 @@ public final class ClientSetup {
         MinecraftForge.EVENT_BUS.register(new SleepPoseClient());
         MinecraftForge.EVENT_BUS.register(new SleepRenderer());
         MinecraftForge.EVENT_BUS.register(new VillageOutlineRenderer());
+        MinecraftForge.EVENT_BUS.register(new CrossbowClient());
+        CrossbowClient.registerRenderers();
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBell.class, new TileEntityBellRenderer());
+        net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler(
+                com.exiledradio.villagerbackport.illager.EntityPillager.class, RenderPillager::new);
+        net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler(
+                com.exiledradio.villagerbackport.illager.EntityRavager.class, RenderRavager::new);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLectern.class, new TileEntityLecternRenderer());
     }
 }

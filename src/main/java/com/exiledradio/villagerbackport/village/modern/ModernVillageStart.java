@@ -93,7 +93,7 @@ public class ModernVillageStart extends StructureStart {
     public ModernVillageStart(World world, Random random, int chunkX, int chunkZ, TerrainHeights heights, Type type,
                               int size) {
         super(chunkX, chunkZ);
-        new Assembler(heights, random, this.components).assemble(type.startPool(), new BlockPos(chunkX * 16, 0, chunkZ * 16));
+        new Assembler(heights, random, this.components, DEPTH).assemble(type.startPool(), new BlockPos(chunkX * 16, 0, chunkZ * 16));
         // Other mods' village buildings - Recurrent Complex's houses, Waystones' waystone - on plots
         // beside the streets. See ModVillagePieces.
         ModVillagePieces.add(world, this.components, heights, chunkX, chunkZ, size);
@@ -164,22 +164,28 @@ public class ModernVillageStart extends StructureStart {
         }
     }
 
-    private static final class Assembler {
+    /** 1.14's {@code JigsawManager.Assembler}, for any jigsaw structure: villages, and pillager outposts. */
+    static final class Assembler {
         private final TerrainHeights heights;
         private final Random random;
         private final List<net.minecraft.world.gen.structure.StructureComponent> pieces;
         private final Deque<Entry> queue = new ArrayDeque<Entry>();
 
-        Assembler(TerrainHeights heights, Random random, List<net.minecraft.world.gen.structure.StructureComponent> pieces) {
+        /** How many jigsaws deep the structure grows: 6 for villages, 7 for outposts, as in 1.14. */
+        private final int maxDepth;
+
+        Assembler(TerrainHeights heights, Random random, List<net.minecraft.world.gen.structure.StructureComponent> pieces,
+                  int maxDepth) {
             this.heights = heights;
             this.random = random;
             this.pieces = pieces;
+            this.maxDepth = maxDepth;
         }
 
         void assemble(String startPool, BlockPos origin) {
             ModernPools.Pool pool = ModernPools.get(startPool);
             if (pool == null || pool.size() == 0) {
-                VillagerBackport.LOGGER.warn("No village start pool {}.", startPool);
+                VillagerBackport.LOGGER.warn("No jigsaw start pool {}.", startPool);
                 return;
             }
             Rotation rotation = Rotation.values()[this.random.nextInt(Rotation.values().length)];
@@ -237,7 +243,7 @@ public class ModernVillageStart extends StructureStart {
                 }
 
                 List<ModernPools.Element> candidates = new ArrayList<ModernPools.Element>();
-                if (depth != DEPTH) {
+                if (depth != this.maxDepth) {
                     candidates.addAll(pool.shuffled(this.random));
                 }
                 if (fallback != null) {
@@ -290,7 +296,7 @@ public class ModernVillageStart extends StructureStart {
                                 int groundLevelDelta = childRigid ? parent.groundLevelDelta() - dy : candidate.groundLevelDelta();
                                 ModernVillagePiece child = new ModernVillagePiece(candidate, placedAt, groundLevelDelta, rotation, placed);
                                 this.pieces.add(child);
-                                if (depth + 1 <= DEPTH) {
+                                if (depth + 1 <= this.maxDepth) {
                                     this.queue.addLast(new Entry(child, space, depth + 1));
                                 }
                                 continue jigsaws;

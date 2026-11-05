@@ -164,13 +164,18 @@ public final class PanicWatch {
      * @return how close this mob has to be to frighten a villager, or 0 if it never does
      *
      * <p>The game's hostile list for villagers, at its distances: zombies of every kind - husks and
-     * zombie villagers are subclasses here - and the illagers. Drowned, pillagers and ravagers do not
-     * exist in 1.12.2. Zombie pigmen extend {@code EntityZombie} here but are not on the list.
+     * zombie villagers are subclasses here - and the illagers, including any mod's pillagers and
+     * ravagers. Zombie pigmen extend {@code EntityZombie} here but are not on the list.
      *
      * <p>It is a short list on purpose. Villagers are not frightened of skeletons, creepers or
      * spiders, and a test of "is it hostile" made every cave mob under a village a reason to panic.
      */
     private static double frightRange(EntityLivingBase mob) {
+        // Pillagers and ravagers, whichever mod adds them, at 1.14's distances.
+        double raider = com.exiledradio.villagerbackport.raid.Raids.frightRange(mob);
+        if (raider > 0.0D) {
+            return raider;
+        }
         if (mob instanceof EntityPigZombie) {
             return 0.0D;
         }

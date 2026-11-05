@@ -1,6 +1,148 @@
-# 2.1.1
+# 2.2.0
 
-1.14 villages in Realistic Terrain Generation worlds, and fixes for playing alongside Future MC.
+Raids, pillagers, ravagers, patrols, pillager outposts and the crossbow. Carry Bad Omen into a village and, 30 seconds later, a raid comes: waves of illagers, a raid bar, a horn, and Hero of the Village for whoever beats it. Villagers ring the bell, hide and celebrate as in 1.14. Works with **Raids Backport** too.
+
+## New: raids
+
+*   **Bad Omen** in a village turns into **Raid Omen** for 30 seconds, and the raid starts where you were when it runs out, as in current Java. Turn off `raids.raidOmen` for 1.14's rule, where the raid starts the moment you walk in.
+*   **1.14's waves**: three on easy, five on normal, seven on hard, plus a bonus wave when the omen was above level I. 1.14's mix of raiders per wave, with the extra raiders it adds on harder difficulties, and sharper axes on the later waves of a strong raid.
+*   **The raid bar** fills up while the raid gathers, then counts the raiders' health down, says how many are left when only a couple remain, and shows Victory or Defeat at the end. **The horn** sounds from the direction each wave arrives from.
+*   Raiders head for the village, go from house to house looking for villagers, and jump about cheering if they win. Raiders met on the way join in. They never despawn mid-raid, and pick up where they left off after a restart.
+*   **Captains**: each wave has one, wearing the ominous banner. Kill a captain away from a raid and you get Bad Omen, one level higher each time, up to V.
+*   **The ominous banner** is 1.14's, named in gold, with its pattern list hidden. It's in this mod's creative tab too.
+*   A raid needs a village: beds villagers sleep in, workstations they work at, a bell they meet at, or a 1.12.2 village of doors. It's lost when the village is gone and times out after 40 minutes.
+*   `/raid start [level]`, `/raid stop` and `/raid status` for operators, and the `disableRaids` game rule to switch raids off in a world.
+*   Two advancements: **Hero of the Village** and **Voluntary Exile**.
+
+## New: pillagers and ravagers
+
+*   **Pillagers**: 1.14's crossbow illager. They close to eight blocks, load for just over a second, hold their aim for one or two seconds and fire, with 1.14's speed and spread. On the later waves of a strong raid some carry a multishot crossbow that loads faster.
+*   **Their crossbow** is this mod's own (see below), or Future MC's, Crossbows Backport's or Spartan Weaponry's when that one is in use (`raids.crossbows`). It shows loaded and unloaded as the pillager works it, and drops now and then, enchantments and all.
+*   **Ravagers**: 100 health, a 12-damage bite that throws you back, and 1.14's shield rule: block the bite with a shield and half the time it is stunned for two seconds, then roars, hurting and scattering everything nearby that isn't an illager. It walks through leaves and tears them down, and drops a saddle.
+*   **Riders**: ravagers on normal's last wave carry a pillager; from hard's last wave they carry an evoker or a vindicator, as in 1.14.
+*   Both have 1.14's models, textures and sounds, and spawn eggs. Neither spawns on its own.
+*   **Ominous bottle**: turn on `raids.captainDropsOminousBottle` and captains drop a bottle of random level instead of giving Bad Omen straight away, as in current Java. Drink it for Bad Omen. With Deeper Depths installed, its bottle is dropped instead.
+
+## New: the crossbow
+
+*   **1.14's crossbow**, with its recipe (sticks, string, an iron ingot and a tripwire hook). Hold use to draw it, let go to load, use again to fire. It stays loaded until you fire it, even put away.
+*   **Arrows of any kind**, from anywhere in your inventory, or a **firework rocket** held in your other hand. Rockets fly straight and explode on whatever they hit, damaging everything nearby.
+*   **Quick Charge** (I-III) loads it faster, **Multishot** fires three arrows for one, and **Piercing** (I-IV) sends arrows through that many mobs to hit the next. Multishot and Piercing don't go together. Unbreaking and Mending work; the bow's enchantments don't. From the enchanting table, anvils and books, with current Java's odds.
+*   Arrows fly at 1.14's speed and always crit, for 6 to 11 damage. 465 durability, as in current Java.
+*   Fletchers sell it, enchanted at expert, and outpost chests hold one.
+*   Four advancements: **Ol' Betsy**, **Who's the Pillager Now?**, **Two Birds, One Arrow** (with a mod that adds phantoms) and **Arbalistic**.
+*   In first person it moves as in 1.14: turned across you while it draws, resting at your side once drawn, and swung in to aim down the middle of the screen once loaded. Seen by others, holding it loaded raises both arms to aim, the nearest pose 1.12.2 has to 1.14's.
+*   **With Future MC or Crossbows Backport installed, this mod adds no crossbow**, so a pack never has two: theirs is used by pillagers, fletchers and outposts instead. `compat.crossbow` changes that: `AUTO`, `OURS` (always) or `OFF` (never).
+
+## New: patrols and pillager outposts
+
+*   **Patrols**: from the fifth day, by day, now and then a band of pillagers appears 24 to 48 blocks from a player who isn't in a village, as in 1.14. A captain carrying the ominous banner leads it across the country, the rest following. Kill the captain away from a raid for Bad Omen - which is now how a raid is meant to start. Patrols stay as long as a player is within 128 blocks.
+*   **Pillager outposts**: 1.14's own outposts - the dark oak watchtower with its banners and chest at the top, sometimes overgrown, and around it tents, log piles, targets and cages holding an iron golem. They're placed by 1.14's rules: plains, desert, savanna, taiga and snowy tundra (and other mods' biomes like them), never within ten chunks of a village. New chunks only.
+*   **Outposts stay manned**: pillagers spawn in and around them day and night, as in 1.14.
+*   **The chest**: 1.14's loot, crossbow included.
+*   `/locate pillager_outpost` finds the nearest.
+
+## New: the bell reveals raiders
+
+Ring a bell with raiders within 32 blocks and it resonates, and two seconds later every raider within 48 blocks glows for three seconds, as in 1.14. Raiders are pillagers, vindicators, evokers, illusioners, ravagers and witches, whichever mod adds them.
+
+**Changed:** the bell no longer highlights villagers. It only reveals raiders, as in 1.14, and the `workstations.bellHighlightsVillagers`, `bellRadius` and `bellGlowTicks` settings are gone.
+
+## New: villagers hide
+
+*   **When a bell rings**, villagers within 32 blocks run to their bed, or the nearest bed, and stay inside for 15 seconds.
+*   **During a raid**, they gather at the bell and ring it until the raiders arrive, then go home and stay there. After a victory they come out, jump about and set off fireworks.
+*   A villager that can't reach a bed hides under the nearest roof.
+*   Villagers run from pillagers at 15 blocks and ravagers at 12, as in 1.14.
+
+## New: Hero of the Village
+
+*   **Discount**: 30% off every trade, plus 6.25% a level, taken from the base price and shown on the trade screen with the struck-out original. Stacks with reputation, as in 1.14.
+*   **Gifts**: villagers walk up to a hero now and then and throw them something: 1.14's gift for each profession, a poppy from a baby, wheat seeds from a villager without a job. Each profession's gift is a loot table you can change.
+
+## Raids Backport
+
+With **Raids Backport** installed, its raids are used instead of this mod's, villagers live through them, and three things that went wrong with the two together are fixed:
+
+*   Ringing this mod's bell now reveals its raiders. Before, only Future MC's bell did, and this mod hides that one.
+*   Villagers hide during its raids again. Before, this mod had removed the goal its hiding works through.
+*   The hero discount is counted once and shown on the trade screen. Before, it was charged but not shown, and worked out from a price that already included demand.
+
+Its own gifts are left as they are; this mod only adds gifts for the mason.
+
+## Settings
+
+New `raids` section: `bellRevealsRaiders`, `hideOnBell`, `raidBehaviour`, `heroDiscount`, `heroGifts`, `raidOmen`, `easyWaves`/`normalWaves`/`hardWaves`, `crossbows`, `captainDropsOminousBottle`, `patrols`, `outposts`, `outpostsInModdedBiomes`, which mob plays each raider (`pillagers`, `vindicators`, `evokers`, `witches`, `ravagers`) and `extraRaiders` (more mobs to count as raiders). New `compat.raids` picks whose raids there are: `AUTO` (Raids Backport's when installed, otherwise this mod's), `OURS`, `RAIDS_BACKPORT` or `NONE`. New `compat.crossbow` decides whether this mod adds the crossbow: `AUTO` (unless Future MC or Crossbows Backport is installed), `OURS` or `OFF`.
+
+# 2.1.4
+
+1.14 villages in Biomes O' Plenty's world type, rank badges and 1.14 outfits for other mods' villagers, safe curing in modded packs, `/librarian` and `/discount`, 1.14's work sounds, a setting for farming with mob griefing off, and villagers keeping their outfits.
+
+## New: 1.14 villages in Biomes O' Plenty worlds
+
+Worlds made with **Biomes O' Plenty**'s own world type now get 1.14 villages. BOP builds its terrain its own way, so until now this mod couldn't plan villages on it and those worlds got 1.12.2's villages.
+
+*   They're planned on BOP's real terrain, so houses sit on the ground as they do in any other world.
+*   Each village takes its style from the biome's tags: snowy biomes get snowy villages, sandy ones desert villages, savanna savanna and coniferous forests taiga; the rest get plains villages. Villages only appear in the biomes BOP allows them in.
+*   `/locate village_plains` and the other village types work in BOP worlds too.
+*   Villages already in your world stay as they are.
+
+## New: other mods' villagers
+
+*   **Other mods' villagers now wear the rank badge.** A villager from another mod's profession keeps its own texture, since it's a whole 1.12.2 villager with no way to tell its clothes apart, but now shows the 1.14 rank badge for its level like everyone else.
+*   **Dress them in 1.14 clothes if you'd rather.** The new `display.modOutfits` setting maps another mod's profession, or a single career, to the closest 1.14 outfit, for example `somemod:chef=butcher`. A mapped villager is dressed exactly like a vanilla one: biome clothing, the outfit, its hat and the badge.
+*   **Other mods' villagers no longer lose their profession.** A villager that hadn't traded yet was made unemployed the first time this mod saw it, to find its job at a workstation as in 1.14. No workstation offers another mod's career, so Forestry's apiarists, Immersive Engineering's engineers and the like turned unemployed for good, whether a village, that mod's own houses or a `/summon` made them. Careers no workstation offers now keep their job and restock without one.
+*   **Other mods' villagers earned too little experience.** Each trade's experience follows the level it unlocked at, and this mod could only guess that level for another mod's trades, from how its trades are registered. Those guesses often came out as novice, so later trades paid 1 or 2 experience instead of up to 30 and those villagers levelled up very slowly. A villager now gets its first trades from this mod, which records where each level's trades end, as it already did for vanilla villagers. That also stops villagers made with `/summon` starting on their second level's trades and getting them twice.
+*   **Careers other mods add to vanilla professions** now wear that profession's 1.14 outfit (the farmer's, librarian's, cleric's, toolsmith's or butcher's) instead of plain biome clothing, unless `display.modOutfits` says otherwise.
+
+## New: farming with `mobGriefing` off
+
+Villagers only harvest, replant and pick up food and seeds while the `mobGriefing` gamerule is on, just as in vanilla. Worlds that turn it off to stop creeper damage end up with farmers standing idle beside ripe fields and villagers ignoring the bread you throw them.
+
+Turn on `jobs.ignoreMobGriefing` and villagers farm and pick up food and seeds anyway. Everything else `mobGriefing` controls stays off, including villagers trampling farmland. It's off by default, so nothing changes unless you turn it on.
+
+## New: curing is safe in modded packs
+
+Zombifying and curing villagers for the discount no longer risks anything in packs that make mobs stronger. A zombie villager that was one of your villagers is never made an **Infernal Mobs** elite, a **Scaling Health** blight or a **Champion**, and gets no Scaling Health bonus health, so an exploding elite can no longer appear in the middle of your trading hall.
+
+In Dregora, the cured villager is also never turned into a **Sussyberian** or **Mentalberian**, which refuse to trade. Until now every cured librarian had a one-in-ten chance of coming back as one. Berians that were made this way before are turned back into the librarians they were, with their trades, the next time their chunk loads. Berians that generated as berians are Dregora's own and are left alone.
+
+All of this is the `compat.convertedStayOrdinary` setting, on by default.
+
+## New: `/librarian` and `/discount`
+
+Two operator commands for putting back what a bad cure took:
+
+*   `/librarian <enchantment> [level] [villager level] [price] [cured]` spawns a librarian where you stand, selling that enchanted book. For example, `/librarian strengthened_vitality 3`. Press Tab for the enchantment names. The price defaults to 1.14's price for the book, and `cured` gives you the cure discount with it.
+*   `/discount [radius]` gives you the cure discount from the villager you're looking at, or from every villager within the radius. It's exactly what a cure gives, so using it again changes nothing.
+
+## Fixed
+
+*   **Curing villagers that stood side by side mixed up their trades.** When several villagers a block apart were cured together, one could come back with its neighbour's trades and level, and the neighbour came back with a fresh set. Each cured villager now gets back its own trades, level and experience, however close together they stand. The same goes for villagers zombified together.
+*   **Villagers lost their trades through a cure with `pricing.gossipEnabled` off.** Their trades are now kept whether gossip is on or not.
+*   **Villagers changed clothes when they walked into another biome.** A villager now keeps the biome outfit it was given when it spawned, as in 1.14: a desert villager led into a taiga stays a desert villager. A baby takes the biome it's born in half the time, otherwise one of its parents' outfits, and a cured zombie villager wears what it wore before it was infected. Villagers already in your world keep the outfit for the biome they're standing in when you first load the world with this version.
+*   **Villagers at a smithing table, composter, blast furnace or fletching table made a generic wood or stone knock while working.** Every profession now makes 1.14's own work sound, with 1.14's sound files: the armorer's blast furnace crackles, the butcher's smoker hisses, the farmer's composter fills, the fisherman's barrel opens, the fletcher whittles, the leatherworker dyes in the cauldron, the toolsmith hammers, and the shepherd now uses the loom's finishing sound, as in 1.14.
+*   **The left arm's texture was the wrong way round.** 1.14 draws the left sleeve mirrored, so the outfit's detail sits on the outside of both arms, as it should.
+
+***
+
+# 2.1.3
+
+1.14 villages in superflat worlds.
+
+## New: 1.14 villages in superflat worlds
+
+Superflat worlds now get 1.14 villages, in any preset that has villages turned on (Classic Flat does). Superflat builds its villages differently from every other world type, so until now it was left with 1.12.2's villages.
+
+*   Villages keep the preset's own size and spacing settings, and appear in the same biomes as before: plains, desert, savanna, taiga, and now snowy villages in a snowy preset.
+*   `/locate village_plains` and the other village types work in superflat worlds too.
+*   Villages already in your world stay as they are.
+
+***
+
+# 2.1.2
+
+1.14 villages in Realistic Terrain Generation worlds.
 
 ## New: 1.14 villages in Realistic Terrain Generation worlds
 
@@ -9,6 +151,12 @@ Worlds made with **Realistic Terrain Generation**'s world type now get 1.14 vill
 *   They are planned on RTG's real terrain, so houses sit properly on its hills.
 *   `/locate village_plains` and the other village types work in RTG worlds too.
 *   Villages already in your world stay as they are.
+
+***
+
+# 2.1.1
+
+Fixes for playing alongside Future MC.
 
 ## Fixed
 

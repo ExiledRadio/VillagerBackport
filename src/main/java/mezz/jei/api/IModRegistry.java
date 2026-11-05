@@ -10,4 +10,6 @@ public interface IModRegistry {
     void addRecipes(Collection<?> recipes, String recipeCategoryUid);
 
     void addRecipeCatalyst(Object catalystIngredient, String... recipeCategoryUids);
+
+    <T> void addIngredientInfo(T ingredient, Class<? extends T> ingredientClass, String... descriptionKeys);
 }

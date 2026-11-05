@@ -240,7 +240,8 @@ def map_state(full, props):
     # slabs, stairs, walls in stone
     if n.endswith("_slab"):
         base = n[: -len("_slab")]
-        variant = {"cobblestone": "cobblestone", "sandstone": "sand", "smooth_sandstone": "sand",
+        variant = {"cobblestone": "cobblestone", "mossy_cobblestone": "cobblestone", "sandstone": "sand",
+                   "smooth_sandstone": "sand",
                    "cut_sandstone": "sand", "smooth_stone": "stone", "stone": "stone", "stone_brick": "stone_brick",
                    "brick": "brick", "diorite": "quartz", "granite": "stone", "andesite": "stone",
                    "quartz": "quartz"}.get(base)
@@ -252,7 +253,7 @@ def map_state(full, props):
         return one("stone_slab", {"variant": variant, "half": t})
     if n.endswith("_stairs"):
         base = n[: -len("_stairs")]
-        name = {"cobblestone": "stone_stairs", "sandstone": "sandstone_stairs",
+        name = {"cobblestone": "stone_stairs", "mossy_cobblestone": "stone_stairs", "sandstone": "sandstone_stairs",
                 "smooth_sandstone": "sandstone_stairs", "stone_brick": "stone_brick_stairs",
                 "brick": "brick_stairs", "diorite": "quartz_stairs", "granite": "stone_stairs",
                 "andesite": "stone_stairs", "quartz": "quartz_stairs"}.get(base)
@@ -316,6 +317,10 @@ def map_state(full, props):
         return one("flower_pot", {}, {"Item": item, "Data": data})
     if n == "flower_pot":
         return one("flower_pot")
+
+    if n == "vine":
+        # 1.14 names the same five faces 1.12.2 does.
+        return one("vine", {k: props.get(k, "false") for k in ("north", "east", "south", "west", "up")})
 
     if n in ("sea_pickle", "sweet_berry_bush", "kelp", "kelp_plant", "seagrass", "tall_seagrass"):
         return one("air")

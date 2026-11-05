@@ -36,10 +36,11 @@ import java.lang.reflect.Modifier;
  * fragments are discarded before they reach the depth buffer. Nothing is written, so nothing can be
  * fought over, and the composed texture is the only thing drawn.
  *
- * <h2>What is deliberately left alone</h2>
- * Only professions this mod can actually replace are suppressed - the six vanilla ones. A profession
- * another mod registered keeps its texture, because the layer skips those villagers and blanking
- * them would leave them invisible.
+ * <h2>Other mods' professions</h2>
+ * Only the six vanilla professions are blanked for good. Another mod's is blanked only while the
+ * renderer this mod's layer sits on is drawing it - see {@link #blankWhileDrawing} - because a mod
+ * may draw its villagers with a renderer of its own, and there a blank texture would mean an
+ * invisible villager.
  *
  * <p>The zombie texture is untouched. Curing and zombie villager rendering go through
  * {@code getZombieSkin}, which this mod has no replacement for.
@@ -79,13 +80,15 @@ public final class VanillaSkinSuppressor {
                     VillagerRegistry.VillagerProfession.class, "texture", "texture");
             unfinalise(texture);
 
+            textureField = texture;
             int count = 0;
             for (VillagerRegistry.VillagerProfession profession : ForgeRegistries.VILLAGER_PROFESSIONS) {
+                ORIGINALS.put(profession, profession.getSkin());
                 if (!VillagerSkin.isVanilla(profession)) {
+                    // Another mod's: blanked only while the renderer this mod draws on is drawing it.
                     continue;
                 }
 
-                ORIGINALS.put(profession, profession.getSkin());
                 texture.set(profession, BLANK);
                 count++;
             }
@@ -100,9 +103,53 @@ public final class VanillaSkinSuppressor {
         }
     }
 
+    /** The profession's texture field, once {@link #apply} has opened it. */
+    private static Field textureField;
+
+    /** Another mod's profession blanked for the villager being drawn now, or null. */
+    @javax.annotation.Nullable
+    private static VillagerRegistry.VillagerProfession blanked;
+
+    /**
+     * Blanks another mod's profession texture for one villager's draw, so the layer can draw its
+     * own version - the mod's texture with the rank badge, or a 1.14 outfit - with nothing under it.
+     *
+     * <h2>Why only for the draw</h2>
+     * Some mods draw their villagers with a renderer of their own, which this mod adds no layer to.
+     * A texture blanked for good would leave those invisible. Blanked only while the vanilla
+     * renderer this mod's layer sits on is drawing, and put back straight after, nothing else ever
+     * sees it.
+     */
+    public static void blankWhileDrawing(@javax.annotation.Nullable VillagerRegistry.VillagerProfession profession) {
+        restore();
+        if (textureField == null || profession == null || VillagerSkin.isVanilla(profession)
+                || !ORIGINALS.containsKey(profession)) {
+            return;
+        }
+        try {
+            textureField.set(profession, BLANK);
+            blanked = profession;
+        } catch (Exception e) {
+            // Left as it was: the mod's own texture shows, as before.
+        }
+    }
+
+    /** Puts back whatever {@link #blankWhileDrawing} took away. */
+    public static void restore() {
+        if (blanked == null) {
+            return;
+        }
+        try {
+            textureField.set(blanked, ORIGINALS.get(blanked));
+        } catch (Exception ignored) {
+            // The field was writable a moment ago; nothing more to do.
+        }
+        blanked = null;
+    }
+
     /**
      * @return the profession's own 1.12.2 texture as it was before being blanked, or null if this
-     * profession was never suppressed
+     * profession was never seen
      */
     @javax.annotation.Nullable
     public static ResourceLocation original(@javax.annotation.Nullable VillagerRegistry.VillagerProfession profession) {

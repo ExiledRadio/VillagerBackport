@@ -1,0 +1,31 @@
+{
+  "conditions": [
+    {
+      "type": "villagerbackport:crossbow"
+    }
+  ],
+  "parent": "villagerbackport:adventure/ol_betsy",
+  "display": {
+    "icon": {
+      "item": "villagerbackport:crossbow"
+    },
+    "title": {
+      "translate": "advancements.villagerbackport.two_birds_one_arrow.title"
+    },
+    "description": {
+      "translate": "advancements.villagerbackport.two_birds_one_arrow.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "two_birds_one_arrow": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 65
+  }
+}

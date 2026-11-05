@@ -38,7 +38,10 @@ public final class TradeTables {
     /** Records which table built the villager's current trade list. */
     private static final String TABLE = "TradeTable";
 
-    /** Trade-list size after each level was added, for villagers built from the modern table. */
+    /**
+     * Trade-list size after each level was added, so a trade's tier is known rather than guessed.
+     * Kept for both tables, for villagers whose first level this mod built.
+     */
     private static final String TIER_ENDS = "TierEnds";
 
     public enum Table {
@@ -94,11 +97,12 @@ public final class TradeTables {
 
         if (table == Table.MODERN) {
             ModernTrades.addTier(careerKey(villager), 1, villager, list, villager.getRNG());
-            VillagerTradeData.root(villager).setIntArray(TIER_ENDS, new int[]{list.size()});
         } else {
-            VillagerTradeData.root(villager).removeTag(TIER_ENDS);
             addLegacyTier(villager, 1, list);
         }
+        // Another mod's career may add any number of trades per registered entry, so counting its
+        // entries afterwards says nothing reliable about where a level ends. Recording it does.
+        VillagerTradeData.root(villager).setIntArray(TIER_ENDS, new int[]{list.size()});
 
         record(villager, table);
         return list;
@@ -123,15 +127,7 @@ public final class TradeTables {
 
             // Kept in step with vanilla's counter, which other code still reads as a progress hint.
             VillagerAccess.setCareerLevel(villager, tier);
-
-            int[] ends = VillagerTradeData.root(villager).getIntArray(TIER_ENDS);
-            int[] grown = new int[Math.max(ends.length, tier)];
-            System.arraycopy(ends, 0, grown, 0, Math.min(ends.length, grown.length));
-            for (int i = ends.length; i < tier - 1; i++) {
-                grown[i] = i == 0 ? 0 : grown[i - 1];
-            }
-            grown[tier - 1] = list.size();
-            VillagerTradeData.root(villager).setIntArray(TIER_ENDS, grown);
+            recordTierEnd(villager, tier, list.size());
             return;
         }
 
@@ -145,6 +141,22 @@ public final class TradeTables {
         }
         addLegacyTier(villager, tier, list);
         VillagerAccess.setCareerLevel(villager, tier);
+        // Only extends a record this mod started; a list vanilla built has none to extend.
+        if (VillagerTradeData.root(villager).hasKey(TIER_ENDS)) {
+            recordTierEnd(villager, tier, list.size());
+        }
+    }
+
+    /** Records that the list was this long once the given level's trades were in. */
+    private static void recordTierEnd(EntityVillager villager, int tier, int size) {
+        int[] ends = VillagerTradeData.root(villager).getIntArray(TIER_ENDS);
+        int[] grown = new int[Math.max(ends.length, tier)];
+        System.arraycopy(ends, 0, grown, 0, Math.min(ends.length, grown.length));
+        for (int i = ends.length; i < tier - 1; i++) {
+            grown[i] = i == 0 ? 0 : grown[i - 1];
+        }
+        grown[tier - 1] = size;
+        VillagerTradeData.root(villager).setIntArray(TIER_ENDS, grown);
     }
 
     /**
@@ -152,9 +164,6 @@ public final class TradeTables {
      * say, in which case the caller works it out from the career's registered trades
      */
     public static int tierOf(EntityVillager villager, int index) {
-        if (recorded(villager) != Table.MODERN) {
-            return 0;
-        }
         int[] ends = VillagerTradeData.root(villager).getIntArray(TIER_ENDS);
         if (ends.length == 0) {
             return 0;
@@ -176,6 +185,10 @@ public final class TradeTables {
      */
     public static void adopt(EntityVillager villager) {
         MerchantRecipeList list = VillagerAccess.getBuyingList(villager);
+        if (list == null && villager.getCustomer() == null) {
+            buildFirstTrades(villager);
+            return;
+        }
         if (list == null || list.isEmpty() || villager.getCustomer() != null) {
             return;
         }
@@ -210,10 +223,42 @@ public final class TradeTables {
             } else {
                 addLegacyTier(villager, tier, rebuilt);
                 VillagerAccess.setCareerLevel(villager, tier);
+                recordTierEnd(villager, tier, rebuilt.size());
             }
         }
 
         VillagerBackport.LOGGER.debug("Rebuilt an untraded villager's trades from the {} table.", wanted);
+    }
+
+    /**
+     * Builds the first level of trades for a villager that has a career but no trades yet - another
+     * mod's villager, one from a {@code /summon}, one from 1.12.2's own village houses.
+     *
+     * <h2>Why not leave it to vanilla</h2>
+     * Vanilla builds the list when a player first opens it, in {@code populateBuyingList}, which for
+     * a villager that already has a career and a level counts the level up first: one summoned at
+     * level one gets level two's trades, never level one's, and level two's again when it reaches
+     * it. One with a career and level zero has its career rolled again. Building the first level
+     * here, as hiring does (see {@code Employment.assign}), gives every villager its own career's
+     * first level and a record of where it ends, so each trade's experience follows its real tier.
+     */
+    private static void buildFirstTrades(EntityVillager villager) {
+        if (villager.isChild() || careerOf(villager) == null
+                || com.exiledradio.villagerbackport.job.Employment.isUnemployed(villager)
+                || com.exiledradio.villagerbackport.job.Employment.isNitwit(villager)) {
+            return;
+        }
+        MerchantRecipeList list = buildFirstTier(villager);
+        if (list.isEmpty()) {
+            // Nothing registered for level one: left to vanilla, as before.
+            VillagerTradeData.root(villager).removeTag(TIER_ENDS);
+            return;
+        }
+        VillagerAccess.setBuyingList(villager, list);
+        VillagerAccess.setCareerLevel(villager, 1);
+        if (VillagerTradeData.getAppliedLevel(villager) < 1) {
+            VillagerTradeData.setAppliedLevel(villager, 1);
+        }
     }
 
     /** @return true if a player has ever completed a trade with this villager */

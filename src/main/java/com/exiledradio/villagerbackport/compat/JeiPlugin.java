@@ -54,6 +54,14 @@ public final class JeiPlugin implements IModPlugin {
             blacklist.addIngredientToBlacklist(new ItemStack(item));
         }
 
+        // The pillagers' own crossbow is a prop, never meant for a player's hands - see ItemPillagerCrossbow.
+        blacklist.addIngredientToBlacklist(new ItemStack(com.exiledradio.villagerbackport.illager.IllagerContent.pillagerCrossbow));
+
+        for (int level = 0; level < com.exiledradio.villagerbackport.illager.ItemOminousBottle.LEVELS; level++) {
+            registry.addIngredientInfo(new ItemStack(com.exiledradio.villagerbackport.illager.IllagerContent.ominousBottle, 1, level),
+                    ItemStack.class, "jei.villagerbackport.ominous_bottle");
+        }
+
         if (JeiSmithing.shown()) {
             registry.addRecipes(JeiSmithing.recipes(), JeiSmithing.UID);
             registry.addRecipeCatalyst(new ItemStack(JeiSmithing.table()), JeiSmithing.UID);

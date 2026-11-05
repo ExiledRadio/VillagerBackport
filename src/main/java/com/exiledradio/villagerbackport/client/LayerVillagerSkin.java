@@ -45,13 +45,16 @@ public class LayerVillagerSkin implements LayerRenderer<EntityVillager> {
     public void doRenderLayer(EntityVillager villager, float limbSwing, float limbSwingAmount,
                               float partialTicks, float ageInTicks, float netHeadYaw,
                               float headPitch, float scale) {
+        // Another mod's texture was blanked for this draw only; the renderer's own pass is done.
+        VanillaSkinSuppressor.restore();
         if (!ModConfig.display.useModernVillagerSkins || villager.isInvisible()) {
             return;
         }
 
-        ResourceLocation skin = skinFor(villager);
-        boolean modern = skin != null;
-        if (skin == null && VillagerSkin.isVanillaProfession(villager)) {
+        boolean modern = VillagerSkin.dressesAsVanilla(villager);
+        ResourceLocation skin = modern ? skinFor(villager) : modSkinFor(villager);
+        modern = modern && skin != null;
+        if (skin == null) {
             // The 1.14 skin could not be built - a texture missing from a resource pack, or the jar
             // replaced underneath a running game. The vanilla skin underneath has been blanked, so
             // drawing nothing here would leave only the villager's shadow. Its own 1.12.2 texture
@@ -88,17 +91,32 @@ public class LayerVillagerSkin implements LayerRenderer<EntityVillager> {
     }
 
     /**
-     * @return the composed texture for this villager, or null to leave it alone entirely
+     * Another mod's villager in its own texture, with 1.14's rank badge drawn on.
      *
-     * <p>Null only for villagers whose profession has no 1.14 counterpart - ones another mod
-     * registered. Those keep their own texture, which {@link VanillaSkinSuppressor} deliberately
-     * leaves intact for exactly this reason.
+     * <p>Its texture is a whole 1.12.2 villager, clothes and all, so it is kept as it is; a pack can
+     * dress it in a 1.14 outfit instead with {@code display.modOutfits}. Null for a profession that
+     * has no texture this mod could read, which is then drawn by its renderer as before.
      */
-    private ResourceLocation skinFor(EntityVillager villager) {
-        if (!VillagerSkin.isVanillaProfession(villager)) {
+    @javax.annotation.Nullable
+    private ResourceLocation modSkinFor(EntityVillager villager) {
+        ResourceLocation own = VanillaSkinSuppressor.original(villager.getProfessionForge());
+        if (own == null) {
             return null;
         }
+        ResourceLocation badge = ModConfig.display.showLevelBadge && VillagerLevelCache.career(villager) > 0
+                && !villager.isChild() ? VillagerSkin.badgeFor(VillagerLevelCache.get(villager)) : null;
+        if (badge == null) {
+            return own;
+        }
+        String key = "mod_" + own.getNamespace() + "_" + VillagerSkin.name(own) + "_" + VillagerSkin.name(badge);
+        ResourceLocation composed = VillagerSkinComposer.compose(key, null, own, badge);
+        return composed != null ? composed : own;
+    }
 
+    /**
+     * @return the composed 1.14 texture for this villager, or null if it could not be built
+     */
+    private ResourceLocation skinFor(EntityVillager villager) {
         // A villager that has not picked a career yet - which is every villager until its trade list
         // is first built - has no profession outfit. 1.14 dresses an unemployed villager in plain
         // biome clothing, and doing the same means it is never left with nothing to render.

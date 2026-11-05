@@ -1,0 +1,5 @@
+{
+  "conditions": {
+    "crossbow": "com.exiledradio.villagerbackport.crossbow.CrossbowCondition"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "villagerbackport:item/crossbow_base",
+  "textures": {
+    "layer0": "villagerbackport:items/crossbow_firework"
+  }
+}

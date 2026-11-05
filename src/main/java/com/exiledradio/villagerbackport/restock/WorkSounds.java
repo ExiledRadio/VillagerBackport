@@ -18,21 +18,16 @@ import javax.annotation.Nullable;
  * The noise a villager makes when it works at its job site.
  *
  * <h2>Where this comes from</h2>
- * 1.14 plays a work sound when a villager uses its workstation, and it is per profession: a
- * librarian turns a page, a toolsmith runs a grindstone, a cartographer draws. Those are separate
- * sound assets 1.12.2 has no equivalent of, but the sounds themselves are the workstation's - and
- * this mod already ships 1.14's workstation sounds, because it ships the workstations.
+ * 1.14 plays a work sound when a villager uses its workstation, one per profession
+ * ({@code entity.villager.work_*}): an armorer's blast furnace crackles, a farmer's composter fills,
+ * a fletcher whittles at the fletching table, a toolsmith hammers at the smithing table. This mod
+ * ships those same sound events with 1.14's own files, volumes and pitches.
  *
- * <p>So the sound is taken from the block the villager is working at rather than from its
- * profession. It arrives at the same answer by the shorter route: the villager at the lectern makes
- * the lectern's noise, and a profession this mod never gave a workstation to cannot reach here at
- * all.
- *
- * <p>Anything without a sound of its own falls back to the noise the block makes when it is struck,
- * which every block defines and which is always made of the right material - a wooden tap at a
- * fletching table, stone at a mason's, metal at a cauldron.
+ * <p>Picked by the villager's career, as 1.14 picks it by profession. A career 1.14 does not have -
+ * another mod's - gets its workstation's own sound if it is one of this mod's, or else the noise the
+ * block makes when struck, which is always of the right material.
  */
-final class WorkSounds {
+public final class WorkSounds {
 
     private WorkSounds() {
     }
@@ -45,13 +40,69 @@ final class WorkSounds {
         }
 
         IBlockState state = villager.world.getBlockState(pos);
-        SoundEvent sound = forBlock(state, villager, pos);
+        SoundEvent sound = forCareer(villager);
+        if (sound == null) {
+            sound = forBlock(state, villager, pos);
+        }
 
         if (sound != null) {
             villager.world.playSound(null, pos, sound, SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
     }
 
+    /**
+     * 1.12.2's career names, which abbreviate three, to 1.14's professions. 1.14 picks the work sound
+     * by profession, not by block: a farmer sounds like a composter filling wherever it works.
+     */
+    private static final java.util.Map<String, String> PROFESSIONS = new java.util.HashMap<String, String>();
+
+    static {
+        for (String same : new String[]{"farmer", "fisherman", "shepherd", "fletcher", "librarian", "cartographer",
+                "cleric", "butcher", com.exiledradio.villagerbackport.job.MasonCareer.NAME}) {
+            PROFESSIONS.put(same, same);
+        }
+        PROFESSIONS.put("armor", "armorer");
+        PROFESSIONS.put("weapon", "weaponsmith");
+        PROFESSIONS.put("tool", "toolsmith");
+        PROFESSIONS.put("leather", "leatherworker");
+    }
+
+    /** @return 1.14's work sound for this villager's career, or null for a career 1.14 does not have */
+    @Nullable
+    private static SoundEvent forCareer(EntityVillager villager) {
+        String name = modernProfession(villager);
+        return name == null ? null : ModSounds.WORK.get(name);
+    }
+
+    /**
+     * @return the 1.14 profession this villager's career is - {@code "armorer"}, {@code "mason"} -
+     *         or null for no career, or another mod's career 1.14 does not have
+     */
+    @Nullable
+    public static String modernProfession(EntityVillager villager) {
+        net.minecraftforge.fml.common.registry.VillagerRegistry.VillagerCareer career = careerOf(villager);
+        return career == null ? null : PROFESSIONS.get(career.getName());
+    }
+
+    /** @return this villager's career, or null if it has none */
+    @Nullable
+    public static net.minecraftforge.fml.common.registry.VillagerRegistry.VillagerCareer careerOf(
+            EntityVillager villager) {
+        try {
+            net.minecraftforge.fml.common.registry.VillagerRegistry.VillagerProfession profession =
+                    villager.getProfessionForge();
+            int career = com.exiledradio.villagerbackport.compat.VillagerAccess.getCareerId(villager);
+            if (profession == null || career <= 0) {
+                return null;
+            }
+            return profession.getCareer(career - 1);
+        } catch (RuntimeException e) {
+            // An out-of-range career, which a mod reassigning professions can cause.
+            return null;
+        }
+    }
+
+    /** Another mod's career: the workstation's own sound, or its material's. */
     @Nullable
     private static SoundEvent forBlock(IBlockState state, EntityVillager villager, BlockPos pos) {
         ResourceLocation name = state.getBlock().getRegistryName();
@@ -93,10 +144,6 @@ final class WorkSounds {
         if ("stonecutter".equals(name)) {
             return ModSounds.stonecutterUse;
         }
-
-        // Not the fletching table. It is a stonecutter in what it does and a wooden bench in what it
-        // is, and a saw biting stone is the wrong noise for arrows - so it falls through and gets
-        // the wood of its own material instead.
 
         return null;
     }

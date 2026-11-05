@@ -1,0 +1,28 @@
+{
+  "conditions": [
+    {
+      "type": "villagerbackport:crossbow"
+    }
+  ],
+  "parent": "minecraft:adventure/root",
+  "display": {
+    "icon": {
+      "item": "villagerbackport:crossbow"
+    },
+    "title": {
+      "translate": "advancements.villagerbackport.ol_betsy.title"
+    },
+    "description": {
+      "translate": "advancements.villagerbackport.ol_betsy.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "ol_betsy": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

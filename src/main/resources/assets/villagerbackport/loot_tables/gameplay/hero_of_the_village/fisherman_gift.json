@@ -1,0 +1,31 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "minecraft:fish",
+          "functions": [
+            {
+              "function": "minecraft:set_data",
+              "data": 0
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "name": "minecraft:fish",
+          "functions": [
+            {
+              "function": "minecraft:set_data",
+              "data": 1
+            }
+          ],
+          "entryName": "fish_2"
+        }
+      ],
+      "name": "gift"
+    }
+  ]
+}

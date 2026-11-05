@@ -134,7 +134,28 @@ public final class Employment {
             return;
         }
 
+        if (!canRegainJob(villager)) {
+            return;
+        }
+
         unassign(villager);
+    }
+
+    /**
+     * @return true if a workstation offers this villager's career, so taking the job away is not
+     * taking it away for good.
+     *
+     * <h2>Other mods' careers</h2>
+     * A villager loses an unearned job here on the understanding that it can get one back at a
+     * workstation, which is how 1.14's villagers are employed. Nothing offers another mod's career
+     * unless a pack maps a block to it in {@code jobs.workstations}, so for those that understanding
+     * fails: a Forestry apiarist or an Immersive Engineering engineer turned unemployed could never be
+     * one again, and every such villager - from that mod's village houses, from 1.12.2's villages,
+     * from a {@code /summon} - simply vanished into the unemployed. They keep their job instead,
+     * restocking without a workstation as any career without one does.
+     */
+    private static boolean canRegainJob(EntityVillager villager) {
+        return JobSiteRegistry.hasSite(villager);
     }
 
     /**
@@ -144,6 +165,14 @@ public final class Employment {
      * @return true if the job was taken
      */
     public static boolean assign(EntityVillager villager, String career) {
+        return assign(villager, career, true);
+    }
+
+    /**
+     * @param announce whether to say in chat which enchanted books the new trades include; off for
+     *                 a villager whose trades are about to be changed anyway
+     */
+    public static boolean assign(EntityVillager villager, String career, boolean announce) {
         VillagerRegistry.VillagerProfession profession = professionFor(career);
         if (profession == null) {
             return false;
@@ -172,7 +201,7 @@ public final class Employment {
         // There is no value of careerLevel that both survives that test and produces tier one, so
         // tier one is built directly and vanilla is only ever asked for tier two onward.
         VillagerAccess.setCareerLevel(villager, 1);
-        buildFirstTier(villager, profession, careerId);
+        buildFirstTier(villager, announce);
         VillagerTradeData.setAppliedLevel(villager, 1);
 
         com.exiledradio.villagerbackport.trade.LevelSyncHandler.broadcastJobChange(villager);
@@ -188,15 +217,16 @@ public final class Employment {
      * trades, which is what {@code populateBuyingList} would add minus the career re-roll that makes
      * it unusable here.
      */
-    private static void buildFirstTier(EntityVillager villager,
-                                       VillagerRegistry.VillagerProfession profession, int careerId) {
+    private static void buildFirstTier(EntityVillager villager, boolean announce) {
         // From whichever table new trades come from - see TradeTables.
         MerchantRecipeList list = com.exiledradio.villagerbackport.trade.TradeTables.buildFirstTier(villager);
 
         VillagerAccess.setBuyingList(villager, list);
 
         // The moment a reroll produces its answer: a fresh set of trades, rolled just now.
-        com.exiledradio.villagerbackport.trade.BookAnnouncer.announce(villager, list, 0);
+        if (announce) {
+            com.exiledradio.villagerbackport.trade.BookAnnouncer.announce(villager, list, 0);
+        }
     }
 
     /**
@@ -295,6 +325,11 @@ public final class Employment {
         }
 
         if (VillagerTradeData.getXp(villager) > 0) {
+            return false;
+        }
+
+        // Another mod's career, which no workstation could give back; see canRegainJob.
+        if (!canRegainJob(villager)) {
             return false;
         }
 

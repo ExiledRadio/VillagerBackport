@@ -6,6 +6,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
@@ -56,6 +57,14 @@ public final class ModCreativeTab extends CreativeTabs {
     @SideOnly(Side.CLIENT)
     public String getTranslationKey() {
         return Names.translateOr(super.getTranslationKey(), LABEL);
+    }
+
+    /** Everything registered to the tab, then the ominous banner, which 1.14's creative menu lists. */
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void displayAllRelevantItems(NonNullList<ItemStack> items) {
+        super.displayAllRelevantItems(items);
+        items.add(com.exiledradio.villagerbackport.raid.OminousBanner.create());
     }
 
     @Override

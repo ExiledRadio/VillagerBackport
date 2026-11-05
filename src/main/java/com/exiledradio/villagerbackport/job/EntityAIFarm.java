@@ -19,7 +19,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nullable;
 
@@ -74,7 +73,7 @@ public class EntityAIFarm extends EntityAIMoveToBlock {
     @Override
     public boolean shouldExecute() {
         if (this.runDelay <= 0) {
-            if (!ForgeEventFactory.getMobGriefingEvent(this.villager.world, this.villager)) {
+            if (!MobGriefingExemption.allowsFarming(this.villager)) {
                 return false;
             }
 

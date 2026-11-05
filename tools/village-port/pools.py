@@ -158,6 +158,9 @@ def processors(node):
         return node
     out = []
     for proc in node["args"]:
+        if proc["$new"] == "IntegrityProcessor":
+            out.append({"integrity": proc["args"][0]})
+            continue
         if proc["$new"] != "RuleStructureProcessor":
             raise ValueError(proc["$new"])
         rules = []
@@ -198,8 +201,17 @@ def element(node):
 
 def parse_file(path, pools):
     src = strip_comments(open(path, encoding="utf-8").read())
-    body = src[src.index("static {") + len("static {"):src.rindex("}")]
-    body = body[:body.rindex("}")]
+    # The static block alone, by its matching brace: PillagerOutpostPieces has a class after it.
+    start = src.index("static {") + len("static {")
+    depth, end, in_str = 1, start, False
+    while depth:
+        ch = src[end]
+        if ch == '"':
+            in_str = not in_str
+        elif not in_str:
+            depth += {"{": 1, "}": -1}.get(ch, 0)
+        end += 1
+    body = src[start:end - 1]
     env = {}
     for stmt in split_statements(body):
         toks = tokenize(stmt)

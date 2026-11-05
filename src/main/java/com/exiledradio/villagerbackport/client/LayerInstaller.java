@@ -39,13 +39,21 @@ public final class LayerInstaller {
 
     private static boolean installed;
 
+    /** The renderer the skin layer went onto: only its draws may blank another mod's texture. */
+    @javax.annotation.Nullable
+    private static RenderLivingBase<?> installedOn;
+
     /**
      * Runs at the lowest priority so any mod that swaps the renderer during this event has already
      * done so, and the layer lands on the renderer that will actually draw.
      */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onRenderLiving(RenderLivingEvent.Pre<?> event) {
-        if (installed || !(event.getEntity() instanceof EntityVillager)) {
+        if (!(event.getEntity() instanceof EntityVillager)) {
+            return;
+        }
+        if (installed) {
+            blankForLayer(event);
             return;
         }
 
@@ -62,6 +70,27 @@ public final class LayerInstaller {
         }
     }
 
+    /**
+     * Blanks another mod's profession texture for this one draw when the skin layer is going to draw
+     * the villager itself - see {@link VanillaSkinSuppressor#blankWhileDrawing}. The layer puts it back.
+     */
+    private static void blankForLayer(RenderLivingEvent.Pre<?> event) {
+        EntityVillager villager = (EntityVillager) event.getEntity();
+        if (event.getRenderer() != installedOn || villager.isInvisible()
+                || !com.exiledradio.villagerbackport.ModConfig.display.useModernVillagerSkins) {
+            return;
+        }
+        VanillaSkinSuppressor.blankWhileDrawing(villager.getProfessionForge());
+    }
+
+    /** In case a draw was cancelled before the layer could put the texture back. */
+    @SubscribeEvent
+    public void onRenderPost(RenderLivingEvent.Post<?> event) {
+        if (event.getEntity() instanceof EntityVillager) {
+            VanillaSkinSuppressor.restore();
+        }
+    }
+
     @SuppressWarnings("unchecked")
     private void install(Render<?> render) {
         if (!(render instanceof RenderLivingBase)) {
@@ -72,6 +101,7 @@ public final class LayerInstaller {
         }
 
         RenderLivingBase<?> living = (RenderLivingBase<?>) render;
+        installedOn = living;
 
         Field field = ReflectionHelper.findField(RenderLivingBase.class, "layerRenderers", "field_177097_h");
         field.setAccessible(true);
@@ -86,6 +116,9 @@ public final class LayerInstaller {
         // One layer, not two. The rank badge is composited into the same texture as the outfit, so
         // there is no second pass to order against the first.
         layers.add((LayerRenderer) new LayerVillagerSkin(living));
+
+        // 1.14's model mirrors the left arm; 1.12.2's does not. See VillagerArms.
+        VillagerArms.mirrorLeftArm(living.getMainModel());
 
         // What a villager holds up to show a player its trades. See ShowWares.
         layers.add((LayerRenderer) new LayerVillagerHeldItem());

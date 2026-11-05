@@ -134,10 +134,8 @@ public final class ReputationEvents {
             return;
         }
 
-        // The trades, level, experience and gossip it had before it was bitten, back where they
-        // belong - and before the cure is credited, so the discount applies to the book it was
-        // already selling rather than to a fresh roll.
-        Zombification.restore(villager, zombie);
+        // Its trades, level, experience and gossip are already back - Zombification put them back
+        // at a higher priority - so the discount applies to the book it was already selling.
 
         UUID curer = curerOf(zombie);
         if (curer != null) {

@@ -5,13 +5,6 @@ import com.exiledradio.villagerbackport.compat.VillagerAccess;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeDesert;
-import net.minecraft.world.biome.BiomeJungle;
-import net.minecraft.world.biome.BiomeSavanna;
-import net.minecraft.world.biome.BiomeSnow;
-import net.minecraft.world.biome.BiomeSwamp;
-import net.minecraft.world.biome.BiomeTaiga;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -82,6 +75,21 @@ public final class VillagerSkin {
                     "minecraft:farmer", "minecraft:librarian", "minecraft:priest",
                     "minecraft:smith", "minecraft:butcher", "minecraft:nitwit"));
 
+    /**
+     * The outfit for a career another mod added to a vanilla profession, by that profession: the
+     * 1.12.2 texture it would have worn was the profession's.
+     */
+    private static final Map<String, String> VANILLA_DEFAULTS = new HashMap<String, String>();
+
+    static {
+        VANILLA_DEFAULTS.put("minecraft:farmer", "farmer");
+        VANILLA_DEFAULTS.put("minecraft:librarian", "librarian");
+        VANILLA_DEFAULTS.put("minecraft:priest", "cleric");
+        VANILLA_DEFAULTS.put("minecraft:smith", "toolsmith");
+        VANILLA_DEFAULTS.put("minecraft:butcher", "butcher");
+        VANILLA_DEFAULTS.put("minecraft:nitwit", "nitwit");
+    }
+
     /** Rank badge textures, indexed by level 1 through 5. */
     private static final ResourceLocation[] BADGES = {
             badge("stone"), badge("iron"), badge("gold"), badge("emerald"), badge("diamond")
@@ -142,6 +150,31 @@ public final class VillagerSkin {
         return path.substring(slash + 1, dot < slash ? path.length() : dot);
     }
 
+    /**
+     * @return true if this villager is dressed in 1.14's clothes: a vanilla profession, or another
+     * mod's that {@code display.modOutfits} maps
+     */
+    public static boolean dressesAsVanilla(EntityVillager villager) {
+        try {
+            VillagerRegistry.VillagerProfession profession = villager.getProfessionForge();
+            if (isVanilla(profession)) {
+                return true;
+            }
+            if (profession == null || !ModOutfits.mentions(profession)) {
+                return false;
+            }
+            int careerId = VillagerLevelCache.career(villager);
+            VillagerRegistry.VillagerCareer career = careerId > 0 ? profession.getCareer(careerId - 1) : null;
+            return ModOutfits.outfitFor(profession, career) != null;
+        } catch (RuntimeException e) {
+            return false;
+        }
+    }
+
+    private static ResourceLocation outfit(String name) {
+        return new ResourceLocation(ROOT, "textures/entity/villager/profession/" + name + ".png");
+    }
+
     private static void profession(String career, String texture) {
         PROFESSIONS.put(career, new ResourceLocation(ROOT, "textures/entity/villager/profession/" + texture + ".png"));
     }
@@ -166,7 +199,23 @@ public final class VillagerSkin {
             }
 
             VillagerRegistry.VillagerCareer career = profession.getCareer(careerId - 1);
-            return career == null ? null : PROFESSIONS.get(career.getName());
+            if (career == null) {
+                return null;
+            }
+            String mapped = ModOutfits.outfitFor(profession, career);
+            if (mapped != null) {
+                return ModOutfits.NONE.equals(mapped) ? null : outfit(mapped);
+            }
+            if (!isVanilla(profession)) {
+                return null;
+            }
+            ResourceLocation own = PROFESSIONS.get(career.getName());
+            if (own != null) {
+                return own;
+            }
+            // A career another mod added to a vanilla profession: that profession's outfit.
+            String fallback = VANILLA_DEFAULTS.get(String.valueOf(profession.getRegistryName()));
+            return fallback == null ? null : outfit(fallback);
         } catch (RuntimeException e) {
             // getCareer throws on an out-of-range id, which a mod reassigning professions can cause.
             return null;
@@ -174,80 +223,18 @@ public final class VillagerSkin {
     }
 
     /**
-     * @return the biome outfit to wear, based on where the villager currently is.
+     * @return the biome outfit to wear: the type the server settled when the villager spawned.
      *
-     * <p>1.14 stores this on the villager as a type fixed when it spawns. There is no such field in
-     * 1.12.2 and no room to add one, so it is read from the surroundings instead. The visible
-     * difference is that a villager carried far from home changes clothes, which is a fair trade for
-     * not having to invent and persist a value for every villager already in a world.
+     * <p>Kept for life, as in 1.14 - see {@code VillagerTypes}. Until the server's word arrives the
+     * biome it stands in stands in for it, which is what the type was settled from anyway.
      */
     public static ResourceLocation typeFor(EntityVillager villager) {
-        Biome biome = villager.world.getBiome(new BlockPos(villager));
-        return type(nameFor(biome));
-    }
-
-    /**
-     * Classifies a biome into one of 1.14's seven villager types.
-     *
-     * <p>Done by biome class and temperature rather than by name, so biomes from other mods - and
-     * Dregora and Biomes O' Plenty add a great many - land somewhere sensible instead of all
-     * defaulting to plains.
-     */
-    private static String nameFor(Biome biome) {
-        if (biome instanceof BiomeDesert) {
-            return "desert";
+        String type = VillagerLevelCache.type(villager);
+        if (type == null) {
+            type = com.exiledradio.villagerbackport.data.VillagerTypes.forBiome(
+                    villager.world.getBiome(new BlockPos(villager)));
         }
-        if (biome instanceof BiomeJungle) {
-            return "jungle";
-        }
-        if (biome instanceof BiomeSavanna) {
-            return "savanna";
-        }
-        if (biome instanceof BiomeSwamp) {
-            return "swamp";
-        }
-        if (biome instanceof BiomeSnow || biome.isSnowyBiome()) {
-            return "snow";
-        }
-        if (biome instanceof BiomeTaiga) {
-            return "taiga";
-        }
-
-        // The game's list puts every badlands biome with the desert and every windswept hills with
-        // the taiga, and neither is a subclass of those here.
-        if (biome instanceof net.minecraft.world.biome.BiomeMesa) {
-            return "desert";
-        }
-        if (biome instanceof net.minecraft.world.biome.BiomeHills) {
-            return "taiga";
-        }
-
-        // Any other vanilla biome is plains, as the game has it - the Nether and stony shore
-        // included, which the climate reading below would have dressed as desert and taiga.
-        if (biome.getRegistryName() != null && "minecraft".equals(biome.getRegistryName().getNamespace())) {
-            return "plains";
-        }
-
-        // Modded biomes rarely extend the vanilla classes, so fall back to climate. The game would
-        // call all of them plains, which in a pack made of modded biomes would be every villager.
-        float temperature = biome.getDefaultTemperature();
-        if (temperature <= 0.05F) {
-            return "snow";
-        }
-        if (temperature <= 0.3F) {
-            return "taiga";
-        }
-        if (temperature >= 1.5F && biome.getRainfall() < 0.3F) {
-            return "desert";
-        }
-        if (temperature >= 1.0F && biome.getRainfall() >= 0.8F) {
-            return "jungle";
-        }
-        if (temperature >= 1.0F) {
-            return "savanna";
-        }
-
-        return "plains";
+        return type(type);
     }
 
     private static ResourceLocation type(String name) {

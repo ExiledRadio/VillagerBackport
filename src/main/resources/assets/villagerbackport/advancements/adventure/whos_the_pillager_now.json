@@ -1,0 +1,28 @@
+{
+  "conditions": [
+    {
+      "type": "villagerbackport:crossbow"
+    }
+  ],
+  "parent": "villagerbackport:adventure/ol_betsy",
+  "display": {
+    "icon": {
+      "item": "villagerbackport:crossbow"
+    },
+    "title": {
+      "translate": "advancements.villagerbackport.whos_the_pillager_now.title"
+    },
+    "description": {
+      "translate": "advancements.villagerbackport.whos_the_pillager_now.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "whos_the_pillager_now": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

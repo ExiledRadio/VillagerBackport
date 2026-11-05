@@ -33,8 +33,8 @@ import java.util.Set;
  * <p>The {@code Math.max(0, ...)} is easy to miss and important: demand can go negative for a trade
  * nobody uses, but it never discounts below the base price. Demand only ever makes things more
  * expensive or leaves them alone. Discounts in 1.14 come from {@code specialPrice}, which is driven
- * by gossip, curing a zombie villager, and Hero of the Village - a separate system, and a later
- * phase here.
+ * by gossip, curing a zombie villager, and Hero of the Village - a separate term, added in
+ * {@link #applyPrice(EntityVillager, MerchantRecipe, String, int, net.minecraft.entity.player.EntityPlayer)}.
  *
  * <h2>Why the price is written into the recipe</h2>
  * 1.12.2's {@code ContainerMerchant} and {@code InventoryMerchant} match the player's input against
@@ -208,6 +208,15 @@ public final class PriceEngine {
      */
     public static void applyPrice(EntityVillager villager, MerchantRecipe recipe, String key,
                                   int discount) {
+        applyPrice(villager, recipe, key, discount, null);
+    }
+
+    /**
+     * @param customer the player the price is for, whose Hero of the Village discount - taken from
+     *                 the base price, as 1.14 does - is added to {@code discount}; null for none
+     */
+    public static void applyPrice(EntityVillager villager, MerchantRecipe recipe, String key,
+                                  int discount, @javax.annotation.Nullable net.minecraft.entity.player.EntityPlayer customer) {
         ItemStack buy = pricedStack(recipe);
         if (buy.isEmpty()) {
             return;
@@ -220,6 +229,10 @@ public final class PriceEngine {
             base = buy.getCount();
             storeBase(villager, recipe, key, base);
             startDemand(villager, recipe, key);
+        }
+
+        if (customer != null) {
+            discount += com.exiledradio.villagerbackport.raid.Raids.heroDiscount(customer, base);
         }
 
         int demand = VillagerTradeData.getDemand(villager, key);
@@ -245,7 +258,7 @@ public final class PriceEngine {
     }
 
     /**
-     * The 1.14 price calculation, minus {@code specialPrice} (no discount sources exist yet).
+     * The 1.14 price calculation, with no {@code specialPrice}.
      *
      * @param base         the trade's original buy-stack count
      * @param demand       accumulated demand, may be negative

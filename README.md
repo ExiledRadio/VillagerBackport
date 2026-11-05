@@ -36,6 +36,12 @@ straight into a test instance.
   score that decays and spreads between villagers.
 * **Beds** — claimed as homes, slept in at night, used for breeding and for iron golem eligibility.
 * **Iron golems** — spawned on 1.14's rules, by panic or by gossip.
+* **Raids** — Bad Omen in a village brings 1.14's raids: waves, a raid bar, the horn, captains with
+  the ominous banner. The bell reveals raiders and sends villagers home; during a raid villagers
+  gather and ring the bell, hide, then come out to celebrate. Heroes of the Village get 1.14's
+  discount and gifts. Uses Raids Backport's raids instead when it is installed.
+* **Crossbow** — 1.14's crossbow with Quick Charge, Multishot and Piercing, firework rockets and
+  the four crossbow advancements. Not added when Future MC or Crossbows Backport supplies one.
 * **1.14 trade screen** — scrollable trade list, level badge, experience bar, spacebar refill.
 
 Server-side where it can be. Clients without the mod can join, but will not see the workstation
@@ -43,8 +49,8 @@ blocks or the new trade screen.
 
 ## Configuration
 
-`config/villagerbackport.cfg`, eight categories, every setting documented in the file:
-`restock`, `pricing`, `jobs`, `workstations`, `villages`, `structures`, `homes`, `display`.
+`config/villagerbackport.cfg`, every setting documented in the file: `restock`, `pricing`,
+`trades`, `jobs`, `workstations`, `villages`, `homes`, `raids`, `display`, `compat`, `sounds`.
 
 ## Licence
 

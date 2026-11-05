@@ -197,6 +197,9 @@ public class ModernVillagePiece extends StructureComponent {
                 continue;
             }
 
+            if (!ModernPools.keeps(element, at)) {
+                continue;
+            }
             state = ModernPools.process(element.processors, entry, state, world, at);
             if (state == null) {
                 continue;

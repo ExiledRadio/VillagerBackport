@@ -109,6 +109,28 @@ public final class TerrainHeights {
             return null;
         }
 
+        if (BopTerrain.handles(live)) {
+            BopTerrain terrain = BopTerrain.of(world, live);
+            if (terrain != null) {
+                sampler = new TerrainHeights(null, terrain);
+                SAMPLERS.put(world, sampler);
+                return sampler;
+            }
+            UNSUPPORTED.put(world, Boolean.TRUE);
+            return null;
+        }
+
+        if (FlatTerrain.handles(live)) {
+            FlatTerrain terrain = FlatTerrain.of(live);
+            if (terrain != null) {
+                sampler = new TerrainHeights(null, terrain);
+                SAMPLERS.put(world, sampler);
+                return sampler;
+            }
+            UNSUPPORTED.put(world, Boolean.TRUE);
+            return null;
+        }
+
         if (FfdTerrain.handles(live)) {
             FfdTerrain terrain = new FfdTerrain(live);
             if (terrain.usable()) {

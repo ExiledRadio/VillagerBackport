@@ -1,6 +1,9 @@
 package com.exiledradio.villagerbackport.trade;
 
+import com.exiledradio.villagerbackport.compat.ConvertedVillagers;
 import com.exiledradio.villagerbackport.compat.VillagerAccess;
+
+import net.minecraft.entity.Entity;
 
 import net.minecraft.entity.monster.EntityZombieVillager;
 import net.minecraft.entity.passive.EntityVillager;
@@ -9,6 +12,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nullable;
@@ -36,6 +40,13 @@ import java.util.List;
  * still standing there when the cured villager appears. The record rides on the zombie's own saved
  * data in between, so it survives the world being saved and reloaded mid-conversion - which, at five
  * minutes a cure, is not a rare case.
+ *
+ * <h2>Rows of villagers</h2>
+ * Players cure for the discount, so they keep villagers in cells a block apart and cure the whole
+ * row at once. Each half of the conversion therefore picks the closest candidate, not the first one
+ * in reach: the zombie stands up exactly where the villager died, and the cured villager appears
+ * exactly where the zombie stood. Taking the first one in reach let a cured villager pick up its
+ * neighbour's record, and the neighbour then came out of its own cure with a fresh set of trades.
  */
 public final class Zombification {
 
@@ -49,6 +60,13 @@ public final class Zombification {
 
     /** How far the zombie may spawn from where the villager died, in blocks. */
     private static final double HANDOVER_RANGE = 2.0D;
+
+    /**
+     * How far a cured villager may stand from a zombie that is still alive, in blocks. Vanilla
+     * removes the zombie first and spawns the villager on its exact spot, so this is only for a mod
+     * that cures in the other order.
+     */
+    private static final double SAME_SPOT = 0.1D;
 
     /** How long a snapshot waits to be claimed. The spawn follows the death in the same tick. */
     private static final long HANDOVER_TICKS = 5L;
@@ -74,16 +92,18 @@ public final class Zombification {
             this.data = data;
         }
 
-        boolean matches(EntityZombieVillager zombie) {
+        /** @return the squared distance to the zombie, or -1 if it is out of reach */
+        double distanceTo(EntityZombieVillager zombie) {
             if (zombie.world.provider.getDimension() != this.dimension) {
-                return false;
+                return -1.0D;
             }
 
             double dx = zombie.posX - this.x;
             double dy = zombie.posY - this.y;
             double dz = zombie.posZ - this.z;
+            double distance = dx * dx + dy * dy + dz * dz;
 
-            return dx * dx + dy * dy + dz * dz <= HANDOVER_RANGE * HANDOVER_RANGE;
+            return distance <= HANDOVER_RANGE * HANDOVER_RANGE ? distance : -1.0D;
         }
     }
 
@@ -110,43 +130,86 @@ public final class Zombification {
 
     /**
      * A zombie villager has appeared: if a villager just died where it is standing, it is that one.
+     *
+     * <p>Highest priority, so it is marked as a converted villager before Infernal Mobs, Scaling
+     * Health and Champions decide what to make of it - see {@link ConvertedVillagers}. That happens
+     * again each time it is loaded, for the mods that roll again then.
      */
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onZombieJoin(EntityJoinWorldEvent event) {
         if (event.getWorld().isRemote || !(event.getEntity() instanceof EntityZombieVillager)) {
             return;
         }
 
         EntityZombieVillager zombie = (EntityZombieVillager) event.getEntity();
+        if (isCarrying(zombie)) {
+            ConvertedVillagers.keepOrdinary(zombie);
+            return;
+        }
+
         long now = zombie.world.getTotalWorldTime();
 
         expire(now);
 
-        for (Iterator<Snapshot> it = PENDING.iterator(); it.hasNext(); ) {
-            Snapshot snapshot = it.next();
-
-            if (snapshot.matches(zombie)) {
-                zombie.getEntityData().setTag(CARRIED, snapshot.data);
-                it.remove();
-
-                // One a player has traded with stays put until it is cured, as in the game, so a
-                // villager zombified on purpose for the cure discount is still there to cure.
-                if (snapshot.data.getCompoundTag(ROOT).getInteger("Xp") > 0) {
-                    zombie.enablePersistence();
-                }
-                return;
+        Snapshot nearest = null;
+        double nearestDistance = Double.MAX_VALUE;
+        for (Snapshot snapshot : PENDING) {
+            double distance = snapshot.distanceTo(zombie);
+            if (distance >= 0.0D && distance < nearestDistance) {
+                nearest = snapshot;
+                nearestDistance = distance;
             }
         }
+        if (nearest == null) {
+            return;
+        }
+
+        PENDING.remove(nearest);
+        zombie.getEntityData().setTag(CARRIED, nearest.data);
+        ConvertedVillagers.keepOrdinary(zombie);
+
+        // One a player has traded with stays put until it is cured, as in the game, so a villager
+        // zombified on purpose for the cure discount is still there to cure.
+        if (nearest.data.getCompoundTag(ROOT).getInteger("Xp") > 0) {
+            zombie.enablePersistence();
+        }
+    }
+
+    /**
+     * A villager appearing on top of a converting zombie villager is that zombie being cured.
+     *
+     * <p>There is no event for it; see {@link ReputationEvents#onEntityJoin}, which credits the cure
+     * afterwards. Highest priority so the villager is itself again before any other mod looks at
+     * it, and EagleMixins sees a librarian it has already rolled.
+     */
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onVillagerJoin(EntityJoinWorldEvent event) {
+        if (event.getWorld().isRemote || !(event.getEntity() instanceof EntityVillager)) {
+            return;
+        }
+
+        EntityVillager villager = (EntityVillager) event.getEntity();
+        EntityZombieVillager zombie = convertingUnder(villager);
+        if (zombie == null) {
+            return;
+        }
+
+        restore(villager, zombie);
+        ConvertedVillagers.keepOrdinary(villager);
+    }
+
+    /** @return true if this is a zombie villager holding the record of the villager it was */
+    public static boolean isCarrying(Entity entity) {
+        return entity instanceof EntityZombieVillager && entity.getEntityData().hasKey(CARRIED, TAG_COMPOUND);
     }
 
     /**
      * Gives a cured villager back the life it had before it was bitten.
      *
-     * <p>Called from {@link ReputationEvents}, which is already holding the zombie this villager
-     * came out of. Everything is restored before the gossip for the cure is added, so the discount
-     * lands on the trades it was earned against rather than on a fresh set.
+     * <p>Done before {@link ReputationEvents} adds the gossip for the cure, so the discount lands on
+     * the trades it was earned against rather than on a fresh set.
      */
-    public static void restore(EntityVillager villager, EntityZombieVillager zombie) {
+    static void restore(EntityVillager villager, EntityZombieVillager zombie) {
         NBTTagCompound carried = zombie.getEntityData().getCompoundTag(CARRIED);
         if (carried.getSize() == 0) {
             return;
@@ -198,19 +261,43 @@ public final class Zombification {
         }
     }
 
-    /** @return the converting zombie villager this one is standing on top of, if any. */
+    /**
+     * @return the converting zombie villager this one was just cured out of, if any
+     *
+     * <p>Vanilla removes the zombie and then spawns the villager on its exact spot, so the zombie is
+     * the one already marked dead, still in its chunk's entity list until the end of the tick. In a
+     * row of villagers being cured together the neighbours are converting too, a block away; they
+     * are still alive, and a live one only counts if it stands on the very same spot.
+     */
     @Nullable
     static EntityZombieVillager convertingUnder(EntityVillager villager) {
         AxisAlignedBB box = villager.getEntityBoundingBox().grow(1.0D);
 
+        EntityZombieVillager best = null;
+        double bestDistance = Double.MAX_VALUE;
+
         for (EntityZombieVillager zombie
                 : villager.world.getEntitiesWithinAABB(EntityZombieVillager.class, box)) {
-            if (zombie.isConverting()) {
-                return zombie;
+            if (!zombie.isConverting()) {
+                continue;
+            }
+
+            double distance = zombie.getDistanceSq(villager);
+            if (!zombie.isDead && distance > SAME_SPOT * SAME_SPOT) {
+                continue;
+            }
+
+            // The removed zombie wins over a live one on the same spot; otherwise the nearest.
+            boolean better = best == null
+                    || zombie.isDead && !best.isDead
+                    || zombie.isDead == best.isDead && distance < bestDistance;
+            if (better) {
+                best = zombie;
+                bestDistance = distance;
             }
         }
 
-        return null;
+        return best;
     }
 
 }

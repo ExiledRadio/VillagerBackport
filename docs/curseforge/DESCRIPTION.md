@@ -1,14 +1,14 @@
 # 1.14 Villager Backport
 
-**Modern Minecraft's villagers and villages, on 1.12.2.**
+**Modern Minecraft's villagers, villages and raids, on 1.12.2.**
 
-Villages generate the way they do in 1.14, from 1.14's own buildings, with the workstations already inside the houses. Villagers take the job that comes with a workstation, sell 1.14's trades and go to work every day, restocking twice a day and charging more for the trades you use most. They remember what you have done to them and gossip about it, sleep in beds at night, breed when they have food and a free bed, run when they are hurt, and call an iron golem when they are frightened.
+Villages generate the way they do in 1.14, from 1.14's own buildings, with the workstations already inside the houses. Villagers take the job that comes with a workstation, sell 1.14's trades and go to work every day, restocking twice a day and charging more for the trades you use most. They remember what you have done to them and gossip about it, sleep in beds at night, breed when they have food and a free bed, run when they are hurt, and call an iron golem when they are frightened. And the pillage half of Village & Pillage: pillagers, ravagers, patrols, outposts, Bad Omen and raids, with Hero of the Village for whoever saves the village.
 
-It is ported from the decompiled 1.14.4 sources, so the village layouts, trade tables, pricing formula, restock timings, gossip weights, experience values, golem conditions and sleep pose are all the ones the real game uses.
+It is ported from the decompiled 1.14.4 sources, so the village layouts, trade tables, pricing formula, restock timings, gossip weights, experience values, golem conditions, sleep pose, raid waves and outpost layouts are all the ones the real game uses.
 
-**Standalone, and friendly with other backports.** It comes with twelve working workstation blocks, the bell and the lantern, and needs no other mod. Install Future MC, Oceanic Expanse, Deeper Depths or Crossbows Backport alongside it and villagers start trading their items too. It is needed on both the client and the server.
+**Standalone, and friendly with other backports.** It comes with twelve working workstation blocks, the bell, the lantern, the crossbow, the pillager and the ravager, and needs no other mod. Install Future MC, Oceanic Expanse, Deeper Depths or Crossbows Backport alongside it and villagers start trading their items too. It is needed on both the client and the server.
 
-**Recommended companions** (none are required): **Future MC** adds the campfire, crossbow and sweet berries that 1.14 villagers trade, along with the real 1.14 building blocks for villages. **Quark**, **Oceanic Expanse** and **Farmer's Future Delight** add more of those village blocks, and **Crossbows Backport** is another source of crossbows.
+**Recommended companions** (none are required): **Future MC** adds the campfire and sweet berries that 1.14 villagers trade, along with the real 1.14 building blocks for villages. **Quark**, **Oceanic Expanse** and **Farmer's Future Delight** add more of those village blocks.
 
 > 💬 **[Join the Discord](https://discord.gg/kxQvMDJBTN)** for bug reports, questions and release pings.
 
@@ -28,7 +28,7 @@ The workstations sit inside the houses where 1.14 puts them, so a village has it
 *   Streets that cross water become plank bridges in the village's own wood, as in the real game.
 *   Mods that add buildings to villages add them to 1.14 villages too. In RLCraft that means the waystone by the bell, and RLCraft's inns, libraries, blacksmiths and farmhouses on plots beside the streets.
 
-1.14 villages need a world generator whose terrain they can plan on: vanilla's, Open Terrain Generator's (RLCraft Dregora), Realistic Terrain Generation's, Farmer's Future Delight's Caves & Cliffs world type, or Caves Not Cliffs. In a world made by any other generator, or with `villages.style` set to `LEGACY`, villages are 1.12.2's, and each building gets the workstation its trade needs: a lectern in the library, a smoker in the butcher's, a blast furnace, smithing table and grindstone at the blacksmith's, a brewing stand in the church, a composter on each field, a bell at the well, and one at random in each small house.
+1.14 villages need a world generator whose terrain they can plan on: vanilla's, superflat, Biomes O' Plenty's, Open Terrain Generator's (RLCraft Dregora), Realistic Terrain Generation's, Farmer's Future Delight's Caves & Cliffs world type, or Caves Not Cliffs. In a world made by any other generator, or with `villages.style` set to `LEGACY`, villages are 1.12.2's, and each building gets the workstation its trade needs: a lectern in the library, a smoker in the butcher's, a blast furnace, smithing table and grindstone at the blacksmith's, a brewing stand in the church, a composter on each field, a bell at the well, and one at random in each small house.
 
 `/locate village_plains`, `village_desert`, `village_savanna`, `village_taiga` or `village_snowy` finds the nearest village of that kind.
 
@@ -57,7 +57,7 @@ Villagers with a job go to work every day. During work hours they keep returning
 | <strong>Stonecutter</strong> |Mason |Cuts stone with no offcuts |
 | <strong>Brewing stand / Cauldron</strong> |Cleric / Leatherworker |The two 1.12.2 already had |
 
-The bell isn't a job site. It is the village's meeting point, where villagers gather in the afternoon, and ringing it makes every villager in range glow through walls for a few seconds. Like 1.14's, it can stand on a floor stand, hang from a ceiling or a wall, or be slung between two walls. The lantern isn't a job site either: it lights the village, standing on a block or hanging beneath one.
+The bell isn't a job site. It is the village's meeting point, where villagers gather in the afternoon. Ringing it sends villagers within earshot home and makes any raiders nearby glow through walls, as in 1.14. Like 1.14's, it can stand on a floor stand, hang from a ceiling or a wall, or be slung between two walls. The lantern isn't a job site either: it lights the village, standing on a block or hanging beneath one.
 
 **Nitwits** are their own thing again: the green-robed villager that never takes a job and wears no level badge. They come from village generation and from curing zombie villagers that were nitwits. Villagers from spawn eggs, and babies, always start out unemployed. Try to trade with a nitwit, a baby or a jobless villager and it shakes its head at you, as in 1.14.
 
@@ -79,7 +79,7 @@ Trades unlock by level rather than by how many trades you have made. A tier-one 
 
 Prefer 1.12.2's own trades? Set `trades.table` to `LEGACY`. Whichever you choose, a villager you have traded with keeps the trades it has and keeps unlocking from the list it started on.
 
-Villagers wear 1.14's skins, so their biome, their profession's outfit and hat, and the badge for their level all show.
+Villagers wear 1.14's skins, so their biome, their profession's outfit and hat, and the badge for their level all show. Other mods' villagers keep their own textures with the rank badge drawn on, or can be dressed in the closest 1.14 outfit with `display.modOutfits`.
 
 ![A villager in 1.14's skin](https://media.forgecdn.net/attachments/1900/424/villager-png.png)
 
@@ -149,7 +149,9 @@ Opinions fade day by day and spread through **gossip**. Villagers swap news when
 
 Here the whole villager carries across and back. Its trades, level, experience, demand and gossip stay with the zombie and return when it is cured. A zombie villager you had traded with never despawns, so it is still there for you to cure.
 
-Curing is the biggest discount in the mod, and most of it never fades. Curing the same villager again adds nothing more, as in the real game.
+Curing is the biggest discount in the mod, and most of it never fades. Curing the same villager again adds nothing more, as in the real game. A row of villagers cured together each get back their own trades, however close together they stand.
+
+In packs that make mobs stronger, a zombie villager that was one of your villagers stays an ordinary zombie villager: never an **Infernal Mobs** elite, a **Scaling Health** blight or a **Champion**. In Dregora, a cured librarian never comes back as a **Sussyberian** or **Mentalberian**. Turn this off with `compat.convertedStayOrdinary`.
 
 ***
 
@@ -171,9 +173,27 @@ A villager is willing once the food it carries adds up to 12: bread is worth 4, 
 
 ## Danger and iron golems
 
-Villagers panic when they are hurt or when they see a zombie, husk, zombie villager or illager close by. A panicking villager wakes up if it was asleep, runs from the threat, and goes back to what it was doing once the danger has passed.
+Villagers panic when they are hurt or when they see a zombie, husk, zombie villager, illager, pillager or ravager close by. A panicking villager wakes up if it was asleep, runs from the threat, and goes back to what it was doing once the danger has passed.
 
 A frightened villager calls for an iron golem, which takes three villagers nearby to help. Villagers chatting together can call one too, which takes five. Any adult villager that has slept in the last 20 minutes can help, and none will while a golem is within 16 blocks, so a village keeps the golems it has rather than filling up with them. These are the rules modern golem farms are built around.
+
+***
+
+## Raids
+
+Carry Bad Omen into a village and the village knows: 30 seconds later the horn sounds and a raid begins. 1.14's waves follow - three on easy, five on normal, seven on hard, and one more if the omen was strong - of pillagers, vindicators, evokers, witches and ravagers, some riding the ravagers. A bar at the top of the screen shows the raid gathering, then the raiders' strength, and Victory or Defeat at the end.
+
+*   **The villagers know what to do.** Before the first wave they gather at the bell and ring it; when the raiders arrive they run home and stay there; when it's over they come out and celebrate with fireworks.
+*   **The bell gives raiders away.** Ring it with raiders nearby and they glow through the walls for a moment. Villagers within earshot run home whenever it rings.
+*   **Hero of the Village** goes to everyone who killed a raider in a raid that was won: 30% off every trade, more for a stronger raid, shown on the trade screen. Villagers come up and throw heroes gifts - bread from the farmer, a book from the librarian, armor from the armorer.
+*   **Pillagers** load their crossbow, take aim and fire as they do in 1.14, and sometimes drop it.
+*   **The crossbow** is yours too: 1.14's recipe, Quick Charge, Multishot and Piercing, arrows or firework rockets, and the four crossbow advancements. With Future MC or Crossbows Backport installed this mod adds none and uses theirs instead (`compat.crossbow`).
+*   **Ravagers** bite hard, throw you back, and charge through leaves. Block a bite with a shield and you may stun one; it roars when it recovers.
+*   **Patrols** roam the land from the fifth day: a captain with the ominous banner and a few pillagers. Kill the captain away from a raid and you have Bad Omen.
+*   **Pillager outposts** stand in plains, deserts, savannas, taigas and snowy tundra: 1.14's own watchtowers, tents and iron golem cages, with pillagers spawning around them day and night and loot at the top of the tower.
+*   **The ominous bottle** is there for those who prefer current Java's rule, where captains drop a bottle rather than giving Bad Omen outright (`raids.captainDropsOminousBottle`).
+
+Already using **Raids Backport**? This mod uses its raids instead of its own, and fixes what went wrong with the two together: our bell reveals its raiders, villagers hide from its raids, and its Hero of the Village discount is counted once and shown on the trade screen.
 
 ***
 
@@ -198,6 +218,8 @@ Without them, those trades are simply left out of the draw, and the master libra
 
 **Open Terrain Generator**, and with it **RLCraft Dregora**, gets 1.14 villages planned on its real terrain, in the biomes and at the spacing its preset sets.
 
+**Biomes O' Plenty**'s world type gets 1.14 villages planned on its real terrain, styled by each biome's tags.
+
 **Realistic Terrain Generation**'s world type, original or **Realistic Terrain Generation Unofficial**, gets 1.14 villages planned on its real terrain too.
 
 **Farmer's Future Delight's** Caves & Cliffs world type and **Caves Not Cliffs** both get 1.14 villages built on their 1.18-style terrain, anywhere from y -64 to 319.
@@ -210,6 +232,8 @@ Without them, those trades are simply left out of the draw, and the master libra
 
 **JEI Villagers** lists the 1.14 trades villagers actually sell, including any from the backport mods above.
 
+**Raids Backport** runs the raids when it is installed; see Raids above. **Deeper Depths'** Bad Omen and ominous bottles start this mod's raids too. Pillagers and ravagers from any mod count as raiders: they glow when the bell rings and villagers run from them.
+
 ***
 
 ## Commands
@@ -217,24 +241,23 @@ Without them, those trades are simply left out of the draw, and the master libra
 *   `/locate <structure>` gives the distance and the coordinates in green brackets; click them to put a teleport command in your chat box. It takes every structure 1.12.2 can find, plus `village_plains`, `village_desert`, `village_savanna`, `village_taiga` and `village_snowy`.
 *   `/village [radius]` draws the village. Every bed gets a box, green where a villager has claimed it and red where it is going spare, along with the counts that decide whether the village can grow.
 *   `/forgive` clears a villager's grudges against you, and `/forgive 32` does the same for every villager within 32 blocks. Discounts you have earned stay. Operators only.
+*   `/librarian <enchantment> [level] [villager level] [price] [cured]` spawns a librarian selling that enchanted book, for putting back one you lost: `/librarian strengthened_vitality 3`. Add `cured` to get the cure discount with it. Operators only.
+*   `/discount` gives you the cure discount from the villager you're looking at, and `/discount 8` from every villager within 8 blocks. Operators only.
+*   `/raid start [level]` starts a raid on the village you're in, `/raid stop` ends it, `/raid status` lists the raids under way, and `/raid patrol` sends a patrol out near you. Operators only. The `disableRaids` game rule turns raids off in a world.
+*   `/locate pillager_outpost` finds the nearest outpost.
 
 ***
 
 ## What is not here
 
-No raids and no pillagers. This backports the villager and the village, and 1.14 shipped a lot besides.
-
-*   Illagers, pillager patrols, outposts and ravagers
-*   Bad Omen, and the Hero of the Village discount
 *   Wandering traders and their llamas
-
-In 1.14 the bell exists to make raiders glow. With no raids to warn of, ours highlights villagers instead.
+*   Allays, which came to outposts later
 
 ***
 
 ## Config
 
-Everything lives in `config/villagerbackport.cfg`, or the in-game config screen: ten categories, with every setting documented in the file.
+Everything lives in `config/villagerbackport.cfg`, or the in-game config screen: eleven categories, with every setting documented in the file.
 
 ![The config screen](https://media.forgecdn.net/attachments/1900/416/config-png.png)
 
@@ -242,14 +265,15 @@ Everything lives in `config/villagerbackport.cfg`, or the in-game config screen:
 *   `trades`: 1.14's trades or 1.12.2's, and whether untraded villagers switch over
 *   `restock`: how many per day, the gap between them, working hours, sounds
 *   `pricing`: demand multipliers, gossip, stock, experience, level gating
-*   `jobs`: search radius, working distance, whether villagers must be at their workstation to restock, the job-to-block map, and modern farming
+*   `jobs`: search radius, working distance, whether villagers must be at their workstation to restock, the job-to-block map, modern farming, and farming with mobGriefing off
 *   `workstations`: what each block accepts and produces, extra recipes, compostables, netherite upgrades
 *   `homes`: beds, sleeping, breeding, golems, gathering at the bell, babies playing
+*   `raids`: the bell and raiders, hiding, the hero discount and gifts, Raid Omen, wave counts, which mob plays each raider, crossbows, patrols, outposts
 *   `display`: trade screen, level badges, villager skins, the refill key
-*   `compat`: Future MC's duplicate blocks
+*   `compat`: Future MC's duplicate blocks, whose raids there are (this mod's or Raids Backport's), and whose crossbow
 *   `sounds`: 1.14's crop sounds
 
-Every part of it switches off. Turn off `homes` and villagers ignore beds; turn off `jobs` and the workstations are just decoration.
+Every part of it switches off. Turn off `homes` and villagers ignore beds; turn off `jobs` and the workstations are just decoration; set `compat.raids` to `NONE` and there are no raids.
 
 ***
 
@@ -259,7 +283,11 @@ Existing worlds work. Villages generate the new way in chunks you haven't explor
 
 Updating from 1.x: villagers you have traded with keep every trade they have, while ones nobody has traded with switch to 1.14's trades. The old `structures` section and the stall and workshop settings in your config do nothing now and can be deleted.
 
+Villagers only farm, replant and pick up food and seeds while the `mobGriefing` gamerule is on, as in vanilla. If yours is off to stop creeper damage, turn on `jobs.ignoreMobGriefing` and they'll farm and pick up food anyway, while still not trampling farmland.
+
 If your world has villages missing their workstation blocks, set `strictJobSite` to `false` and villagers will restock without one.
+
+Patrols and outposts, like villages, only appear in chunks you haven't explored yet; raids work anywhere there is a village.
 
 Spacebar refills the trade. If it doesn't, another mod has claimed the key (Inventory Tweaks binds it by default). The key is configurable.
 

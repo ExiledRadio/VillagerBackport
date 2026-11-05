@@ -66,6 +66,11 @@ final class BackportBlocks {
         }
         add("sandstone_wall", "futuremc:sandstone_wall", "quark:sandstone_wall");
 
+        // Pillager outposts' mossy cobblestone, which 1.12.2 has no stairs or slab for.
+        add("mossy_cobblestone_stairs", "quark:cobblestone_mossy_stairs");
+        add("mossy_cobblestone_slab", "quark:cobblestone_mossy_slab");
+        add("mossy_cobblestone_slab#double", "quark:cobblestone_mossy_slab_double");
+
         // Oceanic Expanse names the count and the water differently.
         TABLE.put("sea_pickle", Collections.singletonList(new Option("oe:sea_pickle") {
             @Override

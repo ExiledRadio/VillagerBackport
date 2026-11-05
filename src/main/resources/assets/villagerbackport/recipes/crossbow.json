@@ -1,0 +1,30 @@
+{
+  "conditions": [
+    {
+      "type": "villagerbackport:crossbow"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#&#",
+    "~$~",
+    " # "
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:stick"
+    },
+    "~": {
+      "item": "minecraft:string"
+    },
+    "&": {
+      "item": "minecraft:iron_ingot"
+    },
+    "$": {
+      "item": "minecraft:tripwire_hook"
+    }
+  },
+  "result": {
+    "item": "villagerbackport:crossbow"
+  }
+}

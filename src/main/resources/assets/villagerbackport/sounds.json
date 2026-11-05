@@ -389,5 +389,809 @@
         "stream": false
       }
     ]
+  },
+  "entity.villager.work_armorer": {
+    "sounds": [
+      {
+        "name": "villagerbackport:block/blastfurnace/blastfurnace1",
+        "volume": 1
+      },
+      {
+        "name": "villagerbackport:block/blastfurnace/blastfurnace2",
+        "volume": 1
+      },
+      {
+        "name": "villagerbackport:block/blastfurnace/blastfurnace3",
+        "volume": 1
+      },
+      {
+        "name": "villagerbackport:block/blastfurnace/blastfurnace4",
+        "volume": 1
+      },
+      {
+        "name": "villagerbackport:block/blastfurnace/blastfurnace5",
+        "volume": 1
+      }
+    ]
+  },
+  "entity.villager.work_butcher": {
+    "sounds": [
+      {
+        "name": "villagerbackport:block/smoker/smoker1",
+        "volume": 1
+      },
+      {
+        "name": "villagerbackport:block/smoker/smoker2",
+        "volume": 1
+      },
+      {
+        "name": "villagerbackport:block/smoker/smoker3",
+        "volume": 1
+      },
+      {
+        "name": "villagerbackport:block/smoker/smoker4",
+        "volume": 1
+      },
+      {
+        "name": "villagerbackport:block/smoker/smoker5",
+        "volume": 1
+      }
+    ]
+  },
+  "entity.villager.work_cartographer": {
+    "sounds": [
+      {
+        "name": "villagerbackport:ui/cartography_table/drawmap1"
+      },
+      {
+        "name": "villagerbackport:ui/cartography_table/drawmap2"
+      },
+      {
+        "name": "villagerbackport:ui/cartography_table/drawmap3"
+      }
+    ]
+  },
+  "entity.villager.work_cleric": {
+    "sounds": [
+      {
+        "name": "minecraft:block/brewing_stand/brew1"
+      },
+      {
+        "name": "minecraft:block/brewing_stand/brew2"
+      }
+    ],
+    "subtitle": "subtitles.block.brewing_stand.brew"
+  },
+  "entity.villager.work_farmer": {
+    "sounds": [
+      {
+        "name": "villagerbackport:block/composter/fill_success1",
+        "volume": 1
+      },
+      {
+        "name": "villagerbackport:block/composter/fill_success2",
+        "volume": 1
+      },
+      {
+        "name": "villagerbackport:block/composter/fill_success3",
+        "volume": 1
+      },
+      {
+        "name": "villagerbackport:block/composter/fill_success4",
+        "volume": 1
+      }
+    ]
+  },
+  "entity.villager.work_fisherman": {
+    "sounds": [
+      {
+        "name": "villagerbackport:block/barrel/open1",
+        "volume": 1,
+        "pitch": 1
+      },
+      {
+        "name": "villagerbackport:block/barrel/open2",
+        "volume": 1,
+        "pitch": 1
+      }
+    ]
+  },
+  "entity.villager.work_fletcher": {
+    "sounds": [
+      {
+        "name": "villagerbackport:block/fletching_table/fletching_table1",
+        "volume": 1,
+        "pitch": 1
+      },
+      {
+        "name": "villagerbackport:block/fletching_table/fletching_table2",
+        "volume": 1,
+        "pitch": 1
+      }
+    ]
+  },
+  "entity.villager.work_leatherworker": {
+    "sounds": [
+      {
+        "name": "villagerbackport:block/cauldron/dye1",
+        "volume": 0.9
+      },
+      {
+        "name": "villagerbackport:block/cauldron/dye2",
+        "volume": 0.9
+      },
+      {
+        "name": "villagerbackport:block/cauldron/dye3",
+        "volume": 0.9
+      }
+    ]
+  },
+  "entity.villager.work_librarian": {
+    "sounds": [
+      {
+        "name": "villagerbackport:item/book/open_flip1",
+        "volume": 2
+      },
+      {
+        "name": "villagerbackport:item/book/open_flip2",
+        "volume": 2
+      },
+      {
+        "name": "villagerbackport:item/book/open_flip3",
+        "volume": 2
+      }
+    ]
+  },
+  "entity.villager.work_mason": {
+    "sounds": [
+      {
+        "name": "villagerbackport:ui/stonecutter/cut1",
+        "volume": 1
+      },
+      {
+        "name": "villagerbackport:ui/stonecutter/cut1",
+        "volume": 1,
+        "pitch": 0.92
+      },
+      {
+        "name": "villagerbackport:ui/stonecutter/cut2",
+        "volume": 1
+      },
+      {
+        "name": "villagerbackport:ui/stonecutter/cut2",
+        "volume": 1,
+        "pitch": 0.92
+      }
+    ]
+  },
+  "entity.villager.work_shepherd": {
+    "sounds": [
+      {
+        "name": "villagerbackport:ui/loom/take_result1",
+        "volume": 0.5
+      },
+      {
+        "name": "villagerbackport:ui/loom/take_result2",
+        "volume": 0.5
+      }
+    ]
+  },
+  "entity.villager.work_toolsmith": {
+    "sounds": [
+      {
+        "name": "villagerbackport:block/smithing_table/smithing_table1",
+        "volume": 1,
+        "pitch": 1
+      },
+      {
+        "name": "villagerbackport:block/smithing_table/smithing_table2",
+        "volume": 1,
+        "pitch": 1
+      },
+      {
+        "name": "villagerbackport:block/smithing_table/smithing_table3",
+        "volume": 1,
+        "pitch": 1
+      }
+    ]
+  },
+  "entity.villager.work_weaponsmith": {
+    "sounds": [
+      {
+        "name": "villagerbackport:block/grindstone/grindstone1",
+        "volume": 0.5
+      },
+      {
+        "name": "villagerbackport:block/grindstone/grindstone2",
+        "volume": 0.5
+      },
+      {
+        "name": "villagerbackport:block/grindstone/grindstone3",
+        "volume": 0.5
+      }
+    ]
+  },
+  "event.raid.horn": {
+    "category": "neutral",
+    "subtitle": "subtitles.villagerbackport.event.raid.horn",
+    "sounds": [
+      {
+        "name": "villagerbackport:event/raid/raidhorn_01",
+        "volume": 0.01,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:event/raid/raidhorn_02",
+        "volume": 0.01,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:event/raid/raidhorn_03",
+        "volume": 0.01,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:event/raid/raidhorn_04",
+        "volume": 0.01,
+        "stream": false
+      }
+    ]
+  },
+  "event.mob_effect.bad_omen": {
+    "category": "neutral",
+    "subtitle": "subtitles.villagerbackport.event.mob_effect.bad_omen",
+    "sounds": [
+      {
+        "name": "villagerbackport:event/mob_effects/bad_omen",
+        "stream": false
+      }
+    ]
+  },
+  "event.mob_effect.raid_omen": {
+    "category": "neutral",
+    "subtitle": "subtitles.villagerbackport.event.mob_effect.raid_omen",
+    "sounds": [
+      {
+        "name": "villagerbackport:event/mob_effects/raid_omen",
+        "stream": false
+      }
+    ]
+  },
+  "entity.pillager.ambient": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/pillager/idle1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/pillager/idle2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/pillager/idle3",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/pillager/idle4",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.pillager.ambient"
+  },
+  "entity.pillager.celebrate": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/pillager/celebrate1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/pillager/celebrate2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/pillager/celebrate3",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/pillager/celebrate4",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/pillager/horn_celebrate",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.pillager.celebrate"
+  },
+  "entity.pillager.death": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/pillager/death1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/pillager/death2",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.pillager.death"
+  },
+  "entity.pillager.hurt": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/pillager/hurt1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/pillager/hurt2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/pillager/hurt3",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.pillager.hurt"
+  },
+  "entity.ravager.ambient": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/ravager/idle1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/idle2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/idle3",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/idle4",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/idle5",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/idle6",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/idle7",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/idle8",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.ravager.ambient"
+  },
+  "entity.ravager.attack": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/ravager/bite1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/bite2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/bite3",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.ravager.attack"
+  },
+  "entity.ravager.celebrate": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/ravager/celebrate1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/celebrate2",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.ravager.celebrate"
+  },
+  "entity.ravager.death": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/ravager/death1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/death2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/death3",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.ravager.death"
+  },
+  "entity.ravager.hurt": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/ravager/hurt1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/hurt2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/hurt3",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/hurt4",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.ravager.hurt"
+  },
+  "entity.ravager.roar": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/ravager/roar1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/roar2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/roar3",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/roar4",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.ravager.roar"
+  },
+  "entity.ravager.step": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/ravager/step1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/step2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/step3",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/step4",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/step5",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.block.generic.footsteps"
+  },
+  "entity.ravager.stunned": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/ravager/stun1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/stun2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/ravager/stun3",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.ravager.stunned"
+  },
+  "item.crossbow.loading_end": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "villagerbackport:item/crossbow/loading_end",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.item.crossbow.load"
+  },
+  "item.crossbow.loading_middle": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "villagerbackport:item/crossbow/loading_middle1",
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/loading_middle1",
+        "pitch": 0.95,
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/loading_middle1",
+        "pitch": 1.2,
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/loading_middle2",
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/loading_middle2",
+        "pitch": 0.9,
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/loading_middle2",
+        "pitch": 1.05,
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/loading_middle3",
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/loading_middle3",
+        "pitch": 0.9,
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/loading_middle3",
+        "pitch": 1.05,
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/loading_middle4",
+        "volume": 0.65,
+        "stream": false
+      }
+    ]
+  },
+  "item.crossbow.loading_start": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "villagerbackport:item/crossbow/loading_start",
+        "volume": 0.3,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.item.crossbow.charge"
+  },
+  "item.crossbow.shoot": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "villagerbackport:item/crossbow/shoot1",
+        "volume": 0.8,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/shoot1",
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/shoot1",
+        "pitch": 0.9,
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/shoot2",
+        "volume": 0.8,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/shoot2",
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/shoot2",
+        "pitch": 0.9,
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/shoot3",
+        "volume": 0.8,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/shoot3",
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/shoot3",
+        "pitch": 0.9,
+        "volume": 0.9,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.item.crossbow.shoot"
+  },
+  "item.ominous_bottle.dispose": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "villagerbackport:item/ominous_bottle/dispose",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.item.ominous_bottle.dispose"
+  },
+  "item.crossbow.quick_charge_1": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "villagerbackport:item/crossbow/quick_charge/quick1_1",
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/quick_charge/quick1_1",
+        "pitch": 0.9,
+        "volume": 0.5,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/quick_charge/quick1_2",
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/quick_charge/quick1_2",
+        "pitch": 0.95,
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/quick_charge/quick1_3",
+        "volume": 0.65,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.item.crossbow.charge"
+  },
+  "item.crossbow.quick_charge_2": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "villagerbackport:item/crossbow/quick_charge/quick2_1",
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/quick_charge/quick2_1",
+        "pitch": 0.95,
+        "volume": 0.5,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/quick_charge/quick2_2",
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/quick_charge/quick2_2",
+        "pitch": 0.95,
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/quick_charge/quick2_2",
+        "pitch": 1.05,
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/quick_charge/quick2_3",
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/quick_charge/quick2_3",
+        "pitch": 0.9,
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/quick_charge/quick2_3",
+        "pitch": 1.05,
+        "volume": 0.65,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.item.crossbow.charge"
+  },
+  "item.crossbow.quick_charge_3": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "villagerbackport:item/crossbow/quick_charge/quick3_1",
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/quick_charge/quick3_1",
+        "pitch": 0.95,
+        "volume": 0.5,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/quick_charge/quick3_2",
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/quick_charge/quick3_2",
+        "pitch": 0.95,
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/quick_charge/quick3_2",
+        "pitch": 1.05,
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/quick_charge/quick3_3",
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/quick_charge/quick3_3",
+        "pitch": 0.9,
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:item/crossbow/quick_charge/quick3_3",
+        "pitch": 1.05,
+        "volume": 0.65,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.item.crossbow.charge"
   }
 }

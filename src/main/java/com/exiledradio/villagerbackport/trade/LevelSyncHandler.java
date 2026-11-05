@@ -1,6 +1,5 @@
 package com.exiledradio.villagerbackport.trade;
 
-import com.exiledradio.villagerbackport.ModConfig;
 import com.exiledradio.villagerbackport.compat.VillagerAccess;
 import com.exiledradio.villagerbackport.data.VillagerTradeData;
 import com.exiledradio.villagerbackport.job.Employment;
@@ -40,13 +39,14 @@ public final class LevelSyncHandler {
             return;
         }
 
-        if (!(event.getEntityPlayer() instanceof EntityPlayerMP) || !ModConfig.display.showLevelBadge) {
+        // Sent whether or not badges are shown: the career and the type choose the outfit too.
+        if (!(event.getEntityPlayer() instanceof EntityPlayerMP)) {
             return;
         }
 
         EntityVillager villager = (EntityVillager) event.getTarget();
         NetworkHandler.sendVillagerLevel((EntityPlayerMP) event.getEntityPlayer(), villager,
-                levelOf(villager), careerOf(villager));
+                levelOf(villager), careerOf(villager), com.exiledradio.villagerbackport.data.VillagerTypes.indexOf(villager));
     }
 
     /**
@@ -71,12 +71,8 @@ public final class LevelSyncHandler {
     }
 
     private static void broadcast(EntityVillager villager, int level) {
-        if (!ModConfig.display.showLevelBadge) {
-            return;
-        }
-
-        NetworkHandler.sendVillagerLevelNearby(villager, level,
-                careerOf(villager), LEVEL_UP_BROADCAST_RANGE);
+        NetworkHandler.sendVillagerLevelNearby(villager, level, careerOf(villager),
+                com.exiledradio.villagerbackport.data.VillagerTypes.indexOf(villager), LEVEL_UP_BROADCAST_RANGE);
     }
 
     /**

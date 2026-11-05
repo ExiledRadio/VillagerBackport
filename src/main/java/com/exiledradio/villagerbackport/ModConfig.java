@@ -44,6 +44,10 @@ public final class ModConfig {
     @Config.Comment("Beds, sleeping, breeding and iron golems.")
     public static final Homes homes = new Homes();
 
+    @Config.LangKey("config.villagerbackport.raids")
+    @Config.Comment("Raids, raiders and Hero of the Village, as villagers live through them.")
+    public static final Raids raids = new Raids();
+
     @Config.LangKey("config.villagerbackport.display")
     @Config.Comment("What the trade screen shows.")
     public static final Display display = new Display();
@@ -428,6 +432,18 @@ public final class ModConfig {
         })
         public boolean farmersCompost = true;
 
+        @Config.Comment({
+                "Let villagers farm and pick up food and seeds even with the mobGriefing gamerule",
+                "off.",
+                "",
+                "As in vanilla, a villager only harvests, replants and picks items up while",
+                "mobGriefing is on, so a world that turns it off to stop creeper damage has farmers",
+                "standing idle beside ripe fields and villagers ignoring bread thrown to them. On,",
+                "they do both anyway. Everything else mobGriefing covers stays off, villagers",
+                "trampling farmland included."
+        })
+        public boolean ignoreMobGriefing = false;
+
         @Config.Comment("How fast a villager walks to work.")
         @Config.RangeDouble(min = 0.1D, max = 2.0D)
         public double walkSpeed = 0.6D;
@@ -481,10 +497,10 @@ public final class ModConfig {
                 "adds them (see backportBlocks).",
                 "LEGACY: 1.12.2's villages, with workstations put into the existing houses.",
                 "",
-                "MODERN needs a world generator it can lay a village out on: vanilla's, Open Terrain",
-                "Generator's, Realistic Terrain Generation's, Farmer's Future Delight's Caves & Cliffs",
-                "world type, or Caves Not Cliffs. In a world made by another generator villages stay",
-                "LEGACY.",
+                "MODERN needs a world generator it can lay a village out on: vanilla's, superflat,",
+                "Biomes O' Plenty's, Open Terrain Generator's, Realistic Terrain Generation's,",
+                "Farmer's Future Delight's Caves & Cliffs world type, or Caves Not Cliffs. In a world",
+                "made by another generator villages stay LEGACY.",
                 "",
                 "Only affects villages generated after the change. Villages already on disk keep",
                 "the layout they were generated with."
@@ -585,15 +601,6 @@ public final class ModConfig {
 
     public static final class Workstations {
 
-        @Config.Comment({
-                "Ringing a bell makes nearby villagers glow.",
-                "",
-                "1.14 highlights raiders instead, so a village under attack can see where the",
-                "attackers are. 1.12.2 has neither raids nor illagers, which would leave the bell",
-                "with nothing to do - so it highlights villagers, which keeps the mechanic and is",
-                "arguably more useful: it finds the one you were looking for."
-        })
-        public boolean bellHighlightsVillagers = true;
 
         @Config.Comment({
                 "Upgrade diamond gear to netherite at the smithing table, as in 1.16, when a mod",
@@ -627,13 +634,7 @@ public final class ModConfig {
         })
         public boolean removeCraftingUpgrades = false;
 
-        @Config.Comment("How far a bell reaches, in blocks. 1.14 uses 32.")
-        @Config.RangeDouble(min = 4.0D, max = 128.0D)
-        public double bellRadius = 32.0D;
 
-        @Config.Comment("How long villagers glow for, in ticks. 60 is three seconds.")
-        @Config.RangeInt(min = 20, max = 1200)
-        public int bellGlowTicks = 60;
 
         @Config.Comment({
                 "Extra things a composter accepts, beyond 1.14's own list.",
@@ -801,6 +802,187 @@ public final class ModConfig {
         @Config.RequiresMcRestart
         public com.exiledradio.villagerbackport.compat.FutureMc.Duplicates futureMcDuplicates =
                 com.exiledradio.villagerbackport.compat.FutureMc.Duplicates.KEEP_OURS;
+
+        @Config.Comment({
+                "Keep villagers ordinary through zombification and curing.",
+                "",
+                "A zombie villager that was one of your villagers is never made an Infernal Mobs",
+                "elite, a Scaling Health blight or a Champion, and gets no Scaling Health bonus",
+                "health. The villager it is cured back into is never turned into a Sussyberian or",
+                "Mentalberian (Dregora's EagleMixins), which refuse to trade.",
+                "",
+                "With this on, a Sussyberian or Mentalberian that was once cured is turned back into",
+                "the librarian it was when its chunk next loads. Ones that generated as berians are",
+                "left alone. Does nothing for mods that are not installed."
+        })
+        public boolean convertedStayOrdinary = true;
+
+        @Config.Comment({
+                "Whose raids there are.",
+                "",
+                "  AUTO            Raids Backport's when it is installed, otherwise this mod's",
+                "  OURS            this mod's, even with Raids Backport installed",
+                "  RAIDS_BACKPORT  Raids Backport's (no raids at all without it)",
+                "  NONE            no raids at all: villagers still hide when a bell rings",
+                "",
+                "With OURS and Raids Backport both installed, both mods start raids: pick one.",
+                "",
+                "With Raids Backport, its raids, raiders and Hero of the Village effect drive",
+                "everything in the raids section: hiding, ringing the bell, celebrating, gifts and",
+                "the discount. Its own discount is then taken off trades, so the hero discount is",
+                "counted once and the trade screen shows the price actually charged."
+        })
+        @Config.RequiresMcRestart
+        public com.exiledradio.villagerbackport.raid.Raids.Source raids =
+                com.exiledradio.villagerbackport.raid.Raids.Source.AUTO;
+
+        @Config.Comment({
+                "Whether this mod adds the crossbow, with Quick Charge, Multishot and Piercing.",
+                "",
+                "  AUTO  only when neither Future MC nor Crossbows Backport is installed",
+                "  OURS  always, alongside theirs",
+                "  OFF   never",
+                "",
+                "Without it, pillagers, outposts and fletchers use another mod's crossbow (see",
+                "raids.crossbows), and its recipe, enchantments and advancements are gone. Turning",
+                "it off in a world that has crossbows deletes them."
+        })
+        @Config.RequiresMcRestart
+        public com.exiledradio.villagerbackport.crossbow.CrossbowContent.Mode crossbow =
+                com.exiledradio.villagerbackport.crossbow.CrossbowContent.Mode.AUTO;
+    }
+
+    public static final class Raids {
+
+        @Config.Comment({
+                "Ringing a bell with raiders nearby makes them glow, as in 1.14.",
+                "",
+                "Raiders are the game's: pillagers, vindicators, evokers, illusioners, ravagers and",
+                "witches, whichever mod adds them, plus anything in extraRaiders. The resonance",
+                "sounds a quarter of a second after the ring, and the raiders within 48 blocks",
+                "light up two seconds after that, for three seconds."
+        })
+        public boolean bellRevealsRaiders = true;
+
+        @Config.Comment({
+                "Villagers within 32 blocks run home when a bell is rung, as in 1.14.",
+                "",
+                "With no raid on they stay inside for fifteen seconds, or until fifteen seconds",
+                "after the bell. During a raid they hide until it is over."
+        })
+        public boolean hideOnBell = true;
+
+        @Config.Comment({
+                "Villagers live through raids as they do in 1.14.",
+                "",
+                "Before the first wave they gather at the bell and ring it. Once raiders arrive",
+                "they go home and stay there. After a victory they come out and celebrate."
+        })
+        public boolean raidBehaviour = true;
+
+        @Config.Comment({
+                "Hero of the Village takes 30% off every trade, plus 6.25% a level, as in 1.14.",
+                "",
+                "Counted from the trade's base price and stacked with reputation, inside the same",
+                "limits. Needs pricing.demandPricing, which is where prices are set."
+        })
+        public boolean heroDiscount = true;
+
+        @Config.Comment({
+                "Villagers throw a Hero of the Village gifts now and then, as in 1.14.",
+                "",
+                "What each profession gives is a loot table in",
+                "villagerbackport:gameplay/hero_of_the_village/<profession>_gift. Babies give a",
+                "poppy and villagers without a job give wheat seeds. With Raids Backport, its own",
+                "gifts are left as they are and this only fills in the professions it has none for."
+        })
+        public boolean heroGifts = true;
+
+        @Config.Comment({
+                "Bad Omen turns into 30 seconds of Raid Omen in a village, and the raid starts when",
+                "that runs out, as in current Java. Off: the raid starts the moment a player with",
+                "Bad Omen walks in, as in 1.14."
+        })
+        public boolean raidOmen = true;
+
+        @Config.Comment("How many waves a raid has on easy. 1.14 uses 3.")
+        @Config.RangeInt(min = 1, max = 7)
+        public int easyWaves = 3;
+
+        @Config.Comment("How many waves a raid has on normal. 1.14 uses 5.")
+        @Config.RangeInt(min = 1, max = 7)
+        public int normalWaves = 5;
+
+        @Config.Comment("How many waves a raid has on hard. 1.14 uses 7.")
+        @Config.RangeInt(min = 1, max = 7)
+        public int hardWaves = 7;
+
+        @Config.Comment({
+                "Which mob a raid sends for each of 1.14's five raiders, by registry name. The first",
+                "one installed is used; a raider with none installed is left out of the waves.",
+                "",
+                "This mod's own pillager and ravager come first; another mod's are used instead",
+                "if they are listed ahead of them."
+        })
+        public String[] pillagers = {"villagerbackport:pillager", "raids:pillager", "minecraft:vindication_illager"};
+
+        @Config.Comment({
+                "The crossbow a pillager carries, by registry name: the first one installed. This",
+                "mod's own is only there when compat.crossbow adds it. With none of them installed",
+                "a pillager carries a stand-in that only pillagers can use and that never drops.",
+                "",
+                "The first of these that players can have is also the one outpost chests hold."
+        })
+        public String[] crossbows = {"villagerbackport:crossbow", "futuremc:crossbow", "crossbows:crossbow",
+                "spartanweaponry:crossbow_wood", "villagerbackport:pillager_crossbow"};
+
+        @Config.Comment({
+                "A captain killed away from a raid drops an ominous bottle of a random level, as in",
+                "current Java, instead of giving Bad Omen straight away, as in 1.14. Deeper Depths'",
+                "bottle is dropped when it is installed."
+        })
+        public boolean captainDropsOminousBottle = false;
+
+        @Config.Comment({
+                "Pillager patrols roam the overworld, as in 1.14: from the fifth day, by day, now and",
+                "then a band of pillagers appears 24 to 48 blocks from a player who is not in a",
+                "village, led by a captain with the ominous banner. Only with this mod's raids."
+        })
+        public boolean patrols = true;
+
+        @Config.Comment({
+                "Pillager outposts generate, as in 1.14: a watchtower with tents, logs, targets and",
+                "iron golem cages around it, manned by pillagers that spawn there day and night.",
+                "On the village grid, one candidate in five, never within ten chunks of a village.",
+                "New chunks only. Only with this mod's raids."
+        })
+        public boolean outposts = true;
+
+        @Config.Comment({
+                "Outposts also generate in other mods' biomes that are like 1.14's outpost biomes:",
+                "plains, desert, savanna, coniferous forest or snowy flats, but not hills,",
+                "mountains or water. Off: only the five vanilla biomes 1.14 uses."
+        })
+        public boolean outpostsInModdedBiomes = true;
+
+        @Config.Comment("See pillagers.")
+        public String[] vindicators = {"minecraft:vindication_illager"};
+
+        @Config.Comment("See pillagers.")
+        public String[] evokers = {"minecraft:evocation_illager"};
+
+        @Config.Comment("See pillagers.")
+        public String[] witches = {"minecraft:witch"};
+
+        @Config.Comment("See pillagers.")
+        public String[] ravagers = {"villagerbackport:ravager", "raids:ravager"};
+
+        @Config.Comment({
+                "More mobs to treat as raiders, by registry name: e.g. 'somemod:marauder'.",
+                "",
+                "Raiders frighten villagers like a vindicator does and glow when a bell rings."
+        })
+        public String[] extraRaiders = {};
     }
 
     public static final class Homes {
@@ -985,10 +1167,32 @@ public final class ModConfig {
                 "Drawn as an extra layer on whatever villager renderer is in use rather than by",
                 "replacing it, so mods that reshape or decorate villagers keep working.",
                 "",
-                "Costs one small packet per villager a player comes near, and one more whenever a",
-                "villager levels up. Turning this off stops both."
+                "Turning this off only hides the badge. The villager's level still reaches each",
+                "player, since its career and biome outfit travel with it."
         })
         public boolean showLevelBadge = true;
+
+        @Config.Comment({
+                "Which 1.14 outfit other mods' villagers wear, one per line, as 'profession=outfit' or",
+                "'profession/career=outfit'. Professions by registry name, careers by name.",
+                "",
+                "By default another mod's villager keeps its own texture, with the rank badge drawn",
+                "on, since there is no telling which part of a whole 1.12.2 skin is the clothes. A",
+                "line here dresses it as a vanilla villager instead: biome clothing, the outfit, its",
+                "hat and the badge.",
+                "",
+                "Outfits: armorer, butcher, cartographer, cleric, farmer, fisherman, fletcher,",
+                "leatherworker, librarian, mason, nitwit, shepherd, toolsmith, weaponsmith, or none",
+                "for the biome clothing alone.",
+                "",
+                "Examples:",
+                "  somemod:chef=butcher",
+                "  minecraft:farmer/beekeeper=farmer   (a career a mod added to a vanilla profession)",
+                "",
+                "A career a mod adds to a vanilla profession wears that profession's outfit unless",
+                "it is listed here: the farmer's, librarian's, cleric's, toolsmith's or butcher's."
+        })
+        public String[] modOutfits = {};
 
         @Config.Comment({
                 "Villagers hold up what they would give you for the item in your hand, as in the game.",
@@ -1028,6 +1232,7 @@ public final class ModConfig {
                 com.exiledradio.villagerbackport.job.WorkstationIndex.invalidateAll();
                 com.exiledradio.villagerbackport.block.Compostables.loadExtras();
                 com.exiledradio.villagerbackport.block.StonecutterRecipes.invalidate();
+                com.exiledradio.villagerbackport.raid.Raids.reloadConfig();
             }
         }
 

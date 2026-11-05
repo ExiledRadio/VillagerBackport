@@ -53,6 +53,9 @@ public final class JobSiteAttacher {
     /** Where 1.12.2 kept its own fleeing goals, above sleep. */
     private static final int PANIC_PRIORITY = 1;
 
+    /** Living through a raid: behind fleeing, ahead of sleep - see EntityAIRaidResponse. */
+    private static final int RAID_PRIORITY = 2;
+
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (event.getWorld().isRemote || !(event.getEntity() instanceof EntityVillager)) {
@@ -110,6 +113,18 @@ public final class JobSiteAttacher {
                 removeVanillaPlay(villager);
                 villager.tasks.addTask(PLAY_PRIORITY,
                         new com.exiledradio.villagerbackport.home.EntityAIBabyPlay(villager));
+            }
+
+            // Below panic and above sleep: a raid gets a villager out of bed, a pillager in its path
+            // still sends it running. Hiding from a bell works without homes, under any roof.
+            if (!hasGoal(villager, com.exiledradio.villagerbackport.raid.EntityAIRaidResponse.class)) {
+                villager.tasks.addTask(RAID_PRIORITY,
+                        new com.exiledradio.villagerbackport.raid.EntityAIRaidResponse(villager));
+            }
+
+            if (!hasGoal(villager, com.exiledradio.villagerbackport.raid.EntityAIGiveHeroGifts.class)) {
+                villager.tasks.addTask(GATHER_PRIORITY,
+                        new com.exiledradio.villagerbackport.raid.EntityAIGiveHeroGifts(villager));
             }
 
             // Older versions raised this permanently, which made every path a villager computed -

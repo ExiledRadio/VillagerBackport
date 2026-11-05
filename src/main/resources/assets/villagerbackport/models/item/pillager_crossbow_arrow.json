@@ -1,0 +1,7 @@
+{
+  "parent": "villagerbackport:item/pillager_crossbow",
+  "textures": {
+    "layer0": "villagerbackport:items/crossbow_arrow"
+  },
+  "overrides": []
+}

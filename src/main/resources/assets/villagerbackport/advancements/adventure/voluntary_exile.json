@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:banner",
+      "data": 15
+    },
+    "title": {
+      "translate": "advancements.villagerbackport.voluntary_exile.title"
+    },
+    "description": {
+      "translate": "advancements.villagerbackport.voluntary_exile.description"
+    },
+    "hidden": true
+  },
+  "parent": "minecraft:adventure/root",
+  "criteria": {
+    "omen": {
+      "trigger": "minecraft:effects_changed",
+      "conditions": {
+        "effects": {
+          "villagerbackport:bad_omen": {}
+        }
+      }
+    }
+  }
+}

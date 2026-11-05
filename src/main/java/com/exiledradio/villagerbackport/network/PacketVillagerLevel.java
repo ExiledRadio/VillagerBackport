@@ -32,14 +32,18 @@ public class PacketVillagerLevel implements IMessage {
      */
     private int careerId;
 
+    /** The villager's biome type, as an index into {@code VillagerTypes.NAMES}; fixed for life. */
+    private int type;
+
     /** Required no-arg constructor for the network layer to instantiate before reading. */
     public PacketVillagerLevel() {
     }
 
-    public PacketVillagerLevel(int entityId, int level, int careerId) {
+    public PacketVillagerLevel(int entityId, int level, int careerId, int type) {
         this.entityId = entityId;
         this.level = level;
         this.careerId = careerId;
+        this.type = type;
     }
 
     public int getEntityId() {
@@ -54,11 +58,16 @@ public class PacketVillagerLevel implements IMessage {
         return careerId;
     }
 
+    public int getType() {
+        return type;
+    }
+
     @Override
     public void fromBytes(ByteBuf buf) {
         this.entityId = buf.readInt();
         this.level = buf.readInt();
         this.careerId = buf.readInt();
+        this.type = buf.readByte();
     }
 
     @Override
@@ -66,6 +75,7 @@ public class PacketVillagerLevel implements IMessage {
         buf.writeInt(this.entityId);
         buf.writeInt(this.level);
         buf.writeInt(this.careerId);
+        buf.writeByte(this.type);
     }
 
     /**
@@ -86,7 +96,7 @@ public class PacketVillagerLevel implements IMessage {
                 @Override
                 public void run() {
                     com.exiledradio.villagerbackport.client.VillagerLevelCache.accept(
-                            message.getEntityId(), message.getLevel(), message.getCareerId());
+                            message.getEntityId(), message.getLevel(), message.getCareerId(), message.getType());
                 }
             });
 

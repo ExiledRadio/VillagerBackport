@@ -64,6 +64,7 @@ public final class VillagerBackport {
         MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.trade.LevelSyncHandler());
         MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.trade.ReputationEvents());
         MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.trade.Zombification());
+        MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.compat.ConvertedVillagers());
         MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.home.HomeClaims());
         MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.home.SleepSync());
         MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.home.BedInteraction());
@@ -78,12 +79,18 @@ public final class VillagerBackport {
         MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.home.BedBreeding());
         MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.job.JobSiteAttacher());
         MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.job.JobSiteClaims());
+        MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.job.MobGriefingExemption());
+        MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.data.VillagerTypes());
         MinecraftForge.EVENT_BUS.register(com.exiledradio.villagerbackport.job.WorkstationIndex.class);
-
+        MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.raid.Raids());
+        MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.raid.RaidEvents());
+        MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.illager.PatrolSpawner());
+        MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.crossbow.CrossbowAdvancements());
         // Before anything can load a world: the piece names have to be known to the save format
         // ahead of a village being read back, and the creation handlers ahead of one being laid out.
         com.exiledradio.villagerbackport.village.VillagePieces.register();
         com.exiledradio.villagerbackport.village.modern.MapGenModernVillage.register();
+        com.exiledradio.villagerbackport.village.modern.OutpostGenerator.register();
 
         // Client-only rendering lives in a class of its own that a server never loads. The call
         // itself is safe to compile in here because it names no client type - see ClientSetup for
@@ -114,6 +121,7 @@ public final class VillagerBackport {
         com.exiledradio.villagerbackport.compat.FutureMc.removeLateRecipes();
         com.exiledradio.villagerbackport.block.CropSounds.apply();
         com.exiledradio.villagerbackport.block.SmithingUpgrades.registerIngots();
+        com.exiledradio.villagerbackport.raid.Raids.init();
     }
 
     /** Every mod's recipes are in by now, so the smithing table's upgrades can be gathered. */
@@ -138,11 +146,14 @@ public final class VillagerBackport {
         com.exiledradio.villagerbackport.block.StonecutterRecipes.invalidate();
     }
 
-    /** Registers the commands this mod adds: the one that draws a village, and /forgive. */
+    /** Registers the commands this mod adds: the one that draws a village, /forgive, /librarian and /discount. */
     @Mod.EventHandler
     public void serverStarted(net.minecraftforge.fml.common.event.FMLServerStartingEvent event) {
         event.registerServerCommand(new com.exiledradio.villagerbackport.home.VillageCommand());
         event.registerServerCommand(new com.exiledradio.villagerbackport.trade.ForgiveCommand());
+        event.registerServerCommand(new com.exiledradio.villagerbackport.trade.LibrarianCommand());
+        event.registerServerCommand(new com.exiledradio.villagerbackport.trade.DiscountCommand());
+        event.registerServerCommand(new com.exiledradio.villagerbackport.raid.RaidCommand());
         // Registered after vanilla's, so it takes the /locate name over.
         event.registerServerCommand(new com.exiledradio.villagerbackport.village.modern.LocateCommand());
     }

@@ -104,6 +104,22 @@ public final class Gossip {
     }
 
     /**
+     * @return true if any player ever cured this villager
+     *
+     * <p>Curing is the only thing that gives major positive gossip, and that kind never decays, so
+     * a cured villager carries it for good.
+     */
+    public static boolean wasCured(EntityVillager villager) {
+        NBTTagCompound gossip = root(villager).getCompoundTag(GOSSIP);
+        for (String player : gossip.getKeySet()) {
+            if (gossip.getCompoundTag(player).getInteger(GossipType.MAJOR_POSITIVE.id) > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * @return how well this villager thinks of the player, as 1.14's weighted total
      *
      * <p>Signed: positive earns a discount, negative costs extra.

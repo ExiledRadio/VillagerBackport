@@ -83,9 +83,9 @@ public final class NetworkHandler {
     }
 
     /** Sends one villager's level to one player, for the rank badge. */
-    public static void sendVillagerLevel(EntityPlayerMP player, Entity villager, int level, int careerId) {
+    public static void sendVillagerLevel(EntityPlayerMP player, Entity villager, int level, int careerId, int type) {
         if (channel != null) {
-            channel.sendTo(new PacketVillagerLevel(villager.getEntityId(), level, careerId), player);
+            channel.sendTo(new PacketVillagerLevel(villager.getEntityId(), level, careerId, type), player);
         }
     }
 
@@ -140,13 +140,13 @@ public final class NetworkHandler {
                         villager.posX, villager.posY, villager.posZ, range));
     }
 
-    public static void sendVillagerLevelNearby(Entity villager, int level, int careerId, double range) {
+    public static void sendVillagerLevelNearby(Entity villager, int level, int careerId, int type, double range) {
         if (channel == null) {
             return;
         }
 
         channel.sendToAllAround(
-                new PacketVillagerLevel(villager.getEntityId(), level, careerId),
+                new PacketVillagerLevel(villager.getEntityId(), level, careerId, type),
                 new NetworkRegistry.TargetPoint(villager.world.provider.getDimension(),
                         villager.posX, villager.posY, villager.posZ, range));
     }

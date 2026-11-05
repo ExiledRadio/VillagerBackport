@@ -1,0 +1,18 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "minecraft:map"
+        },
+        {
+          "type": "item",
+          "name": "minecraft:paper"
+        }
+      ],
+      "name": "gift"
+    }
+  ]
+}

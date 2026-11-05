@@ -111,6 +111,13 @@ public final class PricingHandler {
             return;
         }
 
+        // A villager with a career but no trades yet gets its first level from this mod rather than
+        // from vanilla, which would skip a level - see TradeTables.adopt. Here as well as on its
+        // tick, so a player opening the screen straight after it spawned does not get there first.
+        if (VillagerAccess.getBuyingList(villager) == null) {
+            TradeTables.adopt(villager);
+        }
+
         MerchantRecipeList recipes = VillagerAccess.getBuyingList(villager);
 
         // Send the level data before pricing, and independently of it. The two features are
@@ -140,7 +147,8 @@ public final class PricingHandler {
         for (MerchantRecipe recipe : recipes) {
             int standing = Gossip.specialPriceFor(reputation, PriceEngine.multiplierFor(recipe));
 
-            PriceEngine.applyPrice(villager, recipe, TradeKey.of(villager, recipe), standing);
+            PriceEngine.applyPrice(villager, recipe, TradeKey.of(villager, recipe), standing,
+                    event.getEntityPlayer());
         }
     }
 

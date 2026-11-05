@@ -138,6 +138,12 @@ public final class ModernPools {
         final String location;
         final List<List<Rule>> processors;
 
+        /**
+         * 1.14's {@code IntegrityProcessor}: the share of the template's blocks that are placed, each
+         * kept or dropped by a roll seeded from its position. 1 places them all.
+         */
+        float integrity = 1.0F;
+
         SingleElement(String location, List<List<Rule>> processors, Projection projection) {
             super(projection);
             this.location = location;
@@ -322,6 +328,11 @@ public final class ModernPools {
      * {@code MathHelper.getPositionRandom}, which 1.12.2 marks client-only, so a dedicated server
      * does not have it.
      */
+    /** @return true if 1.14's {@code IntegrityProcessor} keeps the block placed here */
+    static boolean keeps(SingleElement element, BlockPos pos) {
+        return element.integrity >= 1.0F || new Random(positionSeed(pos)).nextFloat() <= element.integrity;
+    }
+
     private static long positionSeed(BlockPos pos) {
         long seed = (long) (pos.getX() * 3129871) ^ (long) pos.getZ() * 116129781L ^ (long) pos.getY();
         return seed * seed * 42317861L + seed * 11L;
@@ -348,11 +359,21 @@ public final class ModernPools {
         Pool empty = new Pool(EMPTY, EMPTY);
         out.put(EMPTY, empty);
 
-        String path = "/assets/" + VillagerBackport.MOD_ID + "/structures/village/pools.json";
+        for (String kind : KINDS) {
+            loadFile(kind, out);
+        }
+        return out;
+    }
+
+    /** Every jigsaw structure ported from 1.14, by its folder under {@code structures/}. */
+    private static final String[] KINDS = {"village", "pillager_outpost"};
+
+    private static void loadFile(String kind, Map<String, Pool> out) {
+        String path = "/assets/" + VillagerBackport.MOD_ID + "/structures/" + kind + "/pools.json";
         InputStream in = ModernPools.class.getResourceAsStream(path);
         if (in == null) {
-            VillagerBackport.LOGGER.error("The 1.14 village pools are missing from the jar; villages will be empty.");
-            return out;
+            VillagerBackport.LOGGER.error("The 1.14 {} pools are missing from the jar; they will be empty.", kind);
+            return;
         }
         try {
             JsonObject root = new JsonParser().parse(new InputStreamReader(in, StandardCharsets.UTF_8)).getAsJsonObject();
@@ -373,7 +394,7 @@ public final class ModernPools {
                 out.put(e.getKey(), pool);
             }
         } catch (Exception e) {
-            VillagerBackport.LOGGER.error("Could not read the 1.14 village pools.", e);
+            VillagerBackport.LOGGER.error("Could not read the 1.14 {} pools.", kind, e);
         } finally {
             try {
                 in.close();
@@ -381,7 +402,6 @@ public final class ModernPools {
                 // Nothing useful to do.
             }
         }
-        return out;
     }
 
     private static Element element(JsonObject json) {
@@ -402,13 +422,20 @@ public final class ModernPools {
             return new ListElement(elements, projection);
         }
         List<List<Rule>> processors = new ArrayList<List<Rule>>();
+        float integrity = 1.0F;
         for (JsonElement proc : json.getAsJsonArray("processors")) {
+            if (proc.isJsonObject() && proc.getAsJsonObject().has("integrity")) {
+                integrity = proc.getAsJsonObject().get("integrity").getAsFloat();
+                continue;
+            }
             List<Rule> rules = new ArrayList<Rule>();
             for (JsonElement rule : proc.getAsJsonArray()) {
                 rules.add(new Rule(rule.getAsJsonObject()));
             }
             processors.add(rules);
         }
-        return new SingleElement(json.get("location").getAsString(), processors, projection);
+        SingleElement single = new SingleElement(json.get("location").getAsString(), processors, projection);
+        single.integrity = integrity;
+        return single;
     }
 }
