@@ -295,7 +295,7 @@ public final class ModernTrades {
                 level(buy(Items.COAL, 15, 16), sell(Items.COOKED_PORKCHOP, 1, 5, 16), sell(Items.COOKED_CHICKEN, 1, 8, 16)),
                 level(buy(Items.MUTTON, 7, 16), buy(Items.BEEF, 10, 16)),
                 level(optionalBuy(10, 12, "oe:dried_kelp_block")),
-                level(optionalBuy(10, 12, "futuremc:sweet_berries")));
+                level(sweetBerriesBuy(10, 12)));
 
         table("minecraft:butcher", "leather",
                 level(buy(Items.LEATHER, 6, 16), dyed(Items.LEATHER_LEGGINGS, 3), dyed(Items.LEATHER_CHESTPLATE, 7)),
@@ -697,6 +697,26 @@ public final class ModernTrades {
 
     private static Trade optionalBuy(final int count, final int stock, String... candidates) {
         return new Optional(candidates) {
+            @Override
+            public MerchantRecipe offer(EntityVillager villager, Random random) {
+                Item item = item();
+                return item == null ? null
+                        : recipe(new ItemStack(item, count), ItemStack.EMPTY, new ItemStack(Items.EMERALD), stock);
+            }
+        };
+    }
+
+    /**
+     * Buying sweet berries: this mod's own, or Future MC's when that is the copy kept - whichever
+     * {@code FoxContent.berries()} says is in use, so a villager never asks for the hidden one.
+     */
+    private static Trade sweetBerriesBuy(final int count, final int stock) {
+        return new Optional() {
+            @Override
+            Item item() {
+                return com.exiledradio.villagerbackport.fox.FoxContent.berries();
+            }
+
             @Override
             public MerchantRecipe offer(EntityVillager villager, Random random) {
                 Item item = item();

@@ -193,6 +193,8 @@ public final class FutureMc {
                 items.add(item);
             }
         }
+        // Sweet berries are an item without a block item, so they are not in the block pairs above.
+        items.addAll(com.exiledradio.villagerbackport.fox.FoxContent.hiddenItems());
 
         return items;
     }

@@ -208,6 +208,14 @@ public final class Compostables {
         }
     }
 
+    /**
+     * Adds one of this mod's own 1.14 items to the table, at 1.14's chance - for content registered
+     * after this class has loaded, such as sweet berries.
+     */
+    public static void register(float chance, Item item) {
+        add(chance, item, ANY_META);
+    }
+
     private static void add(float chance, Item item) {
         add(chance, item, ANY_META);
     }

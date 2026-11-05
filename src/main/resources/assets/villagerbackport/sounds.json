@@ -1193,5 +1193,308 @@
       }
     ],
     "subtitle": "subtitles.villagerbackport.item.crossbow.charge"
+  },
+  "entity.fox.ambient": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/fox/idle1",
+        "volume": 0.8
+      },
+      {
+        "name": "villagerbackport:mob/fox/idle2",
+        "volume": 1
+      },
+      {
+        "name": "villagerbackport:mob/fox/idle3",
+        "volume": 1
+      },
+      {
+        "name": "villagerbackport:mob/fox/idle4",
+        "volume": 1
+      },
+      {
+        "name": "villagerbackport:mob/fox/idle5",
+        "volume": 1
+      },
+      {
+        "name": "villagerbackport:mob/fox/idle6",
+        "volume": 1
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.fox.ambient"
+  },
+  "entity.fox.hurt": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/fox/hurt1",
+        "volume": 0.75
+      },
+      {
+        "name": "villagerbackport:mob/fox/hurt2",
+        "volume": 0.75
+      },
+      {
+        "name": "villagerbackport:mob/fox/hurt3",
+        "volume": 0.75
+      },
+      {
+        "name": "villagerbackport:mob/fox/hurt4",
+        "volume": 0.75
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.fox.hurt"
+  },
+  "entity.fox.death": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/fox/death1",
+        "volume": 0.9
+      },
+      {
+        "name": "villagerbackport:mob/fox/death2",
+        "volume": 0.9
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.fox.death"
+  },
+  "entity.fox.aggro": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/fox/aggro1",
+        "volume": 0.65
+      },
+      {
+        "name": "villagerbackport:mob/fox/aggro2",
+        "volume": 0.65
+      },
+      {
+        "name": "villagerbackport:mob/fox/aggro3",
+        "volume": 0.65
+      },
+      {
+        "name": "villagerbackport:mob/fox/aggro4",
+        "volume": 0.65
+      },
+      {
+        "name": "villagerbackport:mob/fox/aggro5",
+        "volume": 0.65
+      },
+      {
+        "name": "villagerbackport:mob/fox/aggro6",
+        "volume": 0.65
+      },
+      {
+        "name": "villagerbackport:mob/fox/aggro7",
+        "volume": 0.65
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.fox.aggro"
+  },
+  "entity.fox.sniff": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/fox/sniff1",
+        "volume": 0.6
+      },
+      {
+        "name": "villagerbackport:mob/fox/sniff2",
+        "volume": 0.6
+      },
+      {
+        "name": "villagerbackport:mob/fox/sniff3",
+        "volume": 0.6
+      },
+      {
+        "name": "villagerbackport:mob/fox/sniff4",
+        "volume": 0.6
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.fox.sniff"
+  },
+  "entity.fox.bite": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/fox/bite1",
+        "volume": 0.6,
+        "pitch": 1.1
+      },
+      {
+        "name": "villagerbackport:mob/fox/bite2",
+        "volume": 0.6,
+        "pitch": 1.1
+      },
+      {
+        "name": "villagerbackport:mob/fox/bite3",
+        "volume": 0.6,
+        "pitch": 1.1
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.fox.bite"
+  },
+  "entity.fox.eat": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/fox/eat1",
+        "volume": 0.65
+      },
+      {
+        "name": "villagerbackport:mob/fox/eat2",
+        "volume": 0.65
+      },
+      {
+        "name": "villagerbackport:mob/fox/eat3",
+        "volume": 0.65
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.fox.eat"
+  },
+  "entity.fox.screech": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/fox/screech1",
+        "volume": 0.45
+      },
+      {
+        "name": "villagerbackport:mob/fox/screech2",
+        "volume": 0.45
+      },
+      {
+        "name": "villagerbackport:mob/fox/screech3",
+        "volume": 0.45
+      },
+      {
+        "name": "villagerbackport:mob/fox/screech4",
+        "volume": 0.4
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.fox.screech"
+  },
+  "entity.fox.sleep": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/fox/sleep1",
+        "volume": 0.8
+      },
+      {
+        "name": "villagerbackport:mob/fox/sleep2",
+        "volume": 0.8
+      },
+      {
+        "name": "villagerbackport:mob/fox/sleep3",
+        "volume": 0.8
+      },
+      {
+        "name": "villagerbackport:mob/fox/sleep4",
+        "volume": 0.8
+      },
+      {
+        "name": "villagerbackport:mob/fox/sleep5",
+        "volume": 0.8
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.fox.sleep"
+  },
+  "entity.fox.spit": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/fox/spit1",
+        "volume": 0.7
+      },
+      {
+        "name": "villagerbackport:mob/fox/spit2",
+        "volume": 0.7
+      },
+      {
+        "name": "villagerbackport:mob/fox/spit3",
+        "volume": 0.7
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.fox.spit"
+  },
+  "item.sweet_berries.pick_from_bush": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:item/sweet_berries/pick_from_bush1"
+      },
+      {
+        "name": "villagerbackport:item/sweet_berries/pick_from_bush2"
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.sweet_berries.pick"
+  },
+  "block.sweet_berry_bush.break": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:block/sweet_berry_bush/break1",
+        "volume": 0.8
+      },
+      {
+        "name": "villagerbackport:block/sweet_berry_bush/break2",
+        "volume": 0.8
+      },
+      {
+        "name": "villagerbackport:block/sweet_berry_bush/break3",
+        "volume": 0.8
+      },
+      {
+        "name": "villagerbackport:block/sweet_berry_bush/break4",
+        "volume": 0.8
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.sweet_berry_bush.break"
+  },
+  "block.sweet_berry_bush.place": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:block/sweet_berry_bush/place1",
+        "volume": 0.8
+      },
+      {
+        "name": "villagerbackport:block/sweet_berry_bush/place2",
+        "volume": 0.8
+      },
+      {
+        "name": "villagerbackport:block/sweet_berry_bush/place3",
+        "volume": 0.8
+      },
+      {
+        "name": "villagerbackport:block/sweet_berry_bush/place4",
+        "volume": 0.8
+      },
+      {
+        "name": "villagerbackport:block/sweet_berry_bush/place5",
+        "volume": 0.8
+      },
+      {
+        "name": "villagerbackport:block/sweet_berry_bush/place6",
+        "volume": 0.8
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.sweet_berry_bush.place"
+  },
+  "entity.player.hurt_sweet_berry_bush": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "villagerbackport:entity/player/hurt/berrybush_hurt1"
+      },
+      {
+        "name": "villagerbackport:entity/player/hurt/berrybush_hurt2"
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.player.hurt"
   }
 }
