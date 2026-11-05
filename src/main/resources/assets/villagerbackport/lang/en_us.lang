@@ -147,3 +147,7 @@ subtitles.villagerbackport.entity.wandering_trader.drink_milk=Wandering Trader d
 subtitles.villagerbackport.entity.wandering_trader.drink_potion=Wandering Trader drinks potion
 subtitles.villagerbackport.entity.wandering_trader.disappeared=Wandering Trader disappears
 subtitles.villagerbackport.entity.wandering_trader.reappeared=Wandering Trader appears
+# --- cats ---
+entity.villagerbackport.cat.name=Cat
+advancements.villagerbackport.complete_catalogue.title=A Complete Catalogue
+advancements.villagerbackport.complete_catalogue.description=Tame all cat variants!

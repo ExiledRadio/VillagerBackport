@@ -1,0 +1,16 @@
+{
+  "pools": [
+    {
+      "name": "gift",
+      "rolls": 1,
+      "entries": [
+        { "type": "item", "weight": 10, "name": "minecraft:rabbit_hide" },
+        { "type": "item", "weight": 10, "name": "minecraft:rabbit_foot" },
+        { "type": "item", "weight": 10, "name": "minecraft:chicken" },
+        { "type": "item", "weight": 10, "name": "minecraft:feather" },
+        { "type": "item", "weight": 10, "name": "minecraft:rotten_flesh" },
+        { "type": "item", "weight": 10, "name": "minecraft:string" }
+      ]
+    }
+  ]
+}
