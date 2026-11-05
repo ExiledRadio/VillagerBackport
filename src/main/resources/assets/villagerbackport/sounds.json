@@ -1193,5 +1193,203 @@
       }
     ],
     "subtitle": "subtitles.villagerbackport.item.crossbow.charge"
+  },
+  "entity.wandering_trader.ambient": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/wandering_trader/idle1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/wandering_trader/idle2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/wandering_trader/idle3",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/wandering_trader/idle4",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/wandering_trader/idle5",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.wandering_trader.ambient"
+  },
+  "entity.wandering_trader.death": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/wandering_trader/death",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.wandering_trader.death"
+  },
+  "entity.wandering_trader.hurt": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/wandering_trader/hurt1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/wandering_trader/hurt2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/wandering_trader/hurt3",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/wandering_trader/hurt4",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.wandering_trader.hurt"
+  },
+  "entity.wandering_trader.no": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/wandering_trader/no1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/wandering_trader/no2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/wandering_trader/no3",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/wandering_trader/no4",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/wandering_trader/no5",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.wandering_trader.no"
+  },
+  "entity.wandering_trader.yes": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/wandering_trader/yes1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/wandering_trader/yes2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/wandering_trader/yes3",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/wandering_trader/yes4",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.wandering_trader.yes"
+  },
+  "entity.wandering_trader.trade": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/wandering_trader/haggle1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/wandering_trader/haggle2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/wandering_trader/haggle3",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.wandering_trader.trade"
+  },
+  "entity.wandering_trader.drink_milk": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/wandering_trader/drink_milk1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/wandering_trader/drink_milk2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/wandering_trader/drink_milk3",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/wandering_trader/drink_milk4",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/wandering_trader/drink_milk5",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.wandering_trader.drink_milk"
+  },
+  "entity.wandering_trader.drink_potion": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "minecraft:random/drink",
+        "volume": 0.65,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/wandering_trader/drink_potion",
+        "volume": 0.7,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.wandering_trader.drink_potion"
+  },
+  "entity.wandering_trader.disappeared": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/wandering_trader/disappeared1",
+        "volume": 0.8,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/wandering_trader/disappeared2",
+        "volume": 0.8,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.wandering_trader.disappeared"
+  },
+  "entity.wandering_trader.reappeared": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/wandering_trader/reappeared1",
+        "volume": 0.8,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/wandering_trader/reappeared2",
+        "volume": 0.8,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.wandering_trader.reappeared"
   }
 }
