@@ -210,12 +210,9 @@ public final class Compostables {
 
     /**
      * Adds one of this mod's own 1.14 items to the table, at 1.14's chance - for content registered
-     * after this class has loaded, such as sweet berries.
+     * after this class has loaded, such as sweet berries and the flora package's flowers.
      */
     public static void register(float chance, Item item) {
-     * Adds an item another part of this mod registers, once it exists - the flora package's flowers,
-     * for one. The table above is built when this class loads, which may be before them.
-    public static void addItem(float chance, Item item) {
         add(chance, item, ANY_META);
     }
 

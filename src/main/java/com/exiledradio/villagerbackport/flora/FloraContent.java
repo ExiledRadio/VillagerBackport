@@ -142,7 +142,7 @@ public final class FloraContent {
 
         // 1.14 composts every small flower at 65%.
         for (Block flower : new Block[]{cornflower, lilyOfTheValley, witherRose}) {
-            com.exiledradio.villagerbackport.block.Compostables.addItem(0.65F, Item.getItemFromBlock(flower));
+            com.exiledradio.villagerbackport.block.Compostables.register(0.65F, Item.getItemFromBlock(flower));
         }
 
         whiteDye = item(event, "white_dye", new ItemModernDye(EnumDyeColor.WHITE));

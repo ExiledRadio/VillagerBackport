@@ -45,14 +45,14 @@ public final class NetworkHandler {
         // 1.14 completion streams own ids 10-19 (docs/V14_COMPLETION_PLAN.md).
         channel.registerMessage(com.exiledradio.villagerbackport.campfire.PacketCampfireDowse.Handler.class,
                 com.exiledradio.villagerbackport.campfire.PacketCampfireDowse.class, 18, Side.CLIENT);
+        // flora: which mooshrooms are brown. See flora.Mooshrooms.
+        channel.registerMessage(com.exiledradio.villagerbackport.flora.PacketMooshroomType.Handler.class,
+                com.exiledradio.villagerbackport.flora.PacketMooshroomType.class, 19, Side.CLIENT);
     }
 
     /** @return the mod's channel, for packages that send their own messages; null before preInit */
     public static SimpleNetworkWrapper channel() {
         return channel;
-        // flora: which mooshrooms are brown. See flora.Mooshrooms.
-        channel.registerMessage(com.exiledradio.villagerbackport.flora.PacketMooshroomType.Handler.class,
-                com.exiledradio.villagerbackport.flora.PacketMooshroomType.class, 19, Side.CLIENT);
     }
 
     /**

@@ -193,7 +193,9 @@ public final class FutureMc {
             if (item == null || item == net.minecraft.init.Items.AIR) {
                 item = pickedItem(block);
             }
-            if (item != null && item != net.minecraft.init.Items.AIR) {
+            // Only ever the hidden block's own mod's item. One of Future MC's signs is picked as
+            // vanilla's sign item, and hiding that took the oak sign's recipe out of the game.
+            if (item != null && item != net.minecraft.init.Items.AIR && sameMod(item, block)) {
                 items.add(item);
             }
         }
@@ -201,6 +203,11 @@ public final class FutureMc {
         items.addAll(com.exiledradio.villagerbackport.fox.FoxContent.hiddenItems());
 
         return items;
+    }
+
+    private static boolean sameMod(Item item, Block block) {
+        return item.getRegistryName() != null && block.getRegistryName() != null
+                && item.getRegistryName().getNamespace().equals(block.getRegistryName().getNamespace());
     }
 
     /**
