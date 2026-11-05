@@ -823,6 +823,10 @@ public final class ModConfig {
                 "untouched, and villagers still take jobs at it. It loses its crafting recipe and",
                 "its place in JEI and the creative menu, and villages are no longer built with it.",
                 "",
+                "The same goes for the 1.14 building blocks both mods add (building.enabled): the",
+                "twelve new walls, smooth stone, smooth sandstone, smooth red sandstone, smooth",
+                "quartz, and the spruce, birch, jungle, acacia and dark oak signs.",
+                "",
                 "The lectern is never hidden, because Future MC has none.",
                 "",
                 "Does nothing unless Future MC is installed."
@@ -1592,8 +1596,32 @@ public final class ModConfig {
     /** Filled in by its 1.14 completion stream (docs/V14_COMPLETION_PLAN.md). */
     public static final class Building {
 
-        @Config.Comment("Whether this mod adds 1.14's building blocks.")
+        @Config.Comment({
+                "Whether this mod adds 1.14's building blocks: the new stone, sandstone, quartz,",
+                "nether brick and end stone brick slabs, stairs and walls, smooth stone, smooth",
+                "sandstone, smooth red sandstone, smooth quartz, and signs in the five other woods.",
+                "",
+                "Turning it off in a world that has them deletes them."
+        })
         @Config.RequiresMcRestart
         public boolean enabled = true;
+
+        @Config.Comment({
+                "Change seven vanilla recipes the way 1.14 did, so the new blocks can be crafted.",
+                "",
+                "  sign                any planks -> oak planks only (the other woods make their own)",
+                "  stone slab          stone -> smooth stone (stone now makes 1.14's plain stone slab)",
+                "  sandstone slab      no longer takes cut sandstone (that makes the cut slab)",
+                "  red sandstone slab  no longer takes cut red sandstone (likewise)",
+                "  stone brick slab    plain stone bricks only (mossy ones make their own)",
+                "  stone brick stairs  likewise",
+                "  nether brick fence  4 nether brick blocks and 2 nether bricks (6 blocks is the wall)",
+                "",
+                "Without this, each pair shares one crafting pattern and only one of the two can",
+                "ever be crafted. Off leaves vanilla's recipes exactly as they were. Does nothing",
+                "when building.enabled is off."
+        })
+        @Config.RequiresMcRestart
+        public boolean vanillaRecipeChanges = true;
     }
 }

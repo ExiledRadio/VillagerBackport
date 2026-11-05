@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=bottom": {
+      "model": "villagerbackport:red_nether_brick_slab"
+    },
+    "half=top": {
+      "model": "villagerbackport:red_nether_brick_slab_top"
+    }
+  }
+}

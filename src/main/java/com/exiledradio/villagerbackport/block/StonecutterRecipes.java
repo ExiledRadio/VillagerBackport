@@ -164,6 +164,7 @@ public final class StonecutterRecipes {
 
             if (this.kind.derive()) {
                 deriveFromCrafting(gathered);
+                chainOneForOne(gathered);
             }
 
             addConfigured(gathered);
@@ -212,6 +213,49 @@ public final class StonecutterRecipes {
 
         VillagerBackport.LOGGER.info("Derived {} cuts from {} crafting recipes.",
                 this.kind.name().toLowerCase(java.util.Locale.ROOT), recipes);
+    }
+
+    /**
+     * Lets a block be cut straight into whatever its one-for-one cuts can be cut into.
+     *
+     * <p>1.14's stonecutter takes stone to stone brick slabs and andesite to polished andesite
+     * stairs in one step, although no crafting recipe does: crafting goes stone, stone bricks, slab.
+     * Reading the recipes alone only finds the second half of that, so this joins the two halves.
+     *
+     * <p>Only through a one-for-one cut, and only one step deep. A block that cuts into one of
+     * something passes on exactly what that something is worth, so nothing comes out of thin air;
+     * a cut that yields more than one is left unchained, so a saw that splits a block into four
+     * cannot also be read as splitting it into four slabs' worth of pieces each.
+     */
+    private static void chainOneForOne(Map<Long, Set<StackKey>> out) {
+        Map<Long, Set<StackKey>> direct = new HashMap<Long, Set<StackKey>>();
+        for (Map.Entry<Long, Set<StackKey>> entry : out.entrySet()) {
+            direct.put(entry.getKey(), new LinkedHashSet<StackKey>(entry.getValue()));
+        }
+
+        for (Map.Entry<Long, Set<StackKey>> entry : direct.entrySet()) {
+            long input = entry.getKey();
+            Set<StackKey> results = out.get(input);
+
+            for (StackKey middle : entry.getValue()) {
+                if (middle.count != 1) {
+                    continue;
+                }
+                Set<StackKey> next = direct.get(key(middle.item, middle.meta));
+                if (next == null) {
+                    next = direct.get(key(middle.item, ANY_META));
+                }
+                if (next == null) {
+                    continue;
+                }
+                for (StackKey end : next) {
+                    // Back to where it started, by way of a block that cuts both ways.
+                    if (key(end.item, end.meta) != input) {
+                        results.add(end);
+                    }
+                }
+            }
+        }
     }
 
     /** @return true if this recipe contributed anything. */

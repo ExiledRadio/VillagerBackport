@@ -190,6 +190,9 @@ public final class FutureMc {
 
         for (Block block : hidden().keySet()) {
             Item item = Item.getItemFromBlock(block);
+            if (item == null || item == net.minecraft.init.Items.AIR) {
+                item = pickedItem(block);
+            }
             if (item != null && item != net.minecraft.init.Items.AIR) {
                 items.add(item);
             }
@@ -198,6 +201,22 @@ public final class FutureMc {
         items.addAll(com.exiledradio.villagerbackport.fox.FoxContent.hiddenItems());
 
         return items;
+    }
+
+    /**
+     * @return the item a block is picked as, for blocks held as a separate item - a sign is placed
+     * by a sign item, and has no item form of its own to look up
+     */
+    @Nullable
+    @SuppressWarnings("deprecation")
+    private static Item pickedItem(Block block) {
+        try {
+            // Signs answer this without looking at the world, which is not there to pass.
+            ItemStack picked = block.getItem(null, null, block.getDefaultState());
+            return picked.isEmpty() ? null : picked.getItem();
+        } catch (RuntimeException e) {
+            return null;
+        }
     }
 
     private static Map<Block, Block> hidden() {
@@ -209,10 +228,20 @@ public final class FutureMc {
         Duplicates mode = ModConfig.compat.futureMcDuplicates;
 
         if (mode != Duplicates.SHOW_BOTH && isLoaded()) {
+            // The workstations share names outright; the 1.14 building blocks mostly do, but Future
+            // MC calls its standing signs "spruce_standing_sign" where 1.14 says "spruce_sign".
+            List<String[]> names = new ArrayList<String[]>();
             for (String[] shared : SHARED) {
+                names.add(new String[] {shared[0], shared[0]});
+            }
+            if (com.exiledradio.villagerbackport.building.BuildingContent.enabled()) {
+                names.addAll(com.exiledradio.villagerbackport.building.BuildingContent.futureMcPairs());
+            }
+
+            for (String[] shared : names) {
                 Block ours = ForgeRegistries.BLOCKS.getValue(
                         new ResourceLocation(VillagerBackport.MOD_ID, shared[0]));
-                Block theirs = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(MOD_ID, shared[0]));
+                Block theirs = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(MOD_ID, shared[1]));
 
                 // Only a pair if both halves exist. Future MC can switch each of its blocks off.
                 if (ours == null || theirs == null
@@ -242,6 +271,10 @@ public final class FutureMc {
         for (Block block : hidden().keySet()) {
             block.setCreativeTab(null);
         }
+        // Signs are listed by their item, not their block.
+        for (Item item : hiddenItems()) {
+            item.setCreativeTab(null);
+        }
 
         if (!hidden().isEmpty()) {
             VillagerBackport.LOGGER.info(
@@ -268,6 +301,34 @@ public final class FutureMc {
     /** Again at the end of loading, for recipes a mod added later than the registry event. */
     public static void removeLateRecipes() {
         removeRecipes(ForgeRegistries.RECIPES);
+        removeSmelting();
+    }
+
+    /**
+     * Removes furnace recipes that make a hidden block.
+     *
+     * <p>Both mods smelt stone into smooth stone, sandstone into smooth sandstone and so on, and a
+     * furnace keeps one result per input - whichever its map happens to find first. Only the building
+     * blocks have smelting recipes, and both mods register theirs before this runs at the end of
+     * loading.
+     */
+    private static void removeSmelting() {
+        Set<Item> items = hiddenItems();
+        if (items.isEmpty()) {
+            return;
+        }
+        int removed = 0;
+        java.util.Iterator<Map.Entry<ItemStack, ItemStack>> it =
+                net.minecraft.item.crafting.FurnaceRecipes.instance().getSmeltingList().entrySet().iterator();
+        while (it.hasNext()) {
+            if (items.contains(it.next().getValue().getItem())) {
+                it.remove();
+                removed++;
+            }
+        }
+        if (removed > 0) {
+            VillagerBackport.LOGGER.info("Removed {} smelting recipes for hidden duplicates.", removed);
+        }
     }
 
     private static void removeRecipes(IForgeRegistry<IRecipe> registry) {

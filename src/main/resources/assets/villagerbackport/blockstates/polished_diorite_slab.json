@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=bottom": {
+      "model": "villagerbackport:polished_diorite_slab"
+    },
+    "half=top": {
+      "model": "villagerbackport:polished_diorite_slab_top"
+    }
+  }
+}
