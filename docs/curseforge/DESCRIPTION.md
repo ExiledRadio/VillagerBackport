@@ -6,7 +6,7 @@ Villages generate the way they do in 1.14, from 1.14's own buildings, with the w
 
 It is ported from the decompiled 1.14.4 sources, so the village layouts, trade tables, pricing formula, restock timings, gossip weights, experience values, golem conditions, sleep pose, raid waves and outpost layouts are all the ones the real game uses.
 
-**Standalone, and friendly with other backports.** It comes with twelve working workstation blocks, the bell, the lantern, the crossbow, the pillager and the ravager, and needs no other mod. Install Future MC, Oceanic Expanse, Deeper Depths or Crossbows Backport alongside it and villagers start trading their items too. It is needed on both the client and the server.
+**Standalone, and friendly with other backports.** It comes with twelve working workstation blocks, the bell, the lantern, the crossbow, the pillager and the ravager, and needs no other mod. Install Future MC, Oceanic Expanse or Deeper Depths alongside it and villagers start trading their items too. It is needed on both the client and the server.
 
 **Recommended companions** (none are required): **Future MC** adds the campfire and sweet berries that 1.14 villagers trade, along with the real 1.14 building blocks for villages. **Quark**, **Oceanic Expanse** and **Farmer's Future Delight** add more of those village blocks.
 
@@ -51,7 +51,7 @@ Villagers with a job go to work every day. During work hours they keep returning
 | <strong>Fletching table</strong> |Fletcher |Cuts wood the way a stonecutter cuts stone |
 | <strong>Smithing table</strong> |Toolsmith |Upgrades diamond gear to netherite, as in 1.16, when a netherite mod is installed, and runs Future MC's smithing recipes, CraftTweaker's included. Otherwise nothing, as in 1.14 |
 | <strong>Loom</strong> |Shepherd |Applies banner patterns for one dye |
-| <strong>Blast furnace</strong> |Armorer |Smelts ore and armour at double speed |
+| <strong>Blast furnace</strong> |Armorer |Smelts ore and armor at double speed |
 | <strong>Smoker</strong> |Butcher |Cooks food at double speed |
 | <strong>Grindstone</strong> |Weaponsmith |Disenchants and repairs, returns experience |
 | <strong>Stonecutter</strong> |Mason |Cuts stone with no offcuts |
@@ -110,7 +110,7 @@ Rerolling a librarian means breaking and replacing its lectern until the book is
 
 Villagers restock twice a day, at their own workstation, during work hours. A villager that can't get to its workstation doesn't restock. When a trade sells out, green sparkles show you which one ran dry.
 
-Every trade has the stock the real game gives it. Enchanted tools, weapons and armour sell 3 times between restocks, while villagers buy everyday goods like crops and wool 16 times and valuable things like iron, gold and diamonds 12 times. 1.12.2 gives everything 7.
+Every trade has the stock the real game gives it. Enchanted tools, weapons and armor sell 3 times between restocks, while villagers buy everyday goods like crops and wool 16 times and valuable things like iron, gold and diamonds 12 times. 1.12.2 gives everything 7.
 
 ***
 
@@ -118,7 +118,7 @@ Every trade has the stock the real game gives it. Enchanted tools, weapons and a
 
 Prices respond to demand over several days. A trade you sell out every day gets a little dearer each day, with no ceiling short of a full stack, while a trade you leave alone drifts back down. A new trade takes a few days of heavy use before its price first rises.
 
-Expensive items react four times as strongly. Enchanted books, maps, enchanted gear, iron and chainmail armour, shields, stone tools, saddles and leather armour are all premium trades, as they are in the real game.
+Expensive items react four times as strongly. Enchanted books, maps, enchanted gear, iron and chainmail armor, shields, stone tools, saddles and leather armor are all premium trades, as they are in the real game.
 
 The trade screen crosses out the original price and shows the new one beside it, for rises and discounts alike.
 
@@ -191,6 +191,7 @@ Carry Bad Omen into a village and the village knows: 30 seconds later the horn s
 *   **Ravagers** bite hard, throw you back, and charge through leaves. Block a bite with a shield and you may stun one; it roars when it recovers.
 *   **Patrols** roam the land from the fifth day: a captain with the ominous banner and a few pillagers. Kill the captain away from a raid and you have Bad Omen.
 *   **Pillager outposts** stand in plains, deserts, savannas, taigas and snowy tundra: 1.14's own watchtowers, tents and iron golem cages, with pillagers spawning around them day and night and loot at the top of the tower.
+*   **The ominous banner** captains wear is 1.14's, and it's in the creative tab too.
 *   **The ominous bottle** is there for those who prefer current Java's rule, where captains drop a bottle rather than giving Bad Omen outright (`raids.captainDropsOminousBottle`).
 
 Already using **Raids Backport**? This mod uses its raids instead of its own, and fixes what went wrong with the two together: our bell reveals its raiders, villagers hide from its raids, and its Hero of the Village discount is counted once and shown on the trade screen.
@@ -203,12 +204,11 @@ Nothing here needs another mod. When one of these is installed, its items join t
 
 | Mod | Adds to trades |
 | --- | --- |
-| <strong>Future MC</strong> |Crossbow, campfire, bucket of cod, sweet berries, suspicious stew |
-| <strong>Crossbows Backport</strong> |Crossbow |
+| <strong>Future MC</strong> |Campfire, bucket of cod, sweet berries, suspicious stew |
 | <strong>Oceanic Expanse</strong> |Turtle scute, dried kelp block |
 | <strong>Deeper Depths</strong> |Red and yellow candles, sold by the master librarian |
 
-Without them, those trades are simply left out of the draw, and the master librarian sells a name tag as in 1.14. Butchers and leatherworkers have fewer trades at the top levels without these mods.
+Without them, those trades are simply left out of the draw, and the master librarian sells a name tag as in 1.14. Butchers and leatherworkers have fewer trades at the top levels without these mods. The fletcher's crossbow is this mod's own, or Future MC's or Crossbows Backport's when one of those is installed.
 
 **Future MC** adds many of the same blocks. Both sets give villagers jobs, so a fisherman will take either barrel, and one of each pair is hidden from the creative menu, JEI and crafting so you aren't shown two of everything. Choose which set to keep with `compat.futureMcDuplicates` (`KEEP_OURS`, `KEEP_FUTURE_MC` or `SHOW_BOTH`); villages are built with whichever set you keep. That includes the smithing table, and since this mod's reads Future MC's smithing recipes as well as every other netherite mod's, keeping it loses you nothing.
 
