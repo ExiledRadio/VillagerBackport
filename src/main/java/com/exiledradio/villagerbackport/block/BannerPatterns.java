@@ -21,9 +21,9 @@ import java.util.List;
  *
  * <p>Which leaves the list identical to 1.14's in everything the loom shows: the same thirty-four
  * choices, in the same order, four to a row and nine rows deep, so the scrollbar behaves the same
- * way too. Only globe is absent, and globe never appeared in this list in 1.14 either - it is
- * reached through a pattern item, and the one that carries it is sold by the wandering trader, which
- * 1.12.2 does not have.
+ * way too. The globe never appears in the free list, in 1.14 or here: it is added to 1.12.2's enum
+ * by {@link com.exiledradio.villagerbackport.flora.GlobePattern} and joins the special patterns,
+ * reached only through its pattern item, which the master cartographer sells.
  *
  * <h2>Index zero</h2>
  * {@code BASE} occupies it, as in 1.14, and doubles as "nothing chosen" - which is what makes zero a
@@ -59,7 +59,15 @@ public final class BannerPatterns {
 
     static {
         List<BannerPattern> order = new ArrayList<BannerPattern>();
-        List<BannerPattern> special = Arrays.asList(SPECIAL);
+        List<BannerPattern> special = new ArrayList<BannerPattern>();
+
+        // The Globe, when there is one, leads the special patterns as in 1.14's enum. Asking for it
+        // here is what guarantees it is in the enum before this list is built - see GlobePattern.
+        BannerPattern globe = com.exiledradio.villagerbackport.flora.GlobePattern.globe();
+        if (globe != null) {
+            special.add(globe);
+        }
+        special.addAll(Arrays.asList(SPECIAL));
 
         order.add(BannerPattern.BASE);
 

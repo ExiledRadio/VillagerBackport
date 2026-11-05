@@ -51,10 +51,10 @@ import java.util.Random;
  * add it, and drops out of its pool when none of them is installed, so the villager simply picks
  * from what is left. Nothing here needs another mod.
  *
- * <p>Where 1.12.2 has neither the item nor a stand-in, the level can come up short: the leather
- * horse armour has no 1.12.2 counterpart, and the cartographer's globe banner pattern is replaced
- * with one of this mod's four banner patterns, since a master with nothing to sell is worse than a
- * near miss.
+ * <p>1.14's own white, black, brown and blue dyes, suspicious stew, leather horse armor and Globe
+ * banner pattern come from this mod's flora package. With it switched off, a shepherd takes 1.12.2's
+ * bone meal and the rest for those colors, the leatherworker's horse armor drops out of its pool,
+ * and the cartographer sells one of this mod's other four patterns in place of the Globe.
  */
 public final class ModernTrades {
 
@@ -183,7 +183,9 @@ public final class ModernTrades {
                 level(buy(Blocks.PUMPKIN, 6, 12), sell(Items.PUMPKIN_PIE, 1, 4, STOCK),
                         sell(Items.APPLE, 1, 4, 16)),
                 level(sell(Items.COOKIE, 3, 18, STOCK), buy(Blocks.MELON_BLOCK, 4, 12)),
-                level(sell(Items.CAKE, 1, 1, STOCK), optionalSell(1, 1, STOCK, "futuremc:suspicious_stew")),
+                level(sell(Items.CAKE, 1, 1, STOCK), stew("night_vision", 100), stew("jump_boost", 160),
+                        stew("weakness", 140), stew("blindness", 120), stew("poison", 280),
+                        stew("saturation", 7)),
                 level(sell(Items.GOLDEN_CARROT, 3, 3, STOCK), sell(Items.SPECKLED_MELON, 4, 3, STOCK)));
 
         table("minecraft:farmer", "fisherman",
@@ -201,8 +203,8 @@ public final class ModernTrades {
                 level(buy(wool(EnumDyeColor.WHITE, 18), 16), buy(wool(EnumDyeColor.BROWN, 18), 16),
                         buy(wool(EnumDyeColor.BLACK, 18), 16), buy(wool(EnumDyeColor.GRAY, 18), 16),
                         sell(Items.SHEARS, 2, 1, STOCK)),
-                concat(level(buy(dye(EnumDyeColor.WHITE, 12), 16), buy(dye(EnumDyeColor.GRAY, 12), 16),
-                                buy(dye(EnumDyeColor.BLACK, 12), 16), buy(dye(EnumDyeColor.LIGHT_BLUE, 12), 16),
+                concat(level(buyDye(EnumDyeColor.WHITE, 12, 16), buy(dye(EnumDyeColor.GRAY, 12), 16),
+                                buyDye(EnumDyeColor.BLACK, 12, 16), buy(dye(EnumDyeColor.LIGHT_BLUE, 12), 16),
                                 buy(dye(EnumDyeColor.LIME, 12), 16)),
                         everyColour(Blocks.WOOL, 1, 1, 16),
                         everyColour(Blocks.CARPET, 1, 4, 16)),
@@ -210,8 +212,8 @@ public final class ModernTrades {
                                 buy(dye(EnumDyeColor.ORANGE, 12), 16), buy(dye(EnumDyeColor.RED, 12), 16),
                                 buy(dye(EnumDyeColor.PINK, 12), 16)),
                         beds()),
-                concat(level(buy(dye(EnumDyeColor.BROWN, 12), 16), buy(dye(EnumDyeColor.PURPLE, 12), 16),
-                                buy(dye(EnumDyeColor.BLUE, 12), 16), buy(dye(EnumDyeColor.GREEN, 12), 16),
+                concat(level(buyDye(EnumDyeColor.BROWN, 12, 16), buy(dye(EnumDyeColor.PURPLE, 12), 16),
+                                buyDye(EnumDyeColor.BLUE, 12, 16), buy(dye(EnumDyeColor.GREEN, 12), 16),
                                 buy(dye(EnumDyeColor.MAGENTA, 12), 16), buy(dye(EnumDyeColor.CYAN, 12), 16)),
                         banners()),
                 level(sell(Items.PAINTING, 2, 3, STOCK)));
@@ -301,7 +303,7 @@ public final class ModernTrades {
                 level(buy(Items.LEATHER, 6, 16), dyed(Items.LEATHER_LEGGINGS, 3), dyed(Items.LEATHER_CHESTPLATE, 7)),
                 level(buy(Items.FLINT, 26, 12), dyed(Items.LEATHER_HELMET, 5), dyed(Items.LEATHER_BOOTS, 4)),
                 level(buy(Items.RABBIT_HIDE, 9, 12), dyed(Items.LEATHER_CHESTPLATE, 7)),
-                level(optionalBuy(4, 12, "oe:turtle_scute")),
+                level(optionalBuy(4, 12, "oe:turtle_scute"), dyedHorseArmor(6)),
                 level(sell(Items.SADDLE, 6, 1, STOCK), dyed(Items.LEATHER_HELMET, 5)));
     }
 
@@ -613,16 +615,25 @@ public final class ModernTrades {
         return optionalSell(36, 1, STOCK, "villagerbackport:bell");
     }
 
-    /** Stands in for the globe banner pattern, which 1.12.2 has no pattern for. */
+    /**
+     * The master cartographer's Globe banner pattern, 8 emeralds. With the flora package switched off
+     * there is no Globe, and one of this mod's four other patterns stands in, so a master is never
+     * left with nothing to sell.
+     */
     private static Trade bannerPattern() {
         return new Trade() {
             @Override
             public boolean available() {
-                return com.exiledradio.villagerbackport.item.ModItems.mojangBannerPattern != null;
+                return com.exiledradio.villagerbackport.flora.FloraContent.globeBannerPattern != null
+                        || com.exiledradio.villagerbackport.item.ModItems.mojangBannerPattern != null;
             }
 
             @Override
             public MerchantRecipe offer(EntityVillager villager, Random random) {
+                Item globe = com.exiledradio.villagerbackport.flora.FloraContent.globeBannerPattern;
+                if (globe != null) {
+                    return recipe(new ItemStack(Items.EMERALD, 8), ItemStack.EMPTY, new ItemStack(globe), STOCK);
+                }
                 Item[] patterns = {com.exiledradio.villagerbackport.item.ModItems.creeperBannerPattern,
                         com.exiledradio.villagerbackport.item.ModItems.skullBannerPattern,
                         com.exiledradio.villagerbackport.item.ModItems.flowerBannerPattern,
@@ -630,6 +641,94 @@ public final class ModernTrades {
                 Item pattern = patterns[random.nextInt(patterns.length)];
                 return pattern == null ? null
                         : recipe(new ItemStack(Items.EMERALD, 8), ItemStack.EMPTY, new ItemStack(pattern), STOCK);
+            }
+        };
+    }
+
+    /**
+     * {@code EmeraldForItemsTrade} for one of the four colors 1.14 gave a dye item of its own: that
+     * item when the flora package is on, 1.12.2's bone meal, ink sac, cocoa beans or lapis otherwise.
+     * Looked up when offered, since the table is built before items exist.
+     */
+    private static Trade buyDye(final EnumDyeColor colour, final int count, final int stock) {
+        return new Fixed() {
+            @Override
+            public MerchantRecipe offer(EntityVillager villager, Random random) {
+                Item modern = modernDye(colour);
+                ItemStack wanted = modern != null ? new ItemStack(modern, count) : dye(colour, count);
+                return recipe(wanted, ItemStack.EMPTY, new ItemStack(Items.EMERALD), stock);
+            }
+        };
+    }
+
+    @Nullable
+    private static Item modernDye(EnumDyeColor colour) {
+        switch (colour) {
+            case WHITE:
+                return com.exiledradio.villagerbackport.flora.FloraContent.whiteDye;
+            case BLACK:
+                return com.exiledradio.villagerbackport.flora.FloraContent.blackDye;
+            case BROWN:
+                return com.exiledradio.villagerbackport.flora.FloraContent.brownDye;
+            case BLUE:
+                return com.exiledradio.villagerbackport.flora.FloraContent.blueDye;
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * {@code SuspiciousStewForEmeraldTrade}: one emerald for a stew with a hidden effect. Each of the
+     * six is its own entry in the expert farmer's pool, with 1.14's trade durations (which are not the
+     * flowers' durations). Falls back to Future MC's stew, plain, when the flora package is off.
+     */
+    private static Trade stew(final String effect, final int ticks) {
+        return new Trade() {
+            @Override
+            public boolean available() {
+                return com.exiledradio.villagerbackport.flora.FloraContent.suspiciousStew != null
+                        || ForgeRegistries.ITEMS.containsKey(new ResourceLocation("futuremc:suspicious_stew"));
+            }
+
+            @Override
+            public MerchantRecipe offer(EntityVillager villager, Random random) {
+                ItemStack stew;
+                if (com.exiledradio.villagerbackport.flora.FloraContent.suspiciousStew != null) {
+                    stew = com.exiledradio.villagerbackport.flora.ItemSuspiciousStew.create(
+                            net.minecraft.potion.Potion.getPotionFromResourceLocation(effect), ticks);
+                } else {
+                    Item theirs = ForgeRegistries.ITEMS.getValue(new ResourceLocation("futuremc:suspicious_stew"));
+                    if (theirs == null) {
+                        return null;
+                    }
+                    stew = new ItemStack(theirs);
+                }
+                return recipe(new ItemStack(Items.EMERALD), ItemStack.EMPTY, stew, STOCK);
+            }
+        };
+    }
+
+    /** {@code DyedArmorForEmeraldsTrade} for leather horse armor, which only the flora package adds. */
+    private static Trade dyedHorseArmor(final int emeralds) {
+        return new Trade() {
+            @Override
+            public boolean available() {
+                return com.exiledradio.villagerbackport.flora.FloraContent.leatherHorseArmor != null;
+            }
+
+            @Override
+            public MerchantRecipe offer(EntityVillager villager, Random random) {
+                List<EnumDyeColor> dyes = new ArrayList<EnumDyeColor>();
+                dyes.add(EnumDyeColor.byMetadata(random.nextInt(16)));
+                if (random.nextFloat() > 0.7F) {
+                    dyes.add(EnumDyeColor.byMetadata(random.nextInt(16)));
+                }
+                if (random.nextFloat() > 0.8F) {
+                    dyes.add(EnumDyeColor.byMetadata(random.nextInt(16)));
+                }
+                ItemStack result = new ItemStack(com.exiledradio.villagerbackport.flora.FloraContent.leatherHorseArmor);
+                com.exiledradio.villagerbackport.flora.ItemLeatherHorseArmor.setColor(result, mix(dyes));
+                return recipe(new ItemStack(Items.EMERALD, emeralds), ItemStack.EMPTY, result, STOCK);
             }
         };
     }

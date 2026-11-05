@@ -42,6 +42,9 @@ public final class NetworkHandler {
         channel.registerMessage(PacketVillagerSleep.Handler.class, PacketVillagerSleep.class, 4, Side.CLIENT);
         channel.registerMessage(PacketVillageOutline.Handler.class, PacketVillageOutline.class, 5, Side.CLIENT);
         channel.registerMessage(PacketVillagerShake.Handler.class, PacketVillagerShake.class, 6, Side.CLIENT);
+        // flora: which mooshrooms are brown. See flora.Mooshrooms.
+        channel.registerMessage(com.exiledradio.villagerbackport.flora.PacketMooshroomType.Handler.class,
+                com.exiledradio.villagerbackport.flora.PacketMooshroomType.class, 19, Side.CLIENT);
     }
 
     /**
@@ -149,5 +152,13 @@ public final class NetworkHandler {
                 new PacketVillagerLevel(villager.getEntityId(), level, careerId, type),
                 new NetworkRegistry.TargetPoint(villager.world.provider.getDimension(),
                         villager.posX, villager.posY, villager.posZ, range));
+    }
+
+    /** Sends one player a flora packet. Does nothing before the channel exists. */
+    public static void sendFlora(net.minecraftforge.fml.common.network.simpleimpl.IMessage message,
+                                 EntityPlayerMP player) {
+        if (channel != null) {
+            channel.sendTo(message, player);
+        }
     }
 }

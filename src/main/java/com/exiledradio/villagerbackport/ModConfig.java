@@ -1314,9 +1314,50 @@ public final class ModConfig {
     /** Filled in by its 1.14 completion stream (docs/V14_COMPLETION_PLAN.md). */
     public static final class Flora {
 
-        @Config.Comment("Whether this mod adds 1.14's flowers, dyes, suspicious stew and leather horse armor.")
+        @Config.Comment({
+                "Whether this mod adds 1.14's flowers, dyes, suspicious stew and leather horse armor.",
+                "",
+                "Covers the cornflower, lily of the valley and wither rose (and their flower pots),",
+                "white, black, brown and blue dye, suspicious stew, brown mooshrooms, leather horse",
+                "armor, the Globe banner pattern and dyeing sign text. Turning it off in a world that",
+                "has any of them deletes them.",
+                "",
+                "With Future MC installed, which of the two mods' flowers, dyes and stew stay visible",
+                "follows compat.futureMcDuplicates, as the workstations do."
+        })
         @Config.RequiresMcRestart
         public boolean enabled = true;
+
+        @Config.Comment({
+                "Generate cornflowers in plains, sunflower plains and flower forests, and lilies of",
+                "the valley in forests, birch forests, dark forests and flower forests, as 1.14 does.",
+                "Modded biomes join in by their biome dictionary types: plains that are not snowy or",
+                "savanna get cornflowers, forests that are not coniferous, snowy or jungle get lilies.",
+                "",
+                "Also decides whether bone meal on grass can grow them (cornflowers in plains,",
+                "sunflower plains and flower forests, lilies only in flower forests)."
+        })
+        @Config.RequiresMcRestart
+        public boolean generateFlowers = true;
+
+        @Config.Comment({
+                "Brown mooshrooms. Lightning turns a red mooshroom brown and a brown one red. Feed a",
+                "brown one a small flower, then milk it with a bowl, for that flower's suspicious stew.",
+                "Sheared, it drops brown mushrooms. Red mooshrooms are unchanged."
+        })
+        public boolean brownMooshrooms = true;
+
+        @Config.Comment({
+                "Right-clicking a sign with any dye recolors its text, as in 1.14. The color is kept",
+                "with the sign and drawn on every client that has this mod."
+        })
+        public boolean dyeableSigns = true;
+
+        @Config.Comment({
+                "A mob, player or villager the Wither kills leaves a wither rose: planted where it",
+                "died if the block is free and mobGriefing allows it, dropped as an item otherwise."
+        })
+        public boolean witherKillsPlantRoses = true;
     }
 
     /** Filled in by its 1.14 completion stream (docs/V14_COMPLETION_PLAN.md). */

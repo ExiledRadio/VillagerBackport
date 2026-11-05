@@ -1,0 +1,6 @@
+{
+  "parent": "block/cross",
+  "textures": {
+    "cross": "villagerbackport:blocks/wither_rose"
+  }
+}

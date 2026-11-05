@@ -208,6 +208,14 @@ public final class Compostables {
         }
     }
 
+    /**
+     * Adds an item another part of this mod registers, once it exists - the flora package's flowers,
+     * for one. The table above is built when this class loads, which may be before them.
+     */
+    public static void addItem(float chance, Item item) {
+        add(chance, item, ANY_META);
+    }
+
     private static void add(float chance, Item item) {
         add(chance, item, ANY_META);
     }
