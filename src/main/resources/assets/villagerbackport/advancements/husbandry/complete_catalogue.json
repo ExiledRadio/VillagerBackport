@@ -1,0 +1,62 @@
+{
+  "conditions": [
+    {
+      "type": "villagerbackport:cats"
+    }
+  ],
+  "parent": "minecraft:husbandry/tame_an_animal",
+  "display": {
+    "icon": {
+      "item": "minecraft:fish",
+      "data": 0
+    },
+    "title": {
+      "translate": "advancements.villagerbackport.complete_catalogue.title"
+    },
+    "description": {
+      "translate": "advancements.villagerbackport.complete_catalogue.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "rewards": {
+    "experience": 50
+  },
+  "criteria": {
+    "tabby": {
+      "trigger": "minecraft:impossible"
+    },
+    "black": {
+      "trigger": "minecraft:impossible"
+    },
+    "red": {
+      "trigger": "minecraft:impossible"
+    },
+    "siamese": {
+      "trigger": "minecraft:impossible"
+    },
+    "british_shorthair": {
+      "trigger": "minecraft:impossible"
+    },
+    "calico": {
+      "trigger": "minecraft:impossible"
+    },
+    "persian": {
+      "trigger": "minecraft:impossible"
+    },
+    "ragdoll": {
+      "trigger": "minecraft:impossible"
+    },
+    "white": {
+      "trigger": "minecraft:impossible"
+    },
+    "jellie": {
+      "trigger": "minecraft:impossible"
+    },
+    "all_black": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

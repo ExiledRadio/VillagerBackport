@@ -438,6 +438,10 @@ public class ModernVillagePiece extends StructureComponent {
             horse.readFromNBT(data);
             return horse;
         }
+        if ("cat".equals(kind)) {
+            // The village's own cat (1.14's cat_* pieces), or nothing with cats off.
+            return com.exiledradio.villagerbackport.cat.EntityCat.fromTemplate(world, tag.getInteger("variant"));
+        }
         if ("armor_stand".equals(kind)) {
             EntityArmorStand stand = new EntityArmorStand(world);
             NBTTagList armour = tag.getTagList("armor", 8);

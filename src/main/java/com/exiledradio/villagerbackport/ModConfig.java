@@ -1285,6 +1285,30 @@ public final class ModConfig {
         @Config.Comment("Whether this mod adds cats, and 1.14's ocelots.")
         @Config.RequiresMcRestart
         public boolean enabled = true;
+
+        @Config.Comment({"Stray cats turn up in villages, as in 1.14: about once a minute, near a random player,",
+                "where a village has more than four occupied beds within 48 blocks and fewer than five cats."})
+        public boolean spawnInVillages = true;
+
+        @Config.Comment("A black cat turns up at a witch hut that has none, as in 1.14.")
+        public boolean spawnAtWitchHuts = true;
+
+        @Config.Comment({"Ocelots behave as in 1.14: they can no longer be tamed, and feeding one raw cod or salmon",
+                "earns its trust instead, so it stops running from players. Off leaves 1.12.2's ocelots alone."})
+        @Config.RequiresMcRestart
+        public boolean modernOcelots = true;
+
+        @Config.Comment({"Tamed ocelots from before this mod became cats when they load, keeping their owner, name and",
+                "coat (tuxedo, red and Siamese). This is how 1.14 itself upgraded old worlds."})
+        public boolean convertTamedOcelots = true;
+
+        @Config.Comment("Creepers run from cats, as they do from ocelots.")
+        @Config.RequiresMcRestart
+        public boolean creepersFearCats = true;
+
+        @Config.Comment({"Phantoms break off an attack when a cat is within 16 blocks, and the cat hisses. Works with",
+                "any mod's phantom (anything registered as 'phantom'); 1.12.2 itself has none."})
+        public boolean phantomsFearCats = true;
     }
 
     /** Filled in by its 1.14 completion stream (docs/V14_COMPLETION_PLAN.md). */

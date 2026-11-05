@@ -156,6 +156,8 @@ public final class VillagerBackport {
         event.registerServerCommand(new com.exiledradio.villagerbackport.raid.RaidCommand());
         // Registered after vanilla's, so it takes the /locate name over.
         event.registerServerCommand(new com.exiledradio.villagerbackport.village.modern.LocateCommand());
+        // Headless checks for cats; only in the development workspace.
+        com.exiledradio.villagerbackport.cat.CatTestCommand.registerIfDev(event);
     }
 
 }

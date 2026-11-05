@@ -124,8 +124,12 @@ def convert_entity(e):
         for it in n.get("ArmorItems", []):
             armour.append(item_id(it["id"]) if it and "id" in it else "")
         out["armor"] = TagList(STRING, armour)
+    elif eid == "minecraft:cat":
+        # The mod's own cat (cat/EntityCat), spawned with the template's coat. Village cats are
+        # stray and persistent, as 1.14's are.
+        out["kind"] = "cat"
+        out["variant"] = Tag(INT, n.get("CatType", Tag(INT, 0)).value)
     else:
-        # Cats: 1.12.2's only cat is a tamed ocelot, and a wild ocelot is not a village cat.
         skipped_entities[eid] += 1
         return None
     return out

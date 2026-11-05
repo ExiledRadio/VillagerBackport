@@ -1193,5 +1193,109 @@
       }
     ],
     "subtitle": "subtitles.villagerbackport.item.crossbow.charge"
+  },
+  "entity.cat.beg_for_food": {
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/cat/beg1",
+        "volume": 0.7
+      },
+      {
+        "name": "villagerbackport:mob/cat/beg2",
+        "volume": 0.7
+      },
+      {
+        "name": "villagerbackport:mob/cat/beg3",
+        "volume": 0.7
+      }
+    ]
+  },
+  "entity.cat.eat": {
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/cat/eat1",
+        "volume": 1.0
+      },
+      {
+        "name": "villagerbackport:mob/cat/eat2",
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.cat.stray_ambient": {
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/cat/stray/idle1",
+        "volume": 0.35
+      },
+      {
+        "name": "villagerbackport:mob/cat/stray/idle2",
+        "volume": 0.35
+      },
+      {
+        "name": "villagerbackport:mob/cat/stray/idle3",
+        "volume": 0.35
+      },
+      {
+        "name": "villagerbackport:mob/cat/stray/idle4",
+        "volume": 0.35
+      }
+    ],
+    "subtitle": "subtitles.entity.cat.ambient"
+  },
+  "entity.ocelot.ambient": {
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/cat/ocelot/idle1",
+        "volume": 0.3
+      },
+      {
+        "name": "villagerbackport:mob/cat/ocelot/idle2",
+        "volume": 0.3
+      },
+      {
+        "name": "villagerbackport:mob/cat/ocelot/idle3",
+        "volume": 0.35
+      },
+      {
+        "name": "villagerbackport:mob/cat/ocelot/idle4",
+        "volume": 0.45
+      }
+    ],
+    "subtitle": "subtitles.entity.cat.ambient"
+  },
+  "entity.ocelot.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/cat/hitt1",
+        "volume": 0.45
+      },
+      {
+        "name": "minecraft:mob/cat/hitt2",
+        "volume": 0.45
+      },
+      {
+        "name": "minecraft:mob/cat/hitt3",
+        "volume": 0.45
+      }
+    ],
+    "subtitle": "subtitles.entity.cat.hurt"
+  },
+  "entity.ocelot.death": {
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/cat/ocelot/death1",
+        "volume": 0.45
+      },
+      {
+        "name": "villagerbackport:mob/cat/ocelot/death2",
+        "volume": 0.45
+      },
+      {
+        "name": "villagerbackport:mob/cat/ocelot/death3",
+        "volume": 0.45
+      }
+    ],
+    "subtitle": "subtitles.entity.cat.death"
   }
 }
