@@ -43,8 +43,9 @@ import java.util.Set;
  * <h2>How much</h2>
  * 1.14 places flowers as scattered patches; this does the same, after the chunk's own decoration, as
  * a world generator - so it runs under any chunk generator, OTG and RTG included, because Forge calls
- * world generators for every one of them. A patch is up to 32 tries within seven blocks of a point,
- * and each try plants only where the flower could stand anyway: on grass or dirt, in an empty block.
+ * world generators for every one of them. A patch is placed as 1.12.2's own flower patches are
+ * (64 tries around a random height, see {@link #patch}), and each try plants only where the flower
+ * could stand anyway: on grass or dirt, in an empty block.
  * Patches are centered in the middle of the four chunks being populated so no try reaches a chunk
  * that might not be loaded.
  *
@@ -57,13 +58,28 @@ import java.util.Set;
 @Mod.EventBusSubscriber(modid = VillagerBackport.MOD_ID)
 public final class FloraWorldGen implements IWorldGenerator {
 
-    /** A patch's tries, and the chance per chunk of one, for each kind of biome. */
-    private static final int TRIES = 32;
-    private static final int SPREAD = 7;
+    /** A patch's tries and spread, as 1.12.2's {@code WorldGenFlowers}. */
+    private static final int TRIES = 64;
+    private static final int SPREAD = 8;
 
-    private static final float CORNFLOWER_PLAINS = 0.5F;
-    private static final float LILY_FOREST = 0.33F;
-    private static final float FLOWER_FOREST = 1.0F;
+    /**
+     * Patches per chunk, as the 1.12.2 decorator's {@code flowersPerChunk} for these biomes, and the
+     * share of them that are one of these flowers.
+     *
+     * <p>1.14 plains pick a cornflower for about one patch in six (two in three are poppy, bluet, oxeye
+     * daisy or cornflower), which is also its 20 in 122 in the plains' bone meal list. Forests have two
+     * patches, flower forests a hundred spread over eleven flowers.
+     */
+    private static final int PLAINS_PATCHES = 4;
+    private static final int FOREST_PATCHES = 2;
+    private static final int FLOWER_FOREST_PATCHES = 100;
+    private static final float PLAINS_SHARE = 1.0F / 6.0F;
+    private static final float FOREST_SHARE = 1.0F / 6.0F;
+    private static final float FLOWER_FOREST_SHARE = 1.0F / 11.0F;
+
+    private static final float CORNFLOWER_PLAINS = PLAINS_PATCHES * PLAINS_SHARE;
+    private static final float LILY_FOREST = FOREST_PATCHES * FOREST_SHARE;
+    private static final float FLOWER_FOREST = FLOWER_FOREST_PATCHES * FLOWER_FOREST_SHARE;
 
     private static final Map<Biome, float[]> CHANCES = new HashMap<Biome, float[]>();
 
@@ -97,23 +113,42 @@ public final class FloraWorldGen implements IWorldGenerator {
         Biome biome = world.getBiome(new BlockPos(centerX + 8, 0, centerZ + 8));
         float[] chances = chances(biome);
 
-        if (chances[0] > 0.0F && random.nextFloat() < chances[0]) {
-            patch(world, random, centerX, centerZ, FloraContent.cornflower);
+        patches(world, random, centerX, centerZ, FloraContent.cornflower, chances[0]);
+        patches(world, random, centerX, centerZ, FloraContent.lilyOfTheValley, chances[1]);
+    }
+
+    /** As many patches as {@code expected} on average: its whole part, and its fraction as a chance. */
+    private static void patches(World world, Random random, int centerX, int centerZ, Block flower, float expected) {
+        int count = (int) expected;
+        if (random.nextFloat() < expected - count) {
+            count++;
         }
-        if (chances[1] > 0.0F && random.nextFloat() < chances[1]) {
-            patch(world, random, centerX, centerZ, FloraContent.lilyOfTheValley);
+        for (int i = 0; i < count; i++) {
+            patch(world, random, centerX, centerZ, flower);
         }
     }
 
+    /**
+     * One patch, placed exactly as 1.12.2's decorator places a flower patch: from a random height
+     * between the bottom of the world and 32 above the ground, each try moving at most three blocks up
+     * or down. Most patches start too far from the ground to plant anything, and that is what keeps
+     * vanilla's flowers as sparse as they are; dropping every try onto the surface made these flowers
+     * several times as common as the rest.
+     */
     private static void patch(World world, Random random, int centerX, int centerZ, Block flower) {
         int x = centerX + random.nextInt(16);
         int z = centerZ + random.nextInt(16);
+        int top = world.getHeight(new BlockPos(x, 0, z)).getY() + 32;
+        if (top <= 0) {
+            return;
+        }
+        BlockPos start = new BlockPos(x, random.nextInt(top), z);
 
         for (int i = 0; i < TRIES; i++) {
-            int px = x + random.nextInt(SPREAD + 1) - random.nextInt(SPREAD + 1);
-            int pz = z + random.nextInt(SPREAD + 1) - random.nextInt(SPREAD + 1);
-            BlockPos pos = world.getTopSolidOrLiquidBlock(new BlockPos(px, 0, pz));
-            if (world.isAirBlock(pos) && ((BlockFloraFlower) flower).canBlockStay(world, pos, flower.getDefaultState())) {
+            BlockPos pos = start.add(random.nextInt(SPREAD) - random.nextInt(SPREAD),
+                    random.nextInt(4) - random.nextInt(4), random.nextInt(SPREAD) - random.nextInt(SPREAD));
+            if (world.isAirBlock(pos) && pos.getY() < 255
+                    && ((BlockFloraFlower) flower).canBlockStay(world, pos, flower.getDefaultState())) {
                 world.setBlockState(pos, flower.getDefaultState(), 2);
             }
         }
