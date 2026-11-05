@@ -1277,6 +1277,64 @@ public final class ModConfig {
         @Config.Comment("Whether this mod adds the wandering trader and trader llamas.")
         @Config.RequiresMcRestart
         public boolean enabled = true;
+
+        @Config.Comment({
+                "Whether a wandering trader turns up on its own, near a random player in the overworld.",
+                "Off leaves spawn eggs and /wanderingtrader spawn as the only way to get one. The",
+                "doTraderSpawning game rule (added to every world, as current Java has it) does the same per",
+                "world, and doMobSpawning off stops it too."
+        })
+        public boolean naturalSpawning = true;
+
+        @Config.Comment({
+                "Ticks between spawn attempts. 1.14's value is 24000, one in-game day. The countdown is",
+                "kept per world and carries on across restarts."
+        })
+        @Config.RangeInt(min = 1200, max = 1200000)
+        public int spawnDelay = 24000;
+
+        @Config.Comment({
+                "The chance, in percent, of the first attempt after a trader has spawned. Each attempt that",
+                "fails raises it by spawnChanceStep, up to maxSpawnChance. 1.14: 25, then 50, then 75.",
+                "Every attempt then has a further one in ten roll before a trader really appears, so the",
+                "overall chances are 2.5%, 5% and 7.5% - as in 1.14."
+        })
+        @Config.RangeInt(min = 0, max = 100)
+        public int minSpawnChance = 25;
+
+        @Config.Comment("How much each failed attempt raises the chance by, in percent. 1.14's value is 25.")
+        @Config.RangeInt(min = 0, max = 100)
+        public int spawnChanceStep = 25;
+
+        @Config.Comment("The most the chance can climb to, in percent. 1.14's value is 75.")
+        @Config.RangeInt(min = 0, max = 100)
+        public int maxSpawnChance = 75;
+
+        @Config.Comment({
+                "How far from the chosen player, or from the bell it prefers, a trader may appear, in",
+                "blocks. Also how far from the player a bell is looked for. 1.14's value is 48."
+        })
+        @Config.RangeInt(min = 8, max = 128)
+        public int spawnRadius = 48;
+
+        @Config.Comment({
+                "Ticks a naturally spawned trader stays before it leaves. 1.14's value is 48000 (40",
+                "minutes). The clock only runs while the trader is loaded and nobody is trading with it.",
+                "Traders from spawn eggs and commands never leave. 0 means natural ones never leave either."
+        })
+        @Config.RangeInt(min = 0, max = 1200000)
+        public int despawnTicks = 48000;
+
+        @Config.Comment("Trader llamas leashed to each naturally spawned trader. 1.14's value is 2.")
+        @Config.RangeInt(min = 0, max = 4)
+        public int llamas = 2;
+
+        @Config.Comment({
+                "Whether a new trader waits until the last one has gone. 1.14 only remembers the last",
+                "trader; with this on, another is not sent while that one is still loaded, or while it",
+                "could still be somewhere in unloaded chunks (less than despawnTicks since it arrived)."
+        })
+        public boolean oneAtATime = true;
     }
 
     /** Filled in by its 1.14 completion stream (docs/V14_COMPLETION_PLAN.md). */

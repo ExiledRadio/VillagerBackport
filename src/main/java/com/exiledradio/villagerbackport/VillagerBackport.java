@@ -154,6 +154,9 @@ public final class VillagerBackport {
         event.registerServerCommand(new com.exiledradio.villagerbackport.trade.LibrarianCommand());
         event.registerServerCommand(new com.exiledradio.villagerbackport.trade.DiscountCommand());
         event.registerServerCommand(new com.exiledradio.villagerbackport.raid.RaidCommand());
+        if (com.exiledradio.villagerbackport.trader.TraderContent.enabled()) {
+            event.registerServerCommand(new com.exiledradio.villagerbackport.trader.TraderCommand());
+        }
         // Registered after vanilla's, so it takes the /locate name over.
         event.registerServerCommand(new com.exiledradio.villagerbackport.village.modern.LocateCommand());
     }

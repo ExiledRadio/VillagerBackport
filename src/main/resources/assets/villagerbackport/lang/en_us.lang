@@ -134,3 +134,16 @@ advancements.villagerbackport.arbalistic.description=Kill five unique mobs with 
 # --- campfire ---
 tile.villagerbackport.campfire.name=Campfire
 subtitles.villagerbackport.block.campfire.crackle=Campfire crackles
+# --- trader ---
+entity.villagerbackport.wandering_trader.name=Wandering Trader
+entity.villagerbackport.trader_llama.name=Trader Llama
+subtitles.villagerbackport.entity.wandering_trader.ambient=Wandering Trader mumbles
+subtitles.villagerbackport.entity.wandering_trader.death=Wandering Trader dies
+subtitles.villagerbackport.entity.wandering_trader.hurt=Wandering Trader hurts
+subtitles.villagerbackport.entity.wandering_trader.no=Wandering Trader disagrees
+subtitles.villagerbackport.entity.wandering_trader.yes=Wandering Trader agrees
+subtitles.villagerbackport.entity.wandering_trader.trade=Wandering Trader trades
+subtitles.villagerbackport.entity.wandering_trader.drink_milk=Wandering Trader drinks milk
+subtitles.villagerbackport.entity.wandering_trader.drink_potion=Wandering Trader drinks potion
+subtitles.villagerbackport.entity.wandering_trader.disappeared=Wandering Trader disappears
+subtitles.villagerbackport.entity.wandering_trader.reappeared=Wandering Trader appears
