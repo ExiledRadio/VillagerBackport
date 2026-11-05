@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=bottom": {
+      "model": "villagerbackport:stone_slab"
+    },
+    "half=top": {
+      "model": "villagerbackport:stone_slab_top"
+    }
+  }
+}

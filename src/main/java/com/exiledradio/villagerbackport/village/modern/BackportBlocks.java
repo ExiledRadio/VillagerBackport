@@ -18,14 +18,17 @@ import java.util.Map;
  * <p>The structure files carry each block's 1.14 name beside the stand-in 1.12.2 block the converter
  * chose (stripped logs as logs, blue ice as packed ice, smooth sandstone as cut sandstone). When Future
  * MC, Oceanic Expanse, Quark or Farmer's Future Delight is installed and has the 1.14 block, that
- * block is placed instead. With none of them, or with {@code villages.backportBlocks} off, the
- * stand-ins are placed as before.
+ * block is placed instead. With none of them, this mod's own 1.14 building blocks (slabs, stairs,
+ * walls, smooth blocks and wood signs, when {@code building.enabled} is on) are. With
+ * {@code villages.backportBlocks} off, or a block nobody provides, the stand-ins are placed as before.
  *
  * <p>A backport block is given the 1.14 properties it understands, then the converted 1.12.2 ones (a
  * button's {@code facing} is only right in the converted form), then any fixed ones the table names.
  * A property or value the block does not have is skipped, so one table entry fits several mods.
  */
 final class BackportBlocks {
+
+    private static final String VB = "villagerbackport:";
 
     private static final String[] WOODS = {"oak", "spruce", "birch", "jungle", "acacia", "dark_oak"};
 
@@ -45,31 +48,51 @@ final class BackportBlocks {
                 add(wood + "_trapdoor", "futuremc:" + wood + "_trapdoor", "quark:" + wood + "_trapdoor");
                 add(wood + "_button", "quark:" + wood + "_button");
                 add(wood + "_pressure_plate", "quark:" + wood + "_pressure_plate");
-                add(wood + "_wall_sign", "futuremc:" + wood + "_wall_sign");
-                add(wood + "_sign", "futuremc:" + wood + "_standing_sign");
+                add(wood + "_wall_sign", "futuremc:" + wood + "_wall_sign", VB + wood + "_wall_sign");
+                add(wood + "_sign", "futuremc:" + wood + "_standing_sign", VB + wood + "_sign");
             }
         }
 
         add("blue_ice", "futuremc:blue_ice", "oe:blue_ice");
-        add("smooth_stone", "futuremc:smooth_stone");
+        add("smooth_stone", "futuremc:smooth_stone", VB + "smooth_stone");
 
         TABLE.put("smooth_sandstone", Arrays.asList(new Option("futuremc:smooth_sandstone"),
-                new Option("quark:sandstone_new", "variant", "sandstone_smooth")));
-        add("smooth_sandstone_slab", "futuremc:smooth_sandstone_slab", "quark:sandstone_smooth_slab");
-        add("smooth_sandstone_slab#double", "futuremc:smooth_sandstone_double_slab", "quark:sandstone_smooth_slab_double");
+                new Option("quark:sandstone_new", "variant", "sandstone_smooth"), new Option(VB + "smooth_sandstone")));
+        add("smooth_sandstone_slab", "futuremc:smooth_sandstone_slab", "quark:sandstone_smooth_slab",
+                VB + "smooth_sandstone_slab");
+        add("smooth_sandstone_slab#double", "futuremc:smooth_sandstone_double_slab", "quark:sandstone_smooth_slab_double",
+                VB + "smooth_sandstone_double_slab");
+        add("smooth_sandstone_stairs", "quark:sandstone_smooth_stairs", VB + "smooth_sandstone_stairs");
 
         for (String stone : new String[] {"andesite", "diorite", "granite"}) {
-            add(stone + "_slab", "futuremc:" + stone + "_slab", "quark:stone_" + stone + "_slab");
-            add(stone + "_slab#double", "futuremc:" + stone + "_double_slab", "quark:stone_" + stone + "_slab_double");
-            add(stone + "_stairs", "quark:stone_" + stone + "_stairs");
-            add(stone + "_wall", "futuremc:" + stone + "_wall", "quark:stone_" + stone + "_wall");
+            add(stone + "_slab", "futuremc:" + stone + "_slab", "quark:stone_" + stone + "_slab", VB + stone + "_slab");
+            add(stone + "_slab#double", "futuremc:" + stone + "_double_slab", "quark:stone_" + stone + "_slab_double",
+                    VB + stone + "_double_slab");
+            add(stone + "_stairs", "quark:stone_" + stone + "_stairs", VB + stone + "_stairs");
+            add(stone + "_wall", "futuremc:" + stone + "_wall", "quark:stone_" + stone + "_wall", VB + stone + "_wall");
         }
-        add("sandstone_wall", "futuremc:sandstone_wall", "quark:sandstone_wall");
+        add("sandstone_wall", "futuremc:sandstone_wall", "quark:sandstone_wall", VB + "sandstone_wall");
 
         // Pillager outposts' mossy cobblestone, which 1.12.2 has no stairs or slab for.
-        add("mossy_cobblestone_stairs", "quark:cobblestone_mossy_stairs");
-        add("mossy_cobblestone_slab", "quark:cobblestone_mossy_slab");
-        add("mossy_cobblestone_slab#double", "quark:cobblestone_mossy_slab_double");
+        add("mossy_cobblestone_stairs", "quark:cobblestone_mossy_stairs", VB + "mossy_cobblestone_stairs");
+        add("mossy_cobblestone_slab", "quark:cobblestone_mossy_slab", VB + "mossy_cobblestone_slab");
+        add("mossy_cobblestone_slab#double", "quark:cobblestone_mossy_slab_double", VB + "mossy_cobblestone_double_slab");
+
+        // This mod's own building blocks (building.enabled) come last, so a pack that already has
+        // another mod's keeps building with those, as it did before this mod had any.
+        for (String name : new String[] {"stone", "polished_andesite", "polished_diorite", "polished_granite",
+                "mossy_stone_brick", "smooth_red_sandstone", "smooth_quartz", "red_nether_brick", "end_stone_brick",
+                "cut_sandstone", "cut_red_sandstone"}) {
+            addIfAbsent(name + "_slab", VB + name + "_slab");
+            addIfAbsent(name + "_slab#double", VB + name + "_double_slab");
+            addIfAbsent(name + "_stairs", VB + name + "_stairs");
+        }
+        for (String name : new String[] {"brick", "prismarine", "stone_brick", "mossy_stone_brick", "red_sandstone",
+                "nether_brick", "red_nether_brick", "end_stone_brick"}) {
+            addIfAbsent(name + "_wall", VB + name + "_wall");
+        }
+        addIfAbsent("smooth_red_sandstone", VB + "smooth_red_sandstone");
+        addIfAbsent("smooth_quartz", VB + "smooth_quartz");
 
         // Oceanic Expanse names the count and the water differently.
         TABLE.put("sea_pickle", Collections.singletonList(new Option("oe:sea_pickle") {
@@ -122,6 +145,13 @@ final class BackportBlocks {
             options.add(new Option(name));
         }
         TABLE.put(source, options);
+    }
+
+    /** Adds a name only if no line above has it, for the long tail no 1.14 village uses today. */
+    private static void addIfAbsent(String source, String name) {
+        if (!TABLE.containsKey(source)) {
+            add(source, name);
+        }
     }
 
     private static class Option {
