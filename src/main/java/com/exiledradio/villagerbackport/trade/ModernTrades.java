@@ -192,7 +192,7 @@ public final class ModernTrades {
                         optionalSell(3, 1, 16, "futuremc:cod_bucket")),
                 level(buy(stack(Items.FISH, 15, 0), 16),
                         convert(stack(Items.FISH, 6, 1), 1, stack(Items.COOKED_FISH, 6, 1), 16),
-                        optionalSell(2, 1, STOCK, "futuremc:campfire")),
+                        optionalSell(2, 1, STOCK, "villagerbackport:campfire", "futuremc:campfire")),
                 level(buy(stack(Items.FISH, 13, 1), 16), enchanted(Items.FISHING_ROD, 3)),
                 level(buy(stack(Items.FISH, 6, 2), 12)),
                 level(buy(stack(Items.FISH, 4, 3), 12), boatForVillage()));

@@ -1,5 +1,6 @@
 {
   "conditions": {
-    "crossbow": "com.exiledradio.villagerbackport.crossbow.CrossbowCondition"
+    "crossbow": "com.exiledradio.villagerbackport.crossbow.CrossbowCondition",
+    "campfire": "com.exiledradio.villagerbackport.campfire.CampfireCondition"
   }
 }

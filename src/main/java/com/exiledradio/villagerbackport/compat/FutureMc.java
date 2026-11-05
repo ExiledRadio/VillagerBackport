@@ -88,6 +88,7 @@ public final class FutureMc {
             {"stonecutter", "mason"},
             {"bell", null},
             {"lantern", null},
+            {"campfire", null},
     };
 
     /** Hidden block to the visible one standing in for it. Built once the registries are full. */

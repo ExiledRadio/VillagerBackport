@@ -42,6 +42,14 @@ public final class NetworkHandler {
         channel.registerMessage(PacketVillagerSleep.Handler.class, PacketVillagerSleep.class, 4, Side.CLIENT);
         channel.registerMessage(PacketVillageOutline.Handler.class, PacketVillageOutline.class, 5, Side.CLIENT);
         channel.registerMessage(PacketVillagerShake.Handler.class, PacketVillagerShake.class, 6, Side.CLIENT);
+        // 1.14 completion streams own ids 10-19 (docs/V14_COMPLETION_PLAN.md).
+        channel.registerMessage(com.exiledradio.villagerbackport.campfire.PacketCampfireDowse.Handler.class,
+                com.exiledradio.villagerbackport.campfire.PacketCampfireDowse.class, 18, Side.CLIENT);
+    }
+
+    /** @return the mod's channel, for packages that send their own messages; null before preInit */
+    public static SimpleNetworkWrapper channel() {
+        return channel;
     }
 
     /**

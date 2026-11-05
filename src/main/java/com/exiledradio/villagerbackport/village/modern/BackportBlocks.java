@@ -29,6 +29,19 @@ final class BackportBlocks {
 
     private static final String[] WOODS = {"oak", "spruce", "birch", "jungle", "acacia", "dark_oak"};
 
+    /**
+     * 1.14 blocks this mod adds itself, placed whatever {@code villages.backportBlocks} says: that
+     * setting is about borrowing other mods' blocks, and these are not borrowed. Each still goes
+     * through {@code FutureMc.preferred} afterwards, so with Future MC's kept, its twin is placed.
+     * A block switched off in this mod's config is not registered, and the converted names - Future
+     * MC's, then air - are used as before.
+     */
+    private static final Map<String, String> OWN = new HashMap<String, String>();
+
+    static {
+        OWN.put("campfire", "villagerbackport:campfire");
+    }
+
     /** 1.14 block name, with {@code #double} for a double slab, to the blocks to try in order. */
     private static final Map<String, List<Option>> TABLE = new HashMap<String, List<Option>>();
 
@@ -92,6 +105,18 @@ final class BackportBlocks {
      */
     @Nullable
     static IBlockState resolve(String source, NBTTagCompound sourceProps, NBTTagCompound props) {
+        if (source.startsWith("minecraft:")) {
+            String own = OWN.get(source.substring("minecraft:".length()));
+            if (own != null) {
+                NBTTagCompound merged = new NBTTagCompound();
+                merged.merge(sourceProps);
+                merged.merge(props);
+                IBlockState state = ModernTemplate.resolve(new String[] {own}, merged);
+                if (state != null) {
+                    return state;
+                }
+            }
+        }
         if (!ModConfig.villages.backportBlocks || !source.startsWith("minecraft:")) {
             return null;
         }

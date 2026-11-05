@@ -1193,5 +1193,17 @@
       }
     ],
     "subtitle": "subtitles.villagerbackport.item.crossbow.charge"
+  },
+  "block.campfire.crackle": {
+    "category": "block",
+    "sounds": [
+      "villagerbackport:block/campfire/crackle1",
+      "villagerbackport:block/campfire/crackle2",
+      "villagerbackport:block/campfire/crackle3",
+      "villagerbackport:block/campfire/crackle4",
+      "villagerbackport:block/campfire/crackle5",
+      "villagerbackport:block/campfire/crackle6"
+    ],
+    "subtitle": "subtitles.villagerbackport.block.campfire.crackle"
   }
 }

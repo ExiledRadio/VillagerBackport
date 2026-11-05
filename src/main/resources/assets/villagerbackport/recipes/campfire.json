@@ -1,0 +1,30 @@
+{
+  "conditions": [
+    {
+      "type": "villagerbackport:campfire"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " S ",
+    "SCS",
+    "LLL"
+  ],
+  "key": {
+    "L": {
+      "type": "forge:ore_dict",
+      "ore": "logWood"
+    },
+    "S": {
+      "type": "forge:ore_dict",
+      "ore": "stickWood"
+    },
+    "C": {
+      "item": "minecraft:coal",
+      "data": 32767
+    }
+  },
+  "result": {
+    "item": "villagerbackport:campfire"
+  }
+}

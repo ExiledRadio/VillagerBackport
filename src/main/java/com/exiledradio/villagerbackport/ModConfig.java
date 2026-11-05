@@ -1306,9 +1306,37 @@ public final class ModConfig {
     /** Filled in by its 1.14 completion stream (docs/V14_COMPLETION_PLAN.md). */
     public static final class Campfire {
 
-        @Config.Comment("Whether this mod adds the campfire.")
+        @Config.Comment({
+                "Whether this mod adds the campfire.",
+                "When false it is not registered: villages place Future MC's campfire if it is installed,",
+                "and leave the spot empty if not."
+        })
         @Config.RequiresMcRestart
         public boolean enabled = true;
+
+        @Config.Comment({
+                "How long one item takes to cook, in ticks. 1.14's is 600 (30 seconds), three times",
+                "a furnace."
+        })
+        @Config.RangeInt(min = 1, max = 72000)
+        public int cookTime = 600;
+
+        @Config.Comment({
+                "What the campfire cooks. By default: every furnace recipe whose input and output",
+                "are both food, which is 1.14's own list (raw meat, raw fish, potatoes) plus any",
+                "mod's raw foods.",
+                "",
+                "Add an item the default leaves out as 'modid:item' (cooked as the furnace would)",
+                "or 'modid:item=modid:result' (cooked into that). Add ':meta' after either to pick",
+                "one variant, e.g. 'minecraft:fish:1=minecraft:cooked_fish:1'."
+        })
+        public String[] extraFoods = {};
+
+        @Config.Comment({
+                "Items the campfire refuses, even though the rule above would cook them,",
+                "as 'modid:item' or 'modid:item:meta'."
+        })
+        public String[] excludedFoods = {};
     }
 
     /** Filled in by its 1.14 completion stream (docs/V14_COMPLETION_PLAN.md). */
