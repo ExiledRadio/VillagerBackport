@@ -1,10 +1,52 @@
 {
   "variants": {
-    "bottom=true": {
+    "bottom=false,distance=0": {
+      "model": "villagerbackport:scaffolding_stable"
+    },
+    "bottom=false,distance=1": {
+      "model": "villagerbackport:scaffolding_stable"
+    },
+    "bottom=false,distance=2": {
+      "model": "villagerbackport:scaffolding_stable"
+    },
+    "bottom=false,distance=3": {
+      "model": "villagerbackport:scaffolding_stable"
+    },
+    "bottom=false,distance=4": {
+      "model": "villagerbackport:scaffolding_stable"
+    },
+    "bottom=false,distance=5": {
+      "model": "villagerbackport:scaffolding_stable"
+    },
+    "bottom=false,distance=6": {
+      "model": "villagerbackport:scaffolding_stable"
+    },
+    "bottom=false,distance=7": {
+      "model": "villagerbackport:scaffolding_stable"
+    },
+    "bottom=true,distance=0": {
       "model": "villagerbackport:scaffolding_unstable"
     },
-    "bottom=false": {
-      "model": "villagerbackport:scaffolding_stable"
+    "bottom=true,distance=1": {
+      "model": "villagerbackport:scaffolding_unstable"
+    },
+    "bottom=true,distance=2": {
+      "model": "villagerbackport:scaffolding_unstable"
+    },
+    "bottom=true,distance=3": {
+      "model": "villagerbackport:scaffolding_unstable"
+    },
+    "bottom=true,distance=4": {
+      "model": "villagerbackport:scaffolding_unstable"
+    },
+    "bottom=true,distance=5": {
+      "model": "villagerbackport:scaffolding_unstable"
+    },
+    "bottom=true,distance=6": {
+      "model": "villagerbackport:scaffolding_unstable"
+    },
+    "bottom=true,distance=7": {
+      "model": "villagerbackport:scaffolding_unstable"
     }
   }
 }
