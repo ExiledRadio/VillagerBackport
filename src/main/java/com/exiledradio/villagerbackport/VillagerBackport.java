@@ -113,6 +113,7 @@ public final class VillagerBackport {
     public void init(net.minecraftforge.fml.common.event.FMLInitializationEvent event) {
         com.exiledradio.villagerbackport.job.MasonCareer.register();
         com.exiledradio.villagerbackport.compat.FutureMc.hideFromCreative();
+        com.exiledradio.villagerbackport.fox.FoxContent.init();
     }
 
     /** Catches recipes for hidden duplicates that were added after the recipe registry event. */

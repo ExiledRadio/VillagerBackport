@@ -136,9 +136,9 @@ final class VillageFeatures {
         }
     }
 
-    /** Only with a mod that adds sweet berry bushes; 1.12.2 has none. */
+    /** This mod's sweet berry bushes, or Future MC's when that copy is kept (see FoxContent). */
     private static void berries(World world, Random random, BlockPos pos) {
-        Block bush = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("futuremc", "sweet_berry_bush"));
+        Block bush = com.exiledradio.villagerbackport.fox.FoxContent.berryBush();
         if (bush == null || bush == Blocks.AIR) {
             return;
         }

@@ -1372,9 +1372,77 @@ public final class ModConfig {
     /** Filled in by its 1.14 completion stream (docs/V14_COMPLETION_PLAN.md). */
     public static final class Foxes {
 
-        @Config.Comment("Whether this mod adds foxes and sweet berry bushes.")
+        @Config.Comment({
+                "Whether this mod adds foxes, sweet berries and sweet berry bushes.",
+                "",
+                "Off, none of them is registered, so a world that has them loses them. With Future",
+                "MC installed, which adds the same three, compat.futureMcDuplicates decides whose",
+                "are used; this only switches this mod's off altogether."
+        })
         @Config.RequiresMcRestart
         public boolean enabled = true;
+
+        @Config.Comment({
+                "Whether sweet berry bushes generate in taigas, as in 1.14.",
+                "",
+                "Taiga-like biomes are found by the Forge biome dictionary (CONIFEROUS), so modded",
+                "taigas get them too. Nothing generates in a biome listed in bushBiomeBlacklist."
+        })
+        @Config.RequiresWorldRestart
+        public boolean generateBushes = true;
+
+        @Config.Comment({
+                "Bush patches tried per chunk in an ordinary (not snowy, not giant) taiga.",
+                "",
+                "1.14 tries one patch per chunk here, at a random height up to twice the surface, so",
+                "only some of them land on the ground. That is copied as it is."
+        })
+        @Config.RangeInt(min = 0, max = 16)
+        @Config.RequiresWorldRestart
+        public int taigaPatchesPerChunk = 1;
+
+        @Config.Comment({
+                "One chunk in this many gets a bush patch in a snowy or giant tree taiga.",
+                "",
+                "1.14's snowy taigas use one in twelve. 1.14.4 has no bushes in giant tree taigas;",
+                "current Java does, rarely, so they share the snowy taiga's rate. 0 turns both off."
+        })
+        @Config.RangeInt(min = 0, max = 1000)
+        @Config.RequiresWorldRestart
+        public int rarePatchChance = 12;
+
+        @Config.Comment("Biomes (registry names, like minecraft:taiga) that never get sweet berry bushes.")
+        @Config.RequiresWorldRestart
+        public String[] bushBiomeBlacklist = {};
+
+        @Config.Comment({
+                "Fox spawn weight in taiga-like biomes. 1.14 uses 8, the same as wolves in a taiga.",
+                "0 stops foxes spawning naturally; spawn eggs and breeding still work."
+        })
+        @Config.RangeInt(min = 0, max = 100)
+        @Config.RequiresMcRestart
+        public int spawnWeight = 8;
+
+        @Config.Comment("The smallest group of foxes that spawns together. 1.14 uses 2.")
+        @Config.RangeInt(min = 1, max = 16)
+        @Config.RequiresMcRestart
+        public int minGroup = 2;
+
+        @Config.Comment("The largest group of foxes that spawns together. 1.14 uses 4.")
+        @Config.RangeInt(min = 1, max = 16)
+        @Config.RequiresMcRestart
+        public int maxGroup = 4;
+
+        @Config.Comment({
+                "Biomes (registry names) foxes spawn in, on top of every CONIFEROUS biome.",
+                "A snowy biome gets snow foxes, any other red ones."
+        })
+        @Config.RequiresMcRestart
+        public String[] extraFoxBiomes = {};
+
+        @Config.Comment("Biomes (registry names) foxes never spawn in, even when they are CONIFEROUS.")
+        @Config.RequiresMcRestart
+        public String[] foxBiomeBlacklist = {};
     }
 
     /** Filled in by its 1.14 completion stream (docs/V14_COMPLETION_PLAN.md). */
