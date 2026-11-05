@@ -53,6 +53,9 @@ public final class JeiPlugin implements IModPlugin {
         for (Item item : FutureMc.hiddenItems()) {
             blacklist.addIngredientToBlacklist(new ItemStack(item));
         }
+        for (Item item : com.exiledradio.villagerbackport.bamboo.BambooFutureMc.hiddenItems()) {
+            blacklist.addIngredientToBlacklist(new ItemStack(item));
+        }
 
         // Whichever half of the duplicated flowers, dyes and stew compat.futureMcDuplicates hides.
         for (ItemStack stack : com.exiledradio.villagerbackport.flora.FloraFutureMc.hiddenStacks()) {

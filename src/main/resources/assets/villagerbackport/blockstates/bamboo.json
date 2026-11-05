@@ -1,0 +1,58 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "age": "0"
+      },
+      "apply": [
+        {
+          "model": "villagerbackport:bamboo1_age0"
+        },
+        {
+          "model": "villagerbackport:bamboo2_age0"
+        },
+        {
+          "model": "villagerbackport:bamboo3_age0"
+        },
+        {
+          "model": "villagerbackport:bamboo4_age0"
+        }
+      ]
+    },
+    {
+      "when": {
+        "age": "1"
+      },
+      "apply": [
+        {
+          "model": "villagerbackport:bamboo1_age1"
+        },
+        {
+          "model": "villagerbackport:bamboo2_age1"
+        },
+        {
+          "model": "villagerbackport:bamboo3_age1"
+        },
+        {
+          "model": "villagerbackport:bamboo4_age1"
+        }
+      ]
+    },
+    {
+      "when": {
+        "leaves": "small"
+      },
+      "apply": {
+        "model": "villagerbackport:bamboo_small_leaves"
+      }
+    },
+    {
+      "when": {
+        "leaves": "large"
+      },
+      "apply": {
+        "model": "villagerbackport:bamboo_large_leaves"
+      }
+    }
+  ]
+}

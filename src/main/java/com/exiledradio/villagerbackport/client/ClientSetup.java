@@ -49,6 +49,7 @@ public final class ClientSetup {
         MinecraftForge.EVENT_BUS.register(new VillageOutlineRenderer());
         MinecraftForge.EVENT_BUS.register(new CrossbowClient());
         CrossbowClient.registerRenderers();
+        com.exiledradio.villagerbackport.bamboo.client.BambooClient.init();
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBell.class, new TileEntityBellRenderer());
         net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler(
