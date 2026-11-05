@@ -1193,5 +1193,822 @@
       }
     ],
     "subtitle": "subtitles.villagerbackport.item.crossbow.charge"
+  },
+  "block.bamboo.break": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:block/bamboo/place1",
+        "volume": 0.8,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/place2",
+        "volume": 0.8,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/place3",
+        "volume": 0.8,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/place4",
+        "volume": 0.8,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/place5",
+        "volume": 0.8,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/place6",
+        "volume": 0.8,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.generic.break"
+  },
+  "block.bamboo.fall": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:block/bamboo/step1",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/step2",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/step3",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/step4",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/step5",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/step6",
+        "volume": 1,
+        "stream": false
+      }
+    ]
+  },
+  "block.bamboo.hit": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:block/bamboo/step1",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/step2",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/step3",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/step4",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/step5",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/step6",
+        "volume": 1,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.generic.hit"
+  },
+  "block.bamboo.place": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:block/bamboo/place1",
+        "volume": 0.8,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/place2",
+        "volume": 0.8,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/place3",
+        "volume": 0.8,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/place4",
+        "volume": 0.8,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/place5",
+        "volume": 0.8,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/place6",
+        "volume": 0.8,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.generic.place"
+  },
+  "block.bamboo.step": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:block/bamboo/step1",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/step2",
+        "volume": 1,
+        "pitch": 0.7,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/step3",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/step4",
+        "volume": 1,
+        "pitch": 0.7,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/step5",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/step6",
+        "volume": 1,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.generic.footsteps"
+  },
+  "block.bamboo_sapling.place": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:block/bamboo/sapling_place1",
+        "volume": 0.85,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/sapling_place2",
+        "volume": 0.85,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/sapling_place3",
+        "volume": 0.85,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/sapling_place4",
+        "volume": 0.85,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/sapling_place5",
+        "volume": 0.85,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/sapling_place6",
+        "volume": 0.85,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.generic.place"
+  },
+  "block.bamboo_sapling.break": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:block/bamboo/sapling_place1",
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/sapling_place2",
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/sapling_place3",
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/sapling_place4",
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/sapling_place5",
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/sapling_place6",
+        "volume": 0.9,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.generic.break"
+  },
+  "block.bamboo_sapling.hit": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:block/bamboo/sapling_hit1",
+        "volume": 0.8,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/sapling_hit2",
+        "volume": 0.8,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/sapling_hit3",
+        "volume": 0.8,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/sapling_hit4",
+        "volume": 0.8,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/bamboo/sapling_hit5",
+        "volume": 0.8,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.generic.hit"
+  },
+  "block.scaffolding.break": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:block/scaffold/place1",
+        "volume": 0.8,
+        "pitch": 1.4,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/scaffold/place2",
+        "volume": 0.8,
+        "pitch": 1.4,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/scaffold/place3",
+        "volume": 0.8,
+        "pitch": 1.4,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/scaffold/place4",
+        "volume": 0.8,
+        "pitch": 1.4,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.generic.break"
+  },
+  "block.scaffolding.fall": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:step/scaffold1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:step/scaffold2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:step/scaffold3",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:step/scaffold4",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:step/scaffold5",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:step/scaffold6",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:step/scaffold7",
+        "stream": false
+      }
+    ]
+  },
+  "block.scaffolding.hit": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:step/scaffold1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:step/scaffold2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:step/scaffold3",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:step/scaffold4",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:step/scaffold5",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:step/scaffold6",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:step/scaffold7",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.generic.hit"
+  },
+  "block.scaffolding.place": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:block/scaffold/place1",
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/scaffold/place2",
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/scaffold/place3",
+        "volume": 0.9,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:block/scaffold/place4",
+        "volume": 0.9,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.generic.place"
+  },
+  "block.scaffolding.step": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:step/scaffold1",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:step/scaffold2",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:step/scaffold3",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:step/scaffold4",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:step/scaffold5",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:step/scaffold6",
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:step/scaffold7",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.generic.footsteps"
+  },
+  "entity.panda.pre_sneeze": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/panda/pre_sneeze",
+        "volume": 1,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.panda.pre_sneeze"
+  },
+  "entity.panda.sneeze": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/panda/sneeze1",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/sneeze2",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/sneeze3",
+        "volume": 1,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.panda.sneeze"
+  },
+  "entity.panda.ambient": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/panda/idle1",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/idle2",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/idle3",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/idle4",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/nosebreath1",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/nosebreath2",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/nosebreath3",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/pant1",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/pant2",
+        "volume": 1,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.panda.ambient"
+  },
+  "entity.panda.bite": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/panda/bite1",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/bite2",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/bite3",
+        "volume": 1,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.panda.bite"
+  },
+  "entity.panda.cant_breed": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/panda/cant_breed1",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/cant_breed2",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/cant_breed3",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/cant_breed4",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/cant_breed5",
+        "volume": 1,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.panda.cant_breed"
+  },
+  "entity.panda.death": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/panda/death1",
+        "volume": 0.82,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/death2",
+        "volume": 0.82,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/death3",
+        "volume": 0.82,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/death4",
+        "volume": 0.82,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.panda.death"
+  },
+  "entity.panda.eat": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/panda/eat1",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/eat2",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/eat3",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/eat4",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/eat5",
+        "volume": 0.85,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/eat6",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/eat7",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/eat8",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/eat9",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/eat10",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/eat11",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/eat12",
+        "volume": 1,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.panda.eat"
+  },
+  "entity.panda.step": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/panda/step1",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/step2",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/step3",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/step4",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/step5",
+        "volume": 1,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.panda.step"
+  },
+  "entity.panda.aggressive_ambient": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/panda/aggressive/aggressive1",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/aggressive/aggressive2",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/aggressive/aggressive3",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/aggressive/aggressive4",
+        "volume": 0.8,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/nosebreath2",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/nosebreath3",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/pant1",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/pant2",
+        "volume": 1,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.panda.aggressive_ambient"
+  },
+  "entity.panda.worried_ambient": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/panda/worried/worried2",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/worried/worried3",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/worried/worried4",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/worried/worried5",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/worried/worried6",
+        "volume": 1,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/pant2",
+        "volume": 1,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.panda.worried_ambient"
+  },
+  "entity.panda.hurt": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:mob/panda/hurt1",
+        "volume": 0.82,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/hurt2",
+        "volume": 0.82,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/hurt3",
+        "volume": 0.82,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/hurt4",
+        "volume": 0.82,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/hurt5",
+        "volume": 0.82,
+        "stream": false
+      },
+      {
+        "name": "villagerbackport:mob/panda/hurt6",
+        "volume": 0.82,
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.panda.hurt"
   }
 }

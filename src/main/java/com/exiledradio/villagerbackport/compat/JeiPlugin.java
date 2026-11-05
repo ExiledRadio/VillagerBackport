@@ -53,6 +53,9 @@ public final class JeiPlugin implements IModPlugin {
         for (Item item : FutureMc.hiddenItems()) {
             blacklist.addIngredientToBlacklist(new ItemStack(item));
         }
+        for (Item item : com.exiledradio.villagerbackport.bamboo.BambooFutureMc.hiddenItems()) {
+            blacklist.addIngredientToBlacklist(new ItemStack(item));
+        }
 
         // The pillagers' own crossbow is a prop, never meant for a player's hands - see ItemPillagerCrossbow.
         blacklist.addIngredientToBlacklist(new ItemStack(com.exiledradio.villagerbackport.illager.IllagerContent.pillagerCrossbow));

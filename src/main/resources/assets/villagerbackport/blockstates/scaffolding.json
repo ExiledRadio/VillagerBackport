@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "bottom=true": {
+      "model": "villagerbackport:scaffolding_unstable"
+    },
+    "bottom=false": {
+      "model": "villagerbackport:scaffolding_stable"
+    }
+  }
+}

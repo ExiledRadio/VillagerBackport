@@ -1,0 +1,25 @@
+{
+  "conditions": [
+    {
+      "type": "villagerbackport:bamboo"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "I~I",
+    "I I",
+    "I I"
+  ],
+  "key": {
+    "~": {
+      "item": "minecraft:string"
+    },
+    "I": {
+      "item": "villagerbackport:bamboo"
+    }
+  },
+  "result": {
+    "item": "villagerbackport:scaffolding",
+    "count": 6
+  }
+}

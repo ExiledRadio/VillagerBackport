@@ -1298,9 +1298,60 @@ public final class ModConfig {
     /** Filled in by its 1.14 completion stream (docs/V14_COMPLETION_PLAN.md). */
     public static final class Bamboo {
 
-        @Config.Comment("Whether this mod adds bamboo, scaffolding, the bamboo jungle and pandas.")
+        @Config.Comment({
+                "Whether this mod adds bamboo, scaffolding, the bamboo jungle and pandas.",
+                "",
+                "With Future MC installed too, both mods add bamboo and scaffolding. Which copy",
+                "stays visible follows compat.futureMcDuplicates, as it does for the workstations."
+        })
         @Config.RequiresMcRestart
         public boolean enabled = true;
+
+        @Config.Comment({
+                "Generate the bamboo jungle and bamboo jungle hills biomes.",
+                "",
+                "As in 1.14 they are not biomes of their own climate: some jungles are bamboo",
+                "jungles instead, and some jungle hills bamboo jungle hills. Works with any world",
+                "type that places vanilla's jungle - the default, large biomes, amplified, and most",
+                "biome mods. World types that do not use vanilla's biome layers (Open Terrain",
+                "Generator presets, for one) never contain them.",
+                "",
+                "Turning this off also leaves the two biomes unregistered."
+        })
+        @Config.RequiresMcRestart
+        public boolean bambooJungle = true;
+
+        @Config.Comment({
+                "One jungle area in this many becomes a bamboo jungle.",
+                "",
+                "1.14 turns one jungle in ten into a bamboo jungle. Lower is more common."
+        })
+        @Config.RangeInt(min = 1, max = 1000)
+        @Config.RequiresMcRestart
+        public int bambooJungleRarity = 10;
+
+        @Config.Comment({
+                "Scatter bamboo through ordinary jungles and jungle hills, as 1.14 does.",
+                "",
+                "Sparse - a stand every few chunks. Does nothing while Future MC is installed,",
+                "which already puts its own bamboo there."
+        })
+        public boolean jungleBamboo = true;
+
+        @Config.Comment({
+                "Spawn weight of pandas in ordinary jungles and jungle hills (1.14: 1).",
+                "",
+                "Pandas mostly live in bamboo jungles; this is the rare one met elsewhere. 0 keeps",
+                "them out of ordinary jungles."
+        })
+        @Config.RangeInt(min = 0, max = 1000)
+        @Config.RequiresMcRestart
+        public int pandaJungleWeight = 1;
+
+        @Config.Comment("Spawn weight of pandas in bamboo jungles (1.14: 80).")
+        @Config.RangeInt(min = 0, max = 1000)
+        @Config.RequiresMcRestart
+        public int pandaBambooJungleWeight = 80;
     }
 
     /** Filled in by its 1.14 completion stream (docs/V14_COMPLETION_PLAN.md). */
