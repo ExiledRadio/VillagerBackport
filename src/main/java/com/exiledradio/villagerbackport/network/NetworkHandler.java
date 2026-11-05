@@ -50,6 +50,9 @@ public final class NetworkHandler {
     /** @return the mod's channel, for packages that send their own messages; null before preInit */
     public static SimpleNetworkWrapper channel() {
         return channel;
+        // flora: which mooshrooms are brown. See flora.Mooshrooms.
+        channel.registerMessage(com.exiledradio.villagerbackport.flora.PacketMooshroomType.Handler.class,
+                com.exiledradio.villagerbackport.flora.PacketMooshroomType.class, 19, Side.CLIENT);
     }
 
     /**
@@ -157,5 +160,13 @@ public final class NetworkHandler {
                 new PacketVillagerLevel(villager.getEntityId(), level, careerId, type),
                 new NetworkRegistry.TargetPoint(villager.world.provider.getDimension(),
                         villager.posX, villager.posY, villager.posZ, range));
+    }
+
+    /** Sends one player a flora packet. Does nothing before the channel exists. */
+    public static void sendFlora(net.minecraftforge.fml.common.network.simpleimpl.IMessage message,
+                                 EntityPlayerMP player) {
+        if (channel != null) {
+            channel.sendTo(message, player);
+        }
     }
 }

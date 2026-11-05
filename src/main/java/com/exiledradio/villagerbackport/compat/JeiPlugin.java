@@ -54,6 +54,11 @@ public final class JeiPlugin implements IModPlugin {
             blacklist.addIngredientToBlacklist(new ItemStack(item));
         }
 
+        // Whichever half of the duplicated flowers, dyes and stew compat.futureMcDuplicates hides.
+        for (ItemStack stack : com.exiledradio.villagerbackport.flora.FloraFutureMc.hiddenStacks()) {
+            blacklist.addIngredientToBlacklist(stack);
+        }
+
         // The pillagers' own crossbow is a prop, never meant for a player's hands - see ItemPillagerCrossbow.
         blacklist.addIngredientToBlacklist(new ItemStack(com.exiledradio.villagerbackport.illager.IllagerContent.pillagerCrossbow));
 
