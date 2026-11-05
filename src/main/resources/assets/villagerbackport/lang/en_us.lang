@@ -21,6 +21,13 @@ config.villagerbackport.jobs=Villager Jobs
 config.villagerbackport.villages=Village Generation
 config.villagerbackport.compat=Mod Compatibility
 config.villagerbackport.sounds=Sounds
+config.villagerbackport.trader=Wandering Trader
+config.villagerbackport.cats=Cats
+config.villagerbackport.foxes=Foxes & Berries
+config.villagerbackport.bamboo=Bamboo & Pandas
+config.villagerbackport.campfire=Campfire
+config.villagerbackport.flora=Flowers & Dyes
+config.villagerbackport.building=Building Blocks
 config.villagerbackport.homes=Beds, Sleeping & Golems
 config.villagerbackport.raids=Raids & Heroes
 

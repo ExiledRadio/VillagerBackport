@@ -60,6 +60,34 @@ public final class ModConfig {
     @Config.Comment("1.14 sounds for vanilla blocks.")
     public static final Sounds sounds = new Sounds();
 
+    @Config.LangKey("config.villagerbackport.trader")
+    @Config.Comment("The wandering trader and its llamas.")
+    public static final Trader trader = new Trader();
+
+    @Config.LangKey("config.villagerbackport.cats")
+    @Config.Comment("Cats, and ocelots as 1.14 changed them.")
+    public static final Cats cats = new Cats();
+
+    @Config.LangKey("config.villagerbackport.foxes")
+    @Config.Comment("Foxes and sweet berries.")
+    public static final Foxes foxes = new Foxes();
+
+    @Config.LangKey("config.villagerbackport.bamboo")
+    @Config.Comment("Bamboo, scaffolding, the bamboo jungle and pandas.")
+    public static final Bamboo bamboo = new Bamboo();
+
+    @Config.LangKey("config.villagerbackport.campfire")
+    @Config.Comment("The campfire.")
+    public static final Campfire campfire = new Campfire();
+
+    @Config.LangKey("config.villagerbackport.flora")
+    @Config.Comment("1.14's flowers, dyes, suspicious stew and leather horse armor.")
+    public static final Flora flora = new Flora();
+
+    @Config.LangKey("config.villagerbackport.building")
+    @Config.Comment("1.14's stone slabs, stairs and walls, smooth stone and wood signs.")
+    public static final Building building = new Building();
+
     private ModConfig() {
     }
 
@@ -1241,5 +1269,61 @@ public final class ModConfig {
         public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
             // No client sync needed in this phase - see the class comment on ModConfig.
         }
+    }
+
+    /** Filled in by its 1.14 completion stream (docs/V14_COMPLETION_PLAN.md). */
+    public static final class Trader {
+
+        @Config.Comment("Whether this mod adds the wandering trader and trader llamas.")
+        @Config.RequiresMcRestart
+        public boolean enabled = true;
+    }
+
+    /** Filled in by its 1.14 completion stream (docs/V14_COMPLETION_PLAN.md). */
+    public static final class Cats {
+
+        @Config.Comment("Whether this mod adds cats, and 1.14's ocelots.")
+        @Config.RequiresMcRestart
+        public boolean enabled = true;
+    }
+
+    /** Filled in by its 1.14 completion stream (docs/V14_COMPLETION_PLAN.md). */
+    public static final class Foxes {
+
+        @Config.Comment("Whether this mod adds foxes and sweet berry bushes.")
+        @Config.RequiresMcRestart
+        public boolean enabled = true;
+    }
+
+    /** Filled in by its 1.14 completion stream (docs/V14_COMPLETION_PLAN.md). */
+    public static final class Bamboo {
+
+        @Config.Comment("Whether this mod adds bamboo, scaffolding, the bamboo jungle and pandas.")
+        @Config.RequiresMcRestart
+        public boolean enabled = true;
+    }
+
+    /** Filled in by its 1.14 completion stream (docs/V14_COMPLETION_PLAN.md). */
+    public static final class Campfire {
+
+        @Config.Comment("Whether this mod adds the campfire.")
+        @Config.RequiresMcRestart
+        public boolean enabled = true;
+    }
+
+    /** Filled in by its 1.14 completion stream (docs/V14_COMPLETION_PLAN.md). */
+    public static final class Flora {
+
+        @Config.Comment("Whether this mod adds 1.14's flowers, dyes, suspicious stew and leather horse armor.")
+        @Config.RequiresMcRestart
+        public boolean enabled = true;
+    }
+
+    /** Filled in by its 1.14 completion stream (docs/V14_COMPLETION_PLAN.md). */
+    public static final class Building {
+
+        @Config.Comment("Whether this mod adds 1.14's building blocks.")
+        @Config.RequiresMcRestart
+        public boolean enabled = true;
     }
 }
