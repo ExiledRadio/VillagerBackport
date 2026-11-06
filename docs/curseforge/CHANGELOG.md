@@ -2,6 +2,8 @@
 
 The rest of 1.14. The wandering trader and its llamas, cats, foxes, pandas, bamboo and scaffolding, the campfire, sweet berries, the new flowers and dyes, suspicious stew, brown mooshrooms, every new slab, stair and wall, the new signs, stripped logs, wood trapdoors, buttons and pressure plates, blue ice and sea pickles. Villages are now built from 1.14's own blocks, without needing Future MC for any of them. With Future MC installed, each duplicated block or item is shown only once (`compat.futureMcDuplicates`).
 
+**Renamed to Village & Pillage Backport**, since it now backports all of 1.14's Village & Pillage update. Only the name changes: the mod id is still `villagerbackport`, so worlds and configs carry over untouched.
+
 ## New: the wandering trader
 
 *   **The wandering trader** turns up now and then with two **trader llamas** on leads. Once a day the game tries to send one to a random player in the overworld: a 25% chance the first time, 50% the next, then 75% until one comes, each with a further one in ten roll, as in 1.14 and current Java. It arrives within 48 blocks of the player, or of the nearest **bell** within 48 blocks of them, walks there, and stays within 16 blocks of it.

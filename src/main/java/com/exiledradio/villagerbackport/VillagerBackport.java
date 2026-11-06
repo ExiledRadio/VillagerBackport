@@ -39,7 +39,7 @@ import org.apache.logging.log4j.Logger;
 public final class VillagerBackport {
 
     public static final String MOD_ID = "villagerbackport";
-    public static final String MOD_NAME = "1.14 Villager Backport";
+    public static final String MOD_NAME = "Village & Pillage Backport";
     public static final String VERSION = "@VERSION@";
 
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);

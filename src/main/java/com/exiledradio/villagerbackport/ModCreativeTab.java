@@ -46,7 +46,7 @@ public final class ModCreativeTab extends CreativeTabs {
     private static final String ICON = "lectern";
 
     /** Shown when the language file has not loaded. Matches the entry in en_us.lang. */
-    private static final String LABEL = "1.14 Villager Backport";
+    private static final String LABEL = "Village & Pillage Backport";
 
     private ModCreativeTab() {
         // Becomes the itemGroup.villagerbackport translation key.

@@ -1,4 +1,4 @@
-# 1.14 Villager Backport
+# Village & Pillage Backport
 
 Brings 1.14's villages to Minecraft 1.12.2. Villagers take jobs from workstations, restock twice a
 day, price their trades by supply and demand, and remember who you are. They claim beds, sleep at
