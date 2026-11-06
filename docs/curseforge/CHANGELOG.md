@@ -1,13 +1,13 @@
 # 2.3.0
 
-The rest of 1.14. The wandering trader and its llamas, cats, foxes, pandas, bamboo and scaffolding, the campfire, sweet berries, the new flowers and dyes, suspicious stew, brown mooshrooms, every new slab, stair and wall, the new signs, stripped logs, wood trapdoors, buttons and pressure plates, blue ice and sea pickles. Villages are now built from 1.14's own blocks, without needing Future MC for any of them. With Future MC installed, each duplicated block or item is shown only once (`compat.futureMcDuplicates`).
+The rest of 1.14. The wandering trader and its llamas, cats, foxes, pandas, bamboo and scaffolding, the campfire, sweet berries, the new flowers and dyes, suspicious stew, brown mooshrooms, every new slab, stair and wall, the new signs, stripped logs, wood trapdoors, buttons and pressure plates, blue ice and sea pickles. Villages are now built from 1.14's own blocks, all of them in this mod.
 
 **Renamed to Village & Pillage Backport**, since it now backports all of 1.14's Village & Pillage update. Only the name changes: the mod id is still `villagerbackport`, so worlds and configs carry over untouched.
 
 ## New: the wandering trader
 
 *   **The wandering trader** turns up now and then with two **trader llamas** on leads. Once a day the game tries to send one to a random player in the overworld: a 25% chance the first time, 50% the next, then 75% until one comes, each with a further one in ten roll, as in 1.14 and current Java. It arrives within 48 blocks of the player, or of the nearest **bell** within 48 blocks of them, walks there, and stays within 16 blocks of it.
-*   **Current Java's trades**: nine per trader. Two things it buys (hay bales, water bottles, baked potatoes, milk, water buckets, fermented spider eyes), two specials (packed ice, gunpowder, logs, podzol, a potion of invisibility, an enchanted iron pickaxe, and blue ice when a mod adds it) and five everyday goods: flowers, seeds, saplings, dyes, mushrooms, vines, lily pads, sand, glowstone, cactus, slime balls, pumpkins and name tags. Kelp, sea pickles, coral blocks, fish buckets, cornflowers, lilies of the valley and nautilus shells join in when Oceanic Expanse, Future MC or this mod's flowers add them.
+*   **Current Java's trades**: nine per trader. Two things it buys (hay bales, water bottles, baked potatoes, milk, water buckets, fermented spider eyes), two specials (packed ice, gunpowder, logs, podzol, a potion of invisibility, an enchanted iron pickaxe and blue ice) and five everyday goods: flowers, seeds, saplings, dyes, mushrooms, vines, lily pads, sand, glowstone, cactus, slime balls, pumpkins and name tags. Sea pickles, cornflowers and lilies of the valley too, and kelp, coral blocks, fish buckets and nautilus shells when another mod adds them.
 *   **No levels and no restocking**: what it has is all it has. It trades on the 1.14-style trade screen, with no level or experience bar, and drops experience orbs as villagers do.
 *   **Invisible at night**: at dusk it drinks a potion of invisibility, and at dawn a bucket of milk, with 1.14's sounds.
 *   **It leaves after 40 minutes**, counted only while it's loaded and nobody is trading with it. Its llamas go with it. Traders from spawn eggs never leave.
@@ -61,16 +61,6 @@ Cats and ocelots are two animals, as in 1.14. Old worlds' tamed ocelots become c
 
 `enabled` (everything above), `generateBushes`, `taigaPatchesPerChunk` (1), `rarePatchChance` (12, for snowy and giant taigas), `bushBiomeBlacklist`, `spawnWeight` (8), `minGroup` (2), `maxGroup` (4), `extraFoxBiomes`, `foxBiomeBlacklist`.
 
-## With Future MC: berries and foxes
-
-Future MC adds sweet berries and bushes too (and, in some versions, a fox). `compat.futureMcDuplicates` - the same setting as for the barrels and looms - decides whose are used:
-
-*   `KEEP_OURS` (default): this mod's bushes generate and its foxes spawn; Future MC's berries are hidden from JEI and the creative menu, and its fox, if it has one, no longer spawns naturally. **Future MC's own bushes keep generating** - turn them off in its config (`berry bush` > `Spawn Rate` 0) to have only these.
-*   `KEEP_FUTURE_MC`: this mod's bushes and foxes stay registered (so nothing vanishes from a world) but don't generate or spawn, and its berries are hidden. Trades and villages use Future MC's berries.
-*   `SHOW_BOTH`: both.
-
-Foxes eat, breed on and pick either mod's berries in every mode.
-
 ## New: bamboo
 
 *   **1.14's bamboo**, grown exactly by 1.14's rules: plant a piece on grass, dirt, podzol, sand, red sand, gravel or mycelium and a shoot comes up, then a stalk that grows a block at a time in light 9 or more, up to somewhere between 12 and 16 blocks tall.
@@ -84,7 +74,7 @@ Foxes eat, breed on and pick either mod's berries in every mode.
 *   **Crafted** from six bamboo and a string, six at a time. Breaks instantly and burns like bamboo.
 *   **It holds itself up**, as in 1.14: a scaffold can stand on the ground, on more scaffolding, or reach out sideways from a supported column - up to six blocks. Further than that it won't place. Knock out its support and everything leaning on it comes down as items; take out the bottom of a tower and the whole tower falls.
 *   A scaffold hanging out from a column shows its bottom frame, and you can stand on that frame.
-*   **Moving through it**: walk straight through the sides, stand on top, **jump to climb**, **sneak to go down** - at 1.14's climbing speed, with no fall damage. This works with Aqua Acrobatics: the scaffolding only answers the questions the game already asks every block, and doesn't touch how players move.
+*   **Moving through it**: walk straight through the sides, stand on top, **jump to climb**, **sneak to go down** - at 1.14's climbing speed, with no fall damage. The scaffolding only answers the questions the game already asks every block, and doesn't touch how players move, so it works alongside mods that change swimming and climbing.
 *   **Placing it the 1.14 way**: use scaffolding on the top of a scaffold to extend outward in the direction you face, or on its side to build the column up to its top. Sneak to place it against the clicked face instead.
 *   Not 1.14: the selection outline is always the whole block (1.14 shows the frame unless you're holding scaffolding).
 
@@ -104,10 +94,6 @@ Foxes eat, breed on and pick either mod's berries in every mode.
 *   **Cubs** roll about and **sneeze** - startling every grown panda nearby into a jump, and once in a while leaving a slime ball.
 *   Drops a bamboo when killed.
 
-## With Future MC: bamboo, scaffolding and pandas
-
-Future MC adds bamboo, scaffolding and pandas too. Which mod's bamboo and scaffolding stay visible follows `compat.futureMcDuplicates`, as it does for the workstations: the hidden pair loses its recipes and its place in JEI and the creative menu, but anything already placed still works. With this mod's kept, Future MC's pandas stop spawning; with Future MC's kept, this mod's pandas only live in bamboo jungles. Pandas eat and breed on either mod's bamboo. Future MC already puts its bamboo in jungles, so this mod's jungle bamboo stands aside while it's installed.
-
 ## Settings: bamboo, scaffolding and pandas
 
 *   `enabled` - everything above. Off, nothing is registered.
@@ -123,8 +109,7 @@ Future MC adds bamboo, scaffolding and pandas too. Which mod's bamboo and scaffo
 *   **It burns**: 1 damage every half second to anything standing in it, sneaking or not, as in current Java. Fire Resistance, Frost Walker and fire-immune mobs are safe. It never sets anything on fire, so mobs that die in it drop raw meat. Mobs walk around a lit one.
 *   **Put it out** with a shovel (not from underneath), a water bucket, or a splash or lingering water bottle. **Light it** with flint and steel, a fire charge, a burning arrow, or a blaze's fireball (with `mobGriefing` on). Food on it stays put while it's out, and carries on cooking when it's relit.
 *   Breaking it drops two charcoal, or the campfire with Silk Touch, plus whatever was cooking.
-*   **Fishermen sell it**, and **taiga villages** have theirs again: five of the taiga houses and decorations place a lit campfire, which was an empty spot without Future MC.
-*   **With Future MC**, its campfire and this one are a duplicated pair under `compat.futureMcDuplicates`, like the barrel and the lantern: one is hidden from the creative menu and JEI, loses its recipe, and villages build with the other.
+*   **Fishermen sell it**, and **taiga villages** have theirs again: five of the taiga houses and decorations place a lit campfire, which was an empty spot before.
 *   `campfire.enabled` turns it off entirely.
 
 Hay bales already cut fall damage by 80% in 1.12.2, exactly as in 1.14, so there was nothing to add there.
@@ -163,15 +148,11 @@ Hay bales already cut fall damage by 80% in 1.12.2, exactly as in 1.14, so there
 
 ## New: the Globe banner pattern
 
-*   1.14's fifth banner pattern, the **Globe**, sold by **master cartographers** for 8 emeralds in place of the stand-in they sold before. Use it at the loom like the other four; it isn't used up. With Future MC installed its Globe is used rather than adding a second one.
+*   1.14's fifth banner pattern, the **Globe**, sold by **master cartographers** for 8 emeralds in place of the stand-in they sold before. Use it at the loom like the other four; it isn't used up.
 
 ## New: dyed sign text
 
 *   **Right-click a sign with any dye** to recolor its text, as in 1.14. The dye is used up only if the color changes. Every player with the mod sees the color.
-
-## With Future MC: flowers, dyes and stew
-
-*   Future MC adds the same flowers, dyes and suspicious stew. Which copy you see follows `compat.futureMcDuplicates`, as the workstations do: with `KEEP_OURS` (the default) Future MC's leave the creative menu and JEI and lose their recipes, and each can be crafted into this mod's one; with `KEEP_FUTURE_MC` it's the other way round, and this mod's flowers stop generating. Brown mooshrooms, leather horse armor, the Globe and dyed signs stay either way - Future MC has none of them.
 
 ## Settings: flowers, dyes and stew
 
@@ -188,7 +169,7 @@ New `flora` section: `enabled` (everything above), `generateFlowers`, `brownMoos
 *   **The stonecutter cuts all of them**: one block into one stairs or wall, or two slabs. It also cuts straight through a one-for-one step, as 1.14's does: stone into stone brick slabs, stairs and walls, andesite into polished andesite slabs and stairs, sandstone into cut sandstone slabs. This works for other mods' blocks too.
 *   **Smelting stone bricks** gives cracked stone bricks, as in 1.14.
 *   Everything is in this mod's creative tab, and in the ore dictionary as `slab`, `stair`, `wall` and `sign`; smooth stone as `stoneSmooth`, the smooth sandstones as `sandstone`, smooth quartz as `blockQuartz`.
-*   **Villages use them**: desert villages get real smooth sandstone, smooth sandstone stairs and slabs and sandstone walls, taiga villages spruce signs, and so on, wherever 1.12.2 used a stand-in before. If Future MC, Quark, Oceanic Expanse or Farmer's Future Delight provides one of these blocks, villages keep using theirs.
+*   **Villages use them**: desert villages get real smooth sandstone, smooth sandstone stairs and slabs and sandstone walls, taiga villages spruce signs, and so on, wherever 1.12.2 used a stand-in before.
 
 ## Changed: seven vanilla recipes, as in 1.14
 
@@ -202,35 +183,27 @@ So every new block can be crafted, these change the way 1.14 changed them (`buil
 
 Renamed to 1.14's names: Smooth Sandstone to **Cut Sandstone**, Smooth Red Sandstone to **Cut Red Sandstone**, Stone Slab to **Smooth Stone Slab**, Sign to **Oak Sign**.
 
-## With Future MC: building blocks
-
-Future MC adds the twelve walls, the four smooth blocks and the five signs too. `compat.futureMcDuplicates` now covers them like the workstations: by default Future MC's are hidden (no recipe, smelting recipe, JEI entry or creative listing; placed ones keep working) and villages build with this mod's. `KEEP_FUTURE_MC` hides this mod's instead.
-
 ## New: the last blocks 1.14's villages are built from
 
 Villages no longer borrow these from other mods or fall back to 1.12.2 stand-ins:
 
 *   **Stripped logs and stripped wood in all six woods**, with 1.14's textures. Stripped logs face whichever way you place them, like logs. Four stripped logs make three stripped wood. Both make four planks, smelt into charcoal, burn in a furnace and catch fire like logs, keep leaves from decaying, and are `logWood` in the ore dictionary.
-*   **Strip logs with an axe**: right-click a log with any axe, modded axes included, and it becomes the stripped log, facing the same way. Bark blocks become stripped wood. You hear 1.14's strip sound, and the axe takes one point of damage. If Future MC or Quark already strips logs in your pack, theirs is left to do it.
+*   **Strip logs with an axe**: right-click a log with any axe, modded axes included, and it becomes the stripped log, facing the same way. Bark blocks become stripped wood. You hear 1.14's strip sound, and the axe takes one point of damage. If another mod already strips logs in your pack, it's left to do it.
 *   **Trapdoors, buttons and pressure plates in spruce, birch, jungle, acacia and dark oak**, each crafted from its own planks with 1.14's recipe and drawn with 1.14's trapdoor textures. They work exactly like the oak ones: the same redstone, the same timing, the same sounds. Buttons burn for 100 ticks in a furnace, trapdoors and pressure plates for 300.
 *   **Blue ice**, from nine packed ice. Slipperier than packed ice (boats on it are fast), never melts, and only drops with Silk Touch. Mined fastest with a pickaxe.
 *   **Sea pickles**: place up to four in one block by right-clicking with more. In water they glow, brighter the more there are; out of water they are dark. They need a block with a top to stand on, smelt into lime dye and compost at 65%.
-*   **Villages use them**: taiga villages get real spruce trapdoors and pressure plates, snowy villages real stripped spruce logs and wood and blue ice, jungle buttons, acacia pressure plates and so on, wherever 1.12.2 used a stand-in. If Future MC, Quark, Farmer's Future Delight or Oceanic Expanse provides one of these blocks, villages keep using theirs.
+*   **Villages use them**: taiga villages get real spruce trapdoors and pressure plates, snowy villages real stripped spruce logs and wood and blue ice, jungle buttons, acacia pressure plates and so on, wherever 1.12.2 used a stand-in.
 *   Everything is in this mod's creative tab.
 
 ## Changed: three vanilla recipes, as in 1.14
 
 The **trapdoor**, **wooden button** and **wooden pressure plate** now take oak planks only, since the other woods make their own. They are renamed **Oak Trapdoor** and **Oak Pressure Plate**, as in 1.14. (Vanilla's wooden button shares its name with the stone button, so it stays "Button".)
 
-## With Future MC: village blocks
+## New: 1.14's textures
 
-Future MC adds stripped logs and wood, the five wood trapdoors and blue ice too. `compat.futureMcDuplicates` covers them like the rest: by default Future MC's are hidden (no recipe, JEI entry or creative listing; placed ones keep working) and villages build with this mod's. `KEEP_FUTURE_MC` hides this mod's instead. Future MC has no wood buttons, pressure plates or sea pickles, so there is nothing to pair those with.
-
-## New: switching from Future MC
-
-*   **`/futuremc convert [radius]`** turns Future MC's blocks around you into this mod's, while Future MC is still installed. Every block keeps its facing, axis, half, open state and the rest exactly, and whatever is in it - a barrel's or furnace's items, a lectern's book, the food on a campfire, a sign's text - moves into the new block. Neighbors aren't updated, so nothing around it falls or drops. Items are converted too, in every container, item frame and dropped item in the area and in the inventory and ender chest of every player in it. `/futuremc preview` counts what it would change first; `loaded` instead of a radius does every loaded chunk. Operators only. Back up the world first.
-*   **Removing Future MC from a world no longer loses its blocks.** When a world that had Future MC loads without it, each chunk has its Future MC blocks turned into this mod's the first time it loads, with their state and contents, and Future MC's items load as this mod's wherever they are. Future MC's dyes and bark wood load as stand-ins that work as the real thing and become it as soon as a player picks them up. Future MC content this mod has no counterpart for (bees, soul fire, chain, netherite and so on) still turns to air. `compat.convertRemovedFutureMc` switches it off.
-*   Covers all 69 Future MC blocks this mod has a counterpart for: the workstations, bell, lantern, campfire, bamboo, scaffolding, sweet berry bush, flowers, walls, smooth blocks, signs, stripped logs and wood, trapdoors and blue ice, plus its bark wood, which becomes 1.12.2's six-sided log.
+*   **Vanilla's blocks, items and mobs get the textures 1.14's Texture Update gave them** - about 620 of them - plus 1.15's enchantment glint. Turn off `textures.modernTextures` to keep 1.12.2's; changing it in game reloads resources as F3+T does.
+*   Resource packs you pick, and other mods that change a vanilla texture on purpose, still win. Villagers, horses and water keep 1.12.2's textures either way: 1.14's don't fit 1.12.2's models or colors.
+*   Client only; a server ignores the setting.
 
 ## Changed: the grindstone hangs on walls and ceilings
 

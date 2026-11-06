@@ -142,7 +142,7 @@ public final class TraderTrades {
         }
         SPECIAL.add(sell(new ItemStack(Blocks.DIRT, 3, BlockDirt.DirtType.PODZOL.getMetadata()), 3, 6));
         SPECIAL.add(sell(potion(PotionTypes.INVISIBILITY), 5, 1));
-        SPECIAL.add(optionalSell(6, 1, 6, "oe:blue_ice", "futuremc:blue_ice"));
+        SPECIAL.add(optionalSell(6, 1, 6, "villagerbackport:blue_ice", "oe:blue_ice", "futuremc:blue_ice"));
         SPECIAL.add(enchantedPickaxe());
 
         // Ordinary: one emerald for one, twelve in stock.
@@ -181,7 +181,7 @@ public final class TraderTrades {
         ORDINARY.add(sell(new ItemStack(Blocks.SAND, 8), 1, 8));
         ORDINARY.add(sell(new ItemStack(Blocks.SAND, 4, 1), 1, 6));
 
-        ORDINARY.add(optionalSell(2, 1, 5, "oe:sea_pickle", "futuremc:sea_pickle"));
+        ORDINARY.add(optionalSell(2, 1, 5, "villagerbackport:sea_pickle", "oe:sea_pickle", "futuremc:sea_pickle"));
         ORDINARY.add(sell(new ItemStack(Blocks.GLOWSTONE), 3, 5));
         ORDINARY.add(optionalSell(3, 1, 4, "futuremc:tropical_fish_bucket"));
         ORDINARY.add(optionalSell(3, 1, 4, "futuremc:pufferfish_bucket"));

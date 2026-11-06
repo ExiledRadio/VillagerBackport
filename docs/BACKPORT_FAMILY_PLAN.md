@@ -51,19 +51,33 @@ None of these may *require* the other mod. Each mod checks `Loader.isModLoaded` 
 when the other is there. Each mod's own tests cover both cases: installed alone, and installed with the
 others.
 
-## Rule 3: Future MC is a guest
+## Rule 3: other backport mods are never advertised
 
-Every block a backport shares with Future MC follows Village & Pillage's pattern:
+The family is the backport; descriptions, changelogs and in-game text never recommend or name another
+backport mod (Future MC, Raids Backport and the like). The code still copes quietly when one is
+installed:
 
-- `compat.futureMcDuplicates`: hide one of each pair (default: keep ours).
-- Villages, trades and recipes use whichever copy is kept.
-- `/futuremc convert` and the automatic conversion when Future MC is removed cover the mod's blocks too:
-  each mod contributes its pairs to Backport Core's table, and the recorded states come from
-  `/futuremc dump`.
+- duplicate blocks are hidden, ours kept by default (`compat.futureMcDuplicates`);
+- villages, trades and recipes use our blocks first;
+- a world that had Future MC converts to ours as it loads, and `/futuremc convert` does it on demand.
+  Each mod contributes its pairs to Backport Core's table; the recorded states come from `/futuremc dump`.
 
 ## What Backport Core holds
 
-Code only, no blocks or items of its own:
+Code and shared assets, no blocks or items of its own:
+
+- **Vanilla's new look**: the texture packs from Village & Pillage (1.14's Texture Update, 1.15's glint,
+  the classic fallback) move here, with the `modernTextures` switch. Every later update's vanilla
+  retextures and resound go in the same packs, so they apply whichever backports are installed - even
+  Update Aquatic alone, the one update that changed almost no existing textures.
+- **Waterlogging**: a 1.13 feature every later block wants (lanterns, campfires, sea pickles, chains,
+  scaffolding). The framework lives in core so any backport's blocks can be waterlogged; Update Aquatic
+  provides the water mechanics.
+- **Terrain adapters for structures**: the code that plans villages on vanilla, superflat, OTG, Biomes
+  O' Plenty and RTG terrain. Every later structure needs it too: shipwrecks, ocean ruins and buried
+  treasure (1.13), bee nests (1.15), bastions and ruined portals (1.16).
+- **Trade registry**: later updates add villager and wandering trader trades (kelp, coral and fish
+  buckets from 1.13, honey from 1.15), so trades are registered through core rather than hard-coded.
 
 - **Ownership table**: which mod owns each shared block, and the lookup every mod uses (Rule 1).
 - **Migration**: missing-mapping remaps, chunk conversion with a per-chunk generation flag, content
@@ -80,9 +94,10 @@ the move is done once Update Aquatic Backport needs it.
 
 ## Order of work
 
-1. Ship Village & Pillage Backport 2.3.0, still standalone.
-2. Start Update Aquatic Backport. Extract Backport Core from Village & Pillage's `migrate/`, `compat/FutureMc`
-   and smithing code as the first step, and release Village & Pillage 2.4.0 depending on it.
+1. Ship Village & Pillage Backport 2.3.0, still standalone, textures included.
+2. Start Update Aquatic Backport. Extract Backport Core from Village & Pillage's `migrate/`,
+   `compat/FutureMc`, smithing, terrain-adapter, trade and texture code as the first step, and release
+   Village & Pillage 2.4.0 depending on it.
 3. Update Aquatic content, Future MC pairs included. Swimming, crawling and waterlogging need player and
    world mixins: decide between writing them and supporting Aqua Acrobatics and Fluidlogged API before
    starting them.

@@ -6,7 +6,7 @@ Villages generate the way they do in 1.14, from 1.14's own buildings, with the w
 
 It is ported from the decompiled 1.14.4 sources, so the village layouts, trade tables, pricing formula, restock timings, gossip weights, experience values, golem conditions, sleep pose, raid waves and outpost layouts are all the ones the real game uses.
 
-**Standalone, and friendly with other backports.** Everything 1.14 added is in this one mod, and it needs no other. Install Future MC, Oceanic Expanse or Deeper Depths alongside it and villagers start trading their items too. Where Future MC adds the same block or item, only one of the two is shown (see Works with other mods). It is needed on both the client and the server.
+**Standalone.** Everything 1.14 added is in this one mod, and it needs no other. It is needed on both the client and the server.
 
 > 💬 **[Join the Discord](https://discord.gg/kxQvMDJBTN)** for bug reports, questions and release pings.
 
@@ -20,14 +20,14 @@ Villages are 1.14's villages: plains, desert, savanna, taiga and snowy, built fr
 
 The workstations sit inside the houses where 1.14 puts them, so a village has its librarian's lectern and its butcher's smoker from the start. As in the real game, workstations come only from the buildings; nothing else in the world is turned into one.
 
-*   Villages are built from the real 1.14 blocks, all of which this mod adds: stripped logs and wood, smooth sandstone, blue ice, the new walls, stairs and slabs, wood trapdoors, buttons, pressure plates and signs, campfires, lanterns and sweet berry bushes. When Future MC, Quark, Oceanic Expanse or Farmer's Future Delight provides one of them, the village uses theirs.
+*   Villages are built from the real 1.14 blocks, all of which this mod adds: stripped logs and wood, smooth sandstone, blue ice, the new walls, stairs and slabs, wood trapdoors, buttons, pressure plates and signs, campfires, lanterns and sweet berry bushes.
 *   Villages have cats from the start, and taiga villages light their campfires.
 *   Village chests carry 1.14's loot.
 *   Houses sit on the ground they were planned for. The terrain inside each building is cleared and the ground beneath it filled in, so a house on a slope is neither half buried nor standing on stilts.
 *   Streets that cross water become plank bridges in the village's own wood, as in the real game.
 *   Mods that add buildings to villages add them to 1.14 villages too. In RLCraft that means the waystone by the bell, and RLCraft's inns, libraries, blacksmiths and farmhouses on plots beside the streets.
 
-1.14 villages need a world generator whose terrain they can plan on: vanilla's, superflat, Biomes O' Plenty's, Open Terrain Generator's (RLCraft Dregora), Realistic Terrain Generation's, Farmer's Future Delight's Caves & Cliffs world type, or Caves Not Cliffs. In a world made by any other generator, or with `villages.style` set to `LEGACY`, villages are 1.12.2's, and each building gets the workstation its trade needs: a lectern in the library, a smoker in the butcher's, a blast furnace, smithing table and grindstone at the blacksmith's, a brewing stand in the church, a composter on each field, a bell at the well, and one at random in each small house.
+1.14 villages need a world generator whose terrain they can plan on: vanilla's, superflat, Biomes O' Plenty's, Open Terrain Generator's (RLCraft Dregora), or Realistic Terrain Generation's. In a world made by any other generator, or with `villages.style` set to `LEGACY`, villages are 1.12.2's, and each building gets the workstation its trade needs: a lectern in the library, a smoker in the butcher's, a blast furnace, smithing table and grindstone at the blacksmith's, a brewing stand in the church, a composter on each field, a bell at the well, and one at random in each small house.
 
 `/locate village_plains`, `village_desert`, `village_savanna`, `village_taiga` or `village_snowy` finds the nearest village of that kind.
 
@@ -48,7 +48,7 @@ Villagers with a job go to work every day. During work hours they keep returning
 | <strong>Barrel</strong> |Fisherman |A chest that opens with a block on top |
 | <strong>Cartography table</strong> |Cartographer |Copies and zooms maps without eight paper, and locks them with a glass pane |
 | <strong>Fletching table</strong> |Fletcher |Cuts wood the way a stonecutter cuts stone |
-| <strong>Smithing table</strong> |Toolsmith |Upgrades diamond gear to netherite, as in 1.16, when a netherite mod is installed, and runs Future MC's smithing recipes, CraftTweaker's included. Otherwise nothing, as in 1.14 |
+| <strong>Smithing table</strong> |Toolsmith |Upgrades diamond gear to netherite, as in 1.16, when a mod adds netherite, and runs CraftTweaker's smithing recipes. Otherwise nothing, as in 1.14 |
 | <strong>Loom</strong> |Shepherd |Applies banner patterns for one dye |
 | <strong>Blast furnace</strong> |Armorer |Smelts ore and armor at double speed |
 | <strong>Smoker</strong> |Butcher |Cooks food at double speed |
@@ -95,7 +95,7 @@ Each block does in 1.12.2 what it does in 1.14, apart from the fletching table, 
 
 Here the fletching table is a stonecutter for wood. A log becomes planks, and planks become stairs and slabs, without the offcuts a crafting grid charges you. That part is this mod's own addition, not something 1.14 does.
 
-Both saws read the crafting recipes already installed and work out what can be cut from them, so a pack with Chisel or Quark gets its blocks in both. The composter reads the ore dictionary in the same way.
+Both saws read the crafting recipes already installed and work out what can be cut from them, so a pack with Chisel gets its blocks in both. The composter reads the ore dictionary in the same way.
 
 **Locking a map** works as in 1.14: put a map and a glass pane in the cartography table and you get a locked copy that never changes again, however much the land it shows does. The map you put in keeps updating as before, and copies of a locked map are locked too. The one difference from 1.14 is that a locked map doesn't show your own position marker.
 
@@ -186,14 +186,12 @@ Carry Bad Omen into a village and the village knows: 30 seconds later the horn s
 *   **The bell gives raiders away.** Ring it with raiders nearby and they glow through the walls for a moment. Villagers within earshot run home whenever it rings.
 *   **Hero of the Village** goes to everyone who killed a raider in a raid that was won: 30% off every trade, more for a stronger raid, shown on the trade screen. Villagers come up and throw heroes gifts - bread from the farmer, a book from the librarian, armor from the armorer.
 *   **Pillagers** load their crossbow, take aim and fire as they do in 1.14, and sometimes drop it.
-*   **The crossbow** is yours too: 1.14's recipe, Quick Charge, Multishot and Piercing, arrows or firework rockets, and the four crossbow advancements. With Future MC or Crossbows Backport installed this mod adds none and uses theirs instead (`compat.crossbow`).
+*   **The crossbow** is yours too: 1.14's recipe, Quick Charge, Multishot and Piercing, arrows or firework rockets, and the four crossbow advancements.
 *   **Ravagers** bite hard, throw you back, and charge through leaves. Block a bite with a shield and you may stun one; it roars when it recovers.
 *   **Patrols** roam the land from the fifth day: a captain with the ominous banner and a few pillagers. Kill the captain away from a raid and you have Bad Omen.
 *   **Pillager outposts** stand in plains, deserts, savannas, taigas and snowy tundra: 1.14's own watchtowers, tents and iron golem cages, with pillagers spawning around them day and night and loot at the top of the tower.
 *   **The ominous banner** captains wear is 1.14's, and it's in the creative tab too.
 *   **The ominous bottle** is there for those who prefer current Java's rule, where captains drop a bottle rather than giving Bad Omen outright (`raids.captainDropsOminousBottle`).
-
-Already using **Raids Backport**? This mod uses its raids instead of its own, and fixes what went wrong with the two together: our bell reveals its raiders, villagers hide from its raids, and its Hero of the Village discount is counted once and shown on the trade screen.
 
 ***
 
@@ -203,7 +201,7 @@ Already using **Raids Backport**? This mod uses its raids instead of its own, an
 *   **Cats**, in all eleven coats, separate from ocelots as in 1.14. Tame strays with raw fish. Tamed cats sit on chests, furnaces and beds, keep creepers away, and bring you gifts in the morning. Villages have their own cats, and a black cat lives at each witch hut. Ocelots now learn to trust you instead of being tamed, and tamed ocelots in old worlds turn into cats.
 *   **Foxes**, red and snowy, in taigas. They sleep by day, hunt chickens and rabbits by night with a high pounce, and carry one item in their mouth. Breed them with sweet berries and the cub trusts you.
 *   **Sweet berry bushes** grow wild in taigas. Pick them without breaking the bush, and mind the thorns.
-*   **Bamboo**, grown by 1.14's rules, in its own **bamboo jungle**. **Scaffolding** holds itself up as in 1.14: jump to climb it, sneak to climb down. It works with Aqua Acrobatics.
+*   **Bamboo**, grown by 1.14's rules, in its own **bamboo jungle**. **Scaffolding** holds itself up as in 1.14: jump to climb it, sneak to climb down.
 *   **Pandas**, with all seven personalities and 1.14's gene inheritance. They eat bamboo and cake, and cubs sneeze.
 *   **The campfire** cooks four foods at once without fuel and burns whatever stands in it. Put a hay bale under it for a signal fire. Fishermen sell it.
 *   **Cornflowers, lilies of the valley and wither roses**, which also make **white, black, brown and blue dye**. Anything the Wither kills leaves a wither rose.
@@ -213,29 +211,15 @@ Already using **Raids Backport**? This mod uses its raids instead of its own, an
 
 Each of these has its own config category, and each one switches off.
 
+**1.14's look, too.** Vanilla's blocks, items and mobs get the textures 1.14's Texture Update gave them, about 620 in all, plus 1.15's enchantment glint. Prefer 1.12.2's? Turn off `textures.modernTextures`. Your own resource packs still win.
+
 ***
 
 ## Works with other mods
 
-Nothing here needs another mod. When one of these is installed, its items join the trades where the real game has them:
+Nothing here needs another mod.
 
-| Mod | Adds to trades |
-| --- | --- |
-| <strong>Future MC</strong> |Bucket of cod |
-| <strong>Oceanic Expanse</strong> |Turtle scute, dried kelp block |
-| <strong>Deeper Depths</strong> |Red and yellow candles, sold by the master librarian |
-
-Without them, those trades are simply left out of the draw, and the master librarian sells a name tag as in 1.14. Butchers and leatherworkers have fewer trades at the top levels without these mods. The fletcher's crossbow is this mod's own, or Future MC's or Crossbows Backport's when one of those is installed.
-
-**Future MC** adds many of the same blocks and items: the workstations, bamboo and scaffolding, the campfire, sweet berries, the flowers and dyes, suspicious stew, the walls, signs, stripped logs, wood trapdoors and blue ice. Both sets work, so a fisherman will take either barrel and a panda will eat either bamboo, but one of each pair is hidden from the creative menu, JEI and crafting so you aren't shown two of everything. Choose which set to keep with `compat.futureMcDuplicates` (`KEEP_OURS`, `KEEP_FUTURE_MC` or `SHOW_BOTH`); villages are built with whichever set you keep. With this mod's kept, Future MC's pandas stop spawning. That includes the smithing table, and since this mod's reads Future MC's smithing recipes as well as every other netherite mod's, keeping it loses you nothing.
-
-**Quark, Oceanic Expanse and Farmer's Future Delight**: when one of them provides a block 1.14 villages are built from, villages use theirs.
-
-**Switching from Future MC**: `/futuremc convert` turns the Future MC blocks around you into this mod's while Future MC is still installed, keeping every block's facing and contents, and converting the items in chests and inventories nearby. If you just remove Future MC, a world that had it converts itself as it loads instead of losing those blocks.
-
-**Aqua Acrobatics**: scaffolding climbs as it should, since it doesn't touch how players move.
-
-**Netherite mods:** with almost any 1.12.2 netherite mod installed (Future MC, Spartan Netherite, Netherite Mod, Complete 1.16 Nether Overhaul, Netherite Stuff, NetherUpdate, NetheritePlusMOD, Netherites But 1.12.2, Nether+ and more), the smithing table upgrades diamond gear to that mod's netherite gear, keeping its enchantments and damage. Each mod's ingot makes that mod's own gear, and every netherite ingot gets the `ingotNetherite` ore name.
+**Netherite:** with a mod that adds netherite installed, the smithing table upgrades diamond gear to that mod's netherite gear, keeping its enchantments and damage, and every netherite ingot gets the `ingotNetherite` ore name.
 
 **Open Terrain Generator**, and with it **RLCraft Dregora**, gets 1.14 villages planned on its real terrain, in the biomes and at the spacing its preset sets.
 
@@ -243,17 +227,15 @@ Without them, those trades are simply left out of the draw, and the master libra
 
 **Realistic Terrain Generation**'s world type, original or **Realistic Terrain Generation Unofficial**, gets 1.14 villages planned on its real terrain too.
 
-**Farmer's Future Delight's** Caves & Cliffs world type and **Caves Not Cliffs** both get 1.14 villages built on their 1.18-style terrain, anywhere from y -64 to 319.
-
 **Waystones, Recurrent Complex and RLCraft's village buildings** appear in 1.14 villages too: the waystone by the bell, and the mods' houses, inns and libraries on plots beside the streets. Any mod that adds village buildings the standard way is included, and `villages.modPieceExclusions` leaves out any you don't want.
 
 **Antique Atlas** draws 1.14 villages on its maps, building by building.
 
 **Village Names**, and any other mod that brings its own village generator, keep their own villages.
 
-**JEI Villagers** lists the 1.14 trades villagers actually sell, including any from the backport mods above.
+**JEI Villagers** lists the 1.14 trades villagers actually sell.
 
-**Raids Backport** runs the raids when it is installed; see Raids above. **Deeper Depths'** Bad Omen and ominous bottles start this mod's raids too. Pillagers and ravagers from any mod count as raiders: they glow when the bell rings and villagers run from them.
+Pillagers and ravagers from any mod count as raiders: they glow when the bell rings and villagers run from them.
 
 ***
 
@@ -266,7 +248,6 @@ Without them, those trades are simply left out of the draw, and the master libra
 *   `/discount` gives you the cure discount from the villager you're looking at, and `/discount 8` from every villager within 8 blocks. Operators only.
 *   `/raid start [level]` starts a raid on the village you're in, `/raid stop` ends it, `/raid status` lists the raids under way, and `/raid patrol` sends a patrol out near you. Operators only. The `disableRaids` game rule turns raids off in a world.
 *   `/locate pillager_outpost` finds the nearest outpost.
-*   `/futuremc preview [radius]` and `/futuremc convert [radius]` turn Future MC's blocks and items around you into this mod's, keeping their facing and contents. `/futuremc check` lists anything that wouldn't carry across exactly. Operators only.
 *   `/wanderingtrader status` shows the trader countdown and chance, `/wanderingtrader spawn` sends one to you now, and `/wanderingtrader timer` sets the countdown. Operators only.
 
 ***
@@ -280,11 +261,11 @@ Without them, those trades are simply left out of the draw, and the master libra
 
 ## Config
 
-Everything lives in `config/villagerbackport.cfg`, or the in-game config screen: nineteen categories, with every setting documented in the file.
+Everything lives in `config/villagerbackport.cfg`, or the in-game config screen: twenty categories, with every setting documented in the file.
 
 ![The config screen](https://media.forgecdn.net/attachments/1900/416/config-png.png)
 
-*   `villages`: 1.14's villages or 1.12.2's, real 1.14 blocks from backport mods, other mods' buildings, and workstations for 1.12.2's houses
+*   `villages`: 1.14's villages or 1.12.2's, other mods' buildings, and workstations for 1.12.2's houses
 *   `trades`: 1.14's trades or 1.12.2's, and whether untraded villagers switch over
 *   `restock`: how many per day, the gap between them, working hours, sounds
 *   `pricing`: demand multipliers, gossip, stock, experience, level gating
@@ -293,9 +274,10 @@ Everything lives in `config/villagerbackport.cfg`, or the in-game config screen:
 *   `homes`: beds, sleeping, breeding, golems, gathering at the bell, babies playing
 *   `raids`: the bell and raiders, hiding, the hero discount and gifts, Raid Omen, wave counts, which mob plays each raider, crossbows, patrols, outposts
 *   `display`: trade screen, level badges, villager skins, the refill key
-*   `compat`: Future MC's duplicate blocks, whose raids there are (this mod's or Raids Backport's), and whose crossbow
+*   `compat`: how this mod works alongside other mods
 *   `sounds`: 1.14's crop sounds
 *   `trader`, `cats`, `foxes`, `bamboo`, `campfire`, `flora`, `building`, `villageBlocks`: one for each of the rest of 1.14's content, each with an `enabled` switch
+*   `textures`: 1.14's vanilla textures or 1.12.2's
 
 Every part of it switches off. Turn off `homes` and villagers ignore beds; turn off `jobs` and the workstations are just decoration; set `compat.raids` to `NONE` and there are no raids.
 
