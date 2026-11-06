@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "villagerbackport:stripped_oak_log"
+    },
+    "axis=z": {
+      "model": "villagerbackport:stripped_oak_log",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "villagerbackport:stripped_oak_log",
+      "x": 90,
+      "y": 90
+    },
+    "axis=none": {
+      "model": "villagerbackport:stripped_oak_wood"
+    }
+  }
+}

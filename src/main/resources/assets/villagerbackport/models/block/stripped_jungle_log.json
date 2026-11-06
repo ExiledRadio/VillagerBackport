@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "end": "villagerbackport:blocks/stripped_jungle_log_top",
+    "side": "villagerbackport:blocks/stripped_jungle_log"
+  }
+}

@@ -244,6 +244,10 @@ public final class FutureMc {
             if (com.exiledradio.villagerbackport.building.BuildingContent.enabled()) {
                 names.addAll(com.exiledradio.villagerbackport.building.BuildingContent.futureMcPairs());
             }
+            // Stripped logs and wood, the five wood trapdoors and blue ice, all under 1.14's names.
+            if (com.exiledradio.villagerbackport.woodset.WoodsetContent.enabled()) {
+                names.addAll(com.exiledradio.villagerbackport.woodset.WoodsetContent.futureMcPairs());
+            }
 
             for (String[] shared : names) {
                 Block ours = ForgeRegistries.BLOCKS.getValue(

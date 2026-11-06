@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "villagerbackport:birch_pressure_plate_up"
+    },
+    "powered=true": {
+      "model": "villagerbackport:birch_pressure_plate_down"
+    }
+  }
+}

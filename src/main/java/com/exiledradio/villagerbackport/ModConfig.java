@@ -88,6 +88,10 @@ public final class ModConfig {
     @Config.Comment("1.14's stone slabs, stairs and walls, smooth stone and wood signs.")
     public static final Building building = new Building();
 
+    @Config.LangKey("config.villagerbackport.villageBlocks")
+    @Config.Comment("1.14's stripped logs, wood trapdoors, buttons and pressure plates, blue ice and sea pickles.")
+    public static final VillageBlocks villageBlocks = new VillageBlocks();
+
     private ModConfig() {
     }
 
@@ -1623,5 +1627,35 @@ public final class ModConfig {
         })
         @Config.RequiresMcRestart
         public boolean vanillaRecipeChanges = true;
+    }
+
+    /**
+     * The last blocks 1.14's villages place that 1.12.2 lacks (the {@code woodset} package). Extends
+     * {@code Object}, as every category must.
+     */
+    public static final class VillageBlocks {
+
+        @Config.Comment({
+                "Whether this mod adds the rest of the blocks 1.14's villages are built from:",
+                "stripped logs and stripped wood in all six woods, trapdoors, buttons and pressure",
+                "plates in the five woods that are not oak, blue ice and sea pickles.",
+                "",
+                "With it on, villages place them; off, villages use another mod's (Future MC, Quark,",
+                "Farmer's Future Delight, Oceanic Expanse) or 1.12.2 stand-ins as before. Also narrows",
+                "vanilla's trapdoor, button and pressure plate recipes to oak planks, as 1.14 did, so",
+                "each wood makes its own.",
+                "",
+                "Turning it off in a world that has them deletes them."
+        })
+        @Config.RequiresMcRestart
+        public boolean enabled = true;
+
+        @Config.Comment({
+                "Right-clicking a vanilla log or bark block with any axe strips it, as in 1.14: the",
+                "stripped log keeps its direction, bark becomes stripped wood, and the axe takes one",
+                "point of damage. Does nothing if another mod (Future MC, Quark) already handled the",
+                "click, or when villageBlocks.enabled is off."
+        })
+        public boolean axeStripping = true;
     }
 }

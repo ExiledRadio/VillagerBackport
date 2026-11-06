@@ -7,7 +7,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +18,9 @@ import java.util.Map;
  * chose (stripped logs as logs, blue ice as packed ice, smooth sandstone as cut sandstone). When Future
  * MC, Oceanic Expanse, Quark or Farmer's Future Delight is installed and has the 1.14 block, that
  * block is placed instead. With none of them, this mod's own 1.14 building blocks (slabs, stairs,
- * walls, smooth blocks and wood signs, when {@code building.enabled} is on) are. With
+ * walls, smooth blocks and wood signs, when {@code building.enabled} is on) and village blocks
+ * (stripped logs and wood, wood trapdoors, buttons and pressure plates, blue ice and sea pickles,
+ * when {@code villageBlocks.enabled} is on) are. With
  * {@code villages.backportBlocks} off, or a block nobody provides, the stand-ins are placed as before.
  *
  * <p>A backport block is given the 1.14 properties it understands, then the converted 1.12.2 ones (a
@@ -52,21 +53,25 @@ final class BackportBlocks {
         for (String wood : WOODS) {
             // Future MC leaves its stripped logs out when Oceanic Expanse is installed and its
             // Oceanic Expanse option is on, so Farmer's Future Delight's are worth having as well.
+            // This mod's own (villageBlocks.enabled) come last, as with the building blocks below.
             add("stripped_" + wood + "_log", "futuremc:stripped_" + wood + "_log",
-                    "farmers_future_delight:stripped_" + wood + "_log");
+                    "farmers_future_delight:stripped_" + wood + "_log", VB + "stripped_" + wood + "_log");
             add("stripped_" + wood + "_wood", "futuremc:stripped_" + wood + "_wood",
-                    "farmers_future_delight:stripped_" + wood + "_wood");
+                    "farmers_future_delight:stripped_" + wood + "_wood", VB + "stripped_" + wood + "_wood");
             if (!"oak".equals(wood)) {
-                // 1.12.2 has one trapdoor, button and pressure plate, all oak.
-                add(wood + "_trapdoor", "futuremc:" + wood + "_trapdoor", "quark:" + wood + "_trapdoor");
-                add(wood + "_button", "quark:" + wood + "_button");
-                add(wood + "_pressure_plate", "quark:" + wood + "_pressure_plate");
+                // 1.12.2 has one trapdoor, button and pressure plate, all oak. The 1.14 properties
+                // (facing, half, open, powered) carry across by name; a button's 1.14 face/facing
+                // pair is overridden by the converted 1.12.2 facing, as for Quark's.
+                add(wood + "_trapdoor", "futuremc:" + wood + "_trapdoor", "quark:" + wood + "_trapdoor",
+                        VB + wood + "_trapdoor");
+                add(wood + "_button", "quark:" + wood + "_button", VB + wood + "_button");
+                add(wood + "_pressure_plate", "quark:" + wood + "_pressure_plate", VB + wood + "_pressure_plate");
                 add(wood + "_wall_sign", "futuremc:" + wood + "_wall_sign", VB + wood + "_wall_sign");
                 add(wood + "_sign", "futuremc:" + wood + "_standing_sign", VB + wood + "_sign");
             }
         }
 
-        add("blue_ice", "futuremc:blue_ice", "oe:blue_ice");
+        add("blue_ice", "futuremc:blue_ice", "oe:blue_ice", VB + "blue_ice");
         add("smooth_stone", "futuremc:smooth_stone", VB + "smooth_stone");
 
         TABLE.put("smooth_sandstone", Arrays.asList(new Option("futuremc:smooth_sandstone"),
@@ -107,8 +112,9 @@ final class BackportBlocks {
         addIfAbsent("smooth_red_sandstone", VB + "smooth_red_sandstone");
         addIfAbsent("smooth_quartz", VB + "smooth_quartz");
 
-        // Oceanic Expanse names the count and the water differently.
-        TABLE.put("sea_pickle", Collections.singletonList(new Option("oe:sea_pickle") {
+        // Oceanic Expanse names the count and the water differently. This mod's own uses 1.14's
+        // names, pickles and waterlogged, so they carry across by name.
+        TABLE.put("sea_pickle", Arrays.asList(new Option("oe:sea_pickle") {
             @Override
             NBTTagCompound fixed(NBTTagCompound source) {
                 NBTTagCompound out = new NBTTagCompound();
@@ -116,7 +122,7 @@ final class BackportBlocks {
                 out.setString("in_water", source.hasKey("waterlogged") ? source.getString("waterlogged") : "false");
                 return out;
             }
-        }));
+        }, new Option(VB + "sea_pickle")));
     }
 
     private BackportBlocks() {

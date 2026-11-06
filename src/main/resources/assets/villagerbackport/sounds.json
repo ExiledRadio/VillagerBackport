@@ -2801,5 +2801,47 @@
       }
     ],
     "subtitle": "subtitles.villagerbackport.entity.panda.hurt"
+  },
+  "item.axe.strip": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "villagerbackport:item/axe/strip1",
+        "volume": 0.9
+      },
+      {
+        "name": "villagerbackport:item/axe/strip2",
+        "volume": 0.9
+      },
+      {
+        "name": "villagerbackport:item/axe/strip3",
+        "volume": 0.9
+      },
+      {
+        "name": "villagerbackport:item/axe/strip4",
+        "volume": 0.9
+      },
+      {
+        "name": "villagerbackport:item/axe/strip1",
+        "volume": 0.9,
+        "pitch": 0.85
+      },
+      {
+        "name": "villagerbackport:item/axe/strip2",
+        "volume": 0.9,
+        "pitch": 0.85
+      },
+      {
+        "name": "villagerbackport:item/axe/strip3",
+        "volume": 0.9,
+        "pitch": 0.85
+      },
+      {
+        "name": "villagerbackport:item/axe/strip4",
+        "volume": 0.9,
+        "pitch": 0.85
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.item.axe.strip"
   }
 }
