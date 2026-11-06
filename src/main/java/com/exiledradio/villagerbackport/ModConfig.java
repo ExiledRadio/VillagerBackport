@@ -92,6 +92,10 @@ public final class ModConfig {
     @Config.Comment("1.14's stripped logs, wood trapdoors, buttons and pressure plates, blue ice and sea pickles.")
     public static final VillageBlocks villageBlocks = new VillageBlocks();
 
+    @Config.LangKey("config.villagerbackport.textures")
+    @Config.Comment("1.14's Texture Update for vanilla blocks, items and mobs.")
+    public static final Textures textures = new Textures();
+
     private ModConfig() {
     }
 
@@ -838,6 +842,19 @@ public final class ModConfig {
         @Config.RequiresMcRestart
         public com.exiledradio.villagerbackport.compat.FutureMc.Duplicates futureMcDuplicates =
                 com.exiledradio.villagerbackport.compat.FutureMc.Duplicates.KEEP_OURS;
+
+        @Config.Comment({
+                "When a world that had Future MC is loaded without it, turn its blocks and items",
+                "into this mod's instead of letting them vanish.",
+                "",
+                "Stripped logs, walls, slabs, signs, trapdoors, workstations, bamboo, flowers and",
+                "the rest keep their facing and everything else, and barrels, furnaces, lecterns",
+                "and campfires keep what was in them. Each chunk is converted the first time it",
+                "loads. Future MC's blocks this mod has nothing for still turn to air.",
+                "",
+                "With Future MC installed, /futuremc convert does the same on demand."
+        })
+        public boolean convertRemovedFutureMc = true;
 
         @Config.Comment({
                 "Keep villagers ordinary through zombification and curing.",
@@ -1657,5 +1674,21 @@ public final class ModConfig {
                 "click, or when villageBlocks.enabled is off."
         })
         public boolean axeStripping = true;
+    }
+
+    public static final class Textures {
+
+        @Config.Comment({
+                "Give vanilla's blocks, items and mobs the textures 1.14's Texture Update gave them,",
+                "plus 1.15's enchantment glint. Off keeps 1.12.2's, and also puts the tuxedo, red and",
+                "Siamese cats back to the way 1.12.2 drew them.",
+                "",
+                "Client only; a server ignores it. Resource packs you pick, and other mods that change a",
+                "vanilla texture on purpose, still win over it. Villagers, horses and water keep 1.12.2's",
+                "textures either way: 1.14's don't fit 1.12.2's models or colors.",
+                "",
+                "Changing it in game reloads resources, as F3+T does."
+        })
+        public boolean modernTextures = true;
     }
 }

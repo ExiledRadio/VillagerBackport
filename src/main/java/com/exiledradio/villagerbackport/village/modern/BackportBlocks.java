@@ -15,13 +15,14 @@ import java.util.Map;
  * The real block, from a backport mod, for 1.14 blocks a village uses that 1.12.2 does not have.
  *
  * <p>The structure files carry each block's 1.14 name beside the stand-in 1.12.2 block the converter
- * chose (stripped logs as logs, blue ice as packed ice, smooth sandstone as cut sandstone). When Future
- * MC, Oceanic Expanse, Quark or Farmer's Future Delight is installed and has the 1.14 block, that
- * block is placed instead. With none of them, this mod's own 1.14 building blocks (slabs, stairs,
- * walls, smooth blocks and wood signs, when {@code building.enabled} is on) and village blocks
- * (stripped logs and wood, wood trapdoors, buttons and pressure plates, blue ice and sea pickles,
- * when {@code villageBlocks.enabled} is on) are. With
- * {@code villages.backportBlocks} off, or a block nobody provides, the stand-ins are placed as before.
+ * chose (stripped logs as logs, blue ice as packed ice, smooth sandstone as cut sandstone). This
+ * mod's own 1.14 block is placed first: its building blocks (slabs, stairs, walls, smooth blocks and
+ * wood signs, while {@code building.enabled} is on) and village blocks (stripped logs and wood, wood
+ * trapdoors, buttons and pressure plates, blue ice and sea pickles, while {@code villageBlocks.enabled}
+ * is on). Only where this mod's is switched off is Future MC's, Oceanic Expanse's, Quark's or Farmer's
+ * Future Delight's used instead, and only with {@code villages.backportBlocks} on. A block nobody
+ * provides gets the stand-in, as before. With Future MC's kept ({@code compat.futureMcDuplicates}
+ * {@code KEEP_FUTURE_MC}), {@code FutureMc.preferred} then swaps this mod's block for its Future MC twin.
  *
  * <p>A backport block is given the 1.14 properties it understands, then the converted 1.12.2 ones (a
  * button's {@code facing} is only right in the converted form), then any fixed ones the table names.
@@ -51,9 +52,7 @@ final class BackportBlocks {
 
     static {
         for (String wood : WOODS) {
-            // Future MC leaves its stripped logs out when Oceanic Expanse is installed and its
-            // Oceanic Expanse option is on, so Farmer's Future Delight's are worth having as well.
-            // This mod's own (villageBlocks.enabled) come last, as with the building blocks below.
+            // This mod's own are tried first (see resolve), whatever order these are listed in.
             add("stripped_" + wood + "_log", "futuremc:stripped_" + wood + "_log",
                     "farmers_future_delight:stripped_" + wood + "_log", VB + "stripped_" + wood + "_log");
             add("stripped_" + wood + "_wood", "futuremc:stripped_" + wood + "_wood",
@@ -96,8 +95,7 @@ final class BackportBlocks {
         add("mossy_cobblestone_slab", "quark:cobblestone_mossy_slab", VB + "mossy_cobblestone_slab");
         add("mossy_cobblestone_slab#double", "quark:cobblestone_mossy_slab_double", VB + "mossy_cobblestone_double_slab");
 
-        // This mod's own building blocks (building.enabled) come last, so a pack that already has
-        // another mod's keeps building with those, as it did before this mod had any.
+        // 1.14 blocks only this mod provides.
         for (String name : new String[] {"stone", "polished_andesite", "polished_diorite", "polished_granite",
                 "mossy_stone_brick", "smooth_red_sandstone", "smooth_quartz", "red_nether_brick", "end_stone_brick",
                 "cut_sandstone", "cut_red_sandstone"}) {
@@ -146,7 +144,7 @@ final class BackportBlocks {
                 }
             }
         }
-        if (!ModConfig.villages.backportBlocks || !source.startsWith("minecraft:")) {
+        if (!source.startsWith("minecraft:")) {
             return null;
         }
         String key = source.substring("minecraft:".length());
@@ -157,17 +155,33 @@ final class BackportBlocks {
         if (options == null) {
             return null;
         }
-        for (Option option : options) {
-            NBTTagCompound merged = new NBTTagCompound();
-            merged.merge(sourceProps);
-            merged.merge(props);
-            merged.merge(option.fixed(sourceProps));
-            IBlockState state = ModernTemplate.resolve(new String[] {option.name}, merged);
-            if (state != null) {
-                return state;
+        // This mod's own block first, whatever villages.backportBlocks says - that setting is about
+        // borrowing other mods' blocks. Another mod's only if this mod's is switched off.
+        for (int pass = 0; pass < 2; pass++) {
+            boolean own = pass == 0;
+            if (!own && !ModConfig.villages.backportBlocks) {
+                break;
+            }
+            for (Option option : options) {
+                if (option.name.startsWith(VB) != own) {
+                    continue;
+                }
+                IBlockState state = tryOption(option, sourceProps, props);
+                if (state != null) {
+                    return state;
+                }
             }
         }
         return null;
+    }
+
+    @Nullable
+    private static IBlockState tryOption(Option option, NBTTagCompound sourceProps, NBTTagCompound props) {
+        NBTTagCompound merged = new NBTTagCompound();
+        merged.merge(sourceProps);
+        merged.merge(props);
+        merged.merge(option.fixed(sourceProps));
+        return ModernTemplate.resolve(new String[] {option.name}, merged);
     }
 
     private static void add(String source, String... names) {

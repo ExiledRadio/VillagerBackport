@@ -231,6 +231,8 @@ Without them, those trades are simply left out of the draw, and the master libra
 
 **Quark, Oceanic Expanse and Farmer's Future Delight**: when one of them provides a block 1.14 villages are built from, villages use theirs.
 
+**Switching from Future MC**: `/futuremc convert` turns the Future MC blocks around you into this mod's while Future MC is still installed, keeping every block's facing and contents, and converting the items in chests and inventories nearby. If you just remove Future MC, a world that had it converts itself as it loads instead of losing those blocks.
+
 **Aqua Acrobatics**: scaffolding climbs as it should, since it doesn't touch how players move.
 
 **Netherite mods:** with almost any 1.12.2 netherite mod installed (Future MC, Spartan Netherite, Netherite Mod, Complete 1.16 Nether Overhaul, Netherite Stuff, NetherUpdate, NetheritePlusMOD, Netherites But 1.12.2, Nether+ and more), the smithing table upgrades diamond gear to that mod's netherite gear, keeping its enchantments and damage. Each mod's ingot makes that mod's own gear, and every netherite ingot gets the `ingotNetherite` ore name.
@@ -264,6 +266,7 @@ Without them, those trades are simply left out of the draw, and the master libra
 *   `/discount` gives you the cure discount from the villager you're looking at, and `/discount 8` from every villager within 8 blocks. Operators only.
 *   `/raid start [level]` starts a raid on the village you're in, `/raid stop` ends it, `/raid status` lists the raids under way, and `/raid patrol` sends a patrol out near you. Operators only. The `disableRaids` game rule turns raids off in a world.
 *   `/locate pillager_outpost` finds the nearest outpost.
+*   `/futuremc preview [radius]` and `/futuremc convert [radius]` turn Future MC's blocks and items around you into this mod's, keeping their facing and contents. `/futuremc check` lists anything that wouldn't carry across exactly. Operators only.
 *   `/wanderingtrader status` shows the trader countdown and chance, `/wanderingtrader spawn` sends one to you now, and `/wanderingtrader timer` sets the countdown. Operators only.
 
 ***

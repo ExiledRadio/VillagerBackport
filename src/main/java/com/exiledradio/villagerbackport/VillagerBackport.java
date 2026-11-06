@@ -48,6 +48,17 @@ public final class VillagerBackport {
     @Mod.Instance(MOD_ID)
     public static VillagerBackport instance;
 
+    /**
+     * The texture packs go in before FML's one resource load ahead of pre-init - see ModernTextures.
+     * Like ClientSetup below, the call names no client type, so a server never loads that class.
+     */
+    @Mod.EventHandler
+    public void construct(net.minecraftforge.fml.common.event.FMLConstructionEvent event) {
+        if (event.getSide().isClient()) {
+            com.exiledradio.villagerbackport.client.ModernTextures.install();
+        }
+    }
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         // Resolve the private villager fields once, up front. If this fails the handler below
@@ -158,10 +169,9 @@ public final class VillagerBackport {
         if (com.exiledradio.villagerbackport.trader.TraderContent.enabled()) {
             event.registerServerCommand(new com.exiledradio.villagerbackport.trader.TraderCommand());
         }
+        event.registerServerCommand(new com.exiledradio.villagerbackport.migrate.FutureMcCommand());
         // Registered after vanilla's, so it takes the /locate name over.
         event.registerServerCommand(new com.exiledradio.villagerbackport.village.modern.LocateCommand());
-        // Headless checks for cats; only in the development workspace.
-        com.exiledradio.villagerbackport.cat.CatTestCommand.registerIfDev(event);
     }
 
 }

@@ -12,7 +12,7 @@ The rest of 1.14. The wandering trader and its llamas, cats, foxes, pandas, bamb
 *   It flees zombies, pillagers, vindicators, evokers, illusioners and vexes, and panics when hit. Zombies, pillagers, vindicators, evokers, illusioners and ravagers go after it as they go after villagers.
 *   **Trader llamas** wear the trader's blue and gold decor (a carpet still replaces it), can't be ridden while the trader holds the lead, and spit at whatever attacks the trader. Take one with your own lead and it's yours to keep.
 *   1.14's models, textures and sounds, and spawn eggs for both.
-*   `trader.enabled` turns the whole thing off. `trader.naturalSpawning`, `spawnDelay`, the three chance settings, `spawnRadius`, `despawnTicks`, `llamas` and `oneAtATime` (no second trader while the last may still be around) tune it, and the **`doTraderSpawning` game rule** switches it off per world, as in current Java. `/wanderingtrader status`, `spawn` and `timer` for operators (plus `awake` and `selftest` for testing on a server with nobody on it).
+*   `trader.enabled` turns the whole thing off. `trader.naturalSpawning`, `spawnDelay`, the three chance settings, `spawnRadius`, `despawnTicks`, `llamas` and `oneAtATime` (no second trader while the last may still be around) tune it, and the **`doTraderSpawning` game rule** switches it off per world, as in current Java. `/wanderingtrader status`, `spawn` and `timer` for operators.
 
 ## New: cats
 
@@ -223,6 +223,16 @@ The **trapdoor**, **wooden button** and **wooden pressure plate** now take oak p
 ## With Future MC: village blocks
 
 Future MC adds stripped logs and wood, the five wood trapdoors and blue ice too. `compat.futureMcDuplicates` covers them like the rest: by default Future MC's are hidden (no recipe, JEI entry or creative listing; placed ones keep working) and villages build with this mod's. `KEEP_FUTURE_MC` hides this mod's instead. Future MC has no wood buttons, pressure plates or sea pickles, so there is nothing to pair those with.
+
+## New: switching from Future MC
+
+*   **`/futuremc convert [radius]`** turns Future MC's blocks around you into this mod's, while Future MC is still installed. Every block keeps its facing, axis, half, open state and the rest exactly, and whatever is in it - a barrel's or furnace's items, a lectern's book, the food on a campfire, a sign's text - moves into the new block. Neighbors aren't updated, so nothing around it falls or drops. Items are converted too, in every container, item frame and dropped item in the area and in the inventory and ender chest of every player in it. `/futuremc preview` counts what it would change first; `loaded` instead of a radius does every loaded chunk. Operators only. Back up the world first.
+*   **Removing Future MC from a world no longer loses its blocks.** When a world that had Future MC loads without it, each chunk has its Future MC blocks turned into this mod's the first time it loads, with their state and contents, and Future MC's items load as this mod's wherever they are. Future MC's dyes and bark wood load as stand-ins that work as the real thing and become it as soon as a player picks them up. Future MC content this mod has no counterpart for (bees, soul fire, chain, netherite and so on) still turns to air. `compat.convertRemovedFutureMc` switches it off.
+*   Covers all 69 Future MC blocks this mod has a counterpart for: the workstations, bell, lantern, campfire, bamboo, scaffolding, sweet berry bush, flowers, walls, smooth blocks, signs, stripped logs and wood, trapdoors and blue ice, plus its bark wood, which becomes 1.12.2's six-sided log.
+
+## Changed: the grindstone hangs on walls and ceilings
+
+*   As in 1.14, the grindstone goes on the floor, the ceiling or a wall, depending on which way you're looking as you place it. Grindstones already placed stay on the floor. The savanna weaponsmith's wall-mounted grindstone is now built as in 1.14.
 
 # 2.2.0
 

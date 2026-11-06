@@ -78,6 +78,11 @@ public final class ModernTemplate {
                     && !this.props.hasKey("attachment")) {
                 this.props.setString("attachment", this.sourceProps.getString("attachment"));
             }
+            // Likewise the grindstone's face, from before it could hang on a wall.
+            if ("minecraft:grindstone".equals(this.source) && this.sourceProps.hasKey("face")
+                    && !this.props.hasKey("face")) {
+                this.props.setString("face", this.sourceProps.getString("face"));
+            }
         }
 
         /** @return the state to place, or null for "place nothing" */

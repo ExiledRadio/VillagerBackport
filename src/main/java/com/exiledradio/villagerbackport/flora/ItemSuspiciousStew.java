@@ -81,5 +81,9 @@ public class ItemSuspiciousStew extends ItemSoup {
                 player.addPotionEffect(new PotionEffect(effect, ticks));
             }
         }
+        // A Future MC stew, kept in vanilla's potion layout, from a world Future MC was removed from.
+        for (PotionEffect effect : net.minecraft.potion.PotionUtils.getEffectsFromStack(stack)) {
+            player.addPotionEffect(new PotionEffect(effect));
+        }
     }
 }
