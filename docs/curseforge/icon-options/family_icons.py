@@ -145,11 +145,82 @@ CORE = cube('#3a3150', '#2a2339', '#1f1a2b', edge='#b7a6f2') + '''
   <circle cx="200" cy="152" r="16" fill="#e9e1ff"/>
   <circle cx="200" cy="152" r="28" fill="#b7a6f2" opacity="0.35"/>'''
 
-# Modern MC: a grass block.
-GRASS = cube('#6bb04a', '#8a5a3a', '#6e4630') + '''
-  <path d="M116 152 L200 194 L200 214 L188 206 L176 216 L164 204 L150 212 L138 198 L126 206 L116 196 Z" fill="#5a9a3c"/>
-  <path d="M200 194 L284 152 L284 196 L274 204 L262 196 L250 208 L238 198 L226 210 L212 202 L200 214 Z" fill="#4c8732"/>
-  <rect x="140" y="232" width="12" height="12" fill="#a0714f"/><rect x="238" y="250" width="12" height="12" fill="#56351f"/>'''
+# Modern MC: a grass block, drawn texel by texel from Minecraft's own 16x16 grass_block_side and
+# grass_block_top (1.18.2, in grass/), so every pixel row runs parallel to the block's edges as in game.
+# Top tinted with plains grass (#91BD59); side faces shaded as vanilla lights them (0.8 and 0.6).
+def textured_cube(cx=200, cy=110, w=84, h=42, depth=104):
+    from PIL import Image
+    side = Image.open(os.path.join(HERE, 'grass', 'grass_block_side.png')).convert('RGB')
+    top = Image.open(os.path.join(HERE, 'grass', 'grass_block_top.png')).convert('RGB')
+    tint = (0x91, 0xBD, 0x59)
+    n = 16
+
+    def col(rgb, k):
+        return '#%02x%02x%02x' % tuple(max(0, min(255, int(round(c * k)))) for c in rgb)
+
+    def face(origin, du, dv, texel):
+        # origin: corner of texel (0,0); du/dv: one texel step along u and v.
+        out = []
+        for v in range(n):
+            for u in range(n):
+                p0 = (origin[0] + u * du[0] + v * dv[0], origin[1] + u * du[1] + v * dv[1])
+                q = [p0, (p0[0] + du[0], p0[1] + du[1]),
+                     (p0[0] + du[0] + dv[0], p0[1] + du[1] + dv[1]), (p0[0] + dv[0], p0[1] + dv[1])]
+                c = texel(u, v)
+                out.append('<polygon points="%s" fill="%s" stroke="%s" stroke-width="0.6" stroke-linejoin="round"/>'
+                           % (' '.join('%.2f,%.2f' % pt for pt in q), c, c))
+        return ''.join(out)
+
+    l = (cx - w, cy + h)      # left corner of the top diamond
+    b = (cx, cy + 2 * h)      # front corner
+    t = (cx, cy)              # back corner
+    down = depth / float(n)
+    # Left face: u runs from the left corner to the front corner, v straight down.
+    left = face(l, (w / float(n), h / float(n)), (0, down),
+                lambda u, v: col(side.getpixel((u, v)), 0.8))
+    # Right face: u runs from the front corner to the right corner, v straight down.
+    right = face(b, (w / float(n), -h / float(n)), (0, down),
+                 lambda u, v: col(side.getpixel((u, v)), 0.6))
+    # Top face: u from the left corner toward the back, v from the left corner toward the front.
+    top_face = face(l, (w / float(n), -h / float(n)), (w / float(n), h / float(n)),
+                    lambda u, v: col(tuple(a * t_ / 255.0 for a, t_ in zip(top.getpixel((u, v)), tint)), 1.0))
+    return left + right + top_face
+
+
+GRASS = textured_cube()
+
+
+def flat_cube(cx=200, cy=110, w=84, h=42, depth=104):
+    """The family's flat style: the old colors, with the grass edge stepped texel by texel exactly where
+    Minecraft's grass_block_side_overlay is, so each step runs parallel to the block's edges."""
+    from PIL import Image
+    mask = Image.open(os.path.join(HERE, 'grass', 'grass_block_side_overlay.png')).convert('RGBA')
+    n = 16
+    out = cube('#6bb04a', '#8a5a3a', '#6e4630', cx=cx, cy=cy, w=w, h=h, depth=depth)
+    l, b = (cx - w, cy + h), (cx, cy + 2 * h)
+    down = depth / float(n)
+
+    def strip(origin, du, color):
+        # Union of green texels per column: one parallelogram per column, from the top edge down to its
+        # last green texel, so the edge steps along the face's own grid.
+        parts = []
+        for u in range(n):
+            last = max([v for v in range(n) if mask.getpixel((u, v))[3] > 0] or [-1])
+            if last < 0:
+                continue
+            x0, y0 = origin[0] + u * du[0], origin[1] + u * du[1]
+            q = [(x0, y0), (x0 + du[0], y0 + du[1]), (x0 + du[0], y0 + du[1] + (last + 1) * down),
+                 (x0, y0 + (last + 1) * down)]
+            parts.append('<polygon points="%s" fill="%s" stroke="%s" stroke-width="0.6"/>'
+                         % (' '.join('%.2f,%.2f' % pt for pt in q), color, color))
+        return ''.join(parts)
+
+    out += strip(l, (w / float(n), h / float(n)), '#5a9a3c')
+    out += strip(b, (w / float(n), -h / float(n)), '#4c8732')
+    return out
+
+
+GRASS_FLAT = flat_cube()
 
 ICONS = [
     ('backport-core', 'Backport Core', '#b7a6f2', CORE),
@@ -162,12 +233,17 @@ ICONS = [
     ('trails-and-tales-backport', 'Trails & Tales Backport', '#ff8fc0', CHERRY),
     ('tricky-trials-backport', 'Tricky Trials Backport', '#ffa64d', KEY),
     ('modern-mc', 'Modern MC', '#7fd36b', GRASS),
+    ('modern-mc-flat', 'Modern MC (flat)', '#7fd36b', GRASS_FLAT),
 ]
 
 if __name__ == '__main__':
     os.makedirs(OUT, exist_ok=True)
     profile = os.path.join(os.environ.get('TEMP', OUT), 'vbp-edge-profile')
+    import sys
+    only = set(sys.argv[1:])  # optional: the slugs to redraw
     for slug, title, halo, emblem in ICONS:
+        if only and slug not in only:
+            continue
         svg = os.path.join(OUT, slug + '.svg')
         with open(svg, 'w', encoding='utf-8', newline='\n') as f:
             f.write(FRAME.replace('{halo}', halo).replace('{emblem}', emblem))
