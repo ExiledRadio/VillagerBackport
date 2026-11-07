@@ -1,5 +1,7 @@
 package com.exiledradio.villagerbackport.block;
 
+import com.exiledradio.backportcore.smithing.SmithingUpgrades;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;

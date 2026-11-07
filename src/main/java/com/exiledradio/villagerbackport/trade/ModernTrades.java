@@ -1,5 +1,7 @@
 package com.exiledradio.villagerbackport.trade;
 
+import com.exiledradio.backportcore.trade.TradeRegistry;
+
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.passive.EntityVillager;
@@ -22,6 +24,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -114,9 +117,9 @@ public final class ModernTrades {
             return null;
         }
         List<List<EntityVillager.ITradeList>> out = new ArrayList<List<EntityVillager.ITradeList>>();
-        for (Trade[] tier : tiers) {
+        for (int t = 0; t < tiers.length; t++) {
             List<EntityVillager.ITradeList> level = new ArrayList<EntityVillager.ITradeList>();
-            for (final Trade trade : tier) {
+            for (final Trade trade : pool(careerKey, t + 1, tiers[t])) {
                 if (!trade.available()) {
                     continue;
                 }
@@ -148,7 +151,7 @@ public final class ModernTrades {
         }
 
         List<Trade> pool = new ArrayList<Trade>();
-        for (Trade trade : tiers[tier - 1]) {
+        for (Trade trade : pool(careerKey, tier, tiers[tier - 1])) {
             if (trade.available()) {
                 pool.add(trade);
             }
@@ -170,6 +173,29 @@ public final class ModernTrades {
             }
         }
         return added;
+    }
+
+    /**
+     * @return a level's pool: this mod's table, then whatever other mods added to it through Backport
+     * Core's {@code TradeRegistry}
+     */
+    private static List<Trade> pool(String careerKey, int tier, Trade[] own) {
+        List<Trade> pool = new ArrayList<Trade>(Arrays.asList(own));
+        for (final TradeRegistry.VillagerTrade added : TradeRegistry.villagerTrades(careerKey, tier)) {
+            pool.add(new Trade() {
+                @Override
+                public boolean available() {
+                    return added.available();
+                }
+
+                @Nullable
+                @Override
+                public MerchantRecipe offer(@Nullable EntityVillager villager, Random random) {
+                    return added.offer(villager, random);
+                }
+            });
+        }
+        return pool;
     }
 
     // ---------------------------------------------------------------------------------------------

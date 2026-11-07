@@ -31,6 +31,9 @@ import org.apache.logging.log4j.Logger;
         name = VillagerBackport.MOD_NAME,
         version = VillagerBackport.VERSION,
         acceptedMinecraftVersions = "[1.12.2]",
+        // Backport Core holds the code the backports share: textures, Future MC migration, duplicate
+        // hiding, smithing upgrades and the terrain the villages are planned on.
+        dependencies = "required-after:backportcore@[1.0.0,)",
         // A client without the mod can still join a server that has it: the trading changes are all
         // server-side, and the server sends the resulting trade list the way it always does. Such a
         // client will not see this mod's blocks, so a server using them should expect it installed.
@@ -48,17 +51,6 @@ public final class VillagerBackport {
     @Mod.Instance(MOD_ID)
     public static VillagerBackport instance;
 
-    /**
-     * The texture packs go in before FML's one resource load ahead of pre-init - see ModernTextures.
-     * Like ClientSetup below, the call names no client type, so a server never loads that class.
-     */
-    @Mod.EventHandler
-    public void construct(net.minecraftforge.fml.common.event.FMLConstructionEvent event) {
-        if (event.getSide().isClient()) {
-            com.exiledradio.villagerbackport.client.ModernTextures.install();
-        }
-    }
-
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         // Resolve the private villager fields once, up front. If this fails the handler below
@@ -67,6 +59,18 @@ public final class VillagerBackport {
         VillagerAccess.init();
 
         NetworkHandler.init();
+
+        // What this mod tells Backport Core: its Future MC pairs, both for hiding duplicates and for
+        // converting worlds; how the smithing table is set up; and that its 1.13 blocks (which Core's
+        // ownership table says it owns) are only there with villageBlocks.enabled on.
+        com.exiledradio.villagerbackport.compat.FutureMc.register();
+        com.exiledradio.villagerbackport.migrate.FutureMcPairs.register();
+        com.exiledradio.backportcore.smithing.SmithingUpgrades.configure(
+                () -> ModConfig.workstations.netheriteUpgrades,
+                () -> ModConfig.workstations.netheriteNameMatching,
+                () -> ModConfig.workstations.removeCraftingUpgrades);
+        com.exiledradio.backportcore.ownership.BlockOwnership.provides(MOD_ID,
+                com.exiledradio.villagerbackport.woodset.WoodsetContent::enabled);
         net.minecraftforge.fml.common.network.NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 
         MinecraftForge.EVENT_BUS.register(new RestockHandler());
@@ -123,7 +127,6 @@ public final class VillagerBackport {
     @Mod.EventHandler
     public void init(net.minecraftforge.fml.common.event.FMLInitializationEvent event) {
         com.exiledradio.villagerbackport.job.MasonCareer.register();
-        com.exiledradio.villagerbackport.compat.FutureMc.hideFromCreative();
         com.exiledradio.villagerbackport.fox.FoxContent.init();
     }
 
@@ -132,14 +135,14 @@ public final class VillagerBackport {
     public void postInit(net.minecraftforge.fml.common.event.FMLPostInitializationEvent event) {
         com.exiledradio.villagerbackport.compat.FutureMc.removeLateRecipes();
         com.exiledradio.villagerbackport.block.CropSounds.apply();
-        com.exiledradio.villagerbackport.block.SmithingUpgrades.registerIngots();
+        com.exiledradio.backportcore.smithing.SmithingUpgrades.registerIngots();
         com.exiledradio.villagerbackport.raid.Raids.init();
     }
 
     /** Every mod's recipes are in by now, so the smithing table's upgrades can be gathered. */
     @Mod.EventHandler
     public void loadComplete(net.minecraftforge.fml.common.event.FMLLoadCompleteEvent event) {
-        com.exiledradio.villagerbackport.block.SmithingUpgrades.isActive();
+        com.exiledradio.backportcore.smithing.SmithingUpgrades.isActive();
     }
 
     /**
@@ -169,7 +172,6 @@ public final class VillagerBackport {
         if (com.exiledradio.villagerbackport.trader.TraderContent.enabled()) {
             event.registerServerCommand(new com.exiledradio.villagerbackport.trader.TraderCommand());
         }
-        event.registerServerCommand(new com.exiledradio.villagerbackport.migrate.FutureMcCommand());
         // Registered after vanilla's, so it takes the /locate name over.
         event.registerServerCommand(new com.exiledradio.villagerbackport.village.modern.LocateCommand());
     }

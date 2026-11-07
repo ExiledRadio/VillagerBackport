@@ -1,5 +1,12 @@
 package com.exiledradio.villagerbackport.village.modern;
 
+import com.exiledradio.backportcore.terrain.TerrainHeights;
+import com.exiledradio.backportcore.terrain.WorldHeights;
+import com.exiledradio.backportcore.terrain.OtgTerrain;
+import com.exiledradio.backportcore.terrain.FlatTerrain;
+import com.exiledradio.backportcore.terrain.BopTerrain;
+import com.exiledradio.backportcore.terrain.RtgTerrain;
+
 import com.exiledradio.villagerbackport.ModConfig;
 import com.exiledradio.villagerbackport.VillagerBackport;
 
@@ -413,8 +420,8 @@ public class MapGenModernVillage extends MapGenVillage {
             BiomeManager.addVillageBiome(Biomes.ICE_PLAINS, true);
         }
         MinecraftForge.TERRAIN_GEN_BUS.register(new MapGenModernVillage.Swap());
-        // Superflat builds its village generator without Forge's event; see FlatTerrain.
-        MinecraftForge.EVENT_BUS.register(new FlatTerrain.Swap());
+        // Superflat builds its village generator without Forge's event; see FlatVillageSwap.
+        MinecraftForge.EVENT_BUS.register(new FlatVillageSwap());
     }
 
     public static final class Swap {

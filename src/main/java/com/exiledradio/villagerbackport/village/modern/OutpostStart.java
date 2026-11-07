@@ -1,5 +1,7 @@
 package com.exiledradio.villagerbackport.village.modern;
 
+import com.exiledradio.backportcore.terrain.TerrainHeights;
+
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.structure.StructureStart;
 

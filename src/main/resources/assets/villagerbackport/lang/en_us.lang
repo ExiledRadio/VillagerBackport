@@ -29,7 +29,6 @@ config.villagerbackport.campfire=Campfire
 config.villagerbackport.flora=Flowers & Dyes
 config.villagerbackport.building=Building Blocks
 config.villagerbackport.villageBlocks=Village Blocks
-config.villagerbackport.textures=Textures
 config.villagerbackport.homes=Beds, Sleeping & Golems
 config.villagerbackport.raids=Raids & Heroes
 

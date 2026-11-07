@@ -1,5 +1,7 @@
 package com.exiledradio.villagerbackport.village.modern;
 
+import com.exiledradio.backportcore.terrain.WorldHeights;
+
 import com.exiledradio.villagerbackport.VillagerBackport;
 import com.exiledradio.villagerbackport.compat.VillagerAccess;
 

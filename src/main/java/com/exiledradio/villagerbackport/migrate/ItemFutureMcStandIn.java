@@ -1,17 +1,15 @@
 package com.exiledradio.villagerbackport.migrate;
 
+import com.exiledradio.backportcore.migrate.StandInItem;
 import com.exiledradio.villagerbackport.VillagerBackport;
 import com.exiledradio.villagerbackport.flora.FloraContent;
 import com.exiledradio.villagerbackport.flora.ItemModernDye;
 
 import net.minecraft.block.BlockPlanks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -19,8 +17,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * Future MC items, in a world Future MC has been removed from, that can't simply be renamed.
@@ -37,22 +33,17 @@ import java.util.Map;
  * moment it's in a player's inventory; {@code /futuremc} and the chunk conversion turn the ones in
  * containers straight into the real thing. None is in a creative tab or has a recipe: nothing makes
  * one except loading such a world.
+ *
+ * <p>The behaviour is Backport Core's {@link StandInItem}; what each one stands for is this mod's. The
+ * registry names ({@code villagerbackport:future_mc_*}) are in worlds already: never rename them.
  */
 @Mod.EventBusSubscriber(modid = VillagerBackport.MOD_ID)
-public class ItemFutureMcStandIn extends Item {
-
-    /** Future MC item name (its path) to the stand-in it loads as. */
-    static final Map<String, ItemFutureMcStandIn> BY_FUTURE_MC_NAME = new LinkedHashMap<String, ItemFutureMcStandIn>();
+public class ItemFutureMcStandIn extends StandInItem {
 
     private static final String[] WOODS = {"oak", "spruce", "birch", "jungle", "acacia", "dark_oak"};
 
-    /** Future MC's name for it: "dye", "oak_wood" and so on. */
-    private final String futureMcName;
-
     ItemFutureMcStandIn(String futureMcName) {
-        this.futureMcName = futureMcName;
-        this.setHasSubtypes(true);
-        this.setMaxDamage(0);
+        super("futuremc", futureMcName);
     }
 
     /** After the default priority, so this mod's dyes are registered first. */
@@ -75,7 +66,6 @@ public class ItemFutureMcStandIn extends Item {
         ItemFutureMcStandIn item = new ItemFutureMcStandIn(futureMcName);
         item.setRegistryName(new ResourceLocation(VillagerBackport.MOD_ID, "future_mc_" + futureMcName));
         event.getRegistry().register(item);
-        BY_FUTURE_MC_NAME.put(futureMcName, item);
         return item;
     }
 
@@ -119,30 +109,12 @@ public class ItemFutureMcStandIn extends Item {
         return ItemStack.EMPTY;
     }
 
-    /** @return what this stand-in stack really is */
-    public ItemStack real(ItemStack stack) {
-        return real(this.futureMcName, stack.getMetadata(), stack.getCount());
+    @Override
+    public ItemStack real(int damage, int count) {
+        return real(oldName(), damage, count);
     }
 
     public String futureMcName() {
-        return this.futureMcName;
-    }
-
-    @Override
-    public String getItemStackDisplayName(ItemStack stack) {
-        ItemStack real = real(stack);
-        return real.isEmpty() ? super.getItemStackDisplayName(stack) : real.getDisplayName();
-    }
-
-    @Override
-    public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if (world.isRemote || !(entity instanceof EntityPlayer)) {
-            return;
-        }
-        ItemStack real = real(stack);
-        EntityPlayer player = (EntityPlayer) entity;
-        if (!real.isEmpty() && player.inventory.getStackInSlot(slot) == stack) {
-            player.inventory.setInventorySlotContents(slot, real);
-        }
+        return oldName();
     }
 }

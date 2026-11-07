@@ -1,5 +1,7 @@
 package com.exiledradio.villagerbackport.trader;
 
+import com.exiledradio.backportcore.trade.TradeRegistry;
+
 import net.minecraft.block.BlockDirt;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockPlanks;
@@ -84,16 +86,17 @@ public final class TraderTrades {
      */
     public static MerchantRecipeList roll(Random random) {
         MerchantRecipeList list = new MerchantRecipeList();
-        pick(list, BUYING, BUYING_PICKS, random);
-        pick(list, SPECIAL, SPECIAL_PICKS, random);
-        pick(list, ORDINARY, ORDINARY_PICKS, random);
+        pick(list, pool(BUYING, TradeRegistry.TraderPool.BUYING), BUYING_PICKS, random);
+        pick(list, pool(SPECIAL, TradeRegistry.TraderPool.SPECIAL), SPECIAL_PICKS, random);
+        pick(list, pool(ORDINARY, TradeRegistry.TraderPool.ORDINARY), ORDINARY_PICKS, random);
         return list;
     }
 
     /** @return every trade the three pools can produce in this game, one example each - for listings */
     public static List<MerchantRecipe> examples(Random random) {
         List<MerchantRecipe> out = new ArrayList<MerchantRecipe>();
-        for (List<Trade> pool : new List[] {BUYING, SPECIAL, ORDINARY}) {
+        for (List<Trade> pool : new List[] {pool(BUYING, TradeRegistry.TraderPool.BUYING),
+                pool(SPECIAL, TradeRegistry.TraderPool.SPECIAL), pool(ORDINARY, TradeRegistry.TraderPool.ORDINARY)}) {
             for (Trade trade : pool) {
                 if (trade.available()) {
                     MerchantRecipe recipe = trade.offer(random);
@@ -104,6 +107,30 @@ public final class TraderTrades {
             }
         }
         return out;
+    }
+
+    /** @return this mod's pool, then whatever other mods added to it through Backport Core's TradeRegistry */
+    private static List<Trade> pool(List<Trade> own, TradeRegistry.TraderPool which) {
+        List<TradeRegistry.TraderTrade> added = TradeRegistry.traderTrades(which);
+        if (added.isEmpty()) {
+            return own;
+        }
+        List<Trade> pool = new ArrayList<Trade>(own);
+        for (final TradeRegistry.TraderTrade trade : added) {
+            pool.add(new Trade() {
+                @Override
+                public boolean available() {
+                    return trade.available();
+                }
+
+                @Nullable
+                @Override
+                public MerchantRecipe offer(Random random) {
+                    return trade.offer(random);
+                }
+            });
+        }
+        return pool;
     }
 
     private static void pick(MerchantRecipeList list, List<Trade> pool, int count, Random random) {

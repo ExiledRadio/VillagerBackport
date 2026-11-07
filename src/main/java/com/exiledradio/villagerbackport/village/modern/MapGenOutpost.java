@@ -1,5 +1,7 @@
 package com.exiledradio.villagerbackport.village.modern;
 
+import com.exiledradio.backportcore.terrain.TerrainHeights;
+
 import com.exiledradio.villagerbackport.ModConfig;
 import com.exiledradio.villagerbackport.raid.Raids;
 

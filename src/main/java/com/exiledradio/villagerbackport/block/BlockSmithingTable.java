@@ -1,5 +1,7 @@
 package com.exiledradio.villagerbackport.block;
 
+import com.exiledradio.backportcore.smithing.SmithingUpgrades;
+
 import com.exiledradio.villagerbackport.GuiHandler;
 import com.exiledradio.villagerbackport.VillagerBackport;
 

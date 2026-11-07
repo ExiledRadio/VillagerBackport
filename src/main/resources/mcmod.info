@@ -11,6 +11,7 @@
     "credits": "${mod_credits}",
     "logoFile": "pack.png",
     "screenshots": [],
-    "dependencies": []
+    "requiredMods": ["backportcore"],
+    "dependencies": ["backportcore"]
   }
 ]

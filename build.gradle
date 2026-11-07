@@ -15,6 +15,13 @@ buildscript {
     }
 }
 
+repositories {
+	// Backport Core's dev jar, put here by its copyToDependents task. Not committed.
+	flatDir {
+		dirs 'deps'
+	}
+}
+
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -88,7 +95,16 @@ processResources {
     }
 }
 
-// No third-party dependencies, and deliberately no coremod or Mixin. This mod
+dependencies {
+	// Backport Core, required. Its copyToDependents task puts the MCP-named dev jar into deps/:
+	// `gradlew build copyToDependents` in E:/MincraftModding/Workspaces/BackportCore. Plain compile,
+	// not deobfCompile: flatDir matches by file name, so deobfCompile would hand ForgeGradle the
+	// SRG-named jar and compile against that. The dev jar is also what puts Core on the
+	// runClient/runServer classpath, where FML finds it as a mod.
+	compile name: "BackportCore-${core_version}-dev"
+}
+
+// No other third-party dependencies, and deliberately no coremod or Mixin. This mod
 // changes villager *behaviour*, which is normally the kind of thing that wants an
 // ASM patch - but every other mod in a large pack that touches villagers reaches
 // them through VillagerRegistry and MerchantRecipe, not through the restock path.

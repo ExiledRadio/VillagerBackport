@@ -3,7 +3,7 @@ package com.exiledradio.villagerbackport.compat;
 import com.exiledradio.villagerbackport.VillagerBackport;
 import com.exiledradio.villagerbackport.block.ContainerSmithingTable;
 import com.exiledradio.villagerbackport.block.Names;
-import com.exiledradio.villagerbackport.block.SmithingUpgrades;
+import com.exiledradio.backportcore.smithing.SmithingUpgrades;
 import com.exiledradio.villagerbackport.client.GuiSmithingTable;
 
 import mezz.jei.api.IGuiHelper;

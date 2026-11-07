@@ -1,3 +1,0 @@
-assets/villagerbackport/textures/entity/cat/black.png
-assets/villagerbackport/textures/entity/cat/red.png
-assets/villagerbackport/textures/entity/cat/siamese.png
