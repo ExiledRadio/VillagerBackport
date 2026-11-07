@@ -232,8 +232,7 @@ ICONS = [
     ('wild-update-backport', 'Wild Update Backport', '#7fd36b', FROG),
     ('trails-and-tales-backport', 'Trails & Tales Backport', '#ff8fc0', CHERRY),
     ('tricky-trials-backport', 'Tricky Trials Backport', '#ffa64d', KEY),
-    ('modern-mc', 'Modern MC', '#7fd36b', GRASS),
-    ('modern-mc-flat', 'Modern MC (flat)', '#7fd36b', GRASS_FLAT),
+    ('modern-mc', 'Modern MC', '#7fd36b', GRASS_FLAT),  # chosen 2026-11-07; GRASS is the textured option
 ]
 
 if __name__ == '__main__':
