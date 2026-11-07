@@ -1,3 +1,10 @@
+# 2.4.0
+
+**Now requires Backport Core 1.0.0.** Backport Core is a new library holding the code and textures every update backport shares, so the next backports can build on the same pieces. Install it beside this mod. Nothing in your world changes: every block, item, setting and saved village carries over.
+
+*   **1.14's textures moved to Backport Core**, with their switch. It is now `textures.modernTextures` in `config/backportcore.cfg`, and in Backport Core's config screen. If you had turned it off in this mod's config, that choice is carried over the first time you start the game. The old line in `villagerbackport.cfg` does nothing any more.
+*   Mods can now add villager and wandering trader trades through Backport Core, and netherite upgrades to the smithing table.
+
 # 2.3.0
 
 The rest of 1.14. The wandering trader and its llamas, cats, foxes, pandas, bamboo and scaffolding, the campfire, sweet berries, the new flowers and dyes, suspicious stew, brown mooshrooms, every new slab, stair and wall, the new signs, stripped logs, wood trapdoors, buttons and pressure plates, blue ice and sea pickles. Villages are now built from 1.14's own blocks, all of them in this mod.

@@ -7,7 +7,7 @@ umbrella that requires every one of them. Together they replace Future MC.
 
 | Mod | Update | Mod id | State |
 | --- | --- | --- | --- |
-| **Backport Core** | (library) | `backportcore` | Not started; extract it when Update Aquatic Backport starts |
+| **Backport Core** | (library) | `backportcore` | 1.0.0 extracted 2026-11-06 (`E:\MincraftModding\Workspaces\BackportCore`); V&P 2.4.0 requires it |
 | **Update Aquatic Backport** | 1.13 | `updateaquaticbackport` | Next |
 | **Village & Pillage Backport** | 1.14 | `villagerbackport` (kept from 1.x; never changes) | 2.3.0 released 2026-11-06 |
 | **Buzzy Bees Backport** | 1.15 | `buzzybeesbackport` | Later |
@@ -92,6 +92,24 @@ Code and shared assets, no blocks or items of its own:
   netherite-style upgrades.
 - **Shared helpers**: config category conventions, blockstate checks, the ore-dictionary names the
   backports agree on.
+
+### What was extracted (1.0.0)
+
+API reference: `docs/API.md` in the Backport Core repository.
+
+- **Moved**: the texture packs (`backportcore_packs/`), `ModernTextures` and the `textures.modernTextures`
+  switch (now in `backportcore.cfg`, read across once from `villagerbackport.cfg`), `tools/modern-textures`;
+  the Future MC engine (`/futuremc`, removed-mod chunk conversion, saved data still named
+  `villagerbackport_futuremc`) with a per-mod `FutureMcTable.contributor`; duplicate hiding
+  (`DuplicateBlocks`); `SmithingUpgrades` (with `configure` and `add`); the terrain adapters
+  (`TerrainHeights`, `WorldHeights`, vanilla, superflat, OTG, BOP, RTG, Caves Not Cliffs, Farmer's Future
+  Delight).
+- **New**: `BlockOwnership` (Rule 1, Village & Pillage's 1.13 blocks pre-filled) and `TradeRegistry`.
+- **Stayed in Village & Pillage**: its pairs (`migrate/FutureMcPairs`, `compat/FutureMc`), the stand-in items
+  (`villagerbackport:future_mc_*`, now subclasses of Core's `StandInItem`), the Future MC settings
+  (`compat.futureMcDuplicates`, `compat.convertRemovedFutureMc`), the superflat village swap
+  (`FlatVillageSwap`), and the village layout itself.
+- **Not yet**: waterlogging, the owner-remaps-copies half of Rule 1, and the shared ore-dictionary names.
 
 Each backport depends on Backport Core, the way Sophisticated Backpacks Legacy depends on Sophisticated
 Core Legacy. Village & Pillage keeps working on its own copy of this code until the library exists;
