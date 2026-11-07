@@ -9,12 +9,17 @@ umbrella that requires every one of them. Together they replace Future MC.
 | --- | --- | --- | --- |
 | **Backport Core** | (library) | `backportcore` | Not started; extract it when Update Aquatic Backport starts |
 | **Update Aquatic Backport** | 1.13 | `updateaquaticbackport` | Next |
-| **Village & Pillage Backport** | 1.14 | `villagerbackport` (kept from 1.x; never changes) | 2.3.0, unreleased |
+| **Village & Pillage Backport** | 1.14 | `villagerbackport` (kept from 1.x; never changes) | 2.3.0 released 2026-11-06 |
 | **Buzzy Bees Backport** | 1.15 | `buzzybeesbackport` | Later |
 | **Nether Update Backport** | 1.16 | `netherupdatebackport` | Later |
+| **Caves & Cliffs Backport** | 1.17 and 1.18 | `cavesandcliffsbackport` | Later |
+| **Wild Update Backport** | 1.19 | `wildupdatebackport` | Later |
+| **Trails & Tales Backport** | 1.20 | `trailsandtalesbackport` | Later |
+| **Tricky Trials Backport** | 1.21 | `trickytrialsbackport` | Later |
 | **Modern MC** | all of them | `modernmc` | Requires all of the above; adds nothing of its own except a front page |
 
-Mod ids are permanent the day a mod is released: they're in every world that uses the mod. Display
+Icons for every one of them are in `docs/curseforge/family-icons`, drawn by
+`docs/curseforge/icon-options/family_icons.py` in the shared frame. Mod ids are permanent the day a mod is released: they're in every world that uses the mod. Display
 names can change any time.
 
 ## Rule 1: the mod that ships a block first owns it
