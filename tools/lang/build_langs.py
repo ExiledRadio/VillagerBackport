@@ -255,6 +255,15 @@ def structural_candidates(key, modid):
         mt = re.match(pattern, key)
         if mt:
             c += [t.format(mt.group(1)) for t in targets]
+    # Potions: potion.effect.<modid>.slow_falling -> item.minecraft.potion.effect.slow_falling, and the
+    # splash, lingering and tipped arrow forms likewise.
+    mt = re.match(r"^(potion|splash_potion|lingering_potion|tipped_arrow)\.effect\.%s\.(.+)$" % m, key)
+    if mt:
+        c.append("item.minecraft.%s.effect.%s" % mt.groups())
+    # Statistics: stat.timeSinceRest -> stat.minecraft.time_since_rest
+    mt = re.match(r"^stat\.(?:%s\.)?([A-Za-z0-9_]+)$" % m, key)
+    if mt:
+        c.append("stat.minecraft." + re.sub(r"(?<!^)(?=[A-Z])", "_", mt.group(1)).lower())
     mt = re.match(r"^advancements\.%s\.(.+)\.(title|description)$" % m, key)
     if mt:
         c.append(("advancements.*.%s.%s" % mt.groups()))
