@@ -4,6 +4,7 @@
 
 *   **1.14's textures moved to Backport Core**, with their switch. It is now `textures.modernTextures` in `config/backportcore.cfg`, and in Backport Core's config screen. If you had turned it off in this mod's config, that choice is carried over the first time you start the game. The old line in `villagerbackport.cfg` does nothing any more.
 *   Mods can now add villager and wandering trader trades through Backport Core, and netherite upgrades to the smithing table.
+*   **Seventeen more languages**: Spanish (Spain and Latin America, including Argentina, Uruguay and Venezuela), Brazilian Portuguese, French, German, Russian, Simplified and Traditional Chinese, Japanese, Korean, Italian, Polish, Turkish, Ukrainian and Dutch. Block, item, mob, effect, advancement and subtitle names use Minecraft's own translations, so they match the names you already know. The config screen's descriptions are translated too.
 
 # 2.3.0
 

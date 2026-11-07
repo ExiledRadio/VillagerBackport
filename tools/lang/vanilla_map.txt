@@ -1,0 +1,26 @@
+# Our key = Mojang's key, for vanilla text the automatic matching can't pair up (our key is
+# named differently, or our English is worded slightly differently from Mojang's).
+# "our.key = !" makes a key ours even though a Mojang match exists.
+# See tools/lang/build_langs.py.
+
+# Trade screen
+gui.villagerbackport.level.1 = merchant.level.1
+gui.villagerbackport.level.2 = merchant.level.2
+gui.villagerbackport.level.3 = merchant.level.3
+gui.villagerbackport.level.4 = merchant.level.4
+gui.villagerbackport.level.5 = merchant.level.5
+gui.villagerbackport.trades = merchant.trades
+gui.villagerbackport.outofstock = merchant.deprecated
+
+# /locate
+commands.villagerbackport.locate.success = commands.locate.structure.success
+commands.villagerbackport.locate.tooltip = chat.coordinates.tooltip
+
+# Workstation screens titled with the block's name, and the grindstone's own title
+container.villagerbackport.composter = block.minecraft.composter
+container.villagerbackport.fletching_table = block.minecraft.fletching_table
+container.villagerbackport.grindstone = container.grindstone_title
+
+# Worded a little differently from Mojang's English
+subtitles.villagerbackport.event.mob_effect.raid_omen = subtitles.event.mob_effect.raid_omen
+advancements.villagerbackport.voluntary_exile.description = advancements.adventure.voluntary_exile.description

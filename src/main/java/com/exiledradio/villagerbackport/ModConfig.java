@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 /**
  * Configuration, defaulting to 1.14's own numbers.
  *
- * <p>Everything here is server-side behaviour, so the values that matter are the ones on the
+ * <p>Everything here is server-side behavior, so the values that matter are the ones on the
  * host. Nothing is synced to clients yet because nothing in this phase is visible client-side -
  * the client only ever sees the resulting trade list, which vanilla already sends.
  */
@@ -128,7 +128,7 @@ public final class ModConfig {
 
         @Config.Comment({
                 "Master switch for timed restocking.",
-                "When false the mod does nothing and villagers use vanilla 1.12.2 behaviour,",
+                "When false the mod does nothing and villagers use vanilla 1.12.2 behavior,",
                 "where a restock only happens after a lucky roll on a successful trade and a",
                 "villager whose trades all run out can lock permanently."
         })
@@ -224,8 +224,8 @@ public final class ModConfig {
                 "0.2 for the premium ones. 1.12.2 recipes have no such field, so a trade counts as",
                 "premium here when what it sells is one of 1.14's premium items: enchanted books,",
                 "explorer maps, enchanted gear other than the iron sword and bow, and plain iron and",
-                "chainmail armour, shields, the iron axe, stone tools, the diamond hoe, saddles and",
-                "leather armour."
+                "chainmail armor, shields, the iron axe, stone tools, the diamond hoe, saddles and",
+                "leather armor."
         })
         @Config.RangeDouble(min = 0.0D, max = 2.0D)
         public double premiumPriceMultiplier = 0.2D;
@@ -238,7 +238,7 @@ public final class ModConfig {
                 "proportion to what it thinks of you. Opinions wear off daily and spread between",
                 "villagers who are stood near each other.",
                 "",
-                "It runs both ways, as in 1.14: a villager that watched you kill its neighbours will",
+                "It runs both ways, as in 1.14: a villager that watched you kill its neighbors will",
                 "charge you more, and one you cured of zombiehood will charge you less. Only the demand",
                 "part of the price is floored at zero; this part is signed."
         })
@@ -266,7 +266,7 @@ public final class ModConfig {
 
         @Config.Comment({
                 "Ceiling on how far demand can accumulate in either direction. 0 means no ceiling,",
-                "which is 1.14's behaviour and the default.",
+                "which is 1.14's behavior and the default.",
                 "",
                 "With no ceiling a trade that is sold out every day keeps getting dearer until it",
                 "reaches a full stack, and one left alone for weeks builds up a long way the other",
@@ -300,7 +300,7 @@ public final class ModConfig {
                 "master-tier goods while still reading as Novice.",
                 "",
                 "Leaving this on makes the level mean what it says. Turning it off restores 1.12.2's",
-                "behaviour, where the level is decorative and trades unlock on their own schedule.",
+                "behavior, where the level is decorative and trades unlock on their own schedule.",
                 "Restocking is unaffected either way."
         })
         public boolean levelGatedTrades = true;
@@ -330,7 +330,7 @@ public final class ModConfig {
                 "to 7. Set 0 to leave buying trades untouched, including the ones below.",
                 "",
                 "Trades that match one of 1.14's are set to 1.14's own stock for that trade instead:",
-                "3 for every enchanted tool, weapon and piece of armour, 16 for a few everyday",
+                "3 for every enchanted tool, weapon and piece of armor, 16 for a few everyday",
                 "goods like bread and wool, 12 for the rest."
         })
         @Config.RangeInt(min = 0, max = 64)
@@ -341,7 +341,7 @@ public final class ModConfig {
 
         @Config.Comment({
                 "Villagers walk to a workstation to restock, as they do in 1.14.",
-                "Turning this off removes the behaviour entirely - no seeking, no gating."
+                "Turning this off removes the behavior entirely - no seeking, no gating."
         })
         public boolean enabled = true;
 
@@ -579,7 +579,7 @@ public final class ModConfig {
         public int maxModPieces = 10;
 
         @Config.Comment({
-                "Place Waystones' village waystone first, next to the town centre where the bell is,",
+                "Place Waystones' village waystone first, next to the town center where the bell is,",
                 "whenever Waystones rolls one for the village (its own 'Generate in Villages' chance).",
                 "Off, it is just one more piece placed anywhere along the streets."
         })
@@ -787,7 +787,7 @@ public final class ModConfig {
                 "Make the loom the only way to apply a banner pattern.",
                 "",
                 "1.14 removed patterning from the crafting table outright, so this is what exact",
-                "1.14 behaviour looks like. It is off by default because it takes something away:",
+                "1.14 behavior looks like. It is off by default because it takes something away:",
                 "an existing world's players and any pack recipe built on the crafting route would",
                 "both stop working the moment it is turned on.",
                 "",
@@ -1171,7 +1171,7 @@ public final class ModConfig {
                 "there first - which looks exactly like trades being refused while the key is held.",
                 "If that happens, either rebind this or rebind theirs.",
                 "",
-                "An unrecognised name falls back to space."
+                "An unrecognized name falls back to space."
         })
         public String refillKey = "SPACE";
 
@@ -1183,7 +1183,7 @@ public final class ModConfig {
                 "a stack of 64 buys exactly one trade per load - where the alternative is pressing the",
                 "refill key between every single exchange.",
                 "",
-                "Set false for strict 1.14 behaviour: the slots reload when you pick a trade or press",
+                "Set false for strict 1.14 behavior: the slots reload when you pick a trade or press",
                 "the refill key, and at no other time."
         })
         public boolean autoRefillWhileTrading = true;

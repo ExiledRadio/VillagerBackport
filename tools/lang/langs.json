@@ -1,0 +1,9 @@
+{
+  "modid": "villagerbackport",
+  "lang_dir": "src/main/resources/assets/villagerbackport/lang",
+  "mojang_versions": ["26.3", "1.14.4"],
+  "config_classes": ["src/main/java/com/exiledradio/villagerbackport/ModConfig.java"],
+  "ours_prefixes": ["config.", "commands.", "gui.", "jei.", "itemGroup."],
+  "banned_words": ["Future MC", "FutureMC", "Raids Backport", "RAIDS_BACKPORT", "Crossbows Backport", "Oceanic Expanse", "Deeper Depths", "Farmer's Future Delight", "Caves Not Cliffs"],
+  "cache": "G:/MojangLang"
+}
