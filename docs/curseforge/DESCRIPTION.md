@@ -207,7 +207,7 @@ Carry Bad Omen into a village and the village knows: 30 seconds later the horn s
 *   **Cornflowers, lilies of the valley and wither roses**, which also make **white, black, brown and blue dye**. Anything the Wither kills leaves a wither rose.
 *   **Suspicious stew**, **brown mooshrooms**, **leather horse armor**, the **Globe** banner pattern, and **sign text you can dye**.
 *   **Every new slab, stair and wall** (42 of them), the **smooth stone** blocks, and **signs in every wood**. The stonecutter cuts all of them.
-*   **Stripped logs and wood**, and an axe to strip them. **Trapdoors, buttons and pressure plates in every wood**. **Blue ice** and **sea pickles**.
+*   **Stripped logs and wood**, and an axe to strip them. **Trapdoors, buttons and pressure plates in every wood**. **Blue ice**.
 
 Each of these has its own config category, and each one switches off.
 
@@ -218,6 +218,8 @@ Each of these has its own config category, and each one switches off.
 ## Works with other mods
 
 Nothing here needs another mod.
+
+**Update Aquatic Backport**: sea pickles are its block, since they came with 1.13's oceans. With it installed, the wandering trader sells them and the desert house that has sea pickles in 1.14 places its two. Sea pickles from worlds made with 2.3.0 or 2.4.0 become its own as the world loads, and stay safe until it is added.
 
 **Netherite:** with a mod that adds netherite installed, the smithing table upgrades diamond gear to that mod's netherite gear, keeping its enchantments and damage, and every netherite ingot gets the `ingotNetherite` ore name.
 

@@ -22,6 +22,7 @@ public final class SelfTestRunner {
     private static final SelfTest[] TESTS = {
             new LookFeelSelfTest(),
             new WaterlogSelfTest(),
+            new PickleMoveSelfTest(),
     };
 
     private final List<String> wanted;

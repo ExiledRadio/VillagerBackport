@@ -34,7 +34,11 @@ import java.util.Map;
 
 /**
  * Registers the last blocks 1.14's villages are built from that 1.12.2 lacks: stripped logs and
- * stripped wood, wood trapdoors, buttons and pressure plates, blue ice and sea pickles.
+ * stripped wood, wood trapdoors, buttons and pressure plates, and blue ice.
+ *
+ * <p>Sea pickles were here from 2.3.0 to 2.5.0's development. They are Update Aquatic Backport's now
+ * (Backport Core's ownership table: a block two backports need belongs to the one it fits best), and
+ * {@code migrate.UpdateAquaticPickles} looks after the ones older worlds hold.
  *
  * <h2>Data-driven like {@code building}</h2>
  * Every block comes from a loop over {@link Wood} or one line below, and goes through the same
@@ -72,7 +76,6 @@ public final class WoodsetContent {
     private static final Map<Wood, BlockWoodRedstone.PressurePlate> PLATES = new EnumMap<Wood, BlockWoodRedstone.PressurePlate>(Wood.class);
 
     private static Block blueIce;
-    private static Block seaPickle;
 
     /** Every block this package registers, all with an item, in creative-tab order. */
     private static final List<Block> BLOCKS = new ArrayList<Block>();
@@ -107,11 +110,6 @@ public final class WoodsetContent {
     @Nullable
     public static Block blueIce() {
         return blueIce;
-    }
-
-    @Nullable
-    public static Block seaPickle() {
-        return seaPickle;
     }
 
     /** @return every block, each with an item, for the client's model registration and tests */
@@ -191,11 +189,6 @@ public final class WoodsetContent {
 
         blueIce = new BlockBlueIce();
         register(registry, "blue_ice", blueIce, "pickaxe");
-        seaPickle = new BlockSeaPickle();
-        register(registry, "sea_pickle", seaPickle, null);
-        // 2.4.0 and earlier stored a pickle's water as a property; each saved chunk moves it into real
-        // water once, as it loads.
-        com.exiledradio.backportcore.waterlog.Waterlogging.migrateStoredProperty(seaPickle, BlockSeaPickle.WATERLOGGED);
 
         // Vanilla's logs' numbers: catch fire as easily, burn away as fast.
         for (Wood wood : Wood.values()) {
@@ -235,9 +228,6 @@ public final class WoodsetContent {
             OreDictionary.registerOre("logWood", STRIPPED_LOGS.get(wood));
             OreDictionary.registerOre("logWood", STRIPPED_WOOD.get(wood));
         }
-
-        // 1.14's composter takes sea pickles at 65%, the same as a flower.
-        com.exiledradio.villagerbackport.block.Compostables.register(0.65F, Item.getItemFromBlock(seaPickle));
     }
 
     @SubscribeEvent
@@ -321,7 +311,7 @@ public final class WoodsetContent {
         registry.register(recipe);
     }
 
-    /** Charcoal from every stripped log and wood, as from logs; lime dye from sea pickles, as 1.14. */
+    /** Charcoal from every stripped log and wood, as from logs. */
     private static void registerSmelting() {
         FurnaceRecipes furnace = FurnaceRecipes.instance();
         ItemStack charcoal = new ItemStack(Items.COAL, 1, 1);
@@ -329,8 +319,6 @@ public final class WoodsetContent {
             furnace.addSmeltingRecipeForBlock(STRIPPED_LOGS.get(wood), charcoal.copy(), 0.15F);
             furnace.addSmeltingRecipeForBlock(STRIPPED_WOOD.get(wood), charcoal.copy(), 0.15F);
         }
-        // 1.12.2 already has lime dye: dye metadata 10. 1.14's flora additions are other colors.
-        furnace.addSmeltingRecipeForBlock(seaPickle, new ItemStack(Items.DYE, 1, 10), 0.1F);
     }
 
     /**

@@ -496,5 +496,5 @@ villagerbackport.general.flora.witherkillsplantroses.tooltip=被凋零怪殺死�
 config.villagerbackport.building.tooltip=1.14 的石製半磚、階梯和牆，平滑石頭和木製告示牌。
 villagerbackport.general.building.enabled.tooltip=本模組是否加入 1.14 的建築方塊：新的石頭、砂岩、石英、地獄磚和終界石磚半磚、階梯和牆，平滑石頭、平滑砂岩、平滑紅砂岩、平滑石英方塊，以及其他五種木頭的告示牌。\n\n在已有這些方塊的世界中停用這一項會刪除它們。
 villagerbackport.general.building.vanillarecipechanges.tooltip=像 1.14 一樣修改七個原版配方，讓新方塊可以被合成。\n\n告示牌：任何木材 -> 只限橡木材（其他木頭各有自己的配方）\n石半磚：石頭 -> 平滑石頭（石頭現在用來合成 1.14 的一般石半磚）\n砂岩半磚：不再接受切製砂岩（它用來合成切製砂岩半磚）\n紅砂岩半磚：不再接受切製紅砂岩（同理）\n石磚半磚：只限一般石磚（青苔石磚有自己的半磚）\n石磚階梯：同上\n地獄磚柵欄：4 個地獄磚方塊和 2 個地獄磚頭（6 個方塊用來合成牆）\n\n沒有這一項時，每一對配方共用同一個合成圖案，兩者中只有一個能被合成。停用則讓原版配方完全維持原樣。building.enabled 停用時沒有作用。
-config.villagerbackport.villageBlocks.tooltip=1.14 的剝皮原木、木製地板門、按鈕和壓力板、藍冰與海鞘。
+config.villagerbackport.villageBlocks.tooltip=1.14 的剝皮原木、木製地板門、按鈕、壓力板與藍冰。
 # --- end config tooltips ---

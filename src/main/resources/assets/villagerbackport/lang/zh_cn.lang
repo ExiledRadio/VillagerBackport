@@ -496,5 +496,5 @@ villagerbackport.general.flora.witherkillsplantroses.tooltip=被凋灵杀死的�
 config.villagerbackport.building.tooltip=1.14的石质台阶、楼梯和墙，平滑石头和木质告示牌。
 villagerbackport.general.building.enabled.tooltip=本模组是否添加1.14的建筑方块：新的石头、砂岩、石英、下界砖和末地石砖台阶、楼梯和墙，平滑石头、平滑砂岩、平滑红砂岩、平滑石英块，以及其他五种木材的告示牌。\n\n在已有这些方块的世界中关闭此项会删除它们。
 villagerbackport.general.building.vanillarecipechanges.tooltip=像1.14那样修改七个原版配方，以便能合成新的方块。\n\n告示牌：任意木板 -> 仅限橡木木板（其他木材各有自己的配方）\n石台阶：石头 -> 平滑石头（石头现在用于合成1.14的普通石台阶）\n砂岩台阶：不再接受切制砂岩（它用于合成切制砂岩台阶）\n红砂岩台阶：不再接受切制红砂岩（同理）\n石砖台阶：仅限普通石砖（苔石砖有自己的台阶）\n石砖楼梯：同上\n下界砖栅栏：4个下界砖块和2个下界砖（6个砖块用于合成墙）\n\n没有此项时，每对配方共用同一个合成图案，两者中只有一个能被合成。关闭则让原版配方完全保持原样。building.enabled关闭时不起作用。
-config.villagerbackport.villageBlocks.tooltip=1.14的去皮原木、木质活板门、按钮和压力板、蓝冰与海泡菜。
+config.villagerbackport.villageBlocks.tooltip=1.14的去皮原木、木质活板门、按钮、压力板与蓝冰。
 # --- end config tooltips ---
