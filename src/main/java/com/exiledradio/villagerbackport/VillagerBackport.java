@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
         acceptedMinecraftVersions = "[1.12.2]",
         // Backport Core holds the code the backports share: textures, Future MC migration, duplicate
         // hiding, smithing upgrades and the terrain the villages are planned on.
-        dependencies = "required-after:backportcore@[1.0.0,)",
+        dependencies = "required-after:backportcore@[1.2.0,);required-after:fluidlogged_api@[3.3.3,)",
         // A client without the mod can still join a server that has it: the trading changes are all
         // server-side, and the server sends the resulting trade list the way it always does. Such a
         // client will not see this mod's blocks, so a server using them should expect it installed.
@@ -59,6 +59,9 @@ public final class VillagerBackport {
         VillagerAccess.init();
 
         NetworkHandler.init();
+
+        // 1.14's look and feel (panorama, splashes, options, F3 keys) for Backport Core's presentation module.
+        com.exiledradio.villagerbackport.lookfeel.LookAndFeel.preInit();
 
         // What this mod tells Backport Core: its Future MC pairs, both for hiding duplicates and for
         // converting worlds; how the smithing table is set up; and that its 1.13 blocks (which Core's
@@ -161,6 +164,24 @@ public final class VillagerBackport {
         com.exiledradio.villagerbackport.compat.JeiTradeLists.restore();
 
         com.exiledradio.villagerbackport.block.StonecutterRecipes.invalidate();
+    }
+
+    /**
+     * Starts the headless self-test when a test build asks for one ({@code -Pselftest=all}). Reached by name,
+     * so a release jar, which has no test classes, never links against them.
+     */
+    @Mod.EventHandler
+    public void selfTest(net.minecraftforge.fml.common.event.FMLServerStartedEvent event) {
+        String selftest = System.getProperty(MOD_ID + ".selftest");
+        if (selftest == null || selftest.isEmpty() || selftest.equals("client")) {
+            return;
+        }
+        try {
+            Class.forName("com.exiledradio.villagerbackport.selftest.SelfTestRunner").getMethod("start", String.class).invoke(null, selftest);
+        } catch (ReflectiveOperationException e) {
+            LOGGER.error("SELFTEST DONE pass=0 fail=1: '{}' requested but the test classes are not in this build.", selftest, e);
+            net.minecraftforge.fml.common.FMLCommonHandler.instance().getMinecraftServerInstance().initiateShutdown();
+        }
     }
 
     /** Registers the commands this mod adds: the one that draws a village, /forgive, /librarian and /discount. */

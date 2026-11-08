@@ -1,3 +1,15 @@
+# 2.5.0
+
+**Now requires Backport Core 1.2.0 and Fluidlogged API 3.3.3.** Install both beside this mod.
+
+*   **1.14's look and feel.** With Backport Core 1.2.0 the game looks the way 1.14 did, not only plays like it. When another update backport is installed too, the newest update's look wins, as in vanilla.
+    *   **The title screen** shows 1.14's village panorama.
+    *   **Splashes**: 1.14's sixteen new ones ("Rainbow turtle?", "Ping the human!" and more, and now and then "YOUR NAME IS YOU"), and the five it removed are gone.
+    *   **The world-loading screen** shows 1.14's grid of chunks being generated, colored by stage, with the percentage.
+    *   **Accessibility Settings** and **Mouse Settings** screens, as in 1.14 (built by Backport Core). Mouse Settings has 1.14's **Scroll Sensitivity** and **Discrete Scrolling**, and the hotbar scrolls by them: a touchpad no longer flicks through several slots at once.
+    *   **F3 + N** in Survival switches to Creative (cheats on), and **F3 + Esc** pauses the game without opening the pause menu, as since 1.14.1.
+    *   "Chat Opacity" is called **Chat Text Opacity**, as in 1.14, in every language.
+
 # 2.4.0
 
 **Now requires Backport Core 1.0.0.** Backport Core is a new library holding the code and textures every update backport shares, so the next backports can build on the same pieces. Install it beside this mod. Nothing in your world changes: every block, item, setting and saved village carries over.
