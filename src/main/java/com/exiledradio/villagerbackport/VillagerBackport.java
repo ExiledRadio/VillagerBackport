@@ -196,6 +196,7 @@ public final class VillagerBackport {
         event.registerServerCommand(new com.exiledradio.villagerbackport.home.VillageCommand());
         event.registerServerCommand(new com.exiledradio.villagerbackport.trade.ForgiveCommand());
         event.registerServerCommand(new com.exiledradio.villagerbackport.trade.LibrarianCommand());
+        event.registerServerCommand(new com.exiledradio.villagerbackport.trade.RollMessagesCommand());
         event.registerServerCommand(new com.exiledradio.villagerbackport.trade.DiscountCommand());
         event.registerServerCommand(new com.exiledradio.villagerbackport.raid.RaidCommand());
         if (com.exiledradio.villagerbackport.trader.TraderContent.enabled()) {

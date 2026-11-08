@@ -12,6 +12,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.village.MerchantRecipeList;
 
 import java.util.HashSet;
@@ -86,8 +88,22 @@ public final class BookAnnouncer {
     private static ITextComponent rolled(ITextComponent name) {
         ITextComponent message = new TextComponentString("Rolled: ");
         message.getStyle().setColor(TextFormatting.GRAY);
+        message.appendSibling(name);
 
-        return message.appendSibling(name);
+        // Hovering says how to be rid of the line, and clicking does it - for this player only, so a
+        // player who is not rerolling anything needs neither the config nor an operator.
+        ITextComponent hint = new TextComponentString("Click to stop these messages for you.");
+        hint.getStyle().setColor(TextFormatting.YELLOW);
+        ITextComponent how = new TextComponentString("\nTurn them back on with /" + RollMessagesCommand.NAME + " on."
+                + "\nTo turn them off for everyone, set announceEnchantedBooks to false in the"
+                + " mod's config (Display).");
+        how.getStyle().setColor(TextFormatting.GRAY);
+        hint.appendSibling(how);
+        message.getStyle()
+                .setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hint))
+                .setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + RollMessagesCommand.NAME + " off"));
+
+        return message;
     }
 
     /**
@@ -139,7 +155,8 @@ public final class BookAnnouncer {
         }
 
         for (EntityPlayer player : villager.world.playerEntities) {
-            if (player.getDistanceSq(villager) <= HEARING_RANGE * HEARING_RANGE) {
+            if (player.getDistanceSq(villager) <= HEARING_RANGE * HEARING_RANGE
+                    && RollMessagesCommand.wantsMessages(player)) {
                 player.sendMessage(message);
             }
         }

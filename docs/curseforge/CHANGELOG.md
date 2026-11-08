@@ -33,6 +33,7 @@
     *   With a backport of a later update installed as well, the world matches that update instead: its numbers win.
 *   **Villagers find their way home.** They now search for a path as far as 1.14 lets them, instead of 1.12.2's short limit that gave up partway across a village. A path that stops short is walked anyway and asked again from there, as in 1.14. Villagers no longer lose their bed at night just because it was across the village, and no longer stand at the village edge until morning.
     *   Beds and workstations in a newly generated village are seen at once. Before, a villager that looked before the houses were built could miss them for ten minutes.
+*   **Book roll messages can be turned off per player.** Hover over a "Rolled:" line in chat to see how, and click it to stop them for you alone. `/rollmessages on` turns them back on (any player can use it), and the setting is kept through death. `display.announceEnchantedBooks` still turns them off for everyone.
 *   **TradeStages Legacy**: its rules now lock this mod's trades by career and trade level, not only by item.
 *   **Village Names**: villagers without a job keep 1.14's empty trade list. Village Names used to fill it with a 1.12.2 job's trades every time the villager loaded.
 
