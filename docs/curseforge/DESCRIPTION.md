@@ -231,9 +231,17 @@ Nothing here needs another mod.
 
 **Antique Atlas** draws 1.14 villages on its maps, building by building.
 
-**Village Names**, and any other mod that brings its own village generator, keep their own villages.
-
 **JEI Villagers** lists the 1.14 trades villagers actually sell.
+
+**TradeStages Legacy**: its rules lock 1.14 trades too, including rules that name a career or a trade level.
+
+**Scape and Run: Parasites** and **Hunter Illager** (Hunter's Return): tested together with this mod. 1.14 villages generate, and parasites, hunters, villagers and pillagers share them, saving and loading normally.
+
+**Village Names**, and any other mod that brings its own village generator, keep their own villages. With Village Names:
+
+*   Out of the box you get its villages, not 1.14's. For 1.14 villages, set `Activate New Village Generator` to `false` in `config/VillageNames4/newvillages/village_gen.cfg`.
+*   Also set `Modern Villager Trades` and `Modern Villager Profession Skins` to `false` in `config/VillageNames4/general.cfg`. This mod already gives villagers 1.14's jobs, trades and looks, including the mason.
+*   Villagers without a job keep 1.14's empty trade list. Village Names would otherwise fill it with a 1.12.2 job's trades every time the villager loads.
 
 Pillagers and ravagers from any mod count as raiders: they glow when the bell rings and villagers run from them.
 

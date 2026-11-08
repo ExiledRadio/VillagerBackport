@@ -7,6 +7,7 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -298,6 +299,38 @@ public final class WorkstationIndex {
         if (!event.getWorld().isRemote) {
             forget(event.getWorld(), event.getChunk().x, event.getChunk().z);
         }
+    }
+
+    /**
+     * Forgets the chunks a population pass has just written into.
+     *
+     * <h2>Why naturally generated beds went unseen</h2>
+     * A chunk exists, and can be asked about, before it is decorated. Village houses, their beds and
+     * their workstations are written in the population pass, and that pass runs only once the chunk's
+     * neighbors are loaded too, often well after the villagers in the next chunk over have asked about
+     * it. Nothing in population fires a place event. So the first answer, an empty one, read before the
+     * houses were built, was kept for ten minutes. A newly generated village looked to its own
+     * villagers like a village with no beds and no workstations, and the bed a villager did find on the
+     * first evening could be the only one it knew of.
+     *
+     * <p>1.14 records points of interest as the blocks are set, so it never has this gap. Here the
+     * population pass for chunk (x, z) writes into the area from x*16+8 to x*16+23 (and the same in z),
+     * which covers that chunk and its three neighbors on the positive side. Forgetting those four has
+     * them read again, with the houses in them, the next time anybody asks.
+     */
+    @SubscribeEvent
+    public static void onPopulated(PopulateChunkEvent.Post event) {
+        World world = event.getWorld();
+        if (world.isRemote) {
+            return;
+        }
+
+        int x = event.getChunkX();
+        int z = event.getChunkZ();
+        forget(world, x, z);
+        forget(world, x + 1, z);
+        forget(world, x, z + 1);
+        forget(world, x + 1, z + 1);
     }
 
     @SubscribeEvent

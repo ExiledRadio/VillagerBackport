@@ -128,6 +128,7 @@ public final class TradeTables {
             // Kept in step with vanilla's counter, which other code still reads as a progress hint.
             VillagerAccess.setCareerLevel(villager, tier);
             recordTierEnd(villager, tier, list.size());
+            com.exiledradio.villagerbackport.compat.TradeStagesCompat.label(villager);
             return;
         }
 
@@ -145,6 +146,7 @@ public final class TradeTables {
         if (VillagerTradeData.root(villager).hasKey(TIER_ENDS)) {
             recordTierEnd(villager, tier, list.size());
         }
+        com.exiledradio.villagerbackport.compat.TradeStagesCompat.label(villager);
     }
 
     /** Records that the list was this long once the given level's trades were in. */

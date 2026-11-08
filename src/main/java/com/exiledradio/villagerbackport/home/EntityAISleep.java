@@ -110,8 +110,7 @@ public final class EntityAISleep extends EntityAIBase {
         this.walkTime = 0;
 
         if (!HomeSite.isAtBed(this.villager)) {
-            this.onTheWay = WorkPathing.walkTo(this.villager, this.bed, ModConfig.jobs.walkSpeed);
-            ClaimReach.walked(this.villager, ClaimReach.Claim.HOME, this.onTheWay);
+            walkToBed();
         } else {
             this.onTheWay = true;
         }
@@ -175,10 +174,20 @@ public final class EntityAISleep extends EntityAIBase {
         }
 
         // Navigation gives up for all sorts of reasons; ask again periodically rather than assume.
+        // A partial path ends short of the bed, so this is also how the walk carries on from there.
         if (this.villager.getNavigator().noPath() && this.walkTime % 40 == 0) {
-            this.onTheWay = WorkPathing.walkTo(this.villager, this.bed, ModConfig.jobs.walkSpeed);
-            ClaimReach.walked(this.villager, ClaimReach.Claim.HOME, this.onTheWay);
+            walkToBed();
         }
+    }
+
+    /**
+     * Sets off for the bed, walking a path that falls short as 1.14 does; only a path that arrives
+     * stops the can't-reach clock. See {@link WorkPathing#walk}.
+     */
+    private void walkToBed() {
+        WorkPathing.Walk walk = WorkPathing.walk(this.villager, this.bed, ModConfig.jobs.walkSpeed);
+        this.onTheWay = walk.moving();
+        ClaimReach.walked(this.villager, ClaimReach.Claim.HOME, walk == WorkPathing.Walk.REACHES);
     }
 
     @Override
