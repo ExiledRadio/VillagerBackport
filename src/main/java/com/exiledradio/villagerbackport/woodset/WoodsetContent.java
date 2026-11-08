@@ -193,6 +193,9 @@ public final class WoodsetContent {
         register(registry, "blue_ice", blueIce, "pickaxe");
         seaPickle = new BlockSeaPickle();
         register(registry, "sea_pickle", seaPickle, null);
+        // 2.4.0 and earlier stored a pickle's water as a property; each saved chunk moves it into real
+        // water once, as it loads.
+        com.exiledradio.backportcore.waterlog.Waterlogging.migrateStoredProperty(seaPickle, BlockSeaPickle.WATERLOGGED);
 
         // Vanilla's logs' numbers: catch fire as easily, burn away as fast.
         for (Wood wood : Wood.values()) {

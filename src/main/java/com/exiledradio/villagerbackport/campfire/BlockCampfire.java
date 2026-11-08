@@ -1,5 +1,8 @@
 package com.exiledradio.villagerbackport.campfire;
 
+import com.exiledradio.backportcore.waterlog.Waterloggable;
+import com.exiledradio.backportcore.waterlog.Waterlogging;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
@@ -52,9 +55,10 @@ import java.util.Random;
  * <h2>State</h2>
  * Three properties, all kept in metadata: {@code facing} (the way the logs lie, and which slot is
  * which), {@code lit}, and {@code signal_fire} - true while a hay bale sits directly underneath, which
- * sends the smoke up three times as high. 1.14's fourth, {@code waterlogged}, has nothing to mean in
- * 1.12.2; pouring water on the campfire puts it out instead (see below), which is what waterlogging a
- * lit one does.
+ * sends the smoke up three times as high. 1.14's fourth, {@code waterlogged}, is Fluidlogged API's
+ * water through Backport Core ({@link Waterloggable}), not a property: a campfire holds water as in
+ * 1.14, and water arriving puts a lit one out with the burst of smoke. One placed into water is placed
+ * out, and none can be lit while it holds water.
  *
  * <h2>What it does, from minecraft.wiki (current Java)</h2>
  * <ul>
@@ -66,9 +70,11 @@ import java.util.Random;
  * before release. It never sets anything alight, so a mob killed in one drops raw meat.</li>
  * <li><b>Cooks</b> up to four foods at once, no fuel - see {@link TileEntityCampfire}. Food goes on lit
  * or unlit campfires alike, as in current Java (1.14.4 itself only took it while lit).</li>
- * <li><b>Lit</b> by flint and steel, a fire charge or a burning arrow. Placed lit.</li>
- * <li><b>Put out</b> by a shovel, a water bucket or a splash water bottle - never from below, and never
- * by rain. Putting it out keeps what is cooking; it carries on when relit.</li>
+ * <li><b>Lit</b> by flint and steel, a fire charge or a burning arrow, unless it holds water. Placed lit,
+ * except into water.</li>
+ * <li><b>Put out</b> by a shovel, water reaching it (a water bucket waterlogs it) or a splash water
+ * bottle - never from below, and never by rain. Putting it out keeps what is cooking; it carries on
+ * when relit.</li>
  * <li><b>Drops</b> two charcoal, or itself with Silk Touch, plus whatever was cooking.</li>
  * <li>Mobs path around a lit one rather than through it.</li>
  * </ul>
@@ -78,7 +84,7 @@ import java.util.Random;
  * has no bees, so nothing reads it yet: the Buzzy Bees backport should ask {@link #isSmokeSource} for
  * each block in the five below a hive, as 1.15's {@code CampfireBlock.isSmokeyPos} does.
  */
-public class BlockCampfire extends Block implements ITileEntityProvider {
+public class BlockCampfire extends Block implements ITileEntityProvider, Waterloggable {
 
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
     public static final PropertyBool LIT = PropertyBool.create("lit");
@@ -145,13 +151,16 @@ public class BlockCampfire extends Block implements ITileEntityProvider {
         return meta;
     }
 
-    /** Placed lit, facing the way the player looks, a signal fire if there is hay underneath. */
+    /**
+     * Placed lit, facing the way the player looks, a signal fire if there is hay underneath. Placed
+     * into water it keeps the water and is placed out, as 1.14's {@code getStateForPlacement}.
+     */
     @Override
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY,
                                             float hitZ, int meta, EntityLivingBase placer) {
         return getDefaultState()
                 .withProperty(FACING, placer.getHorizontalFacing())
-                .withProperty(LIT, Boolean.TRUE)
+                .withProperty(LIT, Boolean.valueOf(!Waterlogging.hasWaterSource(world, pos)))
                 .withProperty(SIGNAL_FIRE, Boolean.valueOf(isHay(world.getBlockState(pos.down()))));
     }
 
@@ -192,18 +201,20 @@ public class BlockCampfire extends Block implements ITileEntityProvider {
      * Right-click: light it, put it out, or put food on it, depending on what is in the hand.
      *
      * <p>Lighting and putting out are handled here rather than by the items themselves because in
-     * 1.12.2 flint and steel would set fire to the block in front, and a bucket would pour water
-     * beside it. A lit campfire hands flint and steel back to the item, which lights the space next
-     * to it as 1.14's does.
+     * 1.12.2 flint and steel would set fire to the block in front. A lit campfire, or one holding
+     * water, hands flint and steel back to the item, which lights the space next to it as 1.14's
+     * does. A water bucket is the bucket's own: it waterlogs the campfire, and the water puts it
+     * out ({@link #onWaterChanged}).
      */
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand,
                                     EnumFacing side, float hitX, float hitY, float hitZ) {
         ItemStack held = player.getHeldItem(hand);
         boolean lit = state.getValue(LIT).booleanValue();
+        boolean canLight = !lit && !Waterlogging.hasWater(world, pos);
         Item item = held.getItem();
 
-        if (!lit && item instanceof ItemFlintAndSteel) {
+        if (canLight && item instanceof ItemFlintAndSteel) {
             if (!world.isRemote) {
                 world.playSound(null, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F,
                         world.rand.nextFloat() * 0.4F + 0.8F);
@@ -212,7 +223,7 @@ public class BlockCampfire extends Block implements ITileEntityProvider {
             }
             return true;
         }
-        if (!lit && item instanceof ItemFireball) {
+        if (canLight && item instanceof ItemFireball) {
             if (!world.isRemote) {
                 world.playSound(null, pos, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F,
                         (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F + 1.0F);
@@ -227,16 +238,6 @@ public class BlockCampfire extends Block implements ITileEntityProvider {
             if (!world.isRemote) {
                 extinguish(world, pos, state, false);
                 held.damageItem(1, player);
-            }
-            return true;
-        }
-        if (lit && item == Items.WATER_BUCKET) {
-            if (!world.isRemote) {
-                extinguish(world, pos, state, true);
-                if (!player.capabilities.isCreativeMode) {
-                    player.setHeldItem(hand, new ItemStack(Items.BUCKET));
-                }
-                player.addStat(StatList.getObjectUseStats(Items.WATER_BUCKET));
             }
             return true;
         }
@@ -278,10 +279,23 @@ public class BlockCampfire extends Block implements ITileEntityProvider {
         }
     }
 
-    /** Lights an unlit campfire from outside: a burning arrow. */
+    /** Lights an unlit campfire from outside: a burning arrow. Not one that holds water. */
     public static void ignite(World world, BlockPos pos, IBlockState state) {
-        if (state.getBlock() instanceof BlockCampfire && !state.getValue(LIT).booleanValue() && !world.isRemote) {
+        if (state.getBlock() instanceof BlockCampfire && !state.getValue(LIT).booleanValue() && !world.isRemote
+                && !Waterlogging.hasWater(world, pos)) {
             setLit(world, pos, state, true);
+        }
+    }
+
+    /**
+     * Water arriving - a bucket, flowing water, a command - puts a lit campfire out with 1.14's
+     * twenty-plume burst and the hiss, as its {@code receiveFluid} does. Draining it changes nothing:
+     * it stays out until lit again.
+     */
+    @Override
+    public void onWaterChanged(World world, BlockPos pos, IBlockState state, boolean hasWater) {
+        if (hasWater && !world.isRemote) {
+            extinguish(world, pos, world.getBlockState(pos), true);
         }
     }
 

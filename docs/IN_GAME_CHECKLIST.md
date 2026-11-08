@@ -2,7 +2,7 @@
 
 Things only a person in a real game can confirm. Each line says what to look at and what vanilla does.
 
-## 1.14's look and feel (2.5.0, with Backport Core 1.2.0)
+## 1.14's look and feel (2.5.0, with Backport Core 1.1.0)
 
 Self-tests: `gradlew runServer -Pselftest=all` (delete `eclipse/world` first: registration, assets, splash
 pool, options, the scroll arithmetic, lang) and `gradlew runClient -Pselftest=client` (title screen, log only).
@@ -25,7 +25,7 @@ pool, options, the scroll arithmetic, lang) and `gradlew runClient -Pselftest=cl
 - [ ] **Chat Text Opacity** on Chat and Accessibility Settings, also in another language (Mojang's translation).
 - [ ] Menu music unchanged (1.14 kept menu1 to menu4).
 
-## 1.14's pieces in Backport Core's finished presentation module (Core 1.2.0)
+## 1.14's pieces in Backport Core's finished presentation module (Core 1.1.0)
 
 - [ ] **Startup**: as loading ends, the white Mojang screen (1.14.4's logo) with a full red bar, fading into the
       title screen; then the title screen fades in.
@@ -38,3 +38,17 @@ pool, options, the scroll arithmetic, lang) and `gradlew runClient -Pselftest=cl
       Background "Everywhere" darkens the chat input box too.
 - [ ] **F3** in singleplayer: "ServerChunkCache: n Drop: m" right under the client's chunk cache line.
 - [ ] **Text**: "Chat Text Opacity", "Smooth Stone Slab", "Oak Trapdoor" (1.14.4's wording through Core).
+
+## Waterlogging (2.5.0, through Backport Core and Fluidlogged API)
+
+Self-test: `gradlew runServer -Pselftest=waterlog` (which blocks hold water, buckets, campfires, sea pickle light,
+the stored-flag conversion, bone meal spread with a stand-in coral block). What it cannot see:
+
+- [ ] **Rendering**: water draws inside a waterlogged lantern (standing and hanging), campfire, scaffolding and
+      sea pickle, with no see-through faces or flicker.
+- [ ] **Campfire**: a water bucket on a lit campfire waterlogs it with the hiss and a burst of smoke plumes;
+      it can't be relit until the water is taken out with an empty bucket.
+- [ ] **Sea pickle**: the live (glowing tops) model only while waterlogged, the dead one dry; the light
+      changes at once when the water comes or goes.
+- [ ] **Old world**: a 2.4.0 world with pickles on a sea floor loads with the pickles still lit and in water.
+- [ ] **With coral blocks** (from another mod): bone meal on a waterlogged pickle on one spreads pickles.

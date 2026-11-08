@@ -1,5 +1,7 @@
 package com.exiledradio.villagerbackport.block;
 
+import com.exiledradio.backportcore.waterlog.Waterloggable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -24,8 +26,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * structures, most of them hanging from beams and porches where a torch has nothing to stand on.
  * Placed against the underside of a block it hangs; anywhere else it stands. Like 1.14's, it drops
  * when whatever holds it up goes away.
+ *
+ * <p>Waterloggable, standing or hanging, as in current Java: it holds a water source (Fluidlogged API's,
+ * through Backport Core's {@link Waterloggable}) and the water changes nothing else about it.
  */
-public class BlockLantern extends Block {
+public class BlockLantern extends Block implements Waterloggable {
 
     public static final PropertyBool HANGING = PropertyBool.create("hanging");
 

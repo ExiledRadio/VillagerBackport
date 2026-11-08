@@ -1,8 +1,8 @@
 # 2.5.0
 
-**Now requires Backport Core 1.2.0 and Fluidlogged API 3.3.3.** Install both beside this mod.
+**Now requires Backport Core 1.1.0 and Fluidlogged API 3.3.3.** Install both beside this mod.
 
-*   **1.14's look and feel.** With Backport Core 1.2.0 the game looks the way 1.14 did, not only plays like it. When another update backport is installed too, the newest update's look wins, as in vanilla.
+*   **1.14's look and feel.** With Backport Core 1.1.0 the game looks the way 1.14 did, not only plays like it. When another update backport is installed too, the newest update's look wins, as in vanilla.
     *   **The title screen** shows 1.14's village panorama.
     *   **Splashes**: 1.14's sixteen new ones ("Rainbow turtle?", "Ping the human!" and more, and now and then "YOUR NAME IS YOU"), and the five it removed are gone.
     *   **The world-loading screen** shows 1.14's grid of chunks being generated, colored by stage, with the percentage.
@@ -10,11 +10,16 @@
     *   **F3 + N** in Survival switches to Creative (cheats on), and **F3 + Esc** pauses the game without opening the pause menu, as since 1.14.1.
     *   "Chat Opacity" is called **Chat Text Opacity**, as in 1.14, in every language.
 
+*   **Waterlogging, as in current Java.** Every block of this mod that current Java waterlogs now holds water: lanterns (standing and hanging), campfires, scaffolding, sea pickles, the new stairs, walls and half slabs (not double slabs), the new signs and wood trapdoors. Place one into a water source and it keeps the water; a bucket fills or empties it. Bells, grindstones, lecterns, composters, barrels and the other workstations, buttons and pressure plates hold no water, as in vanilla.
+    *   **Campfires**: water reaching a lit campfire puts it out, with the hiss and the burst of smoke. A campfire holding water can't be lit by flint and steel, a fire charge or a burning arrow, and one placed into water is placed out. A water bucket now waterlogs a campfire instead of only putting it out.
+    *   **Sea pickles** hold real water now, so they glow only while waterlogged: 6, 9, 12 or 15 light for one to four pickles. Placing one in water waterlogs it, adding pickles keeps the water, and draining it never breaks it. Bone meal on a waterlogged pickle sitting on a coral block spreads pickles across the coral, as in current Java.
+    *   **Existing worlds**: sea pickles saved as being in water get real water once, when their chunk first loads. Their light is then worked out from that water.
+
 *   **Seed maps: worlds match 1.14.** A new world generated with this mod and Update Aquatic Backport matches what 1.14 generates for the same seed, so seed map sites set to 1.14 show its biomes and structures where they really are. Checked against Minecraft 1.14.4's own code over six seeds: every biome in a 2,048-block square and every structure start in an 8,192-block square came out the same.
     *   **Bamboo jungles** are placed by 1.14's own rule: one jungle area in ten, chosen as 1.14 chooses it, with bamboo jungle hills and jungle edges where 1.14 puts them. In a world type this mod doesn't know, or one another mod has changed, they are still placed by the old filter.
     *   **Villages and pillager outposts** check the biome at the block 1.14 does, so they start in the same chunks.
     *   **Temples** each have their own grid, as since 1.13, and jungle temples also generate in bamboo jungles.
-    *   **Strongholds and the world spawn** search for their biome as 1.14 does (with Backport Core 1.2.0, which now holds that part for every backport), and strongholds can be in mushroom field shores.
+    *   **Strongholds and the world spawn** search for their biome as 1.14 does (with Backport Core 1.1.0, which now holds that part for every backport), and strongholds can be in mushroom field shores.
     *   Without Update Aquatic Backport, the oceans have no temperatures and no shipwrecks or ocean ruins; everything else matches 1.14.
     *   With a backport of a later update installed as well, the world matches that update instead: its numbers win.
 

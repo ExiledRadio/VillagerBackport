@@ -21,6 +21,7 @@ public final class SelfTestRunner {
     /** Every test. Add a line per new one. */
     private static final SelfTest[] TESTS = {
             new LookFeelSelfTest(),
+            new WaterlogSelfTest(),
     };
 
     private final List<String> wanted;
