@@ -147,8 +147,8 @@ public class EntityAIWorkAtSite extends EntityAIBase {
             return false;
         }
 
-        // Re-issue the path periodically; navigation gives up on its own for all sorts of reasons.
-        if (this.villager.getNavigator().noPath() && this.walkTime % 40 == 0) {
+        // As 1.14's walk task: when the path runs out, a new one is asked for within half a second.
+        if (this.villager.getNavigator().noPath() && this.walkTime % 10 == 0) {
             walkToTarget();
         }
 

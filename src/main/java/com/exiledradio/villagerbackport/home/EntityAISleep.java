@@ -53,21 +53,18 @@ public final class EntityAISleep extends EntityAIBase {
     /** 1.14's pause before a villager turned out of bed may get back into one. */
     private static final int SHOVED_COOLDOWN = 40;
 
-    /** How long the villager will keep trying to reach its bed before giving up for the night. */
-    private static final int WALK_TIMEOUT = 600;
+    /**
+     * Ticks between path searches while no way to the bed is found at all. 1.14's walk task asks again
+     * every tick; one search a second is the same behavior at a twentieth of the cost.
+     */
+    private static final int NO_PATH_RETRY = 20;
 
     private final EntityVillager villager;
 
     private BlockPos bed;
-    private int walkTime;
 
-    /** Whether the last attempt found a way to the bed. */
-    private boolean onTheWay;
-
-    /** After failing to find a way, how long before trying again. */
-    private static final long RETRY_TICKS = 200L;
-
-    private long retryAt;
+    /** Ticks until the next path search; a path that runs out is followed by a new one at once. */
+    private int repathIn;
 
     public EntityAISleep(EntityVillager villager) {
         this.villager = villager;
@@ -92,10 +89,6 @@ public final class EntityAISleep extends EntityAIBase {
             return false;
         }
 
-        if (this.villager.world.getTotalWorldTime() < this.retryAt) {
-            return false;
-        }
-
         // A frightened villager does not go to bed, and one already in bed gets out - see below.
         if (PanicWatch.isPanicking(this.villager)) {
             return false;
@@ -107,13 +100,7 @@ public final class EntityAISleep extends EntityAIBase {
 
     @Override
     public void startExecuting() {
-        this.walkTime = 0;
-
-        if (!HomeSite.isAtBed(this.villager)) {
-            walkToBed();
-        } else {
-            this.onTheWay = true;
-        }
+        this.repathIn = 0;
     }
 
     @Override
@@ -141,19 +128,10 @@ public final class EntityAISleep extends EntityAIBase {
             return stillInBed();
         }
 
-        // No way to the bed at all: stand down rather than stare at a wall, and try again later. A
-        // minute of this and the villager gives the bed up - see ClaimReach.
-        if (!this.onTheWay) {
-            this.retryAt = this.villager.world.getTotalWorldTime() + RETRY_TICKS;
-            return false;
-        }
-
-        // Still walking. A bed it cannot get to tonight is not worth standing outside until dawn.
-        if (++this.walkTime > WALK_TIMEOUT) {
-            ClaimReach.failed(this.villager, ClaimReach.Claim.HOME);
-            return false;
-        }
-
+        // 1.14's rest activity: with a home, the villager does nothing else all night but head for it
+        // (StayNearPointTask aims the walk at the bed every tick). Holding the goal is what keeps the
+        // wandering and idle goals from walking it off between tries. A bed it truly cannot reach is
+        // given up after a minute by HomeClaims (ClaimReach), which ends this goal.
         return true;
     }
 
@@ -173,9 +151,9 @@ public final class EntityAISleep extends EntityAIBase {
             return;
         }
 
-        // Navigation gives up for all sorts of reasons; ask again periodically rather than assume.
-        // A partial path ends short of the bed, so this is also how the walk carries on from there.
-        if (this.villager.getNavigator().noPath() && this.walkTime % 40 == 0) {
+        // As 1.14's walk task: when the path runs out - arrived short of the bed, interrupted, or never
+        // found - a new one is asked for straight away; only a search that found nothing waits a second.
+        if (this.villager.getNavigator().noPath() && --this.repathIn <= 0) {
             walkToBed();
         }
     }
@@ -186,7 +164,7 @@ public final class EntityAISleep extends EntityAIBase {
      */
     private void walkToBed() {
         WorkPathing.Walk walk = WorkPathing.walk(this.villager, this.bed, ModConfig.jobs.walkSpeed);
-        this.onTheWay = walk.moving();
+        this.repathIn = walk.moving() ? this.villager.getRNG().nextInt(10) : NO_PATH_RETRY;
         ClaimReach.walked(this.villager, ClaimReach.Claim.HOME, walk == WorkPathing.Walk.REACHES);
     }
 

@@ -172,7 +172,7 @@ public class EntityAIGatherAtBell extends EntityAIBase {
                 || Math.abs(end.y - this.bell.getY()) > 3) {
             return false;
         }
-        return this.villager.getNavigator().setPath(path, SPEED);
+        return com.exiledradio.villagerbackport.job.WorkPathing.follow(this.villager, path, SPEED);
     }
 
     private boolean startMingling() {
