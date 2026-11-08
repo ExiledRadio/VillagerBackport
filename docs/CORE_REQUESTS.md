@@ -3,7 +3,7 @@
 Things this mod needs from Backport Core (`E:\MincraftModding\Workspaces\BackportCore`). This repo never edits
 Core; each request says what is wanted and what this mod does until it exists.
 
-## 1. Look and feel: 1.14 pieces the `presentation` module does not cover yet (Core 1.2.0)
+## 1. Look and feel: 1.14 pieces the `presentation` module does not cover yet (Core 1.1.0)
 
 This mod registers 1.14 and 1.14.1 with `Presentation.version` (panorama, splashes, Scroll Sensitivity and
 Discrete Scrolling, F3+N). These 1.14 items need a single owner or a screen Core builds:
@@ -31,7 +31,7 @@ Discrete Scrolling, F3+N). These 1.14 items need a single owner or a screen Core
     with only a newer backport installed they are missing although vanilla still has them. Wanted later: Core
     carrying vanilla's own key table per version, so the newest version's full map applies.
 
-## Done in Backport Core 1.2.0 (core-finish, 2026-11-08)
+## Done in Backport Core 1.1.0 (core-finish, 2026-11-08)
 
 Used here on branch `vp-lookfeel2`: the title-screen Accessibility button (this mod's icon), the startup screen
 (this mod's 1.14.4 `mojang.png`; Core draws the bar), the pause menu's feedback row and Use VBOs' removal (Core's

@@ -1,8 +1,8 @@
 # 2.5.0
 
-**Now requires Backport Core 1.2.0 and Fluidlogged API 3.3.3.** Install both beside this mod.
+**Now requires Backport Core 1.1.0 and Fluidlogged API 3.3.3.** Install both beside this mod.
 
-*   **1.14's look and feel.** With Backport Core 1.2.0 the game looks the way 1.14 did, not only plays like it. When another update backport is installed too, the newest update's look wins, as in vanilla.
+*   **1.14's look and feel.** With Backport Core 1.1.0 the game looks the way 1.14 did, not only plays like it. When another update backport is installed too, the newest update's look wins, as in vanilla.
     *   **The title screen** shows 1.14's village panorama.
     *   **Splashes**: 1.14's sixteen new ones ("Rainbow turtle?", "Ping the human!" and more, and now and then "YOUR NAME IS YOU"), and the five it removed are gone.
     *   **The world-loading screen** shows 1.14's grid of chunks being generated, colored by stage, with the percentage.
@@ -14,7 +14,7 @@
     *   **Bamboo jungles** are placed by 1.14's own rule: one jungle area in ten, chosen as 1.14 chooses it, with bamboo jungle hills and jungle edges where 1.14 puts them. In a world type this mod doesn't know, or one another mod has changed, they are still placed by the old filter.
     *   **Villages and pillager outposts** check the biome at the block 1.14 does, so they start in the same chunks.
     *   **Temples** each have their own grid, as since 1.13, and jungle temples also generate in bamboo jungles.
-    *   **Strongholds and the world spawn** search for their biome as 1.14 does (with Backport Core 1.2.0, which now holds that part for every backport), and strongholds can be in mushroom field shores.
+    *   **Strongholds and the world spawn** search for their biome as 1.14 does (with Backport Core 1.1.0, which now holds that part for every backport), and strongholds can be in mushroom field shores.
     *   Without Update Aquatic Backport, the oceans have no temperatures and no shipwrecks or ocean ruins; everything else matches 1.14.
     *   With a backport of a later update installed as well, the world matches that update instead: its numbers win.
 

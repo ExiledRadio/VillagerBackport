@@ -2,7 +2,7 @@
 
 Things only a person in a real game can confirm. Each line says what to look at and what vanilla does.
 
-## 1.14's look and feel (2.5.0, with Backport Core 1.2.0)
+## 1.14's look and feel (2.5.0, with Backport Core 1.1.0)
 
 Self-tests: `gradlew runServer -Pselftest=all` (delete `eclipse/world` first: registration, assets, splash
 pool, options, the scroll arithmetic, lang) and `gradlew runClient -Pselftest=client` (title screen, log only).
@@ -25,7 +25,7 @@ pool, options, the scroll arithmetic, lang) and `gradlew runClient -Pselftest=cl
 - [ ] **Chat Text Opacity** on Chat and Accessibility Settings, also in another language (Mojang's translation).
 - [ ] Menu music unchanged (1.14 kept menu1 to menu4).
 
-## 1.14's pieces in Backport Core's finished presentation module (Core 1.2.0)
+## 1.14's pieces in Backport Core's finished presentation module (Core 1.1.0)
 
 - [ ] **Startup**: as loading ends, the white Mojang screen (1.14.4's logo) with a full red bar, fading into the
       title screen; then the title screen fades in.

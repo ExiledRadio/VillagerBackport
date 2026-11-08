@@ -104,7 +104,7 @@ dependencies {
 	// SRG-named jar and compile against that. The dev jar is also what puts Core on the
 	// runClient/runServer classpath, where FML finds it as a mod.
 	compile name: "BackportCore-${core_version}-dev"
-	// Fluidlogged API 3.3.3 (CurseForge 485654, file 8445863), which Backport Core 1.2.0 requires.
+	// Fluidlogged API 3.3.3 (CurseForge 485654, file 8445863), which Backport Core 1.1.0 requires.
 	// Core's dev jar does not carry it. deobfCompile maps it to dev names, and FG2's GradleStart
 	// finds its coremod on the classpath. Never shade it.
 	deobfCompile 'curse.maven:fluidlogged-api-485654:8445863'
