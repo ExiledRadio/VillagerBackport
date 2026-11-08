@@ -1,10 +1,12 @@
 package com.exiledradio.villagerbackport.job;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.pathfinding.NodeProcessor;
 import net.minecraft.pathfinding.Path;
 import net.minecraft.pathfinding.PathHeap;
 import net.minecraft.pathfinding.PathPoint;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.ChunkCache;
@@ -71,7 +73,7 @@ public final class LongPathFinder {
             PathPoint start = processor.getStart();
             PathPoint end = processor.getPathPointToCoords(
                     target.getX() + 0.5D, target.getY() + 0.5D, target.getZ() + 0.5D);
-            return search(processor, start, end, range, budget);
+            return search(entity, processor, start, end, range, budget);
         } finally {
             processor.postProcess();
             entity.world.profiler.endSection();
@@ -87,7 +89,7 @@ public final class LongPathFinder {
     }
 
     @Nullable
-    private static Path search(NodeProcessor processor, PathPoint from, PathPoint to, float maxDistance,
+    private static Path search(EntityLiving entity, NodeProcessor processor, PathPoint from, PathPoint to, float maxDistance,
                                int budget) {
         PathHeap open = new PathHeap();
         PathPoint[] options = new PathPoint[32];
@@ -117,7 +119,7 @@ public final class LongPathFinder {
             }
 
             current.visited = true;
-            int count = processor.findPathOptions(options, current, to, maxDistance);
+            int count = fitting(entity, options, processor.findPathOptions(options, current, to, maxDistance));
 
             for (int i = 0; i < count; i++) {
                 PathPoint next = options[i];
@@ -160,5 +162,49 @@ public final class LongPathFinder {
         }
 
         return new Path(points);
+    }
+
+    /**
+     * Drops the options the entity would not actually fit into, and returns how many are left.
+     *
+     * <h2>Why carpet stranded villagers</h2>
+     * 1.12's walk node processor treats a carpet, snow layer or other thin block as open air: a
+     * node on it is walkable when two blocks of headroom sit above the floor block. But the entity
+     * stands on top of the carpet, a sixteenth higher, and a villager is 1.95 tall - so under a
+     * ceiling two blocks up it no longer fits. The search sent villagers across exactly such carpets
+     * in plains houses, and they stood pressed against the step all night, the path reaching the
+     * bed on paper so the give-up clock never ran. This checks the entity's own box, standing on
+     * whatever the node's block really is, before the node is used.
+     */
+    private static int fitting(EntityLiving entity, PathPoint[] options, int count) {
+        if (entity.width >= 1.0F) {
+            return count;
+        }
+        int kept = 0;
+        for (int i = 0; i < count; i++) {
+            if (fits(entity, options[i])) {
+                options[kept++] = options[i];
+            }
+        }
+        for (int i = kept; i < count; i++) {
+            options[i] = null;
+        }
+        return kept;
+    }
+
+    private static boolean fits(EntityLiving entity, PathPoint node) {
+        BlockPos pos = new BlockPos(node.x, node.y, node.z);
+        IBlockState state = entity.world.getBlockState(pos);
+        AxisAlignedBB own = state.getCollisionBoundingBox(entity.world, pos);
+        if (own == null || own.maxY >= 1.0D || own.maxY <= 0.0D) {
+            // Nothing to stand on inside the block itself (air, a door, a full block the processor
+            // already judged): 1.12's own headroom test stands.
+            return true;
+        }
+        double floor = node.y + own.maxY;
+        double half = entity.width / 2.0D;
+        AxisAlignedBB box = new AxisAlignedBB(node.x + 0.5D - half, floor + 0.001D, node.z + 0.5D - half,
+                node.x + 0.5D + half, floor + entity.height - 0.002D, node.z + 0.5D + half);
+        return !entity.world.collidesWithAnyBlock(box);
     }
 }

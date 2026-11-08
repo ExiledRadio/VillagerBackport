@@ -99,7 +99,7 @@ public final class WorkPathing {
     public static Walk walk(EntityVillager villager, BlockPos pos, double speed) {
         Path path = pathTo(villager, pos);
 
-        if (path != null && villager.getNavigator().setPath(path, speed)) {
+        if (path != null && follow(villager, path, speed)) {
             if (arrives(path, pos)) {
                 return Walk.REACHES;
             }
@@ -137,8 +137,36 @@ public final class WorkPathing {
             return false;
         }
 
-        return villager.getNavigator().setPath(path, speed);
+        return follow(villager, path, speed);
     }
+
+    /**
+     * Hands the navigator a path this mod found, and makes it forget the target it last searched for
+     * itself.
+     *
+     * <h2>Why the villagers wandered off at night</h2>
+     * 1.12's {@code PathNavigate} remembers the block of its last own search in {@code targetPos}, and
+     * {@code setPath} leaves that alone. When a block changes near a path - a door opening is enough -
+     * {@code PathWorldListener} calls {@code updatePath}, which throws the current path away and
+     * searches again to {@code targetPos}. So a villager walking to bed along a path from here would
+     * turn round at the first door and set off for wherever its wander goal last picked. With no
+     * target remembered, {@code updatePath} only flags a later retry and the path stands; the goals
+     * here re-path themselves when it runs out.
+     */
+    public static boolean follow(EntityVillager villager, Path path, double speed) {
+        if (!villager.getNavigator().setPath(path, speed)) {
+            return false;
+        }
+        try {
+            TARGET_POS.set(villager.getNavigator(), null);
+        } catch (Exception ignored) {
+            // A navigator some other mod replaced: nothing to forget.
+        }
+        return true;
+    }
+
+    private static final java.lang.reflect.Field TARGET_POS = net.minecraftforge.fml.common.ObfuscationReflectionHelper
+            .findField(net.minecraft.pathfinding.PathNavigate.class, "field_188564_r");
 
     /**
      * Takes off a modifier left behind by an older version of this mod.

@@ -35,6 +35,11 @@ public final class SelfTestRunner {
 
     public static void start(String which) {
         VillagerBackport.LOGGER.info("SELFTEST requested: {}", which);
+        if (which.startsWith("night")) {
+            // A tick-driven measurement, not a pass/fail test; see NightBench.
+            NightBench.start(which);
+            return;
+        }
         MinecraftForge.EVENT_BUS.register(new SelfTestRunner(Arrays.asList(which.split(","))));
     }
 

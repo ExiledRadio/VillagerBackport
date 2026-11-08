@@ -56,6 +56,9 @@ public final class JobSiteAttacher {
     /** Living through a raid: behind fleeing, ahead of sleep - see EntityAIRaidResponse. */
     private static final int RAID_PRIORITY = 2;
 
+    /** Where 1.12.2 had its door goal; it shares no mutex, so it runs beside whatever is walking. */
+    private static final int DOOR_PRIORITY = 4;
+
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (event.getWorld().isRemote || !(event.getEntity() instanceof EntityVillager)) {
@@ -130,6 +133,7 @@ public final class JobSiteAttacher {
             // Older versions raised this permanently, which made every path a villager computed -
             // wandering, fleeing, going indoors - search a far larger volume. See WorkPathing.
             WorkPathing.removeStale(villager);
+            useModernDoors(villager);
             allowDoors(villager);
         } catch (RuntimeException e) {
             // A villager that never walks to work still trades; the gate fails open for it.
@@ -155,6 +159,28 @@ public final class JobSiteAttacher {
      * <p>Setting it costs nothing when it is already true, so it is set unconditionally rather than
      * detected.
      */
+    /**
+     * 1.14's door handling in place of 1.12.2's: {@link com.exiledradio.villagerbackport.home.EntityAIInteractWithDoors}
+     * opens the doors on a villager's path ahead of it and shuts them behind it. 1.12.2's two door goals
+     * go: {@code EntityAIOpenDoor} only opened a door the villager had already walked into, and
+     * {@code EntityAIRestrictOpenDoor} took doors away from the villager's paths altogether whenever it
+     * stood near a village door at night, which is exactly when it was walking through its own front door
+     * to bed. 1.14 has neither.
+     */
+    private void useModernDoors(EntityVillager villager) {
+        if (hasGoal(villager, com.exiledradio.villagerbackport.home.EntityAIInteractWithDoors.class)) {
+            return;
+        }
+        for (EntityAITasks.EntityAITaskEntry entry :
+                new java.util.ArrayList<EntityAITasks.EntityAITaskEntry>(villager.tasks.taskEntries)) {
+            if (entry.action instanceof net.minecraft.entity.ai.EntityAIOpenDoor
+                    || entry.action instanceof net.minecraft.entity.ai.EntityAIRestrictOpenDoor) {
+                villager.tasks.removeTask(entry.action);
+            }
+        }
+        villager.tasks.addTask(DOOR_PRIORITY, new com.exiledradio.villagerbackport.home.EntityAIInteractWithDoors(villager));
+    }
+
     private void allowDoors(EntityVillager villager) {
         if (villager.getNavigator() instanceof PathNavigateGround) {
             PathNavigateGround navigator = (PathNavigateGround) villager.getNavigator();
