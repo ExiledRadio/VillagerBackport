@@ -186,66 +186,27 @@ public class MapGenModernVillage extends MapGenVillage {
     }
 
     /**
-     * The nearest village of one 1.14 type, for {@code /locate village_plains} and friends.
+     * The 1.14 village type that starts in a chunk, for Backport Core's {@code /locate structure}: the start rule
+     * ({@link #canSpawnStructureAtCoords}) and the type {@link #getStructureStart} gives it, from the biome at
+     * block (9, 9). Villages not yet generated are found too, since the seed and the biome decide both. A village
+     * already generated the 1.12.2 way, before 1.14 villages were switched on, is not one of today's types and is
+     * skipped, as is a start laid out with nothing in it. Loads and generates nothing.
      *
-     * <p>Walks the same grid 1.12.2 places villages on, ring by ring outwards: each grid cell holds
-     * at most one village, at a chunk fixed by the world seed, and its type is the type of the biome
-     * it starts in - which is all that decides it, so villages not yet generated can be found too.
-     * A village already generated the 1.12.2 way, before 1.14 villages were switched on, is skipped.
-     *
-     * @return the village's start position, or null if none lies within {@code maxRings} cells
+     * @return the type, or null where no 1.14 village starts
      */
     @javax.annotation.Nullable
-    public net.minecraft.util.math.BlockPos findNearest(net.minecraft.world.World world,
-                                                        net.minecraft.util.math.BlockPos from,
-                                                        ModernVillageStart.Type type, int maxRings) {
-        this.world = world;
-        int baseX = Math.floorDiv(from.getX() >> 4, this.spacing);
-        int baseZ = Math.floorDiv(from.getZ() >> 4, this.spacing);
-        net.minecraft.util.math.BlockPos best = null;
-        double bestDistance = Double.MAX_VALUE;
-        int foundRing = -1;
-
-        for (int ring = 0; ring <= maxRings; ring++) {
-            // A village one ring further out can still be nearer than the first one found.
-            if (foundRing >= 0 && ring > foundRing + 1) {
-                break;
-            }
-            for (int dx = -ring; dx <= ring; dx++) {
-                for (int dz = -ring; dz <= ring; dz++) {
-                    if (Math.abs(dx) != ring && Math.abs(dz) != ring) {
-                        continue;
-                    }
-                    int cellX = baseX + dx;
-                    int cellZ = baseZ + dz;
-                    java.util.Random random = world.setRandomSeed(cellX, cellZ, 10387312);
-                    int chunkX = cellX * this.spacing + random.nextInt(this.spacing - 8);
-                    int chunkZ = cellZ * this.spacing + random.nextInt(this.spacing - 8);
-                    if (!canSpawnStructureAtCoords(chunkX, chunkZ)) {
-                        continue;
-                    }
-                    StructureStart existing = this.structureMap.get(net.minecraft.util.math.ChunkPos.asLong(chunkX, chunkZ));
-                    if (existing != null && !(existing instanceof ModernVillageStart)) {
-                        continue;
-                    }
-                    net.minecraft.world.biome.Biome biome = world.getBiomeProvider()
-                            .getBiome(new net.minecraft.util.math.BlockPos((chunkX << 4) + 9, 0, (chunkZ << 4) + 9));
-                    if (typeAt(biome) != type) {
-                        continue;
-                    }
-                    net.minecraft.util.math.BlockPos pos = new net.minecraft.util.math.BlockPos((chunkX << 4) + 8, 64, (chunkZ << 4) + 8);
-                    double distance = pos.distanceSq(from.getX(), 64, from.getZ());
-                    if (distance < bestDistance) {
-                        bestDistance = distance;
-                        best = pos;
-                        if (foundRing < 0) {
-                            foundRing = ring;
-                        }
-                    }
-                }
-            }
+    public ModernVillageStart.Type startTypeAt(net.minecraft.world.World world, int chunkX, int chunkZ) {
+        if (this.world == null) {
+            this.world = world;
         }
-        return best;
+        if (!canSpawnStructureAtCoords(chunkX, chunkZ)) {
+            return null;
+        }
+        StructureStart existing = this.structureMap.get(net.minecraft.util.math.ChunkPos.asLong(chunkX, chunkZ));
+        if (existing != null && (!(existing instanceof ModernVillageStart) || !existing.isSizeableStructure())) {
+            return null;
+        }
+        return typeAt(world.getBiomeProvider().getBiome(new net.minecraft.util.math.BlockPos((chunkX << 4) + 9, 0, (chunkZ << 4) + 9)));
     }
 
     /** @return the overworld's village generator if it is this one and builds 1.14 villages, else null */

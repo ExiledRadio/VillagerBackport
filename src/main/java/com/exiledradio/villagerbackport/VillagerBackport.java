@@ -137,6 +137,8 @@ public final class VillagerBackport {
     public void init(net.minecraftforge.fml.common.event.FMLInitializationEvent event) {
         com.exiledradio.villagerbackport.job.MasonCareer.register();
         com.exiledradio.villagerbackport.fox.FoxContent.init();
+        // Villages and outposts for Backport Core's /locate structure, under today's ids.
+        com.exiledradio.villagerbackport.village.modern.VillageLocate.register();
     }
 
     /** Catches recipes for hidden duplicates that were added after the recipe registry event. */
@@ -199,8 +201,6 @@ public final class VillagerBackport {
         if (com.exiledradio.villagerbackport.trader.TraderContent.enabled()) {
             event.registerServerCommand(new com.exiledradio.villagerbackport.trader.TraderCommand());
         }
-        // Registered after vanilla's, so it takes the /locate name over.
-        event.registerServerCommand(new com.exiledradio.villagerbackport.village.modern.LocateCommand());
     }
 
 }

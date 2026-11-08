@@ -23,6 +23,7 @@ public final class SelfTestRunner {
             new LookFeelSelfTest(),
             new WaterlogSelfTest(),
             new PickleMoveSelfTest(),
+            new LocateSelfTest(),
     };
 
     private final List<String> wanted;

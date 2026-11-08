@@ -118,6 +118,31 @@ public class MapGenOutpost extends MapGenStructure {
         return findNearestStructurePosBySpacing(world, this, pos, this.spacing, SEPARATION, SEED, false, 100, findUnexplored);
     }
 
+    /** @return the outposts' grid spacing in chunks (the village grid's) */
+    public int spacing() {
+        return this.spacing;
+    }
+
+    /** {@code PillagerOutpostStructure}'s seed modifier: the outposts' grid salt. */
+    public static int salt() {
+        return SEED;
+    }
+
+    /**
+     * @return true if an outpost starts in this chunk (by the seed, laid out or not), skipping a start laid out with
+     *         nothing in it; for Backport Core's {@code /locate}. Loads and generates nothing.
+     */
+    public boolean startsAt(World world, int chunkX, int chunkZ) {
+        if (this.world == null) {
+            this.world = world;
+        }
+        if (!canSpawnStructureAtCoords(chunkX, chunkZ)) {
+            return false;
+        }
+        StructureStart existing = this.structureMap.get(net.minecraft.util.math.ChunkPos.asLong(chunkX, chunkZ));
+        return existing == null || existing.isSizeableStructure();
+    }
+
     @Override
     protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ) {
         int cellX = Math.floorDiv(chunkX, this.spacing);

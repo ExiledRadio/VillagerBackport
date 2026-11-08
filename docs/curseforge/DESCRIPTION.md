@@ -29,7 +29,7 @@ The workstations sit inside the houses where 1.14 puts them, so a village has it
 
 1.14 villages need a world generator whose terrain they can plan on: vanilla's, superflat, Biomes O' Plenty's, Open Terrain Generator's (RLCraft Dregora), or Realistic Terrain Generation's. In a world made by any other generator, or with `villages.style` set to `LEGACY`, villages are 1.12.2's, and each building gets the workstation its trade needs: a lectern in the library, a smoker in the butcher's, a blast furnace, smithing table and grindstone at the blacksmith's, a brewing stand in the church, a composter on each field, a bell at the well, and one at random in each small house.
 
-`/locate village_plains`, `village_desert`, `village_savanna`, `village_taiga` or `village_snowy` finds the nearest village of that kind.
+`/locate structure minecraft:village_plains`, `village_desert`, `village_savanna`, `village_taiga` or `village_snowy` finds the nearest village of that kind, and `/locate structure #minecraft:village` the nearest of any kind.
 
 ***
 
@@ -251,13 +251,13 @@ Pillagers and ravagers from any mod count as raiders: they glow when the bell ri
 
 ## Commands
 
-*   `/locate <structure>` gives the distance and the coordinates in green brackets; click them to put a teleport command in your chat box. It takes every structure 1.12.2 can find, plus `village_plains`, `village_desert`, `village_savanna`, `village_taiga` and `village_snowy`.
+*   `/locate structure <structure>` (Backport Core's, as in today's game) gives the distance and the coordinates in green brackets; click them to put a teleport command in your chat box. It takes `minecraft:village_plains`, `village_desert`, `village_savanna`, `village_taiga`, `village_snowy`, the tag `#minecraft:village`, and every other installed update backport's structures; 1.12.2's own names (`/locate Stronghold` ...) still work.
 *   `/village [radius]` draws the village. Every bed gets a box, green where a villager has claimed it and red where it is going spare, along with the counts that decide whether the village can grow.
 *   `/forgive` clears a villager's grudges against you, and `/forgive 32` does the same for every villager within 32 blocks. Discounts you have earned stay. Operators only.
 *   `/librarian <enchantment> [level] [villager level] [price] [cured]` spawns a librarian selling that enchanted book, for putting back one you lost: `/librarian strengthened_vitality 3`. Add `cured` to get the cure discount with it. Operators only.
 *   `/discount` gives you the cure discount from the villager you're looking at, and `/discount 8` from every villager within 8 blocks. Operators only.
 *   `/raid start [level]` starts a raid on the village you're in, `/raid stop` ends it, `/raid status` lists the raids under way, and `/raid patrol` sends a patrol out near you. Operators only. The `disableRaids` game rule turns raids off in a world.
-*   `/locate pillager_outpost` finds the nearest outpost.
+*   `/locate structure minecraft:pillager_outpost` finds the nearest outpost.
 *   `/wanderingtrader status` shows the trader countdown and chance, `/wanderingtrader spawn` sends one to you now, and `/wanderingtrader timer` sets the countdown. Operators only.
 
 ***
