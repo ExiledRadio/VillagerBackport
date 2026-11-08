@@ -110,14 +110,15 @@ public class MapGenModernVillage extends MapGenVillage {
 
     /**
      * 1.14's {@code VillageFeature.isFeatureChunk}: the region's candidate chunk on 1.12.2's grid (which is
-     * 1.14's: spacing 32, separation 8, salt 10387312), whose block-scale biome at block (9, 9) is a village
-     * biome. 1.12.2 reads the 1:4 cell at (8, 8) instead, which moves villages near biome edges off 1.14's seed
-     * maps. With OTG, its own biome list and 1.12.2's point.
+     * 1.14's: spacing 32, separation 8, salt 10387312), whose biome at the newest installed version's point
+     * (Backport Core's placement table: the block biome at (9, 9) to 1.15, the 1:4 cell at (4x + 2, 4z + 2) from
+     * 1.16) is a village biome. 1.12.2 reads the 1:4 cell at (8, 8) instead, which moves villages near biome
+     * edges off the seed maps. With OTG, its own biome list and 1.12.2's point.
      */
     @Override
     protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ) {
         if (this.otgBiomes == null) {
-            return startsAt114(this.world, this.spacing, chunkX, chunkZ);
+            return startsAtModern(this.world, this.spacing, chunkX, chunkZ);
         }
         int cellX = Math.floorDiv(chunkX, this.spacing);
         int cellZ = Math.floorDiv(chunkZ, this.spacing);
@@ -128,17 +129,25 @@ public class MapGenModernVillage extends MapGenVillage {
                 && this.world.getBiomeProvider().areBiomesViable(chunkX * 16 + 8, chunkZ * 16 + 8, 0, this.otgBiomes);
     }
 
-    /** 1.14's village start rule, on the vanilla village biomes (Forge's list, with this mod's snowy tundra). */
-    static boolean startsAt114(net.minecraft.world.World world, int spacing, int chunkX, int chunkZ) {
+    /**
+     * The village start rule of 1.14 and later, on the vanilla village biomes (Forge's list, with this mod's
+     * snowy tundra): the grid candidate, and the biome at the newest installed version's point.
+     */
+    static boolean startsAtModern(net.minecraft.world.World world, int spacing, int chunkX, int chunkZ) {
+        if (!isGridCandidate(world, spacing, chunkX, chunkZ)) {
+            return false;
+        }
+        net.minecraft.world.biome.Biome biome = com.exiledradio.backportcore.worldgen.StructurePlacements.biomeAt(
+                world.getBiomeProvider(), chunkX, chunkZ);
+        return biome != null && MapGenVillage.VILLAGE_SPAWN_BIOMES.contains(biome);
+    }
+
+    /** @return true if the chunk is its region's candidate on the village grid (spacing, 8 apart, salt 10387312) */
+    static boolean isGridCandidate(net.minecraft.world.World world, int spacing, int chunkX, int chunkZ) {
         int cellX = Math.floorDiv(chunkX, spacing);
         int cellZ = Math.floorDiv(chunkZ, spacing);
         java.util.Random random = world.setRandomSeed(cellX, cellZ, 10387312);
-        if (chunkX != cellX * spacing + random.nextInt(spacing - 8) || chunkZ != cellZ * spacing + random.nextInt(spacing - 8)) {
-            return false;
-        }
-        net.minecraft.world.biome.Biome biome = world.getBiomeProvider()
-                .getBiome(new net.minecraft.util.math.BlockPos((chunkX << 4) + 9, 0, (chunkZ << 4) + 9));
-        return biome != null && MapGenVillage.VILLAGE_SPAWN_BIOMES.contains(biome);
+        return chunkX == cellX * spacing + random.nextInt(spacing - 8) && chunkZ == cellZ * spacing + random.nextInt(spacing - 8);
     }
 
     /**

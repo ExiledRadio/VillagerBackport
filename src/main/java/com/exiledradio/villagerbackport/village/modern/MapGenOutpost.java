@@ -5,6 +5,8 @@ import com.exiledradio.backportcore.terrain.TerrainHeights;
 import com.exiledradio.villagerbackport.ModConfig;
 import com.exiledradio.villagerbackport.raid.Raids;
 
+import com.exiledradio.backportcore.worldgen.StructurePlacements;
+
 import net.minecraft.init.Biomes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -135,8 +137,10 @@ public class MapGenOutpost extends MapGenStructure {
             return false;
         }
 
-        Biome biome = this.world.getBiomeProvider().getBiome(new BlockPos((chunkX << 4) + 9, 0, (chunkZ << 4) + 9));
-        if (!isOutpostBiome(biome)) {
+        // The newest installed version's biome point (Backport Core's table): block (9, 9) in 1.14 and 1.15,
+        // the 1:4 cell at (4x + 2, 4z + 2) from 1.16.
+        Biome biome = StructurePlacements.biomeAt(this.world.getBiomeProvider(), chunkX, chunkZ);
+        if (biome == null || !isOutpostBiome(biome)) {
             return false;
         }
 
@@ -179,11 +183,16 @@ public class MapGenOutpost extends MapGenStructure {
     }
 
     private boolean villageStartsAt(int chunkX, int chunkZ) {
+        // 1.16's PillagerOutpostStructure.isNearVillage asks only the village grid (StructureFeature.VILLAGE's
+        // getPotentialFeatureChunk), not the village's biome; 1.14 and 1.15 ask the whole village rule.
+        if (StructurePlacements.isAtLeast("1.16")) {
+            return MapGenModernVillage.isGridCandidate(this.world, this.villages != null ? this.villages.spacing() : 32, chunkX, chunkZ);
+        }
         if (this.villages != null) {
             return this.villages.startsAt(this.world, chunkX, chunkZ);
         }
-        // Worlds whose villages this mod does not generate: 1.14's village rule on 1.12.2's grid.
-        return MapGenModernVillage.startsAt114(this.world, 32, chunkX, chunkZ);
+        // Worlds whose villages this mod does not generate: the village rule of 1.14 and later on 1.12.2's grid.
+        return MapGenModernVillage.startsAtModern(this.world, 32, chunkX, chunkZ);
     }
 
     @Override
