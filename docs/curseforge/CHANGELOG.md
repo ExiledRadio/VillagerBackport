@@ -24,6 +24,10 @@
     *   **Strongholds and the world spawn** search for their biome as 1.14 does (with Backport Core 1.1.0, which now holds that part for every backport), and strongholds can be in mushroom field shores.
     *   Without Update Aquatic Backport, the oceans have no temperatures and no shipwrecks or ocean ruins; everything else matches 1.14.
     *   With a backport of a later update installed as well, the world matches that update instead: its numbers win.
+*   **Villagers find their way home.** They now search for a path as far as 1.14 lets them, instead of 1.12.2's short limit that gave up partway across a village. A path that stops short is walked anyway and asked again from there, as in 1.14. Villagers no longer lose their bed at night just because it was across the village, and no longer stand at the village edge until morning.
+    *   Beds and workstations in a newly generated village are seen at once. Before, a villager that looked before the houses were built could miss them for ten minutes.
+*   **TradeStages Legacy**: its rules now lock this mod's trades by career and trade level, not only by item.
+*   **Village Names**: villagers without a job keep 1.14's empty trade list. Village Names used to fill it with a 1.12.2 job's trades every time the villager loaded.
 
 # 2.4.0
 
