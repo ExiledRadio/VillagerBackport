@@ -312,7 +312,7 @@ Spacebar refills the trade. If it doesn't, another mod has claimed the key (Inve
 ## Requirements
 
 *   Minecraft 1.12.2, Forge 14.23.5.2847 or newer
-*   [Backport Core](https://www.curseforge.com/minecraft/mc-mods/backport-core) 1.2.0 or newer
+*   [Backport Core](https://www.curseforge.com/minecraft/mc-mods/backport-core) 1.1.0 or newer
 *   Required on the client and the server
 
 ## Install

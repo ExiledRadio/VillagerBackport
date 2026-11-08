@@ -1,5 +1,7 @@
 package com.exiledradio.villagerbackport.bamboo;
 
+import com.exiledradio.backportcore.waterlog.Waterloggable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -70,11 +72,15 @@ import java.util.Random;
  * block, so anything that rewrites player movement - Aqua Acrobatics, for one - is unaffected and
  * still sees an ordinary block.
  *
+ * <h2>Water</h2>
+ * Waterloggable as in current Java: placed into a water source it keeps it, a bucket fills or drains
+ * it, and the water changes nothing else about it.
+ *
  * <h2>Not 1.14</h2>
  * The outline is always a full block. 1.14 shows the full block only while you hold scaffolding,
  * and the frame otherwise, but 1.12's outline cannot see what is in your hand.
  */
-public class BlockScaffolding extends Block {
+public class BlockScaffolding extends Block implements Waterloggable {
 
     public static final PropertyInteger DISTANCE = PropertyInteger.create("distance", 0, 7);
     public static final PropertyBool BOTTOM = PropertyBool.create("bottom");
@@ -113,8 +119,9 @@ public class BlockScaffolding extends Block {
 
     /**
      * 1.14's {@code Material.MISCELLANEOUS}, sand-colored on maps. It blocks movement as far as
-     * water and falling blocks are concerned - so water cannot wash scaffolding away, which 1.14
-     * prevents by waterlogging it - while {@link #isPassable} lets mobs plan paths through it.
+     * water and falling blocks are concerned - so flowing water cannot wash scaffolding away - while
+     * {@link #isPassable} lets mobs plan paths through it. A water source it holds is Fluidlogged
+     * API's, through Backport Core ({@link Waterloggable}), as current Java waterlogs scaffolding.
      */
     static final Material MATERIAL = new Material(MapColor.SAND) {
         @Override
