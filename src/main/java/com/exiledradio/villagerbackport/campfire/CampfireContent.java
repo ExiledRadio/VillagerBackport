@@ -1,7 +1,7 @@
 package com.exiledradio.villagerbackport.campfire;
 
+import com.exiledradio.backportcore.creative.CreativePlacement;
 import com.exiledradio.villagerbackport.ModConfig;
-import com.exiledradio.villagerbackport.ModCreativeTab;
 import com.exiledradio.villagerbackport.VillagerBackport;
 
 import net.minecraft.block.Block;
@@ -57,7 +57,7 @@ public final class CampfireContent {
         campfire = new BlockCampfire();
         campfire.setRegistryName(new ResourceLocation(VillagerBackport.MOD_ID, "campfire"));
         campfire.setTranslationKey(VillagerBackport.MOD_ID + ".campfire");
-        campfire.setCreativeTab(ModCreativeTab.TAB);
+        CreativePlacement.place(campfire);
         event.getRegistry().register(campfire);
 
         GameRegistry.registerTileEntity(TileEntityCampfire.class,

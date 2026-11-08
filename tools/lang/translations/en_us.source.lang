@@ -1,5 +1,4 @@
 # The English each translations/<code>.lang entry was made from. Written by build_langs.py snapshot.
-itemGroup.villagerbackport=Village & Pillage Backport
 gui.villagerbackport.xp.progress=%s/%s XP
 gui.villagerbackport.xp.max=%s XP
 config.villagerbackport.restock=Restocking

@@ -1,7 +1,7 @@
 package com.exiledradio.villagerbackport.building;
 
+import com.exiledradio.backportcore.creative.CreativePlacement;
 import com.exiledradio.villagerbackport.ModConfig;
-import com.exiledradio.villagerbackport.ModCreativeTab;
 import com.exiledradio.villagerbackport.VillagerBackport;
 
 import net.minecraft.block.Block;
@@ -231,7 +231,10 @@ public final class BuildingContent {
     private static void register(IForgeRegistry<Block> registry, String name, Block block, boolean hasItem) {
         block.setRegistryName(new ResourceLocation(VillagerBackport.MOD_ID, name));
         block.setTranslationKey(VillagerBackport.MOD_ID + "." + name);
-        block.setCreativeTab(ModCreativeTab.TAB);
+        if (hasItem) {
+            // Vanilla's tab, next to the vanilla block of the same name (Backport Core's creative placement).
+            CreativePlacement.place(block);
+        }
         if (block.getDefaultState().getMaterial() == net.minecraft.block.material.Material.ROCK) {
             // Stone needs a pickaxe to drop; vanilla's own get this from Forge, ours have to ask.
             block.setHarvestLevel("pickaxe", 0);
@@ -278,7 +281,7 @@ public final class BuildingContent {
             ItemWoodSign item = new ItemWoodSign(wood);
             item.setRegistryName(new ResourceLocation(VillagerBackport.MOD_ID, wood.name + "_sign"));
             item.setTranslationKey(VillagerBackport.MOD_ID + "." + wood.name + "_sign");
-            item.setCreativeTab(ModCreativeTab.TAB);
+            CreativePlacement.place(item);
             registry.register(item);
             SIGN_ITEMS.put(wood, item);
         }

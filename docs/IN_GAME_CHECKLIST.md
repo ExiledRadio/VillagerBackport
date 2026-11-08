@@ -52,3 +52,13 @@ the stored-flag conversion, bone meal spread with a stand-in coral block). What 
       changes at once when the water comes or goes.
 - [ ] **Old world**: a 2.4.0 world with pickles on a sea floor loads with the pickles still lit and in water.
 - [ ] **With coral blocks** (from another mod): bone meal on a waterlogged pickle on one spreads pickles.
+
+## Creative tabs (with Backport Core 1.1.0)
+
+The places are in `docs/CREATIVE_TABS.md`; a dev client already checked the lists, the search tab and JEI.
+
+- [ ] There is no tab for this mod; every vanilla tab keeps its icon, name, background and scroll bar.
+- [ ] A few places: stripped logs right after the dark oak log, the 1.14 walls after the mossy cobblestone wall, the workstations, bell, lantern and campfire at the end of Decoration Blocks, the fox egg after the evoker egg, the crossbow at the end of Combat with its three enchanted books.
+- [ ] The search tab finds the mod's items, and JEI lists them.
+- [ ] Other mods' items are still in their tabs, in their own order.
+- [ ] With another update backport installed too, its items and this mod's sit together by kind (stripped logs, slabs).

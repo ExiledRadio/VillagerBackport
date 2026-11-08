@@ -1,7 +1,7 @@
 package com.exiledradio.villagerbackport.flora;
 
+import com.exiledradio.backportcore.creative.CreativePlacement;
 import com.exiledradio.villagerbackport.ModConfig;
-import com.exiledradio.villagerbackport.ModCreativeTab;
 import com.exiledradio.villagerbackport.VillagerBackport;
 import com.exiledradio.villagerbackport.item.ItemBannerPattern;
 
@@ -167,7 +167,8 @@ public final class FloraContent {
     private static <T extends Item> T item(RegistryEvent.Register<Item> event, String name, T item) {
         item.setRegistryName(new ResourceLocation(VillagerBackport.MOD_ID, name));
         item.setTranslationKey(VillagerBackport.MOD_ID + "." + name);
-        item.setCreativeTab(ModCreativeTab.TAB);
+        // Vanilla's tab, next to the vanilla item of the same name (Backport Core's creative placement).
+        CreativePlacement.place(item);
         event.getRegistry().register(item);
         ITEMS.add(item);
         return item;

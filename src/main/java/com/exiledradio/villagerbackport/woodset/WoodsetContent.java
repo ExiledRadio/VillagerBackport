@@ -1,7 +1,7 @@
 package com.exiledradio.villagerbackport.woodset;
 
+import com.exiledradio.backportcore.creative.CreativePlacement;
 import com.exiledradio.villagerbackport.ModConfig;
-import com.exiledradio.villagerbackport.ModCreativeTab;
 import com.exiledradio.villagerbackport.VillagerBackport;
 
 import net.minecraft.block.Block;
@@ -209,7 +209,8 @@ public final class WoodsetContent {
     private static void register(IForgeRegistry<Block> registry, String name, Block block, @Nullable String tool) {
         block.setRegistryName(new ResourceLocation(VillagerBackport.MOD_ID, name));
         block.setTranslationKey(VillagerBackport.MOD_ID + "." + name);
-        block.setCreativeTab(ModCreativeTab.TAB);
+        // Vanilla's tab, next to the vanilla block of the same name (Backport Core's creative placement).
+        CreativePlacement.place(block);
         if (tool != null) {
             // Vanilla's own get these from Forge by material; ours have to ask.
             block.setHarvestLevel(tool, 0);

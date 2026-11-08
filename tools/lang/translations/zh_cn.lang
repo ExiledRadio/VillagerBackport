@@ -1,5 +1,4 @@
 # 简体中文 - our own text; vanilla names come from Mojang (tools/lang/build_langs.py)
-itemGroup.villagerbackport=Village & Pillage Backport
 gui.villagerbackport.xp.progress=%s/%s经验
 gui.villagerbackport.xp.max=%s经验
 config.villagerbackport.restock=补货

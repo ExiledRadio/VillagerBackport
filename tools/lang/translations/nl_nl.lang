@@ -1,5 +1,4 @@
 # Dutch - our own text; vanilla names come from Mojang (tools/lang/build_langs.py)
-itemGroup.villagerbackport=Village & Pillage Backport
 gui.villagerbackport.xp.progress=%s/%s XP
 gui.villagerbackport.xp.max=%s XP
 config.villagerbackport.restock=Voorraad aanvullen

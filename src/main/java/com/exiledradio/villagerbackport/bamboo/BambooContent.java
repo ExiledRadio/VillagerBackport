@@ -1,7 +1,7 @@
 package com.exiledradio.villagerbackport.bamboo;
 
+import com.exiledradio.backportcore.creative.CreativePlacement;
 import com.exiledradio.villagerbackport.ModConfig;
-import com.exiledradio.villagerbackport.ModCreativeTab;
 import com.exiledradio.villagerbackport.VillagerBackport;
 
 import net.minecraft.block.Block;
@@ -128,13 +128,12 @@ public final class BambooContent {
         // BlockBamboo.getStateForPlacement), and the shoot and stalk both drop it.
         bambooItem = new ItemBlock(bamboo);
         bambooItem.setRegistryName(bamboo.getRegistryName());
-        bambooItem.setCreativeTab(ModCreativeTab.TAB);
-        bamboo.setCreativeTab(ModCreativeTab.TAB);
+        // Vanilla's tabs, by the vanilla block of the same name (Backport Core's creative placement).
+        CreativePlacement.place(bamboo);
 
         scaffoldingItem = new ItemScaffolding(scaffolding);
         scaffoldingItem.setRegistryName(scaffolding.getRegistryName());
-        scaffoldingItem.setCreativeTab(ModCreativeTab.TAB);
-        scaffolding.setCreativeTab(ModCreativeTab.TAB);
+        CreativePlacement.place(scaffolding);
 
         event.getRegistry().registerAll(bambooItem, scaffoldingItem);
 

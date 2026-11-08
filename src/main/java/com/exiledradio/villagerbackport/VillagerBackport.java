@@ -55,6 +55,8 @@ public final class VillagerBackport {
     public void preInit(FMLPreInitializationEvent event) {
         // 1.14's structure placement numbers, for Backport Core's table (seed parity with 1.14).
         com.exiledradio.villagerbackport.worldgen.Placement114.register();
+        // This mod's spawn eggs in Miscellaneous where vanilla lists each mob's (Backport Core's creative placement).
+        com.exiledradio.backportcore.creative.CreativePlacement.placeSpawnEggs(MOD_ID);
         // Resolve the private villager fields once, up front. If this fails the handler below
         // still registers but every villager check short-circuits, so the pack loads normally
         // and the failure is one log line rather than an exception per villager per tick.
