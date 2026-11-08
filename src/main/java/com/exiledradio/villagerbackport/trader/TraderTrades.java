@@ -46,7 +46,8 @@ import java.util.Random;
  * bone meal unless something adds a real one). An item with no 1.12.2 equivalent - blue ice, kelp,
  * sea pickles, coral blocks, cornflowers, fish buckets, the nautilus shell - is looked up by name
  * from the mods that commonly add it, and drops out of its pool when none is installed, so the
- * trader picks from what is left. Things only much later versions added (cherry and mangrove wood,
+ * trader picks from what is left. Sea pickles are Update Aquatic Backport's, the family mod they fit
+ * best, and are sold only when it is installed. Things only much later versions added (cherry and mangrove wood,
  * moss, dripleaf, dripstone, wildflowers, firefly bushes) are left out entirely.
  */
 public final class TraderTrades {
@@ -208,7 +209,8 @@ public final class TraderTrades {
         ORDINARY.add(sell(new ItemStack(Blocks.SAND, 8), 1, 8));
         ORDINARY.add(sell(new ItemStack(Blocks.SAND, 4, 1), 1, 6));
 
-        ORDINARY.add(optionalSell(2, 1, 5, "villagerbackport:sea_pickle", "oe:sea_pickle", "futuremc:sea_pickle"));
+        // Sea pickles are Update Aquatic Backport's: the trader sells them only when it is installed.
+        ORDINARY.add(optionalSell(2, 1, 5, "updateaquaticbackport:sea_pickle"));
         ORDINARY.add(sell(new ItemStack(Blocks.GLOWSTONE), 3, 5));
         ORDINARY.add(optionalSell(3, 1, 4, "futuremc:tropical_fish_bucket"));
         ORDINARY.add(optionalSell(3, 1, 4, "futuremc:pufferfish_bucket"));

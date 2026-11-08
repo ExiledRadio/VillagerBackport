@@ -12,10 +12,15 @@
     *   **F3 + N** in Survival switches to Creative (cheats on), and **F3 + Esc** pauses the game without opening the pause menu, as since 1.14.1.
     *   "Chat Opacity" is called **Chat Text Opacity**, as in 1.14, in every language.
 
-*   **Waterlogging, as in current Java.** Every block of this mod that current Java waterlogs now holds water: lanterns (standing and hanging), campfires, scaffolding, sea pickles, the new stairs, walls and half slabs (not double slabs), the new signs and wood trapdoors. Place one into a water source and it keeps the water; a bucket fills or empties it. Bells, grindstones, lecterns, composters, barrels and the other workstations, buttons and pressure plates hold no water, as in vanilla.
+*   **Waterlogging, as in current Java.** Every block of this mod that current Java waterlogs now holds water: lanterns (standing and hanging), campfires, scaffolding, the new stairs, walls and half slabs (not double slabs), the new signs and wood trapdoors. Place one into a water source and it keeps the water; a bucket fills or empties it. Bells, grindstones, lecterns, composters, barrels and the other workstations, buttons and pressure plates hold no water, as in vanilla.
     *   **Campfires**: water reaching a lit campfire puts it out, with the hiss and the burst of smoke. A campfire holding water can't be lit by flint and steel, a fire charge or a burning arrow, and one placed into water is placed out. A water bucket now waterlogs a campfire instead of only putting it out.
-    *   **Sea pickles** hold real water now, so they glow only while waterlogged: 6, 9, 12 or 15 light for one to four pickles. Placing one in water waterlogs it, adding pickles keeps the water, and draining it never breaks it. Bone meal on a waterlogged pickle sitting on a coral block spreads pickles across the coral, as in current Java.
-    *   **Existing worlds**: sea pickles saved as being in water get real water once, when their chunk first loads. Their light is then worked out from that water.
+
+*   **Sea pickles moved to Update Aquatic Backport.** They are a 1.13 ocean block, so they belong with the update they came from. This mod no longer adds them: no item, recipe or creative tab entry. With Update Aquatic Backport installed:
+    *   The wandering trader sells its sea pickles, as in current Java.
+    *   The desert house that has sea pickles in 1.14 places its two. Without it, that stand is left bare, as the house was before.
+*   **Existing worlds keep every sea pickle.** Sea pickles placed by 2.3.0 or 2.4.0, wet or dry, and pickle items in chests, inventories and on the ground are all kept.
+    *   **With Update Aquatic Backport installed**, they become its sea pickles as the world loads, with the same number in each block and the same water. Ones saved as being in water get real water once, when their chunk first loads.
+    *   **Without it**, they stay as they are, still glowing in water, and become its sea pickles the day you add it. Until then they can't be placed or crafted, and breaking one gives its pickles back.
 
 *   **Seed maps: worlds match 1.14.** A new world generated with this mod and Update Aquatic Backport matches what 1.14 generates for the same seed, so seed map sites set to 1.14 show its biomes and structures where they really are. Checked against Minecraft 1.14.4's own code over six seeds: every biome in a 2,048-block square and every structure start in an 8,192-block square came out the same.
     *   **Bamboo jungles** are placed by 1.14's own rule: one jungle area in ten, chosen as 1.14 chooses it, with bamboo jungle hills and jungle edges where 1.14 puts them. In a world type this mod doesn't know, or one another mod has changed, they are still placed by the old filter.

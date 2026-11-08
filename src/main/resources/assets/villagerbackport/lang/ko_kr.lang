@@ -496,5 +496,5 @@ villagerbackport.general.flora.witherkillsplantroses.tooltip=위더가 죽인 �
 config.villagerbackport.building.tooltip=1.14의 돌 반 블록, 계단, 담장, 매끄러운 돌, 나무 표지판입니다.
 villagerbackport.general.building.enabled.tooltip=이 모드가 1.14의 건축 블록을 추가할지 여부입니다. 새로운 돌, 사암, 석영, 네더 벽돌, 엔드 석재 벽돌의 반 블록, 계단, 담장, 매끄러운 돌, 매끄러운 사암, 매끄러운 붉은 사암, 매끄러운 석영 블록, 그리고 나머지 다섯 가지 나무의 표지판입니다.\n\n이 블록들이 있는 세계에서 끄면 블록이 삭제됩니다.
 villagerbackport.general.building.vanillarecipechanges.tooltip=새 블록을 제작할 수 있도록 바닐라 제작법 일곱 개를 1.14와 같이 바꿉니다.\n\n표지판              아무 판자 -> 참나무 판자만(다른 나무는 각자의 표지판을 만듦)\n돌 반 블록          돌 -> 매끄러운 돌(돌은 이제 1.14의 일반 돌 반 블록을 만듦)\n사암 반 블록        깎인 사암을 더 이상 받지 않음(깎인 사암은 깎인 사암 반 블록을 만듦)\n붉은 사암 반 블록   깎인 붉은 사암을 더 이상 받지 않음(마찬가지)\n석재 벽돌 반 블록   일반 석재 벽돌만(이끼 낀 것은 따로 만듦)\n석재 벽돌 계단      마찬가지\n네더 벽돌 울타리    네더 벽돌 블록 4개와 네더 벽돌 2개(블록 6개는 담장)\n\n이 설정이 없으면 각 쌍이 같은 제작 패턴을 공유해 둘 중 하나만 제작할 수 있습니다. 끄면 바닐라 제작법을 원래대로 둡니다. building.enabled가 꺼져 있으면 아무것도 하지 않습니다.
-config.villagerbackport.villageBlocks.tooltip=1.14의 껍질 벗긴 원목, 나무 다락문, 버튼, 압력판, 푸른얼음, 불우렁쉥이입니다.
+config.villagerbackport.villageBlocks.tooltip=1.14의 껍질 벗긴 원목, 나무 다락문, 버튼, 압력판, 푸른얼음입니다.
 # --- end config tooltips ---

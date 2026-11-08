@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 
-/** Draws each stand-in for a removed Future MC item as what it stands for. */
+/** Draws each stand-in for a removed Future MC item as what it stands for, and kept sea pickles as sea pickles. */
 @Mod.EventBusSubscriber(modid = VillagerBackport.MOD_ID, value = Side.CLIENT)
 public final class MigrateClient {
 
@@ -22,6 +22,11 @@ public final class MigrateClient {
 
     @SubscribeEvent
     public static void registerModels(ModelRegistryEvent event) {
+        Item pickle = com.exiledradio.villagerbackport.migrate.UpdateAquaticPickles.standIn();
+        if (pickle != null) {
+            ModelLoader.setCustomModelResourceLocation(pickle, 0,
+                    new ModelResourceLocation(VillagerBackport.MOD_ID + ":sea_pickle", "inventory"));
+        }
         for (Item item : ForgeRegistries.ITEMS) {
             if (!(item instanceof ItemFutureMcStandIn)) {
                 continue;

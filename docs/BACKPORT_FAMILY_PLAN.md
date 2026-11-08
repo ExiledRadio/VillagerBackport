@@ -25,8 +25,15 @@ names can change any time.
 ## Rule 1: the mod that ships a block first owns it
 
 Some blocks belong to one update but are needed by another. Village & Pillage Backport adds 1.13's
-stripped logs and wood, blue ice, sea pickles, and wood trapdoors, buttons and pressure plates,
+stripped logs and wood, blue ice, and wood trapdoors, buttons and pressure plates,
 because 1.14's villages are built from them. They stay there.
+
+**The exception: a block belongs to the backport it fits best.** When two backports need the same
+block and it plainly belongs to one update's theme, that backport owns it, even if another shipped it
+first. Sea pickles are the first case: Village & Pillage shipped them in 2.3.0, but they are an ocean
+block, so they are Update Aquatic Backport's from Village & Pillage 2.5.0 (2026-11-08). Village &
+Pillage uses Update Aquatic's when it is installed (the wandering trader, one desert house) and keeps
+older worlds' pickles until it is.
 
 When a later mod needs a block another backport owns:
 
@@ -50,7 +57,7 @@ earlier mod's block. For example:
 - Nether Update Backport's netherite upgrades through Village & Pillage's smithing table. The smithing
   table already reads netherite recipes from any mod, so this needs only a registration.
 - Buzzy Bees Backport's iron golem repair works on Village & Pillage's golems and villages.
-- Update Aquatic Backport's waterlogging covers Village & Pillage's lanterns, campfires and sea pickles.
+- Update Aquatic Backport's waterlogging covers Village & Pillage's lanterns and campfires.
 
 None of these may *require* the other mod. Each mod checks `Loader.isModLoaded` and adds the integration
 when the other is there. Each mod's own tests cover both cases: installed alone, and installed with the

@@ -60,7 +60,6 @@ Village & Pillage Backport has no creative tab of its own. Each block and item i
 
 | Item | After | Before |
 |---|---|---|
-| `sea_pickle` | `dead_bush` | `dandelion` |
 | `cornflower` | `oxeye_daisy` | `lily_of_the_valley` (this mod) |
 | `lily_of_the_valley` | `cornflower` (this mod) | `wither_rose` (this mod) |
 | `wither_rose` | `lily_of_the_valley` (this mod) | `brown_mushroom` |

@@ -496,5 +496,5 @@ villagerbackport.general.flora.witherkillsplantroses.tooltip=ウィザーが倒�
 config.villagerbackport.building.tooltip=1.14の石のハーフブロック、階段、塀、滑らかな石、木の看板です。
 villagerbackport.general.building.enabled.tooltip=このModが1.14の建築ブロックを追加するかどうかです。新しい石、砂岩、クォーツ、ネザーレンガ、エンドストーンレンガのハーフブロック・階段・塀、滑らかな石、滑らかな砂岩、滑らかな赤い砂岩、滑らかなクォーツブロック、そしてほかの5種類の木の看板です。\n\nこれらがあるワールドでオフにすると、それらは削除されます。
 villagerbackport.general.building.vanillarecipechanges.tooltip=新しいブロックをクラフトできるように、7つのバニラのレシピを1.14と同じように変更します。\n\n看板                任意の板材 -> オークの板材のみ（ほかの木材はそれぞれ専用の看板になる）\n石のハーフブロック  石 -> 滑らかな石（石からは1.14の普通の石のハーフブロックができる）\n砂岩のハーフブロック  研がれた砂岩は使えなくなる（研がれた砂岩からは研がれた砂岩のハーフブロックができる）\n赤い砂岩のハーフブロック  研がれた赤い砂岩は使えなくなる（同様）\n石レンガのハーフブロック  普通の石レンガのみ（苔むした石レンガは専用のものになる）\n石レンガの階段  同様\nネザーレンガのフェンス  ネザーレンガのブロック4個とネザーレンガ2個（ブロック6個だと塀になる）\n\nこれがないと、各組が1つのクラフトパターンを共有し、どちらか一方しかクラフトできません。オフにするとバニラのレシピはまったく変わりません。building.enabledがオフのときは何もしません。
-config.villagerbackport.villageBlocks.tooltip=1.14の樹皮を剥いだ原木、木のトラップドア、ボタン、感圧板、青氷、シーピクルスです。
+config.villagerbackport.villageBlocks.tooltip=1.14の樹皮を剥いだ原木、木のトラップドア、ボタン、感圧板、青氷です。
 # --- end config tooltips ---

@@ -89,7 +89,7 @@ public final class ModConfig {
     public static final Building building = new Building();
 
     @Config.LangKey("config.villagerbackport.villageBlocks")
-    @Config.Comment("1.14's stripped logs, wood trapdoors, buttons and pressure plates, blue ice and sea pickles.")
+    @Config.Comment("1.14's stripped logs, wood trapdoors, buttons and pressure plates, and blue ice.")
     public static final VillageBlocks villageBlocks = new VillageBlocks();
 
     private ModConfig() {
@@ -550,7 +550,7 @@ public final class ModConfig {
                 "acacia trapdoors and signs.",
                 "Quark: the same smooth sandstone, slabs, walls and trapdoors, diorite and granite",
                 "stairs, and spruce, jungle and acacia buttons and pressure plates.",
-                "Oceanic Expanse: blue ice and sea pickles.",
+                "Oceanic Expanse: blue ice, and sea pickles when Update Aquatic Backport's are missing.",
                 "",
                 "With none of them installed nothing changes. Turn this off to keep 1.12.2's blocks",
                 "even with them installed."
@@ -1651,7 +1651,8 @@ public final class ModConfig {
         @Config.Comment({
                 "Whether this mod adds the rest of the blocks 1.14's villages are built from:",
                 "stripped logs and stripped wood in all six woods, trapdoors, buttons and pressure",
-                "plates in the five woods that are not oak, blue ice and sea pickles.",
+                "plates in the five woods that are not oak, and blue ice. Sea pickles are Update",
+                "Aquatic Backport's.",
                 "",
                 "With it on, villages place them; off, villages use another mod's (Future MC, Quark,",
                 "Farmer's Future Delight, Oceanic Expanse) or 1.12.2 stand-ins as before. Also narrows",

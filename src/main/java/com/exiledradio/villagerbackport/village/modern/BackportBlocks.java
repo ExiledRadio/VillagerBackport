@@ -18,10 +18,19 @@ import java.util.Map;
  * chose (stripped logs as logs, blue ice as packed ice, smooth sandstone as cut sandstone). This
  * mod's own 1.14 block is placed first: its building blocks (slabs, stairs, walls, smooth blocks and
  * wood signs, while {@code building.enabled} is on) and village blocks (stripped logs and wood, wood
- * trapdoors, buttons and pressure plates, blue ice and sea pickles, while {@code villageBlocks.enabled}
- * is on). Only where this mod's is switched off is Future MC's, Oceanic Expanse's, Quark's or Farmer's
- * Future Delight's used instead, and only with {@code villages.backportBlocks} on. A block nobody
- * provides gets the stand-in, as before. With Future MC's kept ({@code compat.futureMcDuplicates}
+ * trapdoors, buttons and pressure plates and blue ice, while {@code villageBlocks.enabled} is on). Sea
+ * pickles are Update Aquatic Backport's, a family mod, so its are placed first in the same way when it
+ * is installed. Only where the family's is missing is Future MC's, Oceanic Expanse's, Quark's or
+ * Farmer's Future Delight's used instead, and only with {@code villages.backportBlocks} on. A block
+ * nobody provides gets the stand-in, as before.
+ *
+ * <h2>A sea pickle with nobody to provide one</h2>
+ * 1.14's villages have one: two dry pickles on a terracotta stand in a desert house
+ * ({@code desert_small_house_8} and its zombie twin). Dry, they give no light. Without Update Aquatic
+ * (or Oceanic Expanse's, borrowed) the stand is left bare, as the converted file already has it: air.
+ * That is closer to vanilla than a lantern, which would light a house vanilla leaves dark, and closer
+ * than this mod's kept pickle ({@code migrate.BlockSeaPickleKept}), which exists only for older worlds
+ * and is never placed by villages. With Future MC's kept ({@code compat.futureMcDuplicates}
  * {@code KEEP_FUTURE_MC}), {@code FutureMc.preferred} then swaps this mod's block for its Future MC twin.
  *
  * <p>A backport block is given the 1.14 properties it understands, then the converted 1.12.2 ones (a
@@ -31,6 +40,9 @@ import java.util.Map;
 final class BackportBlocks {
 
     private static final String VB = "villagerbackport:";
+
+    /** Update Aquatic Backport, the family mod that owns sea pickles. */
+    private static final String UA = "updateaquaticbackport:";
 
     private static final String[] WOODS = {"oak", "spruce", "birch", "jungle", "acacia", "dark_oak"};
 
@@ -110,9 +122,9 @@ final class BackportBlocks {
         addIfAbsent("smooth_red_sandstone", VB + "smooth_red_sandstone");
         addIfAbsent("smooth_quartz", VB + "smooth_quartz");
 
-        // Oceanic Expanse names the count and the water differently. This mod's own uses 1.14's
+        // Oceanic Expanse names the count and the water differently. Update Aquatic's uses 1.14's
         // names, pickles and waterlogged, so they carry across by name.
-        TABLE.put("sea_pickle", Arrays.asList(new Option("oe:sea_pickle") {
+        TABLE.put("sea_pickle", Arrays.asList(new Option(UA + "sea_pickle"), new Option("oe:sea_pickle") {
             @Override
             NBTTagCompound fixed(NBTTagCompound source) {
                 NBTTagCompound out = new NBTTagCompound();
@@ -120,7 +132,7 @@ final class BackportBlocks {
                 out.setString("in_water", source.hasKey("waterlogged") ? source.getString("waterlogged") : "false");
                 return out;
             }
-        }, new Option(VB + "sea_pickle")));
+        }));
     }
 
     private BackportBlocks() {
@@ -155,15 +167,15 @@ final class BackportBlocks {
         if (options == null) {
             return null;
         }
-        // This mod's own block first, whatever villages.backportBlocks says - that setting is about
-        // borrowing other mods' blocks. Another mod's only if this mod's is switched off.
+        // This mod's own block (or the family's) first, whatever villages.backportBlocks says - that
+        // setting is about borrowing other mods' blocks. Another mod's only if the family's is missing.
         for (int pass = 0; pass < 2; pass++) {
             boolean own = pass == 0;
             if (!own && !ModConfig.villages.backportBlocks) {
                 break;
             }
             for (Option option : options) {
-                if (option.name.startsWith(VB) != own) {
+                if (family(option.name) != own) {
                     continue;
                 }
                 IBlockState state = tryOption(option, sourceProps, props);
@@ -173,6 +185,11 @@ final class BackportBlocks {
             }
         }
         return null;
+    }
+
+    /** @return true for this mod's own blocks and the family's: tried before any other mod's */
+    private static boolean family(String name) {
+        return name.startsWith(VB) || name.startsWith(UA);
     }
 
     @Nullable
