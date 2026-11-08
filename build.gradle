@@ -163,9 +163,11 @@ artifacts {
 
 // Dev convenience: copies the built jar straight into a local test instance so
 // testing changes doesn't require a manual copy step. Opt-in and machine-local
-// — set `deployDir` in your user gradle.properties (~/.gradle/gradle.properties),
+// — set `vbpDeployDir` in your user gradle.properties (~/.gradle/gradle.properties),
 // not here, so the build still works for anyone else who clones the repo.
-def deployDir = project.findProperty('deployDir')
+// Its own name, not the shared `deployDir`: that one belongs to another mod's build and points at a
+// played modpack, which then received a 2.5.0 build without the Backport Core it needs.
+def deployDir = project.findProperty('vbpDeployDir')
 
 task deployToInstance(type: Copy) {
 	onlyIf { deployDir && file(deployDir).isDirectory() }
