@@ -32,7 +32,13 @@ import java.util.Random;
  * <p>{@link #isDouble()} is answered by the subclass rather than read from a field, because
  * {@code BlockSlab}'s constructor calls it before any field of this class is assigned.
  */
-public abstract class BlockBuildingSlab extends BlockSlab {
+public abstract class BlockBuildingSlab extends BlockSlab implements com.exiledradio.backportcore.waterlog.Waterloggable {
+
+    /** 1.14: a half slab holds water (a source only, Backport Core's rules); a double one is a full block. */
+    @Override
+    public boolean canHoldWater(net.minecraft.block.state.IBlockState state, net.minecraft.world.IBlockAccess world, net.minecraft.util.math.BlockPos pos) {
+        return !isDouble();
+    }
 
     public static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class);
 

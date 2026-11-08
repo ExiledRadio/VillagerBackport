@@ -22,7 +22,7 @@ import net.minecraft.util.NonNullList;
  * it is pinned to its first value here and ignored by the client's state mapper, and nothing about
  * these blocks ever reads it.
  */
-public final class BlockBuildingWall extends BlockWall {
+public final class BlockBuildingWall extends BlockWall implements com.exiledradio.backportcore.waterlog.Waterloggable {
 
     BlockBuildingWall(Block base) {
         super(base);
