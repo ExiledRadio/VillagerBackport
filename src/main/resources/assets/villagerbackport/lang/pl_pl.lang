@@ -304,11 +304,6 @@ tile.villagerbackport.dark_oak_sign.name=Ciemnodębowa tabliczka
 tile.villagerbackport.dark_oak_wall_sign.name=Ciemnodębowa tabliczka
 item.villagerbackport.dark_oak_sign.name=Ciemnodębowa tabliczka
 # 1.14's names for the vanilla blocks it renamed.
-tile.stoneSlab.stone.name=Gładka kamienna płyta
-tile.sandStone.smooth.name=Przycięty piaskowiec
-tile.redSandStone.smooth.name=Przycięty czerwony piaskowiec
-item.sign.name=Dębowa tabliczka
-tile.sign.name=Dębowa tabliczka
 # --- end building ---
 
 # --- village-blocks ---
@@ -344,15 +339,12 @@ tile.villagerbackport.blue_ice.name=Niebieski lód lodowcowy
 tile.villagerbackport.sea_pickle.name=Iskrzyłuda
 subtitles.villagerbackport.item.axe.strip=Siekiera zeskrobuje
 # 1.14's names for the vanilla blocks it renamed.
-tile.trapdoor.name=Dębowa klapa
-tile.pressurePlateWood.name=Dębowa płytka naciskowa
 # --- end village-blocks ---
 
 # --- look and feel ---
 # 1.14's options (Mouse Settings) and screen text, and vanilla text 1.14 reworded on 1.12.2's own keys.
 options.mouseWheelSensitivity=Czułość przewijania
 options.discrete_mouse_scroll=Przewij. zrównoważone
-options.chat.opacity=Przezr. tekstu czatu
 menu.paused=Gra wstrzymana
 # --- end look and feel ---
 

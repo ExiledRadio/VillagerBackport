@@ -304,11 +304,6 @@ tile.villagerbackport.dark_oak_sign.name=짙은 참나무 표지판
 tile.villagerbackport.dark_oak_wall_sign.name=짙은 참나무 표지판
 item.villagerbackport.dark_oak_sign.name=짙은 참나무 표지판
 # 1.14's names for the vanilla blocks it renamed.
-tile.stoneSlab.stone.name=매끄러운 돌 반 블록
-tile.sandStone.smooth.name=깎인 사암
-tile.redSandStone.smooth.name=깎인 붉은 사암
-item.sign.name=참나무 표지판
-tile.sign.name=참나무 표지판
 # --- end building ---
 
 # --- village-blocks ---
@@ -344,15 +339,12 @@ tile.villagerbackport.blue_ice.name=푸른얼음
 tile.villagerbackport.sea_pickle.name=불우렁쉥이
 subtitles.villagerbackport.item.axe.strip=도끼로 긁어냄
 # 1.14's names for the vanilla blocks it renamed.
-tile.trapdoor.name=참나무 다락문
-tile.pressurePlateWood.name=참나무 압력판
 # --- end village-blocks ---
 
 # --- look and feel ---
 # 1.14's options (Mouse Settings) and screen text, and vanilla text 1.14 reworded on 1.12.2's own keys.
 options.mouseWheelSensitivity=스크롤 감도
 options.discrete_mouse_scroll=별도 스크롤
-options.chat.opacity=대화 문자 불투명도
 menu.paused=게임 일시 정지
 # --- end look and feel ---
 

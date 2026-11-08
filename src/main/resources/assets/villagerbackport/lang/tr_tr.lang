@@ -304,11 +304,6 @@ tile.villagerbackport.dark_oak_sign.name=Koyu Meşe Tabela
 tile.villagerbackport.dark_oak_wall_sign.name=Koyu Meşe Tabela
 item.villagerbackport.dark_oak_sign.name=Koyu Meşe Tabela
 # 1.14's names for the vanilla blocks it renamed.
-tile.stoneSlab.stone.name=Düz Taş Basamak
-tile.sandStone.smooth.name=Kesilmiş Kum Taşı
-tile.redSandStone.smooth.name=Kesilmiş Kırmızı Kum Taşı
-item.sign.name=Meşe Tabela
-tile.sign.name=Meşe Tabela
 # --- end building ---
 
 # --- village-blocks ---
@@ -344,15 +339,12 @@ tile.villagerbackport.blue_ice.name=Mavi Buz
 tile.villagerbackport.sea_pickle.name=Pirozom
 subtitles.villagerbackport.item.axe.strip=Balta soydu
 # 1.14's names for the vanilla blocks it renamed.
-tile.trapdoor.name=Meşe Tuzak Kapısı
-tile.pressurePlateWood.name=Meşe Basınç Plakası
 # --- end village-blocks ---
 
 # --- look and feel ---
 # 1.14's options (Mouse Settings) and screen text, and vanilla text 1.14 reworded on 1.12.2's own keys.
 options.mouseWheelSensitivity=Kaydırma Hassasiyeti
 options.discrete_mouse_scroll=Ayrık Kaydırma
-options.chat.opacity=Sohbet Metni Opaklığı
 menu.paused=Oyun Duraklatıldı
 # --- end look and feel ---
 

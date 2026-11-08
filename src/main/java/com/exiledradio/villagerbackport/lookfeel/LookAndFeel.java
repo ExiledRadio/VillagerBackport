@@ -25,8 +25,11 @@ import net.minecraft.util.ResourceLocation;
  *   <li>the world-loading screen: 1.14's chunk-status grid comes from Core's table for 1.14.</li>
  * </ul>
  * Core builds 1.14's Accessibility Settings and Mouse Settings screens itself once 1.14 is installed. Menu music
- * did not change in 1.14 ({@code music.menu} is menu1 to menu4 in 1.13.2 and 1.14.4). Vanilla text 1.14 reworded
- * ("Chat Text Opacity") is in the lang file.
+ * did not change in 1.14 ({@code music.menu} is menu1 to menu4 in 1.13.2 and 1.14.4). Also, from 1.14.4's jar, as
+ * Core's single slots: the title screen's Accessibility icon (19w13a), the startup screen's {@code mojang.png}
+ * (19w06a; Core draws 1.14's screen and bar), and vanilla's own text as 1.14.4 words it ({@code vanilla_text/}:
+ * "Chat Text Opacity", "Smooth Stone Slab" ...). The pause menu's feedback row, Use VBOs' removal and Text
+ * Background Opacity are Core's own, by version.
  */
 public final class LookAndFeel {
 
@@ -59,9 +62,14 @@ public final class LookAndFeel {
                 .addSplashes("{PLAYER} IS YOU")
                 // Mouse Settings in 1.14.4: Sensitivity, Invert Mouse, Scroll Sensitivity, Discrete Scrolling, Touchscreen.
                 .option(SCROLL_SENSITIVITY.after("INVERT_MOUSE"))
-                .option(DISCRETE_SCROLLING.after(SCROLL_SENSITIVITY.id()));
+                .option(DISCRETE_SCROLLING.after(SCROLL_SENSITIVITY.id()))
+                .titleAccessibilityIcon(new ResourceLocation(ID, "textures/gui/accessibility.png"))
+                .startupLogo("textures/gui/title/mojang.png", new ResourceLocation(ID, "textures/gui/title/mojang.png"))
+                .vanillaText(new ResourceLocation(ID, "vanilla_text"));
         // 1.14.1's F3+N and F3+Esc are client code (LookAndFeelClient); the version is declared here so the
         // newest installed version is the same on both sides.
         Presentation.version("1.14.1");
+        // 1.14.2's F3 server chunk line, also client code.
+        Presentation.version("1.14.2");
     }
 }

@@ -304,11 +304,6 @@ tile.villagerbackport.dark_oak_sign.name=Cartel de roble oscuro
 tile.villagerbackport.dark_oak_wall_sign.name=Cartel de roble oscuro
 item.villagerbackport.dark_oak_sign.name=Cartel de roble oscuro
 # 1.14's names for the vanilla blocks it renamed.
-tile.stoneSlab.stone.name=Losa de piedra lisa
-tile.sandStone.smooth.name=Arenisca cortada
-tile.redSandStone.smooth.name=Arenisca roja cortada
-item.sign.name=Cartel de roble
-tile.sign.name=Cartel de roble
 # --- end building ---
 
 # --- village-blocks ---
@@ -344,15 +339,12 @@ tile.villagerbackport.blue_ice.name=Hielo azul
 tile.villagerbackport.sea_pickle.name=Pepino de mar
 subtitles.villagerbackport.item.axe.strip=Hacha raspa
 # 1.14's names for the vanilla blocks it renamed.
-tile.trapdoor.name=Trampilla de roble
-tile.pressurePlateWood.name=Placa de presión de roble
 # --- end village-blocks ---
 
 # --- look and feel ---
 # 1.14's options (Mouse Settings) and screen text, and vanilla text 1.14 reworded on 1.12.2's own keys.
 options.mouseWheelSensitivity=Sensibilidad de rueda
 options.discrete_mouse_scroll=Desplazamiento discreto
-options.chat.opacity=Opacidad de chat
 menu.paused=Juego en pausa
 # --- end look and feel ---
 

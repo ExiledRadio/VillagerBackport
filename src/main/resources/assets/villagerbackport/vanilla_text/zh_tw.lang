@@ -1,0 +1,8 @@
+tile.stoneSlab.stone.name=平滑石半磚
+tile.sandStone.smooth.name=鑿製砂岩
+tile.redSandStone.smooth.name=鑿製紅砂岩
+item.sign.name=橡木告示牌
+tile.sign.name=橡木告示牌
+tile.trapdoor.name=橡木地板門
+tile.pressurePlateWood.name=橡木壓力板
+options.chat.opacity=聊天欄文字不透明度

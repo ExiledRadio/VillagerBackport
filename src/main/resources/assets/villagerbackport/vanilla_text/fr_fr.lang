@@ -1,0 +1,8 @@
+tile.stoneSlab.stone.name=Dalle de roche lisse
+tile.sandStone.smooth.name=Grès taillé
+tile.redSandStone.smooth.name=Grès rouge taillé
+item.sign.name=Pancarte en chêne
+tile.sign.name=Pancarte en chêne
+tile.trapdoor.name=Trappe en chêne
+tile.pressurePlateWood.name=Plaque de pression en chêne
+options.chat.opacity=Opac. du texte du tchat

@@ -1,0 +1,8 @@
+tile.stoneSlab.stone.name=Laje de pedra lisa
+tile.sandStone.smooth.name=Arenito lapidado
+tile.redSandStone.smooth.name=Arenito vermelho lapidado
+item.sign.name=Placa de carvalho
+tile.sign.name=Placa de carvalho
+tile.trapdoor.name=Alçapão de carvalho
+tile.pressurePlateWood.name=Placa de pressão de carvalho
+options.chat.opacity=Opacidade do chat

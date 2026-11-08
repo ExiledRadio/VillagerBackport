@@ -303,11 +303,6 @@ tile.villagerbackport.dark_oak_sign.name=Dark Oak Sign
 tile.villagerbackport.dark_oak_wall_sign.name=Dark Oak Sign
 item.villagerbackport.dark_oak_sign.name=Dark Oak Sign
 # 1.14's names for the vanilla blocks it renamed.
-tile.stoneSlab.stone.name=Smooth Stone Slab
-tile.sandStone.smooth.name=Cut Sandstone
-tile.redSandStone.smooth.name=Cut Red Sandstone
-item.sign.name=Oak Sign
-tile.sign.name=Oak Sign
 # --- end building ---
 
 # --- village-blocks ---
@@ -343,15 +338,12 @@ tile.villagerbackport.blue_ice.name=Blue Ice
 tile.villagerbackport.sea_pickle.name=Sea Pickle
 subtitles.villagerbackport.item.axe.strip=Axe strips
 # 1.14's names for the vanilla blocks it renamed.
-tile.trapdoor.name=Oak Trapdoor
-tile.pressurePlateWood.name=Oak Pressure Plate
 # --- end village-blocks ---
 
 # --- look and feel ---
 # 1.14's options (Mouse Settings) and screen text, and vanilla text 1.14 reworded on 1.12.2's own keys.
 options.mouseWheelSensitivity=Scroll Sensitivity
 options.discrete_mouse_scroll=Discrete Scrolling
-options.chat.opacity=Chat Text Opacity
 menu.paused=Game paused
 # --- end look and feel ---
 

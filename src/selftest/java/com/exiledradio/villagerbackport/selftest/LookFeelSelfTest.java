@@ -51,8 +51,26 @@ public final class LookFeelSelfTest implements SelfTest {
         Contribution v1141 = Presentation.contribution("1.14.1");
         c.ok(v114 != null && v114.owners().contains(ID), "1.14 is registered by " + ID + ": " + v114);
         c.ok(v1141 != null && v1141.owners().contains(ID), "1.14.1 is registered by " + ID + ": " + v1141);
-        c.eq(GameVersion.parse("1.14.1"), Presentation.newest(), "the newest installed version (this mod alone)");
+        c.ok(Presentation.contribution("1.14.2") != null, "1.14.2 is registered too (its F3 line)");
+        c.eq(GameVersion.parse("1.14.2"), Presentation.newest(), "the newest installed version (this mod alone)");
         c.eq(LoadingRevision.GRID_1_14, Presentation.loadingRevision(), "the world-loading screen revision");
+        // Core's finished single slots: 1.14.4's icon, startup logo and vanilla text.
+        c.eq(new ResourceLocation(ID, "textures/gui/accessibility.png"), Presentation.titleAccessibilityIcon(), "the title screen's Accessibility icon");
+        c.eq(new ResourceLocation(ID, "textures/gui/title/mojang.png"), Presentation.asset("textures/gui/title/mojang.png"), "1.14's startup logo");
+        c.eq(com.exiledradio.backportcore.presentation.VanillaRevisions.Startup.BAR_1_14,
+                com.exiledradio.backportcore.presentation.VanillaRevisions.startup(), "the startup screen is 1.14's white one with its bar");
+        c.ok(Presentation.vanillaTexts().contains(new ResourceLocation(ID, "vanilla_text")), "1.14's vanilla text is registered");
+        c.ok(com.exiledradio.backportcore.presentation.VanillaRevisions.pauseFeedback() && com.exiledradio.backportcore.presentation.VanillaRevisions.vboRemoved()
+                && Presentation.TEXT_BACKGROUND_OPACITY.isShown(), "Core's 1.14 table: pause feedback row, no Use VBOs, Text Background Opacity");
+        try {
+            int[] size = pngSize(new ResourceLocation(ID, "textures/gui/accessibility.png"));
+            c.ok(size != null && size[0] == 32 && size[1] == 64, "1.14.4's accessibility.png is 32x64: " + java.util.Arrays.toString(size));
+            int[] logo = pngSize(new ResourceLocation(ID, "textures/gui/title/mojang.png"));
+            // 1.14.4 draws it as a 256 by 256 square (blit over the whole texture), whatever its pixel size.
+            c.ok(logo != null && logo[0] == 512 && logo[1] == 512, "1.14.4's mojang.png (512x512): " + java.util.Arrays.toString(logo));
+        } catch (IOException e) {
+            c.fail("textures: " + e);
+        }
     }
 
     private static void panorama(Check c) throws IOException {
@@ -156,35 +174,52 @@ public final class LookFeelSelfTest implements SelfTest {
     private static final String[][] LANG = {
             {"options.mouseWheelSensitivity", "Scroll Sensitivity"},
             {"options.discrete_mouse_scroll", "Discrete Scrolling"},
-            {"options.chat.opacity", "Chat Text Opacity"},
             {"menu.paused", "Game paused"},
+    };
+
+    /** Vanilla's own keys as 1.14.4 words them: Core's vanilla text, newest version wins. */
+    private static final String[][] VANILLA = {
+            {"options.chat.opacity", "Chat Text Opacity"},
+            {"tile.stoneSlab.stone.name", "Smooth Stone Slab"},
     };
 
     private static final String[] LANGUAGES = {"de_de", "es_ar", "es_es", "es_mx", "es_uy", "es_ve", "fr_fr", "it_it", "ja_jp",
             "ko_kr", "nl_nl", "pl_pl", "pt_br", "ru_ru", "tr_tr", "uk_ua", "zh_cn", "zh_tw"};
 
     private static void lang(Check c) throws IOException {
-        Map<String, String> en = langFile("en_us");
+        Map<String, String> en = langFile("lang", "en_us");
+        Map<String, String> ven = langFile("vanilla_text", "en_us");
         for (String[] kv : LANG) {
             c.eq(kv[1], en.get(kv[0]), "en_us " + kv[0]);
         }
+        for (String[] kv : VANILLA) {
+            c.eq(kv[1], ven.get(kv[0]), "vanilla_text en_us " + kv[0]);
+            c.ok(!en.containsKey(kv[0]), kv[0] + " is not in the mod's own lang");
+        }
         for (String code : LANGUAGES) {
-            Map<String, String> l = langFile(code);
+            Map<String, String> l = langFile("lang", code);
+            Map<String, String> v = langFile("vanilla_text", code);
             int have = 0;
             for (String[] kv : LANG) {
                 if (l.get(kv[0]) != null && !l.get(kv[0]).isEmpty()) {
                     have++;
                 }
             }
-            c.eq(LANG.length, have, code + " has 1.14's option and reworded vanilla keys");
+            for (String[] kv : VANILLA) {
+                if (v.get(kv[0]) != null && !v.get(kv[0]).isEmpty()) {
+                    have++;
+                }
+            }
+            c.eq(LANG.length + VANILLA.length, have, code + " has 1.14's options and 1.14.4's vanilla text");
+            c.eq(ven.size(), v.size(), code + "'s vanilla text has every key");
         }
     }
 
     // ------------------------------------------------------------------------------------------
 
-    private static Map<String, String> langFile(String code) throws IOException {
+    private static Map<String, String> langFile(String folder, String code) throws IOException {
         Map<String, String> out = new HashMap<String, String>();
-        for (String line : lines(new ResourceLocation(ID, "lang/" + code + ".lang"))) {
+        for (String line : lines(new ResourceLocation(ID, folder + "/" + code + ".lang"))) {
             int eq = line.indexOf('=');
             if (eq > 0 && !line.startsWith("#")) {
                 out.put(line.substring(0, eq), line.substring(eq + 1));

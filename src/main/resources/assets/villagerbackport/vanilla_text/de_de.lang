@@ -1,0 +1,8 @@
+tile.stoneSlab.stone.name=Glatte Steinstufe
+tile.sandStone.smooth.name=Geschnittener Sandstein
+tile.redSandStone.smooth.name=Geschnittener roter Sandstein
+item.sign.name=Eichenholzschild
+tile.sign.name=Eichenholzschild
+tile.trapdoor.name=Eichenholzfalltür
+tile.pressurePlateWood.name=Eichenholzdruckplatte
+options.chat.opacity=Chat-Textdeckkraft

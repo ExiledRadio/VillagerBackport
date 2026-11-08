@@ -304,11 +304,6 @@ tile.villagerbackport.dark_oak_sign.name=ダークオークの看板
 tile.villagerbackport.dark_oak_wall_sign.name=ダークオークの看板
 item.villagerbackport.dark_oak_sign.name=ダークオークの看板
 # 1.14's names for the vanilla blocks it renamed.
-tile.stoneSlab.stone.name=滑らかな石のハーフブロック
-tile.sandStone.smooth.name=研がれた砂岩
-tile.redSandStone.smooth.name=研がれた赤い砂岩
-item.sign.name=オークの看板
-tile.sign.name=オークの看板
 # --- end building ---
 
 # --- village-blocks ---
@@ -344,15 +339,12 @@ tile.villagerbackport.blue_ice.name=青氷
 tile.villagerbackport.sea_pickle.name=シーピクルス
 subtitles.villagerbackport.item.axe.strip=斧で剥がす
 # 1.14's names for the vanilla blocks it renamed.
-tile.trapdoor.name=オークのトラップドア
-tile.pressurePlateWood.name=オークの感圧板
 # --- end village-blocks ---
 
 # --- look and feel ---
 # 1.14's options (Mouse Settings) and screen text, and vanilla text 1.14 reworded on 1.12.2's own keys.
 options.mouseWheelSensitivity=マウスホイールの感度
 options.discrete_mouse_scroll=マウススクロール設定の無視
-options.chat.opacity=チャットの不透明度
 menu.paused=ゲームを一時停止中
 # --- end look and feel ---
 

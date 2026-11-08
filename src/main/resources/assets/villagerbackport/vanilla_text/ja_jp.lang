@@ -1,0 +1,8 @@
+tile.stoneSlab.stone.name=滑らかな石のハーフブロック
+tile.sandStone.smooth.name=研がれた砂岩
+tile.redSandStone.smooth.name=研がれた赤い砂岩
+item.sign.name=オークの看板
+tile.sign.name=オークの看板
+tile.trapdoor.name=オークのトラップドア
+tile.pressurePlateWood.name=オークの感圧板
+options.chat.opacity=チャットの不透明度
