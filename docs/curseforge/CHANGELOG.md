@@ -1,10 +1,14 @@
-# 2.4.0
+# 2.5.0
 
-**Now requires Backport Core 1.0.0.** Backport Core is a new library holding the code and textures every update backport shares, so the next backports can build on the same pieces. Install it beside this mod. Nothing in your world changes: every block, item, setting and saved village carries over.
+**Now requires Backport Core 1.2.0 and Fluidlogged API 3.3.3.** Install both beside this mod.
 
-*   **1.14's textures moved to Backport Core**, with their switch. It is now `textures.modernTextures` in `config/backportcore.cfg`, and in Backport Core's config screen. If you had turned it off in this mod's config, that choice is carried over the first time you start the game. The old line in `villagerbackport.cfg` does nothing any more.
-*   Mods can now add villager and wandering trader trades through Backport Core, and netherite upgrades to the smithing table.
-*   **Seventeen more languages**: Spanish (Spain and Latin America, including Argentina, Uruguay and Venezuela), Brazilian Portuguese, French, German, Russian, Simplified and Traditional Chinese, Japanese, Korean, Italian, Polish, Turkish, Ukrainian and Dutch. Block, item, mob, effect, advancement and subtitle names use Minecraft's own translations, so they match the names you already know. The config screen's descriptions are translated too.
+*   **1.14's look and feel.** With Backport Core 1.2.0 the game looks the way 1.14 did, not only plays like it. When another update backport is installed too, the newest update's look wins, as in vanilla.
+    *   **The title screen** shows 1.14's village panorama.
+    *   **Splashes**: 1.14's sixteen new ones ("Rainbow turtle?", "Ping the human!" and more, and now and then "YOUR NAME IS YOU"), and the five it removed are gone.
+    *   **The world-loading screen** shows 1.14's grid of chunks being generated, colored by stage, with the percentage.
+    *   **Accessibility Settings** and **Mouse Settings** screens, as in 1.14 (built by Backport Core). Mouse Settings has 1.14's **Scroll Sensitivity** and **Discrete Scrolling**, and the hotbar scrolls by them: a touchpad no longer flicks through several slots at once.
+    *   **F3 + N** in Survival switches to Creative (cheats on), and **F3 + Esc** pauses the game without opening the pause menu, as since 1.14.1.
+    *   "Chat Opacity" is called **Chat Text Opacity**, as in 1.14, in every language.
 
 *   **Seed maps: worlds match 1.14.** A new world generated with this mod and Update Aquatic Backport matches what 1.14 generates for the same seed, so seed map sites set to 1.14 show its biomes and structures where they really are. Checked against Minecraft 1.14.4's own code over six seeds: every biome in a 2,048-block square and every structure start in an 8,192-block square came out the same.
     *   **Bamboo jungles** are placed by 1.14's own rule: one jungle area in ten, chosen as 1.14 chooses it, with bamboo jungle hills and jungle edges where 1.14 puts them. In a world type this mod doesn't know, or one another mod has changed, they are still placed by the old filter.
@@ -13,6 +17,14 @@
     *   **Strongholds and the world spawn** search for their biome as 1.14 does (with Backport Core 1.2.0, which now holds that part for every backport), and strongholds can be in mushroom field shores.
     *   Without Update Aquatic Backport, the oceans have no temperatures and no shipwrecks or ocean ruins; everything else matches 1.14.
     *   With a backport of a later update installed as well, the world matches that update instead: its numbers win.
+
+# 2.4.0
+
+**Now requires Backport Core 1.0.0.** Backport Core is a new library holding the code and textures every update backport shares, so the next backports can build on the same pieces. Install it beside this mod. Nothing in your world changes: every block, item, setting and saved village carries over.
+
+*   **1.14's textures moved to Backport Core**, with their switch. It is now `textures.modernTextures` in `config/backportcore.cfg`, and in Backport Core's config screen. If you had turned it off in this mod's config, that choice is carried over the first time you start the game. The old line in `villagerbackport.cfg` does nothing any more.
+*   Mods can now add villager and wandering trader trades through Backport Core, and netherite upgrades to the smithing table.
+*   **Seventeen more languages**: Spanish (Spain and Latin America, including Argentina, Uruguay and Venezuela), Brazilian Portuguese, French, German, Russian, Simplified and Traditional Chinese, Japanese, Korean, Italian, Polish, Turkish, Ukrainian and Dutch. Block, item, mob, effect, advancement and subtitle names use Minecraft's own translations, so they match the names you already know. The config screen's descriptions are translated too.
 
 # 2.3.0
 

@@ -50,6 +50,16 @@ public final class ClientSetup {
         MinecraftForge.EVENT_BUS.register(new CrossbowClient());
         CrossbowClient.registerRenderers();
         com.exiledradio.villagerbackport.bamboo.client.BambooClient.init();
+        com.exiledradio.villagerbackport.lookfeel.client.LookAndFeelClient.init();
+        // `runClient -Pselftest=client`: the look-and-feel title-screen check, reached by name (a release jar has no test classes).
+        String selftest = System.getProperty(com.exiledradio.villagerbackport.VillagerBackport.MOD_ID + ".selftest");
+        if (selftest != null && selftest.contains("client")) {
+            try {
+                Class.forName("com.exiledradio.villagerbackport.selftest.ClientLookFeelTest").getMethod("register").invoke(null);
+            } catch (ReflectiveOperationException e) {
+                com.exiledradio.villagerbackport.VillagerBackport.LOGGER.error("CLIENT SELFTEST DONE pass=0 fail=1: the test classes are not in this build", e);
+            }
+        }
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBell.class, new TileEntityBellRenderer());
         net.minecraftforge.fml.client.registry.RenderingRegistry.registerEntityRenderingHandler(
