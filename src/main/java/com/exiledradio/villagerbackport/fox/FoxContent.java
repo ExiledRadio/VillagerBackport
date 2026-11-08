@@ -1,7 +1,7 @@
 package com.exiledradio.villagerbackport.fox;
 
+import com.exiledradio.backportcore.creative.CreativePlacement;
 import com.exiledradio.villagerbackport.ModConfig;
-import com.exiledradio.villagerbackport.ModCreativeTab;
 import com.exiledradio.villagerbackport.VillagerBackport;
 import com.exiledradio.villagerbackport.compat.FutureMc;
 
@@ -213,7 +213,7 @@ public final class FoxContent {
         sweetBerries = new ItemSweetBerries();
         sweetBerries.setRegistryName(new ResourceLocation(VillagerBackport.MOD_ID, "sweet_berries"));
         sweetBerries.setTranslationKey(VillagerBackport.MOD_ID + ".sweet_berries");
-        sweetBerries.setCreativeTab(ModCreativeTab.TAB);
+        CreativePlacement.place(sweetBerries);
         event.getRegistry().register(sweetBerries);
     }
 

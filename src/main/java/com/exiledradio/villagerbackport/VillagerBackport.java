@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
         acceptedMinecraftVersions = "[1.12.2]",
         // Backport Core holds the code the backports share: textures, Future MC migration, duplicate
         // hiding, smithing upgrades and the terrain the villages are planned on.
-        dependencies = "required-after:backportcore@[1.2.0,);required-after:fluidlogged_api@[3.3.3,)",
+        dependencies = "required-after:backportcore@[1.3.0,);required-after:fluidlogged_api@[3.3.3,)",
         // A client without the mod can still join a server that has it: the trading changes are all
         // server-side, and the server sends the resulting trade list the way it always does. Such a
         // client will not see this mod's blocks, so a server using them should expect it installed.
@@ -55,6 +55,8 @@ public final class VillagerBackport {
     public void preInit(FMLPreInitializationEvent event) {
         // 1.14's structure placement numbers, for Backport Core's table (seed parity with 1.14).
         com.exiledradio.villagerbackport.worldgen.Placement114.register();
+        // This mod's spawn eggs in Miscellaneous where vanilla lists each mob's (Backport Core's creative placement).
+        com.exiledradio.backportcore.creative.CreativePlacement.placeSpawnEggs(MOD_ID);
         // Resolve the private villager fields once, up front. If this fails the handler below
         // still registers but every villager check short-circuits, so the pack loads normally
         // and the failure is one log line rather than an exception per villager per tick.

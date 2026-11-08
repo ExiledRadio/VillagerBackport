@@ -38,3 +38,13 @@ pool, options, the scroll arithmetic, lang) and `gradlew runClient -Pselftest=cl
       Background "Everywhere" darkens the chat input box too.
 - [ ] **F3** in singleplayer: "ServerChunkCache: n Drop: m" right under the client's chunk cache line.
 - [ ] **Text**: "Chat Text Opacity", "Smooth Stone Slab", "Oak Trapdoor" (1.14.4's wording through Core).
+
+## Creative tabs (with Backport Core 1.3.0)
+
+The places are in `docs/CREATIVE_TABS.md`; a dev client already checked the lists, the search tab and JEI.
+
+- [ ] There is no tab for this mod; every vanilla tab keeps its icon, name, background and scroll bar.
+- [ ] A few places: stripped logs right after the dark oak log, the 1.14 walls after the mossy cobblestone wall, the workstations, bell, lantern and campfire at the end of Decoration Blocks, the fox egg after the evoker egg, the crossbow at the end of Combat with its three enchanted books.
+- [ ] The search tab finds the mod's items, and JEI lists them.
+- [ ] Other mods' items are still in their tabs, in their own order.
+- [ ] With another update backport installed too, its items and this mod's sit together by kind (stripped logs, slabs).

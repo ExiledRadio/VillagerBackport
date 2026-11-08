@@ -1,5 +1,4 @@
 # Turkish - our own text; vanilla names come from Mojang (tools/lang/build_langs.py)
-itemGroup.villagerbackport=Village & Pillage Backport
 gui.villagerbackport.xp.progress=%s/%s Tecrübe
 gui.villagerbackport.xp.max=%s Tecrübe
 config.villagerbackport.restock=Stok Yenileme

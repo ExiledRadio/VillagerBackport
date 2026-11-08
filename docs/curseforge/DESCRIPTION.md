@@ -190,7 +190,7 @@ Carry Bad Omen into a village and the village knows: 30 seconds later the horn s
 *   **Ravagers** bite hard, throw you back, and charge through leaves. Block a bite with a shield and you may stun one; it roars when it recovers.
 *   **Patrols** roam the land from the fifth day: a captain with the ominous banner and a few pillagers. Kill the captain away from a raid and you have Bad Omen.
 *   **Pillager outposts** stand in plains, deserts, savannas, taigas and snowy tundra: 1.14's own watchtowers, tents and iron golem cages, with pillagers spawning around them day and night and loot at the top of the tower.
-*   **The ominous banner** captains wear is 1.14's, and it's in the creative tab too.
+*   **The ominous banner** captains wear is 1.14's.
 *   **The ominous bottle** is there for those who prefer current Java's rule, where captains drop a bottle rather than giving Bad Omen outright (`raids.captainDropsOminousBottle`).
 
 ***

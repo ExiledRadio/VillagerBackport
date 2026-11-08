@@ -1,7 +1,7 @@
 package com.exiledradio.villagerbackport.crossbow;
 
+import com.exiledradio.backportcore.creative.CreativePlacement;
 import com.exiledradio.villagerbackport.ModConfig;
-import com.exiledradio.villagerbackport.ModCreativeTab;
 import com.exiledradio.villagerbackport.VillagerBackport;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -82,7 +82,7 @@ public final class CrossbowContent {
         crossbow = new ItemCrossbow();
         crossbow.setRegistryName(new ResourceLocation(VillagerBackport.MOD_ID, "crossbow"));
         crossbow.setTranslationKey(VillagerBackport.MOD_ID + ".crossbow");
-        crossbow.setCreativeTab(ModCreativeTab.TAB);
+        CreativePlacement.place(crossbow);
         event.getRegistry().register(crossbow);
     }
 
@@ -93,8 +93,8 @@ public final class CrossbowContent {
         }
         EnumEnchantmentType type = EnumHelper.addEnchantmentType("VILLAGERBACKPORT_CROSSBOW",
                 item -> item instanceof ItemCrossbow);
-        // Enchanted books of the three show in this mod's tab, as Combat shows the bow's.
-        ModCreativeTab.TAB.setRelevantEnchantmentTypes(type);
+        // Enchanted books of the three show in Combat with the bow's, as in vanilla.
+        CreativePlacement.addEnchantmentType(net.minecraft.creativetab.CreativeTabs.COMBAT, type);
 
         // Current Java's numbers.
         quickCharge = new CrossbowEnchantment("quick_charge", Enchantment.Rarity.UNCOMMON, type, 3, 12, 20);

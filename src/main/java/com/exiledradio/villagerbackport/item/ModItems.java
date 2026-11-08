@@ -1,6 +1,6 @@
 package com.exiledradio.villagerbackport.item;
 
-import com.exiledradio.villagerbackport.ModCreativeTab;
+import com.exiledradio.backportcore.creative.CreativePlacement;
 import com.exiledradio.villagerbackport.VillagerBackport;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -56,7 +56,8 @@ public final class ModItems {
     private static <T extends Item> T add(RegistryEvent.Register<Item> event, String name, T item) {
         item.setRegistryName(new ResourceLocation(VillagerBackport.MOD_ID, name));
         item.setTranslationKey(VillagerBackport.MOD_ID + "." + name);
-        item.setCreativeTab(ModCreativeTab.TAB);
+        // Vanilla's tab, next to the vanilla item of the same name (Backport Core's creative placement).
+        CreativePlacement.place(item);
 
         event.getRegistry().register(item);
         ITEMS.add(item);

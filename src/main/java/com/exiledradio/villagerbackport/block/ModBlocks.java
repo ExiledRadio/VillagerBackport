@@ -1,6 +1,6 @@
 package com.exiledradio.villagerbackport.block;
 
-import com.exiledradio.villagerbackport.ModCreativeTab;
+import com.exiledradio.backportcore.creative.CreativePlacement;
 import com.exiledradio.villagerbackport.VillagerBackport;
 
 import net.minecraft.block.Block;
@@ -106,7 +106,8 @@ public final class ModBlocks {
     private static void add(RegistryEvent.Register<Block> event, String name, Block block) {
         block.setRegistryName(new ResourceLocation(VillagerBackport.MOD_ID, name));
         block.setTranslationKey(VillagerBackport.MOD_ID + "." + name);
-        block.setCreativeTab(ModCreativeTab.TAB);
+        // Vanilla's tab, next to the vanilla block of the same name (Backport Core's creative placement).
+        CreativePlacement.place(block);
 
         event.getRegistry().register(block);
         BLOCKS.add(block);

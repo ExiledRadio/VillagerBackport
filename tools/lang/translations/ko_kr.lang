@@ -1,5 +1,4 @@
 # Korean - our own text; vanilla names come from Mojang (tools/lang/build_langs.py)
-itemGroup.villagerbackport=Village & Pillage Backport
 gui.villagerbackport.xp.progress=%s/%s 경험치
 gui.villagerbackport.xp.max=%s 경험치
 config.villagerbackport.restock=재고 보충

@@ -1,6 +1,6 @@
 package com.exiledradio.villagerbackport.illager;
 
-import com.exiledradio.villagerbackport.ModCreativeTab;
+import com.exiledradio.backportcore.creative.CreativePlacement;
 import com.exiledradio.villagerbackport.VillagerBackport;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -58,7 +58,7 @@ public final class IllagerContent {
         ominousBottle = new ItemOminousBottle();
         ominousBottle.setRegistryName(new ResourceLocation(VillagerBackport.MOD_ID, "ominous_bottle"));
         ominousBottle.setTranslationKey(VillagerBackport.MOD_ID + ".ominous_bottle");
-        ominousBottle.setCreativeTab(ModCreativeTab.TAB);
+        CreativePlacement.place(ominousBottle);
 
         event.getRegistry().registerAll(pillagerCrossbow, ominousBottle);
     }
