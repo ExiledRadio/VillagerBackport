@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
         acceptedMinecraftVersions = "[1.12.2]",
         // Backport Core holds the code the backports share: textures, Future MC migration, duplicate
         // hiding, smithing upgrades and the terrain the villages are planned on.
-        dependencies = "required-after:backportcore@[1.3.0,);required-after:fluidlogged_api@[3.3.3,)",
+        dependencies = "required-after:backportcore@[1.1.0,);required-after:fluidlogged_api@[3.3.3,)",
         // A client without the mod can still join a server that has it: the trading changes are all
         // server-side, and the server sends the resulting trade list the way it always does. Such a
         // client will not see this mod's blocks, so a server using them should expect it installed.

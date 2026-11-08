@@ -39,7 +39,7 @@ pool, options, the scroll arithmetic, lang) and `gradlew runClient -Pselftest=cl
 - [ ] **F3** in singleplayer: "ServerChunkCache: n Drop: m" right under the client's chunk cache line.
 - [ ] **Text**: "Chat Text Opacity", "Smooth Stone Slab", "Oak Trapdoor" (1.14.4's wording through Core).
 
-## Creative tabs (with Backport Core 1.3.0)
+## Creative tabs (with Backport Core 1.1.0)
 
 The places are in `docs/CREATIVE_TABS.md`; a dev client already checked the lists, the search tab and JEI.
 
