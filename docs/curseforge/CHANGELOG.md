@@ -6,6 +6,12 @@
 *   Mods can now add villager and wandering trader trades through Backport Core, and netherite upgrades to the smithing table.
 *   **Seventeen more languages**: Spanish (Spain and Latin America, including Argentina, Uruguay and Venezuela), Brazilian Portuguese, French, German, Russian, Simplified and Traditional Chinese, Japanese, Korean, Italian, Polish, Turkish, Ukrainian and Dutch. Block, item, mob, effect, advancement and subtitle names use Minecraft's own translations, so they match the names you already know. The config screen's descriptions are translated too.
 
+*   **Seed maps: worlds match 1.14.** A new world generated with this mod and Update Aquatic Backport matches what 1.14 generates for the same seed, so seed map sites set to 1.14 show its biomes and structures where they really are. Checked against Minecraft 1.14.4's own code over six seeds: every biome in a 2,048-block square and every structure start in an 8,192-block square came out the same.
+    *   **Bamboo jungles** are placed by 1.14's own rule: one jungle area in ten, chosen as 1.14 chooses it, with bamboo jungle hills and jungle edges where 1.14 puts them. In a world type this mod doesn't know, or one another mod has changed, they are still placed by the old filter.
+    *   **Villages and pillager outposts** check the biome at the block 1.14 does, so they start in the same chunks.
+    *   **Temples** each have their own grid, as since 1.13, and jungle temples also generate in bamboo jungles.
+    *   Without Update Aquatic Backport, the oceans have no temperatures, and strongholds and the spawn point search for their biome 1.12.2's way; everything else on land matches 1.14.
+
 # 2.3.0
 
 The rest of 1.14. The wandering trader and its llamas, cats, foxes, pandas, bamboo and scaffolding, the campfire, sweet berries, the new flowers and dyes, suspicious stew, brown mooshrooms, every new slab, stair and wall, the new signs, stripped logs, wood trapdoors, buttons and pressure plates, blue ice and sea pickles. Villages are now built from 1.14's own blocks, all of them in this mod.

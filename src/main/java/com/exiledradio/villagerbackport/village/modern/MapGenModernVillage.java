@@ -108,11 +108,16 @@ public class MapGenModernVillage extends MapGenVillage {
         return type != null ? type : ModernVillageStart.Type.of(biome);
     }
 
-    /** OTG's placement: 1.12.2's grid, its own biome list rather than vanilla's village biomes. */
+    /**
+     * 1.14's {@code VillageFeature.isFeatureChunk}: the region's candidate chunk on 1.12.2's grid (which is
+     * 1.14's: spacing 32, separation 8, salt 10387312), whose block-scale biome at block (9, 9) is a village
+     * biome. 1.12.2 reads the 1:4 cell at (8, 8) instead, which moves villages near biome edges off 1.14's seed
+     * maps. With OTG, its own biome list and 1.12.2's point.
+     */
     @Override
     protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ) {
         if (this.otgBiomes == null) {
-            return super.canSpawnStructureAtCoords(chunkX, chunkZ);
+            return startsAt114(this.world, this.spacing, chunkX, chunkZ);
         }
         int cellX = Math.floorDiv(chunkX, this.spacing);
         int cellZ = Math.floorDiv(chunkZ, this.spacing);
@@ -121,6 +126,19 @@ public class MapGenModernVillage extends MapGenVillage {
         int z = cellZ * this.spacing + random.nextInt(this.spacing - 8);
         return chunkX == x && chunkZ == z
                 && this.world.getBiomeProvider().areBiomesViable(chunkX * 16 + 8, chunkZ * 16 + 8, 0, this.otgBiomes);
+    }
+
+    /** 1.14's village start rule, on the vanilla village biomes (Forge's list, with this mod's snowy tundra). */
+    static boolean startsAt114(net.minecraft.world.World world, int spacing, int chunkX, int chunkZ) {
+        int cellX = Math.floorDiv(chunkX, spacing);
+        int cellZ = Math.floorDiv(chunkZ, spacing);
+        java.util.Random random = world.setRandomSeed(cellX, cellZ, 10387312);
+        if (chunkX != cellX * spacing + random.nextInt(spacing - 8) || chunkZ != cellZ * spacing + random.nextInt(spacing - 8)) {
+            return false;
+        }
+        net.minecraft.world.biome.Biome biome = world.getBiomeProvider()
+                .getBiome(new net.minecraft.util.math.BlockPos((chunkX << 4) + 9, 0, (chunkZ << 4) + 9));
+        return biome != null && MapGenVillage.VILLAGE_SPAWN_BIOMES.contains(biome);
     }
 
     /**

@@ -8,6 +8,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeJungle;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import net.minecraft.world.gen.feature.WorldGenMegaJungle;
@@ -61,6 +62,16 @@ public class BiomeBambooJungle extends BiomeJungle {
         super(false, properties);
         this.decorator.treesPerChunk = 30;
         this.decorator.extraTreeChance = 0.1F;
+    }
+
+    /**
+     * A jungle to every biome layer that asks: 1.14's layers compare biome categories, and the bamboo
+     * jungle's is the jungle's, where 1.12.2's layers compare {@code getBiomeClass()} (the shore layer's
+     * jungle edges and beaches, "same biome" for hills and edges).
+     */
+    @Override
+    public Class<? extends Biome> getBiomeClass() {
+        return BiomeJungle.class;
     }
 
     @Override

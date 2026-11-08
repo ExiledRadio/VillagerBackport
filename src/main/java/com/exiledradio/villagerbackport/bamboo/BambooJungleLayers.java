@@ -15,31 +15,21 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
- * Turns some jungles into bamboo jungles, the way 1.14 places them.
+ * Puts 1.14's bamboo jungles into the biome map.
  *
- * <h2>How 1.14 does it</h2>
- * The bamboo jungle has no climate of its own. Right after the biome layer picks a jungle for an
- * area - at the scale where one cell is 256 blocks across - one jungle cell in ten becomes a bamboo
- * jungle. The later layers then treat it like a jungle: the hills layer makes some of it bamboo
- * jungle hills, rivers cut through it, and its edges are smoothed as the map is zoomed in.
+ * <h2>Vanilla's world types: 1.14's own layers</h2>
+ * For the default, large biomes and amplified world types, while no other mod has changed the map yet, the
+ * map is rebuilt as 1.14.4 builds it ({@link Layers114}): one jungle cell in ten becomes bamboo jungle right
+ * after the biome layer, and the later layers treat it as 1.14's do, so a seed gives the same map as on
+ * 1.14's seed maps. Update Aquatic's ocean temperatures, if installed, are mixed in after this (a lower
+ * priority), as 1.14 mixes them last.
  *
- * <h2>How this does it</h2>
- * Inserting a layer into the middle of 1.12's chain would mean rebuilding the chain, which would
- * undo every other mod's changes to it and could only work for world types this mod knows about.
- * Instead the finished map is filtered. Alongside it runs a second, private map of its own: one cell
- * in ten (the {@code bambooJungleRarity} setting) marked at the same 256-block scale, then zoomed in
- * with vanilla's own zoom layer so the marked areas come out as rounded blobs rather than squares.
- * Wherever the finished map says jungle and the private map is marked, the jungle becomes bamboo
- * jungle; jungle hills become bamboo jungle hills. Rivers, beaches and everything else are already
- * in place and are left alone.
- *
- * <p>The result is the same proportion of bamboo jungle as 1.14, in areas of the same size. The
- * difference is that a bamboo jungle's edge follows its own blob rather than the jungle's, so it can
- * cover part of a jungle rather than all of one.
- *
- * <p>Any world type that builds its map from vanilla's layers and places vanilla's jungle gets
- * bamboo jungles, modded ones included. World types that generate biomes some other way are not
- * affected.
+ * <h2>Other maps: a filter</h2>
+ * A map another mod built or changed is not rebuilt, which would undo its changes. It is filtered instead:
+ * beside it runs a second, private map with one cell in ten (the {@code bambooJungleRarity} setting) marked at
+ * the same 256-block scale and zoomed in with vanilla's zoom layer; wherever the finished map says jungle
+ * and the private map is marked, the jungle becomes bamboo jungle, and jungle hills bamboo jungle hills. The
+ * proportion and size of bamboo jungles are 1.14's; their places are not.
  */
 final class BambooJungleLayers {
 
@@ -52,12 +42,21 @@ final class BambooJungleLayers {
     private BambooJungleLayers() {
     }
 
-    @SubscribeEvent(priority = EventPriority.LOW)
+    /** High, so the rebuilt map is the one later handlers (Update Aquatic's oceans) work on. */
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onInitBiomeGens(WorldTypeEvent.InitBiomeGens event) {
         Biome bamboo = BambooContent.bambooJungle;
         Biome bambooHills = BambooContent.bambooJungleHills;
         GenLayer[] layers = event.getNewBiomeGens();
         if (bamboo == null || bambooHills == null || layers == null || layers.length < 2) {
+            return;
+        }
+        WorldType type = event.getWorldType();
+        if ((type == WorldType.DEFAULT || type == WorldType.LARGE_BIOMES || type == WorldType.AMPLIFIED)
+                && unchanged(event)) {
+            event.setNewBiomeGens(Layers114.build(event.getSeed(), type, bamboo, bambooHills,
+                    ModConfig.bamboo.bambooJungleRarity));
+            VillagerBackport.LOGGER.debug("Biome map built with 1.14's layers ({})", type.getName());
             return;
         }
 
@@ -83,6 +82,21 @@ final class BambooJungleLayers {
         }
         event.setNewBiomeGens(replaced);
         VillagerBackport.LOGGER.debug("Bamboo jungles added to the biome map ({})", event.getWorldType().getName());
+    }
+
+    /** @return true if the map is still the one vanilla built (nobody before this changed it) */
+    private static boolean unchanged(WorldTypeEvent.InitBiomeGens event) {
+        GenLayer[] original = event.getOriginalBiomeGens();
+        GenLayer[] current = event.getNewBiomeGens();
+        if (original == null || original.length != current.length) {
+            return false;
+        }
+        for (int i = 0; i < original.length; i++) {
+            if (original[i] != current[i]) {
+                return false;
+            }
+        }
+        return original[0] instanceof net.minecraft.world.gen.layer.GenLayerRiverMix;
     }
 
     /** One cell in {@code rarity} marked, the rest not. */

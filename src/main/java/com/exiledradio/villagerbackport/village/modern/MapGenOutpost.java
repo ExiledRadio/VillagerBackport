@@ -182,13 +182,8 @@ public class MapGenOutpost extends MapGenStructure {
         if (this.villages != null) {
             return this.villages.startsAt(this.world, chunkX, chunkZ);
         }
-        // 1.12.2's own village grid, for worlds whose villages this mod does not generate.
-        int cellX = Math.floorDiv(chunkX, 32);
-        int cellZ = Math.floorDiv(chunkZ, 32);
-        Random random = this.world.setRandomSeed(cellX, cellZ, 10387312);
-        return chunkX == cellX * 32 + random.nextInt(24) && chunkZ == cellZ * 32 + random.nextInt(24)
-                && this.world.getBiomeProvider().areBiomesViable(chunkX * 16 + 8, chunkZ * 16 + 8, 0,
-                MapGenVillage.VILLAGE_SPAWN_BIOMES);
+        // Worlds whose villages this mod does not generate: 1.14's village rule on 1.12.2's grid.
+        return MapGenModernVillage.startsAt114(this.world, 32, chunkX, chunkZ);
     }
 
     @Override

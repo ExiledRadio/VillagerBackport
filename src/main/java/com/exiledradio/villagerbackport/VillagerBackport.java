@@ -128,6 +128,8 @@ public final class VillagerBackport {
     public void init(net.minecraftforge.fml.common.event.FMLInitializationEvent event) {
         com.exiledradio.villagerbackport.job.MasonCareer.register();
         com.exiledradio.villagerbackport.fox.FoxContent.init();
+        // 1.14's temple grids and stronghold biomes, for seed parity with 1.14.
+        com.exiledradio.villagerbackport.worldgen.Placement114.init();
     }
 
     /** Catches recipes for hidden duplicates that were added after the recipe registry event. */
