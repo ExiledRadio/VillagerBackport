@@ -10,7 +10,7 @@ import net.minecraft.block.state.IBlockState;
  * its strength and sound from the block it is made of - and only hides its constructor. This exists
  * to open it.
  */
-public final class BlockBuildingStairs extends BlockStairs {
+public final class BlockBuildingStairs extends BlockStairs implements com.exiledradio.backportcore.waterlog.Waterloggable {
 
     BlockBuildingStairs(IBlockState base) {
         super(base);

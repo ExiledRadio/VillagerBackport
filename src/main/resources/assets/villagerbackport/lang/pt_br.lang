@@ -304,11 +304,6 @@ tile.villagerbackport.dark_oak_sign.name=Placa de Carvalho Escuro
 tile.villagerbackport.dark_oak_wall_sign.name=Placa de Carvalho Escuro
 item.villagerbackport.dark_oak_sign.name=Placa de Carvalho Escuro
 # 1.14's names for the vanilla blocks it renamed.
-tile.stoneSlab.stone.name=Laje de Pedra Lisa
-tile.sandStone.smooth.name=Arenito Lapidado
-tile.redSandStone.smooth.name=Arenito Vermelho Lapidado
-item.sign.name=Placa de Carvalho
-tile.sign.name=Placa de Carvalho
 # --- end building ---
 
 # --- village-blocks ---
@@ -344,15 +339,12 @@ tile.villagerbackport.blue_ice.name=Gelo Azul
 tile.villagerbackport.sea_pickle.name=Pepino-do-Mar
 subtitles.villagerbackport.item.axe.strip=Machado descasca
 # 1.14's names for the vanilla blocks it renamed.
-tile.trapdoor.name=Alçapão de Carvalho
-tile.pressurePlateWood.name=Placa de Pressão de Carvalho
 # --- end village-blocks ---
 
 # --- look and feel ---
 # 1.14's options (Mouse Settings) and screen text, and vanilla text 1.14 reworded on 1.12.2's own keys.
 options.mouseWheelSensitivity=Sensibilidade de rolagem
 options.discrete_mouse_scroll=Rolagem discreta
-options.chat.opacity=Opacidade de texto do chat
 menu.paused=Jogo pausado
 # --- end look and feel ---
 

@@ -1,0 +1,8 @@
+tile.stoneSlab.stone.name=Smooth Stone Slab
+tile.sandStone.smooth.name=Cut Sandstone
+tile.redSandStone.smooth.name=Cut Red Sandstone
+item.sign.name=Oak Sign
+tile.sign.name=Oak Sign
+tile.trapdoor.name=Oak Trapdoor
+tile.pressurePlateWood.name=Oak Pressure Plate
+options.chat.opacity=Chat Text Opacity

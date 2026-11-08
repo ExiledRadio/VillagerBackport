@@ -39,7 +39,7 @@ public final class BlockWoodSign {
     }
 
     /** On top of a block, rotated to any of sixteen directions. */
-    public static final class Standing extends BlockStandingSign {
+    public static final class Standing extends BlockStandingSign implements com.exiledradio.backportcore.waterlog.Waterloggable {
         final SignWood wood;
 
         Standing(SignWood wood) {
@@ -66,7 +66,7 @@ public final class BlockWoodSign {
     }
 
     /** On the side of a block. */
-    public static final class Wall extends BlockWallSign {
+    public static final class Wall extends BlockWallSign implements com.exiledradio.backportcore.waterlog.Waterloggable {
         final SignWood wood;
 
         Wall(SignWood wood) {

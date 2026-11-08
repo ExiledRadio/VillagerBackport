@@ -1,0 +1,8 @@
+tile.stoneSlab.stone.name=Düzgün Taş Basamak
+tile.sandStone.smooth.name=Kesilmiş Kum Taşı
+tile.redSandStone.smooth.name=Kesilmiş Kırmızı Kum Taşı
+item.sign.name=Meşe Tabela
+tile.sign.name=Meşe Tabela
+tile.trapdoor.name=Meşe Tuzak Kapısı
+tile.pressurePlateWood.name=Meşe Basınç Plakası
+options.chat.opacity=Sohbet Metni Opaklığı

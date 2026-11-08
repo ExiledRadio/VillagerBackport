@@ -80,7 +80,7 @@ public final class ClientLookFeelTest {
         VillagerBackport.LOGGER.info("LOOKFEEL newest={} panorama={} overlay={} loading={} splashes={} panoramaFrames={}",
                 newest, faces == null ? null : faces[0], Presentation.panoramaOverlay(), loading,
                 pool == null ? -1 : pool.size(), PanoramaRenderer.frames);
-        boolean newestIsMine = newest.equals(GameVersion.parse("1.14.1"));
+        boolean newestIsMine = newest.equals(GameVersion.parse("1.14.2"));
 
         ok(PanoramaRenderer.modern(), "the title screen is drawn the 1.13+ way");
         ok(PanoramaRenderer.frames > 20, "the panorama was drawn: " + PanoramaRenderer.frames + " frames");
@@ -117,6 +117,31 @@ public final class ClientLookFeelTest {
         };
         for (String[] kv : lang) {
             ok(kv[1].equals(I18n.format(kv[0])), "I18n " + kv[0] + " = \"" + kv[1] + "\", got \"" + I18n.format(kv[0]) + "\"");
+        }
+        ok(com.exiledradio.backportcore.presentation.client.DebugText.steps().names(newest).contains("1.14.2 server chunk cache"),
+                "1.14.2's F3 line is registered: " + com.exiledradio.backportcore.presentation.client.DebugText.steps().names(newest));
+        ok(Presentation.titleAccessibilityIcon() != null, "a title Accessibility icon is registered");
+        boolean icon = false;
+        try {
+            @SuppressWarnings("unchecked")
+            java.util.List<net.minecraft.client.gui.GuiButton> buttons = (java.util.List<net.minecraft.client.gui.GuiButton>)
+                    net.minecraftforge.fml.relauncher.ReflectionHelper.findField(net.minecraft.client.gui.GuiScreen.class, "buttonList", "field_146292_n").get(mc.currentScreen);
+            for (net.minecraft.client.gui.GuiButton b : buttons) {
+                icon |= b instanceof com.exiledradio.backportcore.presentation.client.TitleScreenExtras.IconButton;
+            }
+        } catch (Exception e) {
+            icon = false;
+        }
+        ok(icon, "the title screen has 1.14's Accessibility button");
+        if (newestIsMine) {
+            ok(com.exiledradio.backportcore.presentation.client.StartupScreen.lastDrawn == com.exiledradio.backportcore.presentation.VanillaRevisions.Startup.BAR_1_14,
+                    "the startup screen drew 1.14's revision: " + com.exiledradio.backportcore.presentation.client.StartupScreen.lastDrawn);
+        }
+        try {
+            String pack = mc.getResourceManager().getResource(new net.minecraft.util.ResourceLocation("textures/gui/title/mojang.png")).getResourcePackName();
+            ok("backportcore:vanilla_by_version".equals(pack) || !newestIsMine, "mojang.png comes from Core's pack: " + pack);
+        } catch (Exception e) {
+            ok(false, "mojang.png loads: " + e);
         }
     }
 }

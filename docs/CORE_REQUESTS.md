@@ -30,3 +30,12 @@ Discrete Scrolling, F3+N). These 1.14 items need a single owner or a screen Core
 *   **Keys that later versions keep.** F3+Esc and F3+N's 1.14.1 behavior only exist while this mod is installed;
     with only a newer backport installed they are missing although vanilla still has them. Wanted later: Core
     carrying vanilla's own key table per version, so the newest version's full map applies.
+
+## Done in Backport Core 1.2.0 (core-finish, 2026-11-08)
+
+Used here on branch `vp-lookfeel2`: the title-screen Accessibility button (this mod's icon), the startup screen
+(this mod's 1.14.4 `mojang.png`; Core draws the bar), the pause menu's feedback row and Use VBOs' removal (Core's
+1.14 table), Text Background Opacity and Text Background (Core's chat owner), the F3 text pipeline (1.14.2's server
+chunk line, registered here), and vanilla text by version (`vanilla_text/`). Still open: Scroll Sensitivity's
+logarithmic slider, scrolling inside screens, Alt+F3's tick chart (a chart, not text), and keys later versions
+keep.

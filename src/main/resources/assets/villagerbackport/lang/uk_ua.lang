@@ -304,11 +304,6 @@ tile.villagerbackport.dark_oak_sign.name=Темно-дубова табличк�
 tile.villagerbackport.dark_oak_wall_sign.name=Темно-дубова табличка
 item.villagerbackport.dark_oak_sign.name=Темно-дубова табличка
 # 1.14's names for the vanilla blocks it renamed.
-tile.stoneSlab.stone.name=Плита з гладкого каменю
-tile.sandStone.smooth.name=Тесаний пісковик
-tile.redSandStone.smooth.name=Тесаний червоний пісковик
-item.sign.name=Дубова табличка
-tile.sign.name=Дубова табличка
 # --- end building ---
 
 # --- village-blocks ---
@@ -344,15 +339,12 @@ tile.villagerbackport.blue_ice.name=Синій лід
 tile.villagerbackport.sea_pickle.name=Морський огірок
 subtitles.villagerbackport.item.axe.strip=Сокира скрегоче
 # 1.14's names for the vanilla blocks it renamed.
-tile.trapdoor.name=Дубовий люк
-tile.pressurePlateWood.name=Дубова натискна плита
 # --- end village-blocks ---
 
 # --- look and feel ---
 # 1.14's options (Mouse Settings) and screen text, and vanilla text 1.14 reworded on 1.12.2's own keys.
 options.mouseWheelSensitivity=Чутливість прокрутки
 options.discrete_mouse_scroll=Дискретна прокрутка
-options.chat.opacity=Непрозорість тексту
 menu.paused=Гру призупинено
 # --- end look and feel ---
 

@@ -1,0 +1,8 @@
+tile.stoneSlab.stone.name=Gladde stenen plaat
+tile.sandStone.smooth.name=Gesneden zandsteen
+tile.redSandStone.smooth.name=Gesneden rood zandsteen
+item.sign.name=Eikenhouten bord
+tile.sign.name=Eikenhouten bord
+tile.trapdoor.name=Eikenhouten valluik
+tile.pressurePlateWood.name=Eikenhouten drukplaat
+options.chat.opacity=Chattekstdoorzichtigheid

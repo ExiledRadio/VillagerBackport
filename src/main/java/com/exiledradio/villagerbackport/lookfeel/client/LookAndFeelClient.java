@@ -32,12 +32,35 @@ public final class LookAndFeelClient {
     private LookAndFeelClient() {
     }
 
+    /** For the client self-test. */
+    public static volatile int debugEdits;
+
+    /**
+     * 1.14.2's F3 text: in singleplayer the server's chunk cache follows the client's ({@code getServerChunkStats},
+     * the integrated server world's own {@code ServerChunkCache: n Drop: m}).
+     */
+    static void debugText(com.exiledradio.backportcore.presentation.client.DebugText.Lines lines) {
+        Minecraft mc = lines.mc;
+        net.minecraft.server.integrated.IntegratedServer server = mc.getIntegratedServer();
+        if (server == null || mc.player == null || mc.world == null) {
+            return;
+        }
+        net.minecraft.world.WorldServer world = server.getWorld(mc.player.dimension);
+        String client = mc.world.getProviderName();
+        int at = lines.left.indexOf(client);
+        if (world != null && at >= 0) {
+            lines.left.add(at + 1, world.getChunkProvider().makeString());
+            debugEdits++;
+        }
+    }
+
     public static void init() {
         Contribution v1141 = Presentation.contribution("1.14.1");
         if (v1141 != null) {
             v1141.debugKey(Keyboard.KEY_N, "debug.creative_spectator.help", LookAndFeelClient::creativeSpectator);
         }
         MinecraftForge.EVENT_BUS.register(new LookAndFeelClient());
+        com.exiledradio.backportcore.presentation.client.DebugText.add("1.14.2", "server chunk cache", LookAndFeelClient::debugText);
     }
 
     /** 1.14.4 {@code KeyboardHandler}, F3+N: creative goes to spectator, anything else to creative. */

@@ -24,3 +24,17 @@ pool, options, the scroll arithmetic, lang) and `gradlew runClient -Pselftest=cl
       background; Esc resumes. Plain Esc still opens the pause menu.
 - [ ] **Chat Text Opacity** on Chat and Accessibility Settings, also in another language (Mojang's translation).
 - [ ] Menu music unchanged (1.14 kept menu1 to menu4).
+
+## 1.14's pieces in Backport Core's finished presentation module (Core 1.2.0)
+
+- [ ] **Startup**: as loading ends, the white Mojang screen (1.14.4's logo) with a full red bar, fading into the
+      title screen; then the title screen fades in.
+- [ ] **Title screen**: the Accessibility icon right of Options/Quit (1.14.4's icon, lighter when hovered) opens
+      Accessibility Settings.
+- [ ] **Pause menu**: 1.14's grid: Give Feedback and Report Bugs (each asks before opening the link) between
+      Advancements/Statistics and Options/Open to LAN; Forge's Mod Options below Save and Quit.
+- [ ] **Video Settings**: no Use VBOs (VBOs on), no 3D Anaglyph; GUI Scale counts Auto, 1, 2, 3 ...
+- [ ] **Accessibility / Chat Settings**: Text Background Opacity changes only the chat's background; Text
+      Background "Everywhere" darkens the chat input box too.
+- [ ] **F3** in singleplayer: "ServerChunkCache: n Drop: m" right under the client's chunk cache line.
+- [ ] **Text**: "Chat Text Opacity", "Smooth Stone Slab", "Oak Trapdoor" (1.14.4's wording through Core).

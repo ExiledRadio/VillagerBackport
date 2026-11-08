@@ -31,7 +31,7 @@ public final class BlockWoodRedstone {
     }
 
     /** {@code <wood>_trapdoor}: oak's {@code new BlockTrapDoor(Material.WOOD).setHardness(3.0F)}. */
-    public static class Trapdoor extends BlockTrapDoor {
+    public static class Trapdoor extends BlockTrapDoor implements com.exiledradio.backportcore.waterlog.Waterloggable {
 
         public final Wood wood;
 

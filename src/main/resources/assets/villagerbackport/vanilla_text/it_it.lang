@@ -1,0 +1,8 @@
+tile.stoneSlab.stone.name=Lastra di pietra levigata
+tile.sandStone.smooth.name=Arenaria incisa
+tile.redSandStone.smooth.name=Arenaria rossa incisa
+item.sign.name=Cartello di quercia
+tile.sign.name=Cartello di quercia
+tile.trapdoor.name=Botola di quercia
+tile.pressurePlateWood.name=Pedana a pressione di quercia
+options.chat.opacity=Opacità testo chat
