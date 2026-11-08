@@ -3,91 +3,141 @@ package com.exiledradio.villagerbackport.job;
 import com.exiledradio.villagerbackport.ModConfig;
 
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.pathfinding.Path;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nullable;
 
 import java.util.UUID;
 
 /**
- * Lets a villager path further than usual, but only while it is pathing to work.
+ * Lets a villager path further than usual, but only to its workstation, its bed or the bell.
  *
- * <h2>Why the reach has to be borrowed rather than kept</h2>
- * A navigator will not look for a path further than the entity's follow range, so reaching a
- * workstation across a large village means raising it. Raising it and leaving it raised is the
- * obvious way to do that and it is a bad mistake: follow range is what
- * {@code PathNavigate.getPathSearchRange} returns for <em>every</em> path the entity asks for.
+ * <h2>Why the follow range is left alone</h2>
+ * Follow range is what {@code PathNavigate.getPathSearchRange} returns for <em>every</em> path an
+ * entity asks for, so a villager given a permanently large one searches a far larger volume every
+ * time it wanders, heads indoors, flees a zombie or follows a golem. In a village with a lot of
+ * villagers everything then moves in jerks.
  *
- * <p>So a villager left with a permanently large follow range does not merely walk further to work -
- * it searches a far larger volume every time it wanders, heads indoors, flees a zombie or follows a
- * golem, none of which needed the extra reach. Tripling it triples the cost of all of that, and in a
- * village with a lot of villagers the result is exactly what it sounds like: everything moves in
- * jerks.
- *
- * <p>Borrowing it for the one call that needs it costs a map write and a recalculation, which is
- * nothing beside a pathfind, and leaves every other goal searching the distance it was written for.
+ * <p>So the long reach never goes on the attribute. These paths are searched by {@link LongPathFinder}
+ * with the range passed in directly, and every other goal searches the distance it was written for.
  */
 public final class WorkPathing {
 
-    /** Identifies the modifier so it can be found again and taken off. */
+    /** The modifier older versions put on the follow range, found by id so it can be taken off. */
     private static final UUID REACH = UUID.fromString("7b1d5a4e-9c2f-4a30-8d61-2f9b0c7e4a11");
 
     private WorkPathing() {
     }
 
-    /** @return a path to the workstation, computed with the longer reach */
-    @Nullable
-    public static Path pathTo(EntityVillager villager, BlockPos pos) {
-        IAttributeInstance range = borrow(villager);
+    /**
+     * How a walk to a claim went, as 1.14's {@code WalkToTargetTask} sees it.
+     */
+    public enum Walk {
+        /** A path that arrives was found, and the villager is on it. */
+        REACHES,
+        /**
+         * No path arrives, but the villager is walking the nearest part of the way, or towards the
+         * target, and will ask again from there. The can't-reach clock runs meanwhile.
+         */
+        PARTIAL,
+        /** No way at all from here. */
+        NONE;
 
-        try {
-            return villager.getNavigator().getPathToPos(pos);
-        } finally {
-            give(range);
+        public boolean moving() {
+            return this != NONE;
         }
     }
 
+    /** How far past the radius the reach goes, so a claim at the edge of it can still be walked to. */
+    private static final double MARGIN = 8.0D;
+
     /**
-     * Starts the villager walking to the workstation, with the longer reach for the path itself.
+     * @return a path to the target with 1.14's search budget - see {@link LongPathFinder} - which may
+     * end short of it when no route arrives
+     */
+    @Nullable
+    public static Path pathTo(EntityVillager villager, BlockPos pos) {
+        if (!ModConfig.jobs.extendPathfindingRange) {
+            // Exactly as vanilla 1.12 pathfinds, as the config switch promises.
+            return villager.getNavigator().getPathToPos(pos);
+        }
+
+        return LongPathFinder.find(villager, pos, (float) effectiveRange(villager));
+    }
+
+    /** @return true if the path ends against the target rather than merely near it */
+    public static boolean arrives(@Nullable Path path, BlockPos pos) {
+        net.minecraft.pathfinding.PathPoint end = path == null ? null : path.getFinalPathPoint();
+
+        return end != null && Math.abs(end.x - pos.getX()) <= 1
+                && Math.abs(end.y - pos.getY()) <= 1 && Math.abs(end.z - pos.getZ()) <= 1;
+    }
+
+    /**
+     * Starts the villager walking to its workstation or bed, as 1.14's {@code WalkToTargetTask} does.
      *
-     * <h2>Only a path that gets there</h2>
-     * The navigator will happily build a path to the closest point it can reach and call that a
-     * success. For a workstation on the far side of a fence that point is the fence, and a villager
-     * sent along it walks into the corner nearest its workstation and stays pressed against it -
-     * every few seconds, all day, with every other villager whose workstation lies the same way.
+     * <h2>Partial paths are walked, as in 1.14</h2>
+     * This used to drop any path that did not arrive, so a villager behind a fence would not stand
+     * pressed against it. With 1.12's 200-node search, though, nearly every path across a village fell
+     * short, so a villager forty blocks from its bed was told there was no way home. It stood still,
+     * gave the bed up a minute later, found nothing reachable from the edge of the village, and spent
+     * the night there.
      *
-     * <p>So a path counts only if it ends next to the target. One that falls short is dropped before
-     * the villager takes a step, and reported as no path - which is what lets the game's rule apply,
-     * that a villager unable to reach its workstation or bed for a minute gives it up.
+     * <p>1.14 does neither. Its search has the budget to cross a village ({@link LongPathFinder}). When
+     * a path still does not arrive, the villager walks it anyway and asks again from where it ends.
+     * Only the can't-reach clock remembers that the path fell short, so a target that really is walled
+     * off is still given up after a minute, and the villager at the fence stands there for that minute
+     * and no longer. When there is no path at all, it takes a few steps towards the target, as 1.14
+     * does, and tries again from there.
+     */
+    public static Walk walk(EntityVillager villager, BlockPos pos, double speed) {
+        Path path = pathTo(villager, pos);
+
+        if (path != null && villager.getNavigator().setPath(path, speed)) {
+            if (arrives(path, pos)) {
+                return Walk.REACHES;
+            }
+
+            // A path that ends where the villager already stands goes nowhere; treat it as none.
+            net.minecraft.pathfinding.PathPoint end = path.getFinalPathPoint();
+            if (end != null && end.distanceToSquared(new net.minecraft.pathfinding.PathPoint(
+                    MathHelper.floor(villager.posX), MathHelper.floor(villager.posY),
+                    MathHelper.floor(villager.posZ))) > 1.0F) {
+                return Walk.PARTIAL;
+            }
+
+            villager.getNavigator().clearPath();
+        }
+
+        Vec3d towards = RandomPositionGenerator.findRandomTargetBlockTowards(villager, 10, 7,
+                new Vec3d(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D));
+
+        if (towards != null && villager.getNavigator().tryMoveToXYZ(towards.x, towards.y, towards.z, speed)) {
+            return Walk.PARTIAL;
+        }
+
+        return Walk.NONE;
+    }
+
+    /**
+     * Starts the villager walking to the target only if a path arrives.
      *
      * @return true if a path reaching the target was found and the villager is on its way
      */
     public static boolean walkTo(EntityVillager villager, BlockPos pos, double speed) {
-        IAttributeInstance range = borrow(villager);
+        Path path = pathTo(villager, pos);
 
-        try {
-            if (!villager.getNavigator().tryMoveToXYZ(
-                    pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, speed)) {
-                return false;
-            }
-
-            Path path = villager.getNavigator().getPath();
-            net.minecraft.pathfinding.PathPoint end = path == null ? null : path.getFinalPathPoint();
-
-            if (end == null || Math.abs(end.x - pos.getX()) > 1
-                    || Math.abs(end.y - pos.getY()) > 1 || Math.abs(end.z - pos.getZ()) > 1) {
-                villager.getNavigator().clearPath();
-                return false;
-            }
-
-            return true;
-        } finally {
-            give(range);
+        if (!arrives(path, pos)) {
+            return false;
         }
+
+        return villager.getNavigator().setPath(path, speed);
     }
 
     /**
@@ -120,32 +170,6 @@ public final class WorkPathing {
             return base;
         }
 
-        return Math.max(base, ModConfig.jobs.searchRadius + 8.0D);
-    }
-
-    @Nullable
-    private static IAttributeInstance borrow(EntityVillager villager) {
-        if (!ModConfig.jobs.extendPathfindingRange) {
-            return null;
-        }
-
-        IAttributeInstance range = villager.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE);
-        if (range == null || range.getModifier(REACH) != null) {
-            return null;
-        }
-
-        double extra = ModConfig.jobs.searchRadius + 8.0D - range.getBaseValue();
-        if (extra <= 0.0D) {
-            return null;
-        }
-
-        range.applyModifier(new AttributeModifier(REACH, "villagerbackport.workReach", extra, 0));
-        return range;
-    }
-
-    private static void give(@Nullable IAttributeInstance range) {
-        if (range != null) {
-            range.removeModifier(REACH);
-        }
+        return Math.max(base, Math.max(ModConfig.jobs.searchRadius, ModConfig.homes.searchRadius) + MARGIN);
     }
 }

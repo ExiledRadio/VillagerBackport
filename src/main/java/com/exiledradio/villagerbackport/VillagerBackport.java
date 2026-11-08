@@ -85,6 +85,8 @@ public final class VillagerBackport {
         MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.trade.ReputationEvents());
         MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.trade.Zombification());
         MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.compat.ConvertedVillagers());
+        MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.compat.TradeStagesCompat());
+        com.exiledradio.villagerbackport.compat.VillageNamesCompat.register();
         MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.home.HomeClaims());
         MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.home.SleepSync());
         MinecraftForge.EVENT_BUS.register(new com.exiledradio.villagerbackport.home.BedInteraction());
