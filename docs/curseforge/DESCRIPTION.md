@@ -16,7 +16,7 @@ Mods that add village buildings, like Waystones and RLCraft, add them to 1.14 vi
 
 | | |
 | --- | --- |
-| ![A plains village in the day](PENDING:vp-plains-village-day) | ![A desert village in the day](PENDING:vp-desert-village-day) |
+| ![A plains village in the day](https://media.forgecdn.net/attachments/2173/996/vp-plains-village-day-jpg.jpg) | ![A desert village in the day](https://media.forgecdn.net/attachments/2173/992/vp-desert-village-day-jpg.jpg) |
 | ![A snowy village](https://media.forgecdn.net/attachments/2169/793/vp-snowy-village-jpg.jpg) | ![Foxes in a taiga village](https://media.forgecdn.net/attachments/2169/792/vp-taiga-village-foxes-jpg.jpg) |
 
 ## Villagers
@@ -31,7 +31,7 @@ At dusk they head home to their beds. They breed when they have food and a free 
 
 ![The 1.14 trade screen](https://media.forgecdn.net/attachments/1900/425/villagergui-png.png)
 
-![Villagers asleep in their beds](PENDING:vp-villagers-asleep)
+![Villagers asleep in their beds](https://media.forgecdn.net/attachments/2173/981/vp-villagers-asleep-jpg.jpg)
 
 Every workstation does its 1.14 job. The fletching table cuts wood the way the stonecutter cuts stone, and the smithing table upgrades diamond gear to netherite when a mod adds netherite.
 
@@ -39,7 +39,7 @@ Every workstation does its 1.14 job. The fletching table cuts wood the way the s
 
 Breaking and replacing a librarian's lectern rerolls its books, and each roll shows up in chat. Hover over the message to turn it off.
 
-![A librarian's roll message with its tooltip](PENDING:vp-librarian-roll-tooltip)
+![A librarian's roll message with its tooltip](https://media.forgecdn.net/attachments/2173/994/vp-librarian-roll-tooltip-jpg.jpg)
 
 ## Raids
 
@@ -47,7 +47,7 @@ Carry Bad Omen into a village and a raid starts. Waves of pillagers, vindicators
 
 Pillager patrols roam the world from the fifth day, and pillager outposts generate with their watchtowers and caged golems. The crossbow is in too, with its enchantments.
 
-![A raid in progress](PENDING:vp-raid-in-progress)
+![A raid in progress](https://media.forgecdn.net/attachments/2173/989/vp-raid-in-progress-jpg.jpg)
 
 ![A pillager outpost](https://media.forgecdn.net/attachments/2169/815/vp-pillager-outpost-jpg.jpg)
 
