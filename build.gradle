@@ -104,10 +104,14 @@ dependencies {
 	// SRG-named jar and compile against that. The dev jar is also what puts Core on the
 	// runClient/runServer classpath, where FML finds it as a mod.
 	compile name: "BackportCore-${core_version}-dev"
-	// Fluidlogged API 3.3.3 (CurseForge 485654, file 8445863), which Backport Core 1.1.0 requires.
-	// Core's dev jar does not carry it. deobfCompile maps it to dev names, and FG2's GradleStart
-	// finds its coremod on the classpath. Never shade it.
-	deobfCompile 'curse.maven:fluidlogged-api-485654:8445863'
+	// Fluidlogged API 3.3.3 (CurseForge 485654, file 8445863): optional, it only adds waterlogging,
+	// through Backport Core. On the dev classpath for runs and self-tests (which need it); main code
+	// never names it. -PnoFluidlogged leaves it out, to compile and run as a game without it. Core's
+	// dev jar does not carry it. deobfCompile maps it to dev names, and FG2's GradleStart finds its
+	// coremod on the classpath. Never shade it.
+	if (!project.hasProperty('noFluidlogged')) {
+		deobfCompile 'curse.maven:fluidlogged-api-485654:8445863'
+	}
 }
 
 // Headless self-tests live in src/selftest/java and are compiled in only for a test run:
