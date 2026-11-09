@@ -1,5 +1,6 @@
 package com.exiledradio.villagerbackport;
 
+import com.exiledradio.backportcore.settings.Setting;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -18,78 +19,97 @@ public final class ModConfig {
 
     @Config.LangKey("config.villagerbackport.restock")
     @Config.Comment("How villagers replenish their trades.")
+    @Setting.Feature(icon = "minecraft:clock")
     public static final Restock restock = new Restock();
 
     @Config.LangKey("config.villagerbackport.pricing")
     @Config.Comment("Supply-and-demand pricing and villager experience.")
+    @Setting.Feature(icon = "minecraft:emerald", toggle = "demandPricing")
     public static final Pricing pricing = new Pricing();
 
     @Config.LangKey("config.villagerbackport.trades")
     @Config.Comment("Which trades villagers offer.")
+    @Setting.Feature(icon = "minecraft:enchanted_book")
     public static final Trades trades = new Trades();
 
     @Config.LangKey("config.villagerbackport.jobs")
     @Config.Comment("Workstations villagers go to work at.")
+    @Setting.Feature(icon = "villagerbackport:lectern")
     public static final Jobs jobs = new Jobs();
 
     @Config.LangKey("config.villagerbackport.workstations")
     @Config.Comment("What the workstation blocks accept and produce.")
+    @Setting.Feature(icon = "villagerbackport:stonecutter")
     public static final Workstations workstations = new Workstations();
 
     @Config.LangKey("config.villagerbackport.villages")
     @Config.Comment("Which villages generate: 1.14's or 1.12.2's.")
+    @Setting.Feature(icon = "villagerbackport:bell")
     public static final Villages villages = new Villages();
 
     @Config.LangKey("config.villagerbackport.homes")
     @Config.Comment("Beds, sleeping, breeding and iron golems.")
+    @Setting.Feature(icon = "minecraft:bed@14")
     public static final Homes homes = new Homes();
 
     @Config.LangKey("config.villagerbackport.raids")
     @Config.Comment("Raids, raiders and Hero of the Village, as villagers live through them.")
+    @Setting.Feature(icon = "villagerbackport:pillager_crossbow")
     public static final Raids raids = new Raids();
 
     @Config.LangKey("config.villagerbackport.display")
     @Config.Comment("What the trade screen shows.")
+    @Setting.Feature(icon = "minecraft:item_frame")
     public static final Display display = new Display();
 
     @Config.LangKey("config.villagerbackport.compat")
     @Config.Comment("Getting along with other mods that add the same blocks.")
+    @Setting.Feature(icon = "minecraft:command_block")
     public static final Compat compat = new Compat();
 
     @Config.LangKey("config.villagerbackport.sounds")
     @Config.Comment("1.14 sounds for vanilla blocks.")
+    @Setting.Feature(icon = "minecraft:noteblock")
     public static final Sounds sounds = new Sounds();
 
     @Config.LangKey("config.villagerbackport.trader")
     @Config.Comment("The wandering trader and its llamas.")
+    @Setting.Feature(icon = "minecraft:lead")
     public static final Trader trader = new Trader();
 
     @Config.LangKey("config.villagerbackport.cats")
     @Config.Comment("Cats, and ocelots as 1.14 changed them.")
+    @Setting.Feature(icon = "minecraft:fish")
     public static final Cats cats = new Cats();
 
     @Config.LangKey("config.villagerbackport.foxes")
     @Config.Comment("Foxes and sweet berries.")
+    @Setting.Feature(icon = "villagerbackport:sweet_berries")
     public static final Foxes foxes = new Foxes();
 
     @Config.LangKey("config.villagerbackport.bamboo")
     @Config.Comment("Bamboo, scaffolding, the bamboo jungle and pandas.")
+    @Setting.Feature(icon = "villagerbackport:bamboo")
     public static final Bamboo bamboo = new Bamboo();
 
     @Config.LangKey("config.villagerbackport.campfire")
     @Config.Comment("The campfire.")
+    @Setting.Feature(icon = "villagerbackport:campfire")
     public static final Campfire campfire = new Campfire();
 
     @Config.LangKey("config.villagerbackport.flora")
     @Config.Comment("1.14's flowers, dyes, suspicious stew and leather horse armor.")
+    @Setting.Feature(icon = "villagerbackport:cornflower")
     public static final Flora flora = new Flora();
 
     @Config.LangKey("config.villagerbackport.building")
     @Config.Comment("1.14's stone slabs, stairs and walls, smooth stone and wood signs.")
+    @Setting.Feature(icon = "villagerbackport:stone_brick_wall")
     public static final Building building = new Building();
 
     @Config.LangKey("config.villagerbackport.villageBlocks")
     @Config.Comment("1.14's stripped logs, wood trapdoors, buttons and pressure plates, and blue ice.")
+    @Setting.Feature(icon = "villagerbackport:stripped_oak_log")
     public static final VillageBlocks villageBlocks = new VillageBlocks();
 
     private ModConfig() {
@@ -497,6 +517,7 @@ public final class ModConfig {
                 "another mod's block is safe. Future MC's workstations do not need listing here;",
                 "see compat.futureMcWorkstations."
         })
+        @Setting.ListOf(Setting.Kind.BLOCK)
         public String[] workstations = {
                 // This mod's own workstations, one per 1.14 profession.
                 "villagerbackport:lectern=librarian",
@@ -538,6 +559,7 @@ public final class ModConfig {
                 "the layout they were generated with."
         })
         @Config.RequiresMcRestart
+        @Setting.NewChunks
         public com.exiledradio.villagerbackport.village.modern.MapGenModernVillage.Style style =
                 com.exiledradio.villagerbackport.village.modern.MapGenModernVillage.Style.MODERN;
 
@@ -556,6 +578,7 @@ public final class ModConfig {
                 "even with them installed."
         })
         @Config.RequiresMcRestart
+        @Setting.NewChunks
         public boolean backportBlocks = true;
 
         @Config.Comment({
@@ -570,12 +593,14 @@ public final class ModConfig {
                 "The log lists the pieces on offer, by the names modPieceExclusions takes, the first",
                 "time a 1.14 village is made."
         })
+        @Setting.NewChunks
         public boolean modPieces = true;
 
         @Config.Comment({
                 "Most other-mod buildings added to one 1.14 village. The waystone does not count."
         })
         @Config.RangeInt(min = 0, max = 64)
+        @Setting.NewChunks
         public int maxModPieces = 10;
 
         @Config.Comment({
@@ -583,6 +608,7 @@ public final class ModConfig {
                 "whenever Waystones rolls one for the village (its own 'Generate in Villages' chance).",
                 "Off, it is just one more piece placed anywhere along the streets."
         })
+        @Setting.NewChunks
         public boolean waystoneNearBell = true;
 
         @Config.Comment({
@@ -592,6 +618,7 @@ public final class ModConfig {
                 "and piece class ('waystones:ComponentVillageWaystone'), or for Recurrent Complex a",
                 "structure ('reccomplex:P_VillageInn'). The log lists what is on offer."
         })
+        @Setting.NewChunks
         public String[] modPieceExclusions = {};
 
         @Config.Comment({
@@ -603,6 +630,7 @@ public final class ModConfig {
                 "1.12.2's village houses have no workstations at all, so without this a 1.12.2 village",
                 "has almost nowhere for a villager to work."
         })
+        @Setting.NewChunks
         public boolean legacyHouseWorkstations = true;
 
         @Config.Comment({
@@ -616,6 +644,8 @@ public final class ModConfig {
                 "want. Raise a weight to make that job commoner in new villages, or add an entry at 1",
                 "to bring one back to level."
         })
+        @Setting.NewChunks
+        @Setting.ListOf(Setting.Kind.BLOCK)
         public String[] workstationWeights = {
                 "villagerbackport:lectern=2",
         };
@@ -628,6 +658,8 @@ public final class ModConfig {
                 "always the same set. Use this where a pack would rather a particular job were not",
                 "handed out for free."
         })
+        @Setting.NewChunks
+        @Setting.ListOf(Setting.Kind.BLOCK)
         public String[] excludedWorkstations = {};
     }
 
@@ -649,6 +681,7 @@ public final class ModConfig {
                 "does everything Future MC's does. Which of the two tables is kept follows",
                 "compat.futureMcDuplicates."
         })
+        @Config.RequiresMcRestart
         public boolean netheriteUpgrades = true;
 
         @Config.Comment({
@@ -658,12 +691,14 @@ public final class ModConfig {
                 "that adds a netherite ingot. Gives those items an upgrade path their own mod did",
                 "not have."
         })
+        @Config.RequiresMcRestart
         public boolean netheriteNameMatching = true;
 
         @Config.Comment({
                 "Remove other mods' crafting-grid netherite upgrades (diamond item plus ingot in a",
                 "crafting table), so the smithing table is the only way, as in 1.16."
         })
+        @Config.RequiresMcRestart
         public boolean removeCraftingUpgrades = false;
 
 
@@ -683,6 +718,7 @@ public final class ModConfig {
                 "",
                 "Entries naming something that is not installed are ignored."
         })
+        @Setting.ListOf(Setting.Kind.ITEM)
         public String[] extraCompostables = {
                 "oredict:treeLeaves=0.3",
                 "oredict:treeSapling=0.3",
@@ -730,6 +766,7 @@ public final class ModConfig {
                 "",
                 "Entries naming something that is not installed are ignored."
         })
+        @Setting.ListOf(Setting.Kind.ITEM)
         public String[] extraStonecutterRecipes = {
                 "minecraft:stone=minecraft:stonebrick:3",
                 "minecraft:stonebrick=minecraft:stonebrick:3",
@@ -760,6 +797,7 @@ public final class ModConfig {
                 "",
                 "Entries naming something that is not installed are ignored."
         })
+        @Setting.ListOf(Setting.Kind.ITEM)
         public String[] extraFletchingRecipes = {
                 "minecraft:planks=minecraft:trapdoor",
                 "minecraft:planks:1=minecraft:trapdoor",
@@ -773,6 +811,7 @@ public final class ModConfig {
                 "Blocks the fletching table will not accept, whatever the rules decided.",
                 "Each entry is 'modid:name' or 'modid:name:meta'."
         })
+        @Setting.ListOf(Setting.Kind.BLOCK)
         public String[] blockedFletchingInputs = {};
 
         @Config.Comment({
@@ -781,6 +820,7 @@ public final class ModConfig {
                 "Each entry is 'modid:name' or 'modid:name:meta'. Use this if a mod's recipes make",
                 "the saw offer something a pack would rather it did not."
         })
+        @Setting.ListOf(Setting.Kind.BLOCK)
         public String[] blockedStonecutterInputs = {};
 
         @Config.Comment({
@@ -794,6 +834,7 @@ public final class ModConfig {
                 "The loom itself works either way - this only decides whether the old route also",
                 "still does. Duplicating a banner in a crafting table is untouched, as it is in 1.14."
         })
+        @Config.RequiresMcRestart
         public boolean loomOnlyBannerPatterns = false;
     }
 
@@ -973,6 +1014,7 @@ public final class ModConfig {
                 "This mod's own pillager and ravager come first; another mod's are used instead",
                 "if they are listed ahead of them."
         })
+        @Setting.ListOf(Setting.Kind.ENTITY)
         public String[] pillagers = {"villagerbackport:pillager", "raids:pillager", "minecraft:vindication_illager"};
 
         @Config.Comment({
@@ -982,6 +1024,7 @@ public final class ModConfig {
                 "",
                 "The first of these that players can have is also the one outpost chests hold."
         })
+        @Setting.ListOf(Setting.Kind.ITEM)
         public String[] crossbows = {"villagerbackport:crossbow", "futuremc:crossbow", "crossbows:crossbow",
                 "spartanweaponry:crossbow_wood", "villagerbackport:pillager_crossbow"};
 
@@ -990,6 +1033,7 @@ public final class ModConfig {
                 "current Java, instead of giving Bad Omen straight away, as in 1.14. Deeper Depths'",
                 "bottle is dropped when it is installed."
         })
+        @Setting.Vanilla("true")
         public boolean captainDropsOminousBottle = false;
 
         @Config.Comment({
@@ -1005,6 +1049,7 @@ public final class ModConfig {
                 "On the village grid, one candidate in five, never within ten chunks of a village.",
                 "New chunks only. Only with this mod's raids."
         })
+        @Setting.NewChunks
         public boolean outposts = true;
 
         @Config.Comment({
@@ -1012,18 +1057,23 @@ public final class ModConfig {
                 "plains, desert, savanna, coniferous forest or snowy flats, but not hills,",
                 "mountains or water. Off: only the five vanilla biomes 1.14 uses."
         })
+        @Setting.NewChunks
         public boolean outpostsInModdedBiomes = true;
 
         @Config.Comment("See pillagers.")
+        @Setting.ListOf(Setting.Kind.ENTITY)
         public String[] vindicators = {"minecraft:vindication_illager"};
 
         @Config.Comment("See pillagers.")
+        @Setting.ListOf(Setting.Kind.ENTITY)
         public String[] evokers = {"minecraft:evocation_illager"};
 
         @Config.Comment("See pillagers.")
+        @Setting.ListOf(Setting.Kind.ENTITY)
         public String[] witches = {"minecraft:witch"};
 
         @Config.Comment("See pillagers.")
+        @Setting.ListOf(Setting.Kind.ENTITY)
         public String[] ravagers = {"villagerbackport:ravager", "raids:ravager"};
 
         @Config.Comment({
@@ -1031,6 +1081,7 @@ public final class ModConfig {
                 "",
                 "Raiders frighten villagers like a vindicator does and glow when a bell rings."
         })
+        @Setting.ListOf(Setting.Kind.ENTITY)
         public String[] extraRaiders = {};
     }
 
@@ -1145,6 +1196,7 @@ public final class ModConfig {
                 "Wheat, carrots, potatoes and beetroot, pumpkin and melon stems, and nether wart, plus",
                 "any other mod's crop that still uses the plain plant sounds. Takes effect on restart."
         })
+        @Config.RequiresMcRestart
         public boolean cropSounds = true;
     }
 
@@ -1158,6 +1210,7 @@ public final class ModConfig {
                 "lectern reports the result without opening the trade screen to look. Only players",
                 "within 32 blocks are told, and only enchanted books are worth a line."
         })
+        @Setting.Vanilla("false")
         public boolean announceEnchantedBooks = true;
 
         @Config.Comment({
@@ -1173,6 +1226,7 @@ public final class ModConfig {
                 "",
                 "An unrecognized name falls back to space."
         })
+        @Setting.Client
         public String refillKey = "SPACE";
 
         @Config.Comment({
@@ -1186,6 +1240,7 @@ public final class ModConfig {
                 "Set false for strict 1.14 behavior: the slots reload when you pick a trade or press",
                 "the refill key, and at no other time."
         })
+        @Setting.Vanilla("false")
         public boolean autoRefillWhileTrading = true;
 
         @Config.Comment({
@@ -1207,6 +1262,7 @@ public final class ModConfig {
                 "Set to false to keep the vanilla 1.12.2 screen, with the level shown as a small",
                 "overlay above it instead."
         })
+        @Setting.Client
         public boolean useModernTradeScreen = true;
 
         @Config.Comment({
@@ -1219,6 +1275,7 @@ public final class ModConfig {
                 "Turning this off only hides the badge. The villager's level still reaches each",
                 "player, since its career and biome outfit travel with it."
         })
+        @Setting.Client
         public boolean showLevelBadge = true;
 
         @Config.Comment({
@@ -1241,6 +1298,7 @@ public final class ModConfig {
                 "A career a mod adds to a vanilla profession wears that profession's outfit unless",
                 "it is listed here: the farmer's, librarian's, cleric's, toolsmith's or butcher's."
         })
+        @Setting.Client
         public String[] modOutfits = {};
 
         @Config.Comment({
@@ -1264,6 +1322,7 @@ public final class ModConfig {
                 "1.12.2 has no villager biome type, so the outfit is read from where the villager",
                 "currently is - meaning one carried far from home will change clothes."
         })
+        @Setting.Client
         public boolean useModernVillagerSkins = true;
     }
 
@@ -1410,6 +1469,7 @@ public final class ModConfig {
                 "taigas get them too. Nothing generates in a biome listed in bushBiomeBlacklist."
         })
         @Config.RequiresWorldRestart
+        @Setting.NewChunks
         public boolean generateBushes = true;
 
         @Config.Comment({
@@ -1420,6 +1480,7 @@ public final class ModConfig {
         })
         @Config.RangeInt(min = 0, max = 16)
         @Config.RequiresWorldRestart
+        @Setting.NewChunks
         public int taigaPatchesPerChunk = 1;
 
         @Config.Comment({
@@ -1430,10 +1491,13 @@ public final class ModConfig {
         })
         @Config.RangeInt(min = 0, max = 1000)
         @Config.RequiresWorldRestart
+        @Setting.NewChunks
         public int rarePatchChance = 12;
 
         @Config.Comment("Biomes (registry names, like minecraft:taiga) that never get sweet berry bushes.")
         @Config.RequiresWorldRestart
+        @Setting.NewChunks
+        @Setting.ListOf(Setting.Kind.BIOME)
         public String[] bushBiomeBlacklist = {};
 
         @Config.Comment({
@@ -1459,10 +1523,12 @@ public final class ModConfig {
                 "A snowy biome gets snow foxes, any other red ones."
         })
         @Config.RequiresMcRestart
+        @Setting.ListOf(Setting.Kind.BIOME)
         public String[] extraFoxBiomes = {};
 
         @Config.Comment("Biomes (registry names) foxes never spawn in, even when they are CONIFEROUS.")
         @Config.RequiresMcRestart
+        @Setting.ListOf(Setting.Kind.BIOME)
         public String[] foxBiomeBlacklist = {};
     }
 
@@ -1490,6 +1556,7 @@ public final class ModConfig {
                 "Turning this off also leaves the two biomes unregistered."
         })
         @Config.RequiresMcRestart
+        @Setting.NewChunks
         public boolean bambooJungle = true;
 
         @Config.Comment({
@@ -1499,6 +1566,7 @@ public final class ModConfig {
         })
         @Config.RangeInt(min = 1, max = 1000)
         @Config.RequiresMcRestart
+        @Setting.NewChunks
         public int bambooJungleRarity = 10;
 
         @Config.Comment({
@@ -1507,6 +1575,7 @@ public final class ModConfig {
                 "Sparse - a stand every few chunks. Does nothing while Future MC is installed,",
                 "which already puts its own bamboo there."
         })
+        @Setting.NewChunks
         public boolean jungleBamboo = true;
 
         @Config.Comment({
@@ -1552,12 +1621,14 @@ public final class ModConfig {
                 "or 'modid:item=modid:result' (cooked into that). Add ':meta' after either to pick",
                 "one variant, e.g. 'minecraft:fish:1=minecraft:cooked_fish:1'."
         })
+        @Setting.ListOf(Setting.Kind.ITEM)
         public String[] extraFoods = {};
 
         @Config.Comment({
                 "Items the campfire refuses, even though the rule above would cook them,",
                 "as 'modid:item' or 'modid:item:meta'."
         })
+        @Setting.ListOf(Setting.Kind.ITEM)
         public String[] excludedFoods = {};
     }
 
@@ -1588,6 +1659,7 @@ public final class ModConfig {
                 "sunflower plains and flower forests, lilies only in flower forests)."
         })
         @Config.RequiresMcRestart
+        @Setting.NewChunks
         public boolean generateFlowers = true;
 
         @Config.Comment({
