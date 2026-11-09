@@ -208,3 +208,10 @@ deployToInstance.dependsOn reobfJar
 // instance with NoSuchMethodError on the first Minecraft method it calls. Always run it.
 reobfJar.outputs.upToDateWhen { false }
 build.finalizedBy deployToInstance
+
+// -PjoinPort=N: the dev client joins localhost:N at start, for checks against a dev server in the same run dir.
+if (project.hasProperty('joinPort')) {
+    afterEvaluate {
+        runClient.args '--server', 'localhost', '--port', project.property('joinPort').toString()
+    }
+}
