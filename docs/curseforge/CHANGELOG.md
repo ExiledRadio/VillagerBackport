@@ -2,6 +2,8 @@
 
 **Now requires Backport Core 1.1.0.** Install it beside this mod. Fluidlogged API comes through Backport Core and only adds waterlogging. Without it, blocks hold no water and a water bucket puts out a campfire.
 
+*   **The new settings screen** from Backport Core. Every setting has a plain name and a one-line description, in all 18 languages.
+
 *   **Vanilla's creative tabs.** The mod has no creative tab of its own any more: every block and item is in the tab vanilla puts it in, next to its vanilla neighbor, as 1.19.2 lists them (the last version with these tabs). Stripped logs follow the logs, the new walls the cobblestone wall, the workstations, bell, lantern and campfire the rest of the decoration blocks, each spawn egg the others in alphabetical order, and the crossbow's enchanted books are in Combat. With other update backports installed, each item still sits by its vanilla neighbor. As in vanilla, the ominous banner and suspicious stew are not in the creative menu (`/give` still gives them).
 
 *   **Today's `/locate`**, now Backport Core's: `/locate structure minecraft:village_plains` (or `village_desert`, `village_savanna`, `village_snowy`, `village_taiga`), `/locate structure minecraft:pillager_outpost`, and `/locate structure #minecraft:village` for the nearest village of any type, which names the type it found. Results are today's: the same village today's game would pick for a seed, at its chunk's corner. Tab completion lists every installed update backport's structures. The plain 1.12.2 name `Village` is no longer listed, since 1.14's villages have types, but `/locate Village` still works. With 1.12.2-style villages, or on terrain 1.14 villages can't be planned on, `#minecraft:village` still finds the world's own villages.
