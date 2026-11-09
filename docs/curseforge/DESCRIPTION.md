@@ -6,7 +6,7 @@ Villages generate the way they do in 1.14, from 1.14's own buildings, with the w
 
 It is ported from the decompiled 1.14.4 sources, so the village layouts, trade tables, pricing formula, restock timings, gossip weights, experience values, golem conditions, sleep pose, raid waves and outpost layouts are all the ones the real game uses.
 
-**Everything 1.14 added is in this one mod.** It needs one library, Backport Core, which holds the code and textures the update backports share. Both are needed on the client and the server.
+**Everything 1.14 added is in this one mod.** It needs Backport Core, the library that holds the code and textures the update backports share, and Fluidlogged API for waterlogging. All three are needed on the client and the server.
 
 > 💬 **[Join the Discord](https://discord.gg/kxQvMDJBTN)** for bug reports, questions and release pings.
 
@@ -17,6 +17,11 @@ It is ported from the decompiled 1.14.4 sources, so the village layouts, trade t
 ## Villages
 
 Villages are 1.14's villages: plains, desert, savanna, taiga and snowy, built from 1.14's own structure files and laid out street by street the way 1.14 lays them out. You will find farms, animal pens, lamp posts, a meeting point with its bell, an iron golem, unemployed villagers waiting for work and, now and then, an abandoned zombie village. Snowy villages generate on snowy tundra, where 1.12.2 never built villages at all.
+
+| | |
+| --- | --- |
+| ![A snowy village around its farm](https://media.forgecdn.net/attachments/2169/793/vp-snowy-village-jpg.jpg) | ![A taiga village over the water](https://media.forgecdn.net/attachments/2063/505/taiga-village-over-water-jpg.jpg) |
+| ![A desert village street](https://media.forgecdn.net/attachments/2063/506/desert-street-jpg.jpg) | ![A savanna village's meeting point](https://media.forgecdn.net/attachments/2063/508/savanna-meeting-point-jpg.jpg) |
 
 The workstations sit inside the houses where 1.14 puts them, so a village has its librarian's lectern and its butcher's smoker from the start. As in the real game, workstations come only from the buildings; nothing else in the world is turned into one.
 
@@ -99,7 +104,7 @@ Both saws read the crafting recipes already installed and work out what can be c
 
 **Locking a map** works as in 1.14: put a map and a glass pane in the cartography table and you get a locked copy that never changes again, however much the land it shows does. The map you put in keeps updating as before, and copies of a locked map are locked too. The one difference from 1.14 is that a locked map doesn't show your own position marker.
 
-Rerolling a librarian means breaking and replacing its lectern until the book is one you want. Each roll is announced in chat as it happens, so you don't have to open the trade screen to check.
+Rerolling a librarian means breaking and replacing its lectern until the book is one you want. Each roll is announced in chat as it happens, so you don't have to open the trade screen to check. Not rerolling anything? Hover over the line to see how to turn it off, and click it to stop the messages for you alone; `/rollmessages on` brings them back.
 
 ![Rolled: Punch II](https://media.forgecdn.net/attachments/1900/419/lecternmessage-png.png)
 
@@ -180,6 +185,8 @@ A frightened villager calls for an iron golem, which takes three villagers nearb
 
 ## Raids
 
+![A pillager outpost in the plains](https://media.forgecdn.net/attachments/2169/815/vp-pillager-outpost-jpg.jpg)
+
 Carry Bad Omen into a village and the village knows: 30 seconds later the horn sounds and a raid begins. 1.14's waves follow - three on easy, five on normal, seven on hard, and one more if the omen was strong - of pillagers, vindicators, evokers, witches and ravagers, some riding the ravagers. A bar at the top of the screen shows the raid gathering, then the raiders' strength, and Victory or Defeat at the end.
 
 *   **The villagers know what to do.** Before the first wave they gather at the bell and ring it; when the raiders arrive they run home and stay there; when it's over they come out and celebrate with fireworks.
@@ -197,17 +204,78 @@ Carry Bad Omen into a village and the village knows: 30 seconds later the horn s
 
 ## The rest of 1.14
 
-*   **The wandering trader** turns up now and then with two trader llamas, near you or at the nearest bell. It sells current Java's nine trades, never restocks, drinks invisibility at dusk and milk at dawn, and leaves after 40 minutes. Its llamas spit at whatever attacks it. The `doTraderSpawning` game rule switches it off.
-*   **Cats**, in all eleven coats, separate from ocelots as in 1.14. Tame strays with raw fish. Tamed cats sit on chests, furnaces and beds, keep creepers away, and bring you gifts in the morning. Villages have their own cats, and a black cat lives at each witch hut. Ocelots now learn to trust you instead of being tamed, and tamed ocelots in old worlds turn into cats.
-*   **Foxes**, red and snowy, in taigas. They sleep by day, hunt chickens and rabbits by night with a high pounce, and carry one item in their mouth. Breed them with sweet berries and the cub trusts you.
-*   **Sweet berry bushes** grow wild in taigas. Pick them without breaking the bush, and mind the thorns.
-*   **Bamboo**, grown by 1.14's rules, in its own **bamboo jungle**. **Scaffolding** holds itself up as in 1.14: jump to climb it, sneak to climb down.
-*   **Pandas**, with all seven personalities and 1.14's gene inheritance. They eat bamboo and cake, and cubs sneeze.
-*   **The campfire** cooks four foods at once without fuel and burns whatever stands in it. Put a hay bale under it for a signal fire. Fishermen sell it.
-*   **Cornflowers, lilies of the valley and wither roses**, which also make **white, black, brown and blue dye**. Anything the Wither kills leaves a wither rose.
-*   **Suspicious stew**, **brown mooshrooms**, **leather horse armor**, the **Globe** banner pattern, and **sign text you can dye**.
-*   **Every new slab, stair and wall** (42 of them), the **smooth stone** blocks, and **signs in every wood**. The stonecutter cuts all of them.
-*   **Stripped logs and wood**, and an axe to strip them. **Trapdoors, buttons and pressure plates in every wood**. **Blue ice**.
+Village & Pillage was more than villagers and raiders, and all of it is here.
+
+### The wandering trader
+
+![The wandering trader and his llamas coming over the bridge, with a calico cat on the dock](https://media.forgecdn.net/attachments/2169/789/vp-wandering-trader-cat-dock-jpg.jpg)
+
+*   **He turns up now and then** with two **trader llamas** on leads, near you or at the nearest village bell. Once a day the game tries to send one: a 25% chance the first time, 50% the next, then 75%, each with a further one-in-ten roll, as in 1.14 and current Java.
+*   **Current Java's trades**: nine per visit, from the lists today's trader uses. He never restocks; what he has is all he has.
+*   **Invisible at night**: at dusk he drinks a potion of invisibility, and at dawn a bucket of milk.
+*   **He leaves after 40 minutes**, counted only while he's loaded and nobody is trading with him, and his llamas go with him.
+*   **Trader llamas** wear his blue and gold decor and spit at whatever attacks him. Take one with your own lead and it's yours to keep.
+*   The `doTraderSpawning` game rule switches him off, as in current Java.
+
+### Cats
+
+*   **Cats and ocelots are two animals again**, as in 1.14. Cats have 1.14's model, sounds and all **eleven coats**: tabby, tuxedo, red, Siamese, British shorthair, calico, Persian, ragdoll, white, Jellie and black.
+*   **Taming**: stray cats run from you, but creep after you if you're holding raw cod or salmon, meowing for it. Feed one and, one time in three, it's yours.
+*   **Tamed cats** follow you, sit on chests, furnaces and beds, breed on fish, and wear a collar you can dye.
+*   **Morning gifts**: a cat curls up at the foot of your bed while you sleep, and in the morning has often brought you something: string, a feather, rabbit hide, raw chicken, rotten flesh.
+*   **Creepers keep away from cats.** With a mod that adds phantoms, a phantom breaks off its attack when a cat is near, and the cat hisses at it.
+*   **Where they live**: villages have cats from the start, and more strays move into a busy village. A black cat lives at each witch hut.
+*   **Ocelots** can't be tamed any more: feed one fish and it learns to trust you instead. Tamed ocelots in old worlds become cats, keeping their owner and name.
+
+### Foxes and sweet berries
+
+![Foxes in a taiga village, one curled up asleep, among the sweet berry bushes](https://media.forgecdn.net/attachments/2169/792/vp-taiga-village-foxes-jpg.jpg)
+
+*   **Foxes** live in taigas in small groups: red foxes, and white snow foxes in snowy taigas.
+*   **Nocturnal**: by day a fox finds shade and sleeps curled up, until something it doesn't trust comes close, it gets hurt or night falls. At night it hunts, wanders and strolls through villages.
+*   **Hunting**: foxes stalk chickens and rabbits, crouch, wiggle and pounce with a high leap. Pouncing into snow sometimes buries a fox's face in it.
+*   **The mouth**: a fox carries one item. Some spawn holding something, an emerald or a feather. It picks up what it walks over, swaps it for food when it finds some, and eats the food after a while.
+*   **Skittish**: foxes run from players who aren't sneaking, and from wolves and polar bears. Sneak to get close.
+*   **Trust**: breed two foxes with sweet berries and the cub trusts you. It won't run from you, and it attacks whatever hurts you.
+*   **Sweet berry bushes** grow wild in taigas, through four stages from a sprig to fully ripe. **Pick them, don't break them**: use a ripe bush for 2 or 3 berries and it grows again. **Mind the thorns**: walking through a bush slows you to a crawl and scratches. Foxes walk straight through.
+*   **Sweet berries** are a quick snack and the bush's seed: plant them on grass or dirt.
+
+### Bamboo, scaffolding and pandas
+
+![Pandas around a pond in a bamboo jungle, beside a scaffolding tower](https://media.forgecdn.net/attachments/2169/816/vp-bamboo-jungle-pandas-jpg.jpg)
+
+*   **Bamboo jungles**, as in 1.14: about one jungle in ten is a bamboo jungle, packed with bamboo over podzol, with bamboo jungle hills where 1.14 puts them. Ordinary jungles get the odd stand of bamboo too.
+*   **Bamboo** grows by 1.14's rules, a block at a time, up to 12 to 16 blocks tall. Two bamboo make a stick, and it burns as fuel.
+*   **Scaffolding**, crafted from bamboo and string, holds itself up as in 1.14. It stands on the ground or reaches out up to six blocks from a supported column, and knocking out the support brings down everything leaning on it. Walk through the sides, **jump to climb**, **sneak to go down**, with no fall damage. Place it on the top of a scaffold to build outward, or on the side to build the column up.
+*   **Pandas**, with **seven personalities** from 1.14's gene inheritance. **Lazy** ones lie on their backs, **worried** ones cower in thunderstorms, **playful** ones roll over, **aggressive** ones fight back, **weak** ones have half the health, and **brown** pandas are rare: two ordinary-looking parents can have a brown cub.
+*   They **eat bamboo**, and **cake** if they find it, sitting down to munch. Breed them with bamboo, but only where bamboo is growing nearby. **Cubs sneeze**, startling every grown panda around into a jump, and now and then leaving a slime ball.
+
+### The campfire and the lantern
+
+![A lantern lighting a village street at night](https://media.forgecdn.net/attachments/2169/791/vp-village-night-lantern-raid-jpg.jpg)
+
+*   **The campfire** gives full light, crackles and sends up 1.14's tall, slow smoke. It **cooks four foods at once**, with no fuel: raw meat, raw fish or potatoes, 30 seconds each, and other mods' raw foods too.
+*   It burns whatever stands in it, and a **hay bale underneath** makes it a signal fire, its smoke climbing about 24 blocks instead of 10. Water puts it out, with a hiss.
+*   Breaking it drops charcoal, or the campfire with Silk Touch. **Fishermen sell it**, and taiga villages light theirs.
+*   **The lantern** stands on a block or hangs beneath one, lighting 1.14's village streets.
+
+### Flowers, dyes and stew
+
+*   **Cornflowers** in plains and flower forests, and **lilies of the valley** in forests and flower forests, where current Java grows them. Bone meal on grass grows them there too.
+*   **The wither rose**: anything the Wither kills leaves one where it died. It withers whatever walks through it, apart from the Wither and its skeletons.
+*   **White, black, brown and blue dye**, 1.14's own items: from bone meal or a lily of the valley, an ink sac or a wither rose, cocoa beans, lapis lazuli or a cornflower. They work wherever a dye does, other mods' recipes included.
+*   **Suspicious stew**: a bowl, a red and a brown mushroom and a small flower make mushroom stew with that flower's effect.
+*   **Brown mooshrooms**: lightning turns a red mooshroom brown and a brown one red. Feed a brown one a flower, then milk it with a bowl, for that flower's stew.
+*   **Leather horse armor**, which you can dye. Expert leatherworkers sell it.
+*   **Dye a sign's text** by using any dye on it.
+*   **The Globe banner pattern**, sold by master cartographers.
+
+### Building blocks
+
+*   **Every new slab, stair and wall**, 42 of them, in stone, granite, diorite, andesite, sandstone, red sandstone, quartz, nether brick, end stone brick, mossy stone and the rest. The stonecutter cuts all of them.
+*   **Smooth stone, smooth sandstone, smooth red sandstone and smooth quartz** as blocks of their own, smelted as in 1.14.
+*   **Signs in every wood**, **trapdoors, buttons and pressure plates in every wood**, and **stripped logs and wood**: right-click a log with an axe to strip it.
+*   **Blue ice**, the fastest ice there is.
 
 Each of these has its own config category, and each one switches off.
 
@@ -252,6 +320,7 @@ Pillagers and ravagers from any mod count as raiders: they glow when the bell ri
 ## Commands
 
 *   `/locate structure <structure>` (Backport Core's, as in today's game) gives the distance and the coordinates in green brackets; click them to put a teleport command in your chat box. It takes `minecraft:village_plains`, `village_desert`, `village_savanna`, `village_taiga`, `village_snowy`, the tag `#minecraft:village`, and every other installed update backport's structures; 1.12.2's own names (`/locate Stronghold` ...) still work.
+*   `/rollmessages on` or `off` turns the librarian roll messages on or off for you alone. Anyone can use it.
 *   `/village [radius]` draws the village. Every bed gets a box, green where a villager has claimed it and red where it is going spare, along with the counts that decide whether the village can grow.
 *   `/forgive` clears a villager's grudges against you, and `/forgive 32` does the same for every villager within 32 blocks. Discounts you have earned stay. Operators only.
 *   `/librarian <enchantment> [level] [villager level] [price] [cured]` spawns a librarian selling that enchanted book, for putting back one you lost: `/librarian strengthened_vitality 3`. Add `cured` to get the cure discount with it. Operators only.
@@ -315,11 +384,12 @@ Spacebar refills the trade. If it doesn't, another mod has claimed the key (Inve
 
 *   Minecraft 1.12.2, Forge 14.23.5.2847 or newer
 *   [Backport Core](https://www.curseforge.com/minecraft/mc-mods/backport-core) 1.1.0 or newer
+*   [Fluidlogged API](https://www.curseforge.com/minecraft/mc-mods/fluidlogged-api) 3.3.3 or newer
 *   Required on the client and the server
 
 ## Install
 
-Drop this jar and Backport Core's in `mods` on both sides. Delete any older version first, or the two copies will crash on startup with a duplicate mod id.
+Drop this jar, Backport Core's and Fluidlogged API's in `mods` on both sides. Delete any older version first, or the two copies will crash on startup with a duplicate mod id.
 
 ***
 
