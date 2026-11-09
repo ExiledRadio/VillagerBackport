@@ -58,7 +58,8 @@ import java.util.Random;
  * sends the smoke up three times as high. 1.14's fourth, {@code waterlogged}, is Fluidlogged API's
  * water through Backport Core ({@link Waterloggable}), not a property: a campfire holds water as in
  * 1.14, and water arriving puts a lit one out with the burst of smoke. One placed into water is placed
- * out, and none can be lit while it holds water.
+ * out, and none can be lit while it holds water. Without Fluidlogged API it holds no water, as before
+ * 1.13: it is placed lit even where water was, and a water bucket puts a lit one out.
  *
  * <h2>What it does, from minecraft.wiki (current Java)</h2>
  * <ul>
@@ -153,14 +154,15 @@ public class BlockCampfire extends Block implements ITileEntityProvider, Waterlo
 
     /**
      * Placed lit, facing the way the player looks, a signal fire if there is hay underneath. Placed
-     * into water it keeps the water and is placed out, as 1.14's {@code getStateForPlacement}.
+     * into water it keeps the water and is placed out, as 1.14's {@code getStateForPlacement}. Without
+     * Fluidlogged API nothing holds water, so it replaces the water and is placed lit, as before 1.13.
      */
     @Override
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY,
                                             float hitZ, int meta, EntityLivingBase placer) {
         return getDefaultState()
                 .withProperty(FACING, placer.getHorizontalFacing())
-                .withProperty(LIT, Boolean.valueOf(!Waterlogging.hasWaterSource(world, pos)))
+                .withProperty(LIT, Boolean.valueOf(!(Waterlogging.isAvailable() && Waterlogging.hasWaterSource(world, pos))))
                 .withProperty(SIGNAL_FIRE, Boolean.valueOf(isHay(world.getBlockState(pos.down()))));
     }
 
@@ -203,8 +205,10 @@ public class BlockCampfire extends Block implements ITileEntityProvider, Waterlo
      * <p>Lighting and putting out are handled here rather than by the items themselves because in
      * 1.12.2 flint and steel would set fire to the block in front. A lit campfire, or one holding
      * water, hands flint and steel back to the item, which lights the space next to it as 1.14's
-     * does. A water bucket is the bucket's own: it waterlogs the campfire, and the water puts it
-     * out ({@link #onWaterChanged}).
+     * does. With Fluidlogged API a water bucket is the bucket's own: it waterlogs the campfire, and the
+     * water puts it out ({@link #onWaterChanged}). Without it the campfire can't hold water, so a water
+     * bucket puts a lit one out here and is emptied, as 1.14 did before waterlogging (otherwise the
+     * bucket would pour water beside it).
      */
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand,
@@ -238,6 +242,16 @@ public class BlockCampfire extends Block implements ITileEntityProvider, Waterlo
             if (!world.isRemote) {
                 extinguish(world, pos, state, false);
                 held.damageItem(1, player);
+            }
+            return true;
+        }
+        if (lit && item == Items.WATER_BUCKET && !Waterlogging.isAvailable()) {
+            if (!world.isRemote) {
+                extinguish(world, pos, state, true);
+                if (!player.capabilities.isCreativeMode) {
+                    player.setHeldItem(hand, new ItemStack(Items.BUCKET));
+                }
+                player.addStat(StatList.getObjectUseStats(Items.WATER_BUCKET));
             }
             return true;
         }

@@ -74,7 +74,8 @@ import java.util.Random;
  *
  * <h2>Water</h2>
  * Waterloggable as in current Java: placed into a water source it keeps it, a bucket fills or drains
- * it, and the water changes nothing else about it.
+ * it, and the water changes nothing else about it. Without Fluidlogged API it holds none, as before
+ * 1.13; flowing water still cannot wash it away.
  *
  * <h2>Not 1.14</h2>
  * The outline is always a full block. 1.14 shows the full block only while you hold scaffolding,

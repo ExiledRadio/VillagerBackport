@@ -28,7 +28,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * when whatever holds it up goes away.
  *
  * <p>Waterloggable, standing or hanging, as in current Java: it holds a water source (Fluidlogged API's,
- * through Backport Core's {@link Waterloggable}) and the water changes nothing else about it.
+ * through Backport Core's {@link Waterloggable}) and the water changes nothing else about it. Without
+ * Fluidlogged API it holds none, as before 1.13.
  */
 public class BlockLantern extends Block implements Waterloggable {
 

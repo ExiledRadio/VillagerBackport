@@ -41,7 +41,8 @@ import javax.annotation.Nullable;
  * <p>The water is real, as it was in 2.5.0: the block is {@link Waterloggable}, so Fluidlogged API keeps
  * the water a pickle holds, and a pickle saved by 2.3.0 or 2.4.0 with only the stored flag gets real
  * water once, as its chunk loads ({@link Waterlogging#migrateStoredProperty}, asked for by
- * {@link UpdateAquaticPickles}). It looks and lights as before, glowing only in water, and pops off as
+ * {@link UpdateAquaticPickles}). Without Fluidlogged API the stored flag stays as it is and is the only
+ * water a pickle has ({@link #isWet}), so a 2.3.0 or 2.4.0 pickle still glows. It looks and lights as before, glowing only in water, and pops off as
  * its pickles when the block under it goes. Nothing else: it can't be placed, added to, grown or
  * smelted, and breaking it gives the pickles back as {@link ItemSeaPickleStandIn}s.
  *
