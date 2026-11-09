@@ -69,7 +69,13 @@ The campfire cooks food without fuel. Put a hay bale under it for a signal fire.
 
 You also get the new flowers and dyes, suspicious stew, brown mooshrooms, leather horse armor, the Globe banner pattern, every new slab, stair and wall, smooth stone, signs in every wood, stripped logs, and blue ice.
 
-Vanilla's textures switch to the 1.14 look, and you can turn that off. Every feature has its own config section and can be turned off.
+Vanilla's textures switch to the 1.14 look, and you can turn that off.
+
+Every feature can be turned off in Backport Core's settings screen, under Mod Options. Each setting has a plain name and a one-line description, and search finds any of them.
+
+![Village & Pillage's settings](PENDING:vp-settings-new)
+
+![Searching the settings for raids](PENDING:vp-settings-search-new)
 
 ## Compatibility
 
