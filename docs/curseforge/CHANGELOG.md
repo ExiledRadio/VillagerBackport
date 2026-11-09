@@ -1,8 +1,6 @@
 # 2.5.0
 
-Fluidlogged API now comes through Backport Core and only adds waterlogging. Without it, blocks hold no water and a water bucket puts out a campfire.
-
-**Now requires Backport Core 1.1.0 and Fluidlogged API 3.3.3.** Install both beside this mod.
+**Now requires Backport Core 1.1.0.** Install it beside this mod. Fluidlogged API comes through Backport Core and only adds waterlogging.
 
 *   **Vanilla's creative tabs.** The mod has no creative tab of its own any more: every block and item is in the tab vanilla puts it in, next to its vanilla neighbor, as 1.19.2 lists them (the last version with these tabs). Stripped logs follow the logs, the new walls the cobblestone wall, the workstations, bell, lantern and campfire the rest of the decoration blocks, each spawn egg the others in alphabetical order, and the crossbow's enchanted books are in Combat. With other update backports installed, each item still sits by its vanilla neighbor. As in vanilla, the ominous banner and suspicious stew are not in the creative menu (`/give` still gives them).
 
