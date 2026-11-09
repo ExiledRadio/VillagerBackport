@@ -6,7 +6,7 @@ Villages generate the way they do in 1.14, from 1.14's own buildings, with the w
 
 It is ported from the decompiled 1.14.4 sources, so the village layouts, trade tables, pricing formula, restock timings, gossip weights, experience values, golem conditions, sleep pose, raid waves and outpost layouts are all the ones the real game uses.
 
-**Everything 1.14 added is in this one mod.** It needs Backport Core, the library that holds the code and textures the update backports share, and Fluidlogged API for waterlogging. All three are needed on the client and the server.
+**Everything 1.14 added is in this one mod.** It needs one library, Backport Core, which holds the code and textures the update backports share and brings Fluidlogged API with it for waterlogging. All of them are needed on the client and the server.
 
 > 💬 **[Join the Discord](https://discord.gg/kxQvMDJBTN)** for bug reports, questions and release pings.
 
@@ -383,13 +383,12 @@ Spacebar refills the trade. If it doesn't, another mod has claimed the key (Inve
 ## Requirements
 
 *   Minecraft 1.12.2, Forge 14.23.5.2847 or newer
-*   [Backport Core](https://www.curseforge.com/minecraft/mc-mods/backport-core) 1.1.0 or newer
-*   [Fluidlogged API](https://www.curseforge.com/minecraft/mc-mods/fluidlogged-api) 3.3.3 or newer
+*   [Backport Core](https://www.curseforge.com/minecraft/mc-mods/backport-core) 1.1.0 or newer, which needs [Fluidlogged API](https://www.curseforge.com/minecraft/mc-mods/fluidlogged-api) 3.3.3 or newer (the CurseForge app installs both)
 *   Required on the client and the server
 
 ## Install
 
-Drop this jar, Backport Core's and Fluidlogged API's in `mods` on both sides. Delete any older version first, or the two copies will crash on startup with a duplicate mod id.
+Drop this jar, Backport Core's and Fluidlogged API's in `mods` on both sides (the CurseForge app does this for you). Delete any older version first, or the two copies will crash on startup with a duplicate mod id.
 
 ***
 
