@@ -73,9 +73,7 @@ Vanilla's textures switch to the 1.14 look, and you can turn that off.
 
 Every feature can be turned off in Backport Core's settings screen, under Mod Options. Each setting has a plain name and a one-line description, and search finds any of them.
 
-![Village & Pillage's settings](PENDING:vp-settings-new)
-
-![Searching the settings for raids](PENDING:vp-settings-search-new)
+![Village & Pillage's settings](https://media.forgecdn.net/attachments/2174/555/vp-settings-new-png.png)
 
 ## Compatibility
 
