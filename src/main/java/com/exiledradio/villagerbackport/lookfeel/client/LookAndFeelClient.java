@@ -21,8 +21,8 @@ import org.lwjgl.input.Keyboard;
 @SideOnly(Side.CLIENT)
 public final class LookAndFeelClient {
 
-    /** LWJGL 2 reports one wheel notch as 120; GLFW, which 1.14's {@code MouseHandler} reads, as 1.0. */
-    static final double NOTCH = 120.0;
+    /** One wheel notch as this game's input library reports it (GLFW, which 1.14's {@code MouseHandler} reads, says 1.0). */
+    static final double NOTCH = ScrollAccumulator.notch();
 
     /** For the client self-test. */
     public static volatile int pauseOnlyScreens;

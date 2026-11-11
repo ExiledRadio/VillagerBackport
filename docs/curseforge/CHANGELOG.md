@@ -1,3 +1,9 @@
+# 2.5.1
+
+*   **Cats sit and stand with an empty hand.** Right-clicking your cat with an empty hand gave the order twice, so it sat down and stood straight back up; only a click with fish in hand worked. Now any click the cat has no other use for tells it to sit or stand, as in current Java.
+*   **Recipes unlock like vanilla's**, with Backport Core 1.2.0: an iron ingot unlocks the smithing table's recipe, a stick or coal the campfire's, and so on for every recipe of this mod, with the recipe toast. Update Backport Core to get it.
+*   **The hotbar scrolls again on Cleanroom.** Cleanroom reports one wheel notch as 1 where Forge reports 120, and the 1.14 scroll code read every notch as 1/120 of a slot, so the selected slot never moved. Forge was not affected.
+
 # 2.5.0
 
 **Now requires Backport Core 1.1.0.** Install it beside this mod. Fluidlogged API comes through Backport Core and only adds waterlogging. Without it, blocks hold no water and a water bucket puts out a campfire.

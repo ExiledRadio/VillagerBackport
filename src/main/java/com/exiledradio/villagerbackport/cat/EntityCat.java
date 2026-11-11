@@ -427,15 +427,25 @@ public class EntityCat extends EntityTameable {
                         }
                         return true;
                     }
-                } else if (isBreedingItem(stack)) {
-                    if (this.getHealth() < this.getMaxHealth() && stack.getItem() instanceof ItemFood) {
-                        this.consumeItemFromStack(player, stack);
-                        this.heal(((ItemFood) stack.getItem()).getHealAmount(stack));
-                        return true;
-                    }
-                } else if (!this.world.isRemote) {
-                    orderSit(!isOrderedToSit());
+                } else if (isBreedingItem(stack) && this.getHealth() < this.getMaxHealth() && stack.getItem() instanceof ItemFood) {
+                    this.consumeItemFromStack(player, stack);
+                    this.heal(((ItemFood) stack.getItem()).getHealAmount(stack));
+                    return true;
                 }
+                // Current Java's Cat.mobInteract: whatever the animal itself has no use for (feeding for
+                // breeding is its use) tells the cat to sit or stand, and the click is used up. Returning
+                // false here made 1.12.2 send the click again for the other hand, which gave the order
+                // twice: an empty hand sat the cat down and stood it straight back up.
+                if (super.processInteract(player, hand)) {
+                    return true;
+                }
+                if (!this.world.isRemote) {
+                    orderSit(!isOrderedToSit());
+                    this.isJumping = false;
+                    this.navigator.clearPath();
+                    this.setAttackTarget(null);
+                }
+                return true;
             }
         } else if (isBreedingItem(stack)) {
             this.consumeItemFromStack(player, stack);

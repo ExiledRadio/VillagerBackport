@@ -154,6 +154,9 @@ public final class LookFeelSelfTest implements SelfTest {
         c.eq("[0, 0]", sums(0.5, -0.5), "a change of direction starts the sum again");
         c.eq("[3]", sums(3.0), "three notches at once (changeCurrentItem then moves one slot, as 1.14.4's swapPaint)");
         c.eq(1.0, ScrollAccumulator.amount(1.0), "one notch at the default sensitivity is one");
+        c.eq(120.0, ScrollAccumulator.notch(false), "LWJGL 2 reports a notch as 120");
+        c.eq(1.0, ScrollAccumulator.notch(true), "Cleanroom's LWJGL 3 layer reports a notch as 1");
+        c.eq("[1]", sums(ScrollAccumulator.amount(1 / ScrollAccumulator.notch(true))), "one Cleanroom notch moves one slot");
         LookAndFeel.SCROLL_SENSITIVITY.set(0.5);
         c.eq(0.5, ScrollAccumulator.amount(1.0), "Scroll Sensitivity 0.50 halves it");
         LookAndFeel.DISCRETE_SCROLLING.set(true);

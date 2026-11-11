@@ -20,6 +20,19 @@ public final class ScrollAccumulator {
         return whole;
     }
 
+    /**
+     * The size of one wheel notch in a mouse event. LWJGL 2 reports 120. Cleanroom's LWJGL 3 layer
+     * ({@code org.lwjglx}) reports 1, so dividing its events by 120 took 120 notches to move one hotbar slot.
+     */
+    public static double notch() {
+        return notch(ScrollAccumulator.class.getClassLoader().getResource("org/lwjglx/input/Mouse.class") != null);
+    }
+
+    /** @param lwjglx whether Cleanroom's LWJGL 3 layer is the game's input library */
+    public static double notch(boolean lwjglx) {
+        return lwjglx ? 1.0 : 120.0;
+    }
+
     /** One wheel event's amount: the movement in notches, or its sign with Discrete Scrolling, times Scroll Sensitivity. */
     public static double amount(double notches) {
         return (LookAndFeel.DISCRETE_SCROLLING.get() ? Math.signum(notches) : notches) * LookAndFeel.SCROLL_SENSITIVITY.get();
