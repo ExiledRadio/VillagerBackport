@@ -1,5 +1,9 @@
 package com.exiledradio.villagerbackport.village.modern;
 
+import com.exiledradio.backportcore.structure.ScatteredPlacement;
+import com.exiledradio.backportcore.structure.StartRule;
+import com.exiledradio.backportcore.structure.StartRules;
+import com.exiledradio.backportcore.structure.Structures;
 import com.exiledradio.backportcore.terrain.TerrainHeights;
 
 import com.exiledradio.villagerbackport.ModConfig;
@@ -15,6 +19,7 @@ import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.structure.MapGenStructure;
 import net.minecraft.world.gen.structure.MapGenVillage;
+import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.StructureStart;
 import net.minecraftforge.common.BiomeDictionary;
 
@@ -115,12 +120,66 @@ public class MapGenOutpost extends MapGenStructure {
     @Override
     public BlockPos getNearestStructurePos(World world, BlockPos pos, boolean findUnexplored) {
         this.world = world;
+        StartRule rule = rule();
+        if (rule != null) {
+            net.minecraft.util.math.ChunkPos c = rule.grid().nearest(world.getSeed(), pos, rule.grid().spacing() * 100,
+                    p -> startsAt(world, p.x, p.z) && !(findUnexplored && world.isChunkGeneratedAt(p.x, p.z)));
+            return c == null ? null : new BlockPos((c.x << 4) + 8, 64, (c.z << 4) + 8);
+        }
         return findNearestStructurePosBySpacing(world, this, pos, this.spacing, SEPARATION, SEED, false, 100, findUnexplored);
     }
 
-    /** @return the outposts' grid spacing in chunks (the village grid's) */
+    /**
+     * The world generator's rule for where outposts start, where it has one (Caves &amp; Cliffs Backport's 1.18
+     * terrain, through Backport Core's {@code StartRules}: 1.18's outposts), or null for 1.14's.
+     */
+    @Nullable
+    private StartRule rule() {
+        return this.world == null ? null : StartRules.of(this.world, Structures.PILLAGER_OUTPOST);
+    }
+
+    /** @return the outposts' grid spacing in chunks (the village grid's, or the world generator's) */
     public int spacing() {
-        return this.spacing;
+        StartRule rule = rule();
+        return rule != null ? rule.grid().spacing() : this.spacing;
+    }
+
+    /** @return the grid outposts start on in this world: 1.14's, or the world generator's ({@link #rule}) */
+    public ScatteredPlacement placement() {
+        StartRule rule = rule();
+        return rule != null ? rule.grid() : new ScatteredPlacement(this.spacing, SEPARATION, SEED);
+    }
+
+    /**
+     * Every outpost whose box (pillagers' margin included: 12 blocks, 1.18's adapt_noise box) reaches a chunk, laid
+     * out first if it was not, for Backport Core's {@code TerrainAdaptation}: a 1.18 generator shapes its terrain
+     * around them before the chunk exists. Loads and generates nothing.
+     */
+    void startsNear(World world, int chunkX, int chunkZ, java.util.function.Consumer<StructureStart> out) {
+        this.world = world;
+        ScatteredPlacement grid = placement();
+        int s = grid.spacing();
+        int x0 = chunkX << 4;
+        int z0 = chunkZ << 4;
+        for (int gx = Math.floorDiv(chunkX - 8, s); gx <= Math.floorDiv(chunkX + 8, s); gx++) {
+            for (int gz = Math.floorDiv(chunkZ - 8, s); gz <= Math.floorDiv(chunkZ + 8, s); gz++) {
+                net.minecraft.util.math.ChunkPos c = grid.candidate(world.getSeed(), gx * s, gz * s);
+                if (Math.abs(c.x - chunkX) > 8 || Math.abs(c.z - chunkZ) > 8 || !canSpawnStructureAtCoords(c.x, c.z)) {
+                    continue;
+                }
+                long k = net.minecraft.util.math.ChunkPos.asLong(c.x, c.z);
+                StructureStart start = this.structureMap.get(k);
+                if (start == null) {
+                    generate(world, c.x, c.z, null);
+                    start = this.structureMap.get(k);
+                }
+                StructureBoundingBox b = start == null ? null : start.getBoundingBox();
+                if (b != null && start.isSizeableStructure() && b.maxX >= x0 && b.minX <= x0 + 15 && b.maxZ >= z0
+                        && b.minZ <= z0 + 15) {
+                    out.accept(start);
+                }
+            }
+        }
     }
 
     /** {@code PillagerOutpostStructure}'s seed modifier: the outposts' grid salt. */
@@ -145,6 +204,10 @@ public class MapGenOutpost extends MapGenStructure {
 
     @Override
     protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ) {
+        StartRule rule = rule();
+        if (rule != null) {
+            return rule.startAt(chunkX, chunkZ) != null;
+        }
         int cellX = Math.floorDiv(chunkX, this.spacing);
         int cellZ = Math.floorDiv(chunkZ, this.spacing);
         Random grid = this.world.setRandomSeed(cellX, cellZ, SEED);
