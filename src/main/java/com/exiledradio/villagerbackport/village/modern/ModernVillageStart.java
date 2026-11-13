@@ -94,12 +94,31 @@ public class ModernVillageStart extends StructureStart {
 
     public ModernVillageStart(World world, Random random, int chunkX, int chunkZ, TerrainHeights heights, Type type,
                               int size) {
+        this(world, random, chunkX, chunkZ, heights, type, size, false);
+    }
+
+    /** @param modern laid out as 1.18.2 lays one out, where the world generator rules 1.18.2's villages */
+    public ModernVillageStart(World world, Random random, int chunkX, int chunkZ, TerrainHeights heights, Type type,
+                              int size, boolean modern) {
         super(chunkX, chunkZ);
-        new Assembler(heights, random, this.components, DEPTH).assemble(type.startPool(), new BlockPos(chunkX * 16, 0, chunkZ * 16));
+        new Assembler(heights, random, this.components, DEPTH, modern).assemble(type.startPool(), new BlockPos(chunkX * 16, 0, chunkZ * 16));
         // Other mods' village buildings - Recurrent Complex's houses, Waystones' waystone - on plots
         // beside the streets. See ModVillagePieces.
         ModVillagePieces.add(world, this.components, heights, chunkX, chunkZ, size);
         this.updateBoundingBox();
+    }
+
+    /**
+     * 1.14 and later's {@code setLargeFeatureSeed(seed, chunkX, chunkZ)}: the random a jigsaw structure is laid
+     * out with. 1.12.2's MapGenBase seeds its random the same way, but MapGenStructure then draws one
+     * {@code nextInt()} before the start is built, so that random is one step off.
+     */
+    static Random largeFeatureRandom(long seed, int chunkX, int chunkZ) {
+        Random random = new Random(seed);
+        long a = random.nextLong();
+        long b = random.nextLong();
+        random.setSeed((long) chunkX * a ^ (long) chunkZ * b ^ seed);
+        return random;
     }
 
     /** 1.14 keeps every village, however few pieces fitted; there is no 1.12.2-style size cull. */
@@ -176,12 +195,20 @@ public class ModernVillageStart extends StructureStart {
         /** How many jigsaws deep the structure grows: 6 for villages, 7 for outposts, as in 1.14. */
         private final int maxDepth;
 
+        /**
+         * Laid out as 1.18.2's {@code JigsawPlacement} does where it differs from this 1.14 port: a template's jigsaws
+         * are listed in 1.18.2's order before each shuffle (see ModernTemplate.jigsaws), and pools are shuffled with
+         * fastutil's shuffle (see ModernPools.Pool.shuffled).
+         */
+        private final boolean modern;
+
         Assembler(TerrainHeights heights, Random random, List<net.minecraft.world.gen.structure.StructureComponent> pieces,
-                  int maxDepth) {
+                  int maxDepth, boolean modern) {
             this.heights = heights;
             this.random = random;
             this.pieces = pieces;
             this.maxDepth = maxDepth;
+            this.modern = modern;
         }
 
         void assemble(String startPool, BlockPos origin) {
@@ -220,7 +247,7 @@ public class ModernVillageStart extends StructureStart {
             Space inside = null;
 
             jigsaws:
-            for (ModernTemplate.PlacedJigsaw jigsaw : element.jigsaws(parent.pos(), parent.rotation(), this.random)) {
+            for (ModernTemplate.PlacedJigsaw jigsaw : element.jigsaws(parent.pos(), parent.rotation(), this.random, this.modern)) {
                 EnumFacing facing = jigsaw.facing;
                 BlockPos from = jigsaw.pos;
                 BlockPos target = from.offset(facing);
@@ -246,10 +273,10 @@ public class ModernVillageStart extends StructureStart {
 
                 List<ModernPools.Element> candidates = new ArrayList<ModernPools.Element>();
                 if (depth != this.maxDepth) {
-                    candidates.addAll(pool.shuffled(this.random));
+                    candidates.addAll(pool.shuffled(this.random, this.modern));
                 }
                 if (fallback != null) {
-                    candidates.addAll(fallback.shuffled(this.random));
+                    candidates.addAll(fallback.shuffled(this.random, this.modern));
                 }
 
                 for (ModernPools.Element candidate : candidates) {
@@ -258,7 +285,7 @@ public class ModernVillageStart extends StructureStart {
                     }
 
                     for (Rotation rotation : shuffledRotations()) {
-                        List<ModernTemplate.PlacedJigsaw> theirs = candidate.jigsaws(BlockPos.ORIGIN, rotation, this.random);
+                        List<ModernTemplate.PlacedJigsaw> theirs = candidate.jigsaws(BlockPos.ORIGIN, rotation, this.random, this.modern);
                         StructureBoundingBox bare = candidate.boundingBox(BlockPos.ORIGIN, rotation);
                         int headroom = headroom(theirs, bare);
 

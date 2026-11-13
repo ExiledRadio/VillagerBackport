@@ -25,9 +25,14 @@ public class OutpostStart extends StructureStart {
     }
 
     public OutpostStart(Random random, int chunkX, int chunkZ, @Nullable TerrainHeights heights) {
+        this(random, chunkX, chunkZ, heights, false);
+    }
+
+    /** @param modern laid out as 1.18.2 lays one out, where the world generator rules 1.18.2's outposts */
+    public OutpostStart(Random random, int chunkX, int chunkZ, @Nullable TerrainHeights heights, boolean modern) {
         super(chunkX, chunkZ);
         if (heights != null) {
-            new ModernVillageStart.Assembler(heights, random, this.components, DEPTH)
+            new ModernVillageStart.Assembler(heights, random, this.components, DEPTH, modern)
                     .assemble("pillager_outpost/base_plates", new BlockPos(chunkX * 16, 0, chunkZ * 16));
         }
         this.updateBoundingBox();

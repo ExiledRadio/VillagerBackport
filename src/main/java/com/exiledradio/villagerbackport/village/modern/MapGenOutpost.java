@@ -285,6 +285,9 @@ public class MapGenOutpost extends MapGenStructure {
 
     @Override
     protected StructureStart getStructureStart(int chunkX, int chunkZ) {
-        return new OutpostStart(this.rand, chunkX, chunkZ, TerrainHeights.forWorld(this.world));
+        // Where the world generator rules starts, its version's layout random: see MapGenModernVillage.getStructureStart.
+        boolean ruled = rule() != null;
+        Random random = ruled ? ModernVillageStart.largeFeatureRandom(this.world.getSeed(), chunkX, chunkZ) : this.rand;
+        return new OutpostStart(random, chunkX, chunkZ, TerrainHeights.forWorld(this.world), ruled);
     }
 }

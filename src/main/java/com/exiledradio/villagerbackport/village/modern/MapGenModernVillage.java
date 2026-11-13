@@ -453,7 +453,12 @@ public class MapGenModernVillage extends MapGenVillage {
                             .getBiome(new net.minecraft.util.math.BlockPos((chunkX << 4) + 9, 0, (chunkZ << 4) + 9));
                     type = typeAt(biome);
                 }
-                return new ModernVillageStart(this.world, this.rand, chunkX, chunkZ, heights, type, villageSize());
+                // Where the world generator rules starts, the layout is that version's own: its random is the
+                // chunk's large-feature seed, untouched. 1.12.2's MapGenStructure draws one nextInt from this.rand
+                // before asking for the start, which shifts every pick of the layout away from vanilla's.
+                java.util.Random random = rule != null
+                        ? ModernVillageStart.largeFeatureRandom(this.world.getSeed(), chunkX, chunkZ) : this.rand;
+                return new ModernVillageStart(this.world, random, chunkX, chunkZ, heights, type, villageSize(), rule != null);
             }
         }
         if (this.otg != null) {

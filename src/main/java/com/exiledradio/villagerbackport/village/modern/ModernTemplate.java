@@ -51,6 +51,7 @@ public final class ModernTemplate {
     final PaletteEntry[] palette;
     final List<BlockEntry> blocks = new ArrayList<BlockEntry>();
     final List<Jigsaw> jigsaws = new ArrayList<Jigsaw>();
+    private List<Jigsaw> sortedJigsaws;
     final List<EntityEntry> entities = new ArrayList<EntityEntry>();
 
     /** One palette slot: the 1.12.2 state to place, and the 1.14 block it was. */
@@ -270,16 +271,33 @@ public final class ModernTemplate {
                 Math.max(a.getZ(), b.getZ()) + at.getZ());
     }
 
-    /** The template's jigsaws placed at {@code at}, shuffled as 1.14 shuffles them. */
-    List<PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, java.util.Random random) {
-        List<PlacedJigsaw> out = new ArrayList<PlacedJigsaw>(this.jigsaws.size());
-        for (Jigsaw j : this.jigsaws) {
+    /**
+     * The template's jigsaws placed at {@code at}, shuffled as 1.14 shuffles them.
+     *
+     * <p>What the shuffle starts from decides which jigsaw it lands on. 1.14 lists them as the structure file does;
+     * {@code sorted} lists them as 1.18.2 does, whose {@code StructureTemplate.buildInfoList} sorts a template's
+     * blocks by y, then x, then z, in template coordinates.
+     */
+    List<PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, java.util.Random random, boolean sorted) {
+        List<Jigsaw> source = sorted ? sortedJigsaws() : this.jigsaws;
+        List<PlacedJigsaw> out = new ArrayList<PlacedJigsaw>(source.size());
+        for (Jigsaw j : source) {
             out.add(new PlacedJigsaw(transform(j.pos, rotation).add(at), rotation.rotate(j.facing), j));
         }
         if (random != null) {
             Collections.shuffle(out, random);
         }
         return out;
+    }
+
+    private synchronized List<Jigsaw> sortedJigsaws() {
+        if (this.sortedJigsaws == null) {
+            List<Jigsaw> sorted = new ArrayList<Jigsaw>(this.jigsaws);
+            sorted.sort(java.util.Comparator.<Jigsaw>comparingInt(j -> j.pos.getY())
+                    .thenComparingInt(j -> j.pos.getX()).thenComparingInt(j -> j.pos.getZ()));
+            this.sortedJigsaws = sorted;
+        }
+        return this.sortedJigsaws;
     }
 
     // ---------------------------------------------------------------------------------------------

@@ -64,8 +64,24 @@ public final class ModernPools {
 
         /** {@code func_214943_b}: every weighted entry, shuffled. */
         List<Element> shuffled(Random random) {
+            return shuffled(random, false);
+        }
+
+        /**
+         * @param fastutil shuffled as 1.18.2's {@code StructureTemplatePool.getShuffledTemplates} does, with fastutil's
+         *                 {@code ObjectArrays.shuffle}: the same swaps as {@code Collections.shuffle}, but it also draws
+         *                 {@code nextInt(1)} for the last element, so the random ends one draw further on
+         */
+        List<Element> shuffled(Random random, boolean fastutil) {
             List<Element> copy = new ArrayList<Element>(this.expanded);
-            Collections.shuffle(copy, random);
+            if (!fastutil) {
+                Collections.shuffle(copy, random);
+                return copy;
+            }
+            for (int i = copy.size(); i-- != 0; ) {
+                int p = random.nextInt(i + 1);
+                copy.set(p, copy.set(i, copy.get(p)));
+            }
             return copy;
         }
 
@@ -98,7 +114,15 @@ public final class ModernPools {
             this.projection = projection;
         }
 
-        abstract List<ModernTemplate.PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, Random random);
+        /**
+         * The element's jigsaws placed at {@code at}, shuffled. {@code sorted}: listed in 1.18.2's order before the
+         * shuffle (see {@link ModernTemplate#jigsaws}), not 1.14's.
+         */
+        abstract List<ModernTemplate.PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, Random random, boolean sorted);
+
+        final List<ModernTemplate.PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, Random random) {
+            return jigsaws(at, rotation, random, false);
+        }
 
         abstract StructureBoundingBox boundingBox(BlockPos at, Rotation rotation);
 
@@ -118,7 +142,7 @@ public final class ModernPools {
         }
 
         @Override
-        List<ModernTemplate.PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, Random random) {
+        List<ModernTemplate.PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, Random random, boolean sorted) {
             return Collections.emptyList();
         }
 
@@ -155,8 +179,8 @@ public final class ModernPools {
         }
 
         @Override
-        List<ModernTemplate.PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, Random random) {
-            return template().jigsaws(at, rotation, random);
+        List<ModernTemplate.PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, Random random, boolean sorted) {
+            return template().jigsaws(at, rotation, random, sorted);
         }
 
         @Override
@@ -178,7 +202,7 @@ public final class ModernPools {
         }
 
         @Override
-        List<ModernTemplate.PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, Random random) {
+        List<ModernTemplate.PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, Random random, boolean sorted) {
             return Collections.singletonList(new ModernTemplate.PlacedJigsaw(at, net.minecraft.util.EnumFacing.DOWN, this.jigsaw));
         }
 
@@ -198,8 +222,8 @@ public final class ModernPools {
         }
 
         @Override
-        List<ModernTemplate.PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, Random random) {
-            return this.elements.get(0).jigsaws(at, rotation, random);
+        List<ModernTemplate.PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, Random random, boolean sorted) {
+            return this.elements.get(0).jigsaws(at, rotation, random, sorted);
         }
 
         @Override
