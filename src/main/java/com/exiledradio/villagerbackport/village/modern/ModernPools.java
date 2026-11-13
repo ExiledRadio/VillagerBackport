@@ -51,6 +51,7 @@ public final class ModernPools {
         /** Each distinct element once, in file order. Pieces save their element as an index into this. */
         final List<Element> distinct = new ArrayList<Element>();
         private int maxHeight = Integer.MIN_VALUE;
+        private int maxHeight118 = Integer.MIN_VALUE;
 
         Pool(String name, String fallback) {
             this.name = name;
@@ -89,17 +90,27 @@ public final class ModernPools {
             return this.expanded.size();
         }
 
-        /** {@code func_214945_a}: the tallest element, for reserving room above a piece. */
-        int maxHeight() {
-            if (this.maxHeight == Integer.MIN_VALUE) {
+        /**
+         * {@code func_214945_a}: the tallest element, for reserving room above a piece.
+         *
+         * @param modern measured on 1.18.2's templates (see {@link ModernTemplate#get(String, boolean)})
+         */
+        int maxHeight(boolean modern) {
+            int cached = modern ? this.maxHeight118 : this.maxHeight;
+            if (cached == Integer.MIN_VALUE) {
                 int max = 0;
                 for (Element e : this.expanded) {
-                    StructureBoundingBox box = e.boundingBox(BlockPos.ORIGIN, Rotation.NONE);
+                    StructureBoundingBox box = e.boundingBox(BlockPos.ORIGIN, Rotation.NONE, modern);
                     max = Math.max(max, box.getYSize());
                 }
-                this.maxHeight = max;
+                cached = max;
+                if (modern) {
+                    this.maxHeight118 = max;
+                } else {
+                    this.maxHeight = max;
+                }
             }
-            return this.maxHeight;
+            return cached;
         }
     }
 
@@ -115,16 +126,22 @@ public final class ModernPools {
         }
 
         /**
-         * The element's jigsaws placed at {@code at}, shuffled. {@code sorted}: listed in 1.18.2's order before the
-         * shuffle (see {@link ModernTemplate#jigsaws}), not 1.14's.
+         * The element's jigsaws placed at {@code at}, shuffled. {@code modern}: from 1.18.2's templates (see
+         * {@link ModernTemplate#get(String, boolean)}), listed in 1.18.2's order before the shuffle (see
+         * {@link ModernTemplate#jigsaws}), not 1.14's.
          */
-        abstract List<ModernTemplate.PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, Random random, boolean sorted);
+        abstract List<ModernTemplate.PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, Random random, boolean modern);
 
         final List<ModernTemplate.PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, Random random) {
             return jigsaws(at, rotation, random, false);
         }
 
-        abstract StructureBoundingBox boundingBox(BlockPos at, Rotation rotation);
+        /** @param modern the box of 1.18.2's template rather than 1.14's */
+        abstract StructureBoundingBox boundingBox(BlockPos at, Rotation rotation, boolean modern);
+
+        final StructureBoundingBox boundingBox(BlockPos at, Rotation rotation) {
+            return boundingBox(at, rotation, false);
+        }
 
         /** 1.14's default ground level delta, used for every element type. */
         int groundLevelDelta() {
@@ -142,12 +159,12 @@ public final class ModernPools {
         }
 
         @Override
-        List<ModernTemplate.PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, Random random, boolean sorted) {
+        List<ModernTemplate.PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, Random random, boolean modern) {
             return Collections.emptyList();
         }
 
         @Override
-        StructureBoundingBox boundingBox(BlockPos at, Rotation rotation) {
+        StructureBoundingBox boundingBox(BlockPos at, Rotation rotation, boolean modern) {
             return new StructureBoundingBox(at, at);
         }
 
@@ -175,17 +192,22 @@ public final class ModernPools {
         }
 
         ModernTemplate template() {
-            return ModernTemplate.get(this.location);
+            return template(false);
+        }
+
+        /** @param modern 1.18.2's version of the template, where Mojang changed it after 1.14 */
+        ModernTemplate template(boolean modern) {
+            return ModernTemplate.get(this.location, modern);
         }
 
         @Override
-        List<ModernTemplate.PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, Random random, boolean sorted) {
-            return template().jigsaws(at, rotation, random, sorted);
+        List<ModernTemplate.PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, Random random, boolean modern) {
+            return template(modern).jigsaws(at, rotation, random, modern);
         }
 
         @Override
-        StructureBoundingBox boundingBox(BlockPos at, Rotation rotation) {
-            return template().boundingBox(at, rotation);
+        StructureBoundingBox boundingBox(BlockPos at, Rotation rotation, boolean modern) {
+            return template(modern).boundingBox(at, rotation);
         }
     }
 
@@ -202,12 +224,12 @@ public final class ModernPools {
         }
 
         @Override
-        List<ModernTemplate.PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, Random random, boolean sorted) {
-            return Collections.singletonList(new ModernTemplate.PlacedJigsaw(at, net.minecraft.util.EnumFacing.DOWN, this.jigsaw));
+        List<ModernTemplate.PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, Random random, boolean modern) {
+            return Collections.singletonList(new ModernTemplate.PlacedJigsaw(at, net.minecraft.util.EnumFacing.DOWN, null, this.jigsaw));
         }
 
         @Override
-        StructureBoundingBox boundingBox(BlockPos at, Rotation rotation) {
+        StructureBoundingBox boundingBox(BlockPos at, Rotation rotation, boolean modern) {
             return new StructureBoundingBox(at, at);
         }
     }
@@ -222,15 +244,15 @@ public final class ModernPools {
         }
 
         @Override
-        List<ModernTemplate.PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, Random random, boolean sorted) {
-            return this.elements.get(0).jigsaws(at, rotation, random, sorted);
+        List<ModernTemplate.PlacedJigsaw> jigsaws(BlockPos at, Rotation rotation, Random random, boolean modern) {
+            return this.elements.get(0).jigsaws(at, rotation, random, modern);
         }
 
         @Override
-        StructureBoundingBox boundingBox(BlockPos at, Rotation rotation) {
+        StructureBoundingBox boundingBox(BlockPos at, Rotation rotation, boolean modern) {
             StructureBoundingBox box = null;
             for (Element e : this.elements) {
-                StructureBoundingBox b = e.boundingBox(at, rotation);
+                StructureBoundingBox b = e.boundingBox(at, rotation, modern);
                 if (box == null) {
                     box = new StructureBoundingBox(b);
                 } else {
@@ -331,13 +353,14 @@ public final class ModernPools {
      * {@code RuleStructureProcessor}: the first rule that matches decides the block. Seeded from the
      * position, as 1.14 does, so the same village rebuilt from its seed weathers the same way.
      *
+     * @param modern seeded as 1.18.2 seeds it (see positionSeed)
      * @return the state to place in place of the template's
      */
     @Nullable
     static IBlockState process(List<List<Rule>> processors, ModernTemplate.PaletteEntry source, @Nullable IBlockState state,
-                               World world, BlockPos pos) {
+                               World world, BlockPos pos, boolean modern) {
         for (List<Rule> rules : processors) {
-            Random random = new Random(positionSeed(pos));
+            Random random = new Random(positionSeed(pos, modern));
             for (Rule rule : rules) {
                 if (rule.matches(source, world, pos, random)) {
                     state = rule.output();
@@ -353,13 +376,18 @@ public final class ModernPools {
      * does not have it.
      */
     /** @return true if 1.14's {@code IntegrityProcessor} keeps the block placed here */
-    static boolean keeps(SingleElement element, BlockPos pos) {
-        return element.integrity >= 1.0F || new Random(positionSeed(pos)).nextFloat() <= element.integrity;
+    static boolean keeps(SingleElement element, BlockPos pos, boolean modern) {
+        return element.integrity >= 1.0F || new Random(positionSeed(pos, modern)).nextFloat() <= element.integrity;
     }
 
-    private static long positionSeed(BlockPos pos) {
+    /**
+     * @param modern 1.18.2's {@code Mth.getSeed}, which drops the low 16 bits; without it, 1.12.2's
+     *               {@code getCoordinateRandom}, as this port has always seeded 1.14's villages
+     */
+    private static long positionSeed(BlockPos pos, boolean modern) {
         long seed = (long) (pos.getX() * 3129871) ^ (long) pos.getZ() * 116129781L ^ (long) pos.getY();
-        return seed * seed * 42317861L + seed * 11L;
+        seed = seed * seed * 42317861L + seed * 11L;
+        return modern ? seed >> 16 : seed;
     }
 
     // ---------------------------------------------------------------------------------------------

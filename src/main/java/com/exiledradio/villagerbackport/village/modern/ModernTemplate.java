@@ -38,10 +38,20 @@ import java.util.Map;
  *
  * <p>Jigsaw blocks are pulled out into their own list. In the world each one is replaced by its
  * final state, as 1.14's {@code JigsawReplacementStructureProcessor} does.
+ *
+ * <h2>1.18.2's versions</h2>
+ * Mojang changed some of the files after 1.14: more jigsaws on the outpost's feature plate and on some houses
+ * and streets, terminators that ask for nothing, a resized savanna mason, fixed beds, doors and snow. Where the
+ * world generator lays villages out as 1.18.2 does, the same converter's output of 1.18.2's files is used
+ * instead, from {@code structures/v1_18/}, which holds only the files that changed.
  */
 public final class ModernTemplate {
 
     private static final Map<String, ModernTemplate> CACHE = new HashMap<String, ModernTemplate>();
+    private static final Map<String, ModernTemplate> CACHE_118 = new HashMap<String, ModernTemplate>();
+
+    /** Where 1.18.2's changed templates are kept, beside 1.14's. */
+    private static final String V118 = "v1_18/";
 
     /** A missing template, so a bad pool entry costs one log line rather than a crash. */
     private static final ModernTemplate EMPTY = new ModernTemplate("empty", new NBTTagCompound());
@@ -125,18 +135,41 @@ public final class ModernTemplate {
         }
     }
 
-    /** A jigsaw connector, in template coordinates. */
+    /**
+     * A jigsaw connector, in template coordinates.
+     *
+     * <p>1.14 gives a jigsaw one attachment type, and two jigsaws join when theirs are equal. 1.16 and later give it a
+     * name and a target instead, and it joins a jigsaw named its target; Mojang's upgrade of 1.14's files sets both to
+     * the old attachment type, so a 1.14 file reads here as that. A 1.16 jigsaw also has a top, the way it is turned
+     * about its front, and a joint: a rollable one joins whatever way the other is turned, an aligned one only a
+     * jigsaw turned the same way. 1.14's horizontal jigsaws are aligned with their top up, its vertical ones rollable.
+     */
     static final class Jigsaw {
         final BlockPos pos;
         final EnumFacing facing;
         final String pool;
-        final String attachment;
+        final String name;
+        final String target;
+        /** null where it never matters: a rollable 1.14 jigsaw. */
+        @Nullable
+        final EnumFacing top;
+        final boolean rollable;
 
+        /** A 1.14 jigsaw. */
         Jigsaw(BlockPos pos, EnumFacing facing, String pool, String attachment) {
+            this(pos, facing, pool, attachment, attachment, facing.getAxis().isHorizontal() ? EnumFacing.UP : null, "");
+        }
+
+        /** @param joint 1.16's "rollable" or "aligned", or "" for the default: aligned when horizontal */
+        Jigsaw(BlockPos pos, EnumFacing facing, String pool, String name, String target, @Nullable EnumFacing top,
+               String joint) {
             this.pos = pos;
             this.facing = facing;
             this.pool = pool;
-            this.attachment = attachment;
+            this.name = name;
+            this.target = target;
+            this.top = top;
+            this.rollable = joint.isEmpty() ? !facing.getAxis().isHorizontal() : "rollable".equals(joint);
         }
     }
 
@@ -162,17 +195,26 @@ public final class ModernTemplate {
     static final class PlacedJigsaw {
         final BlockPos pos;
         final EnumFacing facing;
+        @Nullable
+        final EnumFacing top;
         final Jigsaw source;
 
-        PlacedJigsaw(BlockPos pos, EnumFacing facing, Jigsaw source) {
+        PlacedJigsaw(BlockPos pos, EnumFacing facing, @Nullable EnumFacing top, Jigsaw source) {
             this.pos = pos;
             this.facing = facing;
+            this.top = top;
             this.source = source;
         }
 
-        /** 1.14's {@code JigsawBlock.func_220171_a}: facing each other, and the same attachment type. */
+        /**
+         * 1.18.2's {@code JigsawBlock.canAttach}, with this the parent's jigsaw: facing each other, turned alike unless
+         * this one is rollable, and the other named this one's target. For 1.14's files that is 1.14's
+         * {@code JigsawBlock.func_220171_a}: facing each other, and the same attachment type.
+         */
         boolean attachesTo(PlacedJigsaw other) {
-            return this.facing == other.facing.getOpposite() && this.source.attachment.equals(other.source.attachment);
+            return this.facing == other.facing.getOpposite()
+                    && (this.source.rollable || this.top == other.top)
+                    && this.source.target.equals(other.source.name);
         }
     }
 
@@ -199,8 +241,14 @@ public final class ModernTemplate {
         for (int i = 0; i < jigsawList.tagCount(); i++) {
             NBTTagCompound j = jigsawList.getCompoundTagAt(i);
             int[] p = j.getIntArray("pos");
-            this.jigsaws.add(new Jigsaw(new BlockPos(p[0], p[1], p[2]), EnumFacing.byName(j.getString("facing")),
-                    j.getString("pool"), j.getString("attach")));
+            BlockPos pos = new BlockPos(p[0], p[1], p[2]);
+            EnumFacing facing = EnumFacing.byName(j.getString("facing"));
+            if (j.hasKey("target")) {
+                this.jigsaws.add(new Jigsaw(pos, facing, j.getString("pool"), j.getString("name"), j.getString("target"),
+                        EnumFacing.byName(j.getString("top")), j.getString("joint")));
+            } else {
+                this.jigsaws.add(new Jigsaw(pos, facing, j.getString("pool"), j.getString("attach")));
+            }
         }
 
         NBTTagList entityList = tag.getTagList("entities", 10);
@@ -219,8 +267,28 @@ public final class ModernTemplate {
         return template;
     }
 
+    /**
+     * @param modern 1.18.2's version where it differs from 1.14's, for villages laid out as 1.18.2 lays them out;
+     *               1.14's file where Mojang left it alone
+     */
+    public static synchronized ModernTemplate get(String location, boolean modern) {
+        if (!modern) {
+            return get(location);
+        }
+        ModernTemplate template = CACHE_118.get(location);
+        if (template == null) {
+            template = ModernTemplate.class.getResource(path(V118 + location)) != null ? load(V118 + location) : get(location);
+            CACHE_118.put(location, template);
+        }
+        return template;
+    }
+
+    private static String path(String location) {
+        return "/assets/" + VillagerBackport.MOD_ID + "/structures/" + location + ".nbt";
+    }
+
     private static ModernTemplate load(String location) {
-        String path = "/assets/" + VillagerBackport.MOD_ID + "/structures/" + location + ".nbt";
+        String path = path(location);
         InputStream in = ModernTemplate.class.getResourceAsStream(path);
         if (in == null) {
             VillagerBackport.LOGGER.warn("Village structure {} is missing from the jar.", location);
@@ -282,7 +350,8 @@ public final class ModernTemplate {
         List<Jigsaw> source = sorted ? sortedJigsaws() : this.jigsaws;
         List<PlacedJigsaw> out = new ArrayList<PlacedJigsaw>(source.size());
         for (Jigsaw j : source) {
-            out.add(new PlacedJigsaw(transform(j.pos, rotation).add(at), rotation.rotate(j.facing), j));
+            out.add(new PlacedJigsaw(transform(j.pos, rotation).add(at), rotation.rotate(j.facing),
+                    j.top == null ? null : rotation.rotate(j.top), j));
         }
         if (random != null) {
             Collections.shuffle(out, random);

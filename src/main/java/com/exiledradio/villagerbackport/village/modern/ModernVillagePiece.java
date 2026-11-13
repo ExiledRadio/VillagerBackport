@@ -67,6 +67,8 @@ public class ModernVillagePiece extends StructureComponent
     private BlockPos pos;
     private int groundLevelDelta;
     private Rotation rotation;
+    /** Built from 1.18.2's templates (see ModernTemplate.get(String, boolean)). Saved only when set. */
+    private boolean modern;
 
     /** For loading from disk. */
     /** @return the 1.14 pool this piece was drawn from, e.g. {@code village/plains/streets} */
@@ -78,8 +80,9 @@ public class ModernVillagePiece extends StructureComponent
     }
 
     ModernVillagePiece(ModernPools.Element element, BlockPos pos, int groundLevelDelta, Rotation rotation,
-                       StructureBoundingBox box) {
+                       StructureBoundingBox box, boolean modern) {
         super(0);
+        this.modern = modern;
         this.poolName = element.pool.name;
         this.elementIndex = element.index;
         this.pos = pos;
@@ -136,6 +139,9 @@ public class ModernVillagePiece extends StructureComponent
         tag.setInteger("PosZ", this.pos.getZ());
         tag.setInteger("GroundLevelDelta", this.groundLevelDelta);
         tag.setString("Rotation", this.rotation.name());
+        if (this.modern) {
+            tag.setBoolean("Modern", true);
+        }
     }
 
     @Override
@@ -149,6 +155,7 @@ public class ModernVillagePiece extends StructureComponent
         } catch (IllegalArgumentException e) {
             this.rotation = Rotation.NONE;
         }
+        this.modern = tag.getBoolean("Modern");
     }
 
     @Override
@@ -183,7 +190,7 @@ public class ModernVillagePiece extends StructureComponent
     }
 
     private void placeTemplate(ModernPools.SingleElement element, World world, Random random, StructureBoundingBox area) {
-        ModernTemplate template = element.template();
+        ModernTemplate template = element.template(this.modern);
         boolean rigid = element.projection == ModernPools.Projection.RIGID;
         int floor = this.boundingBox.minY + this.groundLevelDelta;
         Set<Long> foundation = new HashSet<Long>();
@@ -213,10 +220,13 @@ public class ModernVillagePiece extends StructureComponent
                 continue;
             }
 
-            if (!ModernPools.keeps(element, at)) {
+            // 1.18.2 runs a terrain-matching piece's processors before it drops the block onto the ground (its
+            // GravityProcessor comes last), so their rolls and their world tests are at the piece's own height.
+            BlockPos ruleAt = this.modern && !rigid ? new BlockPos(x, this.pos.getY() + rel.getY(), z) : at;
+            if (!ModernPools.keeps(element, ruleAt, this.modern)) {
                 continue;
             }
-            state = ModernPools.process(element.processors, entry, state, world, at);
+            state = ModernPools.process(element.processors, entry, state, world, ruleAt, this.modern);
             if (state == null) {
                 continue;
             }

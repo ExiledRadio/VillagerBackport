@@ -15,10 +15,8 @@ import nbt
 import blockmap
 from nbt import Tag, TagList, STRING, COMPOUND, INT, DOUBLE, FLOAT
 
-src_root, pools_path, out_root = sys.argv[1], sys.argv[2], sys.argv[3]
-kind = sys.argv[4] if len(sys.argv) > 4 else "village"
-struct_root = os.path.join(src_root, "structures", kind)
-out_struct = os.path.join(out_root, "structures", kind)
+kind = "village"
+struct_root = out_struct = None
 
 unmapped = collections.Counter()
 skipped_entities = collections.Counter()
@@ -135,9 +133,39 @@ def convert_entity(e):
     return out
 
 
-def convert_template(path, rel):
+# 1.18.2's names and properties for blocks that 1.14 named otherwise, put back to 1.14's: blockmap and the pools'
+# processors are written against 1.14's.
+RENAMED_118 = {"minecraft:dirt_path": "minecraft:grass_path"}
+
+
+def upgrade_state(st):
+    """A 1.18.2 palette state as 1.14 would have written it. 1.14 states pass through unchanged."""
+    name = st["Name"]
+    props = st.get("Properties")
+    name = RENAMED_118.get(name, name)
+    if props and name.endswith("_wall") and props.get("north") in ("none", "low", "tall"):
+        props = dict(props)
+        for side in ("north", "east", "south", "west"):
+            if side in props:
+                props[side] = "false" if props[side] == "none" else "true"
+    if name == "minecraft:water_cauldron":
+        name = "minecraft:cauldron"
+    elif name == "minecraft:cauldron" and props is None:
+        props = {"level": "0"}
+    # Properties 1.14 did not have yet: the bell's powered (1.15) and the lantern's waterlogged (1.16).
+    for block, extra in (("minecraft:bell", "powered"), ("minecraft:lantern", "waterlogged")):
+        if name == block and props and extra in props:
+            props = {k: v for k, v in props.items() if k != extra}
+    out = {"Name": name}
+    if props is not None:
+        out["Properties"] = props
+    return out
+
+
+def convert_template(path, rel, dest_root=None):
+    """dest_root: the folder to write into, by default out_struct. Takes 1.14's format or 1.18.2's."""
     t = nbt.load(path)
-    pal14 = [nbt.plain(p) for p in t["palette"]]
+    pal14 = [upgrade_state(nbt.plain(p)) for p in t["palette"]]
     pal = Palette()
     blocks = []
     jigsaws = []
@@ -150,10 +178,20 @@ def convert_template(path, rel):
         te14p = nbt.plain(te14) if te14 is not None else None
         if name == "minecraft:jigsaw":
             fname, fprops = parse_state_string(te14p.get("final_state", "minecraft:air"))
+            up = upgrade_state({"Name": fname, "Properties": fprops})
+            fname, fprops = up["Name"], up["Properties"]
             idx = pal.add(fname, fprops)
-            jigsaws.append({"pos": Tag(nbt.INT_ARRAY, pos), "facing": props["facing"],
-                            "pool": te14p["target_pool"].replace("minecraft:", ""),
-                            "attach": te14p["attachement_type"], "state": Tag(INT, idx)})
+            if "orientation" in props:
+                # 1.18.2: the block's orientation is front_top, and the connector names itself and its target.
+                front, top = props["orientation"].split("_")
+                jigsaws.append({"pos": Tag(nbt.INT_ARRAY, pos), "facing": front, "top": top,
+                                "pool": te14p["pool"].replace("minecraft:", ""),
+                                "name": te14p["name"], "target": te14p["target"],
+                                "joint": te14p.get("joint", ""), "state": Tag(INT, idx)})
+            else:
+                jigsaws.append({"pos": Tag(nbt.INT_ARRAY, pos), "facing": props["facing"],
+                                "pool": te14p["target_pool"].replace("minecraft:", ""),
+                                "attach": te14p["attachement_type"], "state": Tag(INT, idx)})
             blocks.append({"pos": Tag(nbt.INT_ARRAY, pos), "state": Tag(INT, idx)})
             continue
         if name == "minecraft:structure_block":
@@ -173,7 +211,7 @@ def convert_template(path, rel):
     out = {"size": Tag(nbt.INT_ARRAY, size), "palette": pal.tag(),
            "blocks": TagList(COMPOUND, blocks), "jigsaws": TagList(COMPOUND, jigsaws),
            "entities": TagList(COMPOUND, ents)}
-    dest = os.path.join(out_struct, rel)
+    dest = os.path.join(dest_root or out_struct, rel)
     os.makedirs(os.path.dirname(dest), exist_ok=True)
     nbt.save(dest, out)
     return len(blocks), len(jigsaws), len(ents)
@@ -185,130 +223,141 @@ def _plain_get(d, k):
     return d.get(k)
 
 
-count = 0
-for path in sorted(glob.glob(os.path.join(struct_root, "**", "*.nbt"), recursive=True)):
-    rel = os.path.relpath(path, struct_root).replace("\\", "/")
-    convert_template(path, rel)
-    count += 1
+def main(argv):
+    global kind, struct_root, out_struct
+    src_root, pools_path, out_root = argv[1], argv[2], argv[3]
+    kind = argv[4] if len(argv) > 4 else "village"
+    struct_root = os.path.join(src_root, "structures", kind)
+    out_struct = os.path.join(out_root, "structures", kind)
+
+    count = 0
+    for path in sorted(glob.glob(os.path.join(struct_root, "**", "*.nbt"), recursive=True)):
+        rel = os.path.relpath(path, struct_root).replace("\\", "/")
+        convert_template(path, rel)
+        count += 1
 
 
-# ---- pools: map processor outputs and location tests to 1.12.2; input tests keep 1.14 names, since
-# templates carry each block's 1.14 source name for exactly this.
-WORLD_NAMES = {"minecraft:water": ["minecraft:water", "minecraft:flowing_water"],
-               "minecraft:grass_block": ["minecraft:grass"], "minecraft:dirt": ["minecraft:dirt"],
-               "minecraft:air": ["minecraft:air"], "minecraft:sand": ["minecraft:sand"]}
+    # ---- pools: map processor outputs and location tests to 1.12.2; input tests keep 1.14 names, since
+    # templates carry each block's 1.14 source name for exactly this.
+    WORLD_NAMES = {"minecraft:water": ["minecraft:water", "minecraft:flowing_water"],
+                   "minecraft:grass_block": ["minecraft:grass"], "minecraft:dirt": ["minecraft:dirt"],
+                   "minecraft:air": ["minecraft:air"], "minecraft:sand": ["minecraft:sand"]}
 
 
-def map_output(state):
-    names, props, te = blockmap.map_state(state["name"], state["props"])
-    return {"names": names, "props": props}
+    def map_output(state):
+        names, props, te = blockmap.map_state(state["name"], state["props"])
+        return {"names": names, "props": props}
 
 
-def map_test(test, where):
-    if where == "location" and test["kind"] == "block":
-        if test["block"] not in WORLD_NAMES:
-            raise SystemExit("no world mapping for location test " + test["block"])
-        return {"kind": "world_block", "blocks": WORLD_NAMES[test["block"]]}
-    return test
+    def map_test(test, where):
+        if where == "location" and test["kind"] == "block":
+            if test["block"] not in WORLD_NAMES:
+                raise SystemExit("no world mapping for location test " + test["block"])
+            return {"kind": "world_block", "blocks": WORLD_NAMES[test["block"]]}
+        return test
 
 
-raw = json.load(open(pools_path))
-pools = {}
-for name, pool in raw.items():
-    if not name.startswith(kind + "/"):
-        continue
-    elems = []
-    for e in pool["elements"]:
-        el = e["element"]
+    raw = json.load(open(pools_path))
+    pools = {}
+    for name, pool in raw.items():
+        if not name.startswith(kind + "/"):
+            continue
+        elems = []
+        for e in pool["elements"]:
+            el = e["element"]
 
-        def fix(el):
-            if el["type"] == "single":
-                procs = []
-                for rules in el["processors"]:
-                    if isinstance(rules, dict):
-                        procs.append(rules)
+            def fix(el):
+                if el["type"] == "single":
+                    procs = []
+                    for rules in el["processors"]:
+                        if isinstance(rules, dict):
+                            procs.append(rules)
+                            continue
+                        procs.append([{"input": map_test(r["input"], "input"),
+                                       "location": map_test(r["location"], "location"),
+                                       "output": map_output(r["output"])} for r in rules])
+                    el["processors"] = procs
+                    if not os.path.exists(os.path.join(struct_root, el["location"][len(kind + "/"):] + ".nbt")):
+                        raise SystemExit("missing template " + el["location"])
+                if el["type"] == "list":
+                    for sub in el["elements"]:
+                        fix(sub)
+                return el
+
+            elems.append({"element": fix(el), "weight": e["weight"]})
+        pools[name] = {"fallback": pool["fallback"], "projection": pool["projection"], "elements": elems}
+
+    json.dump(pools, open(os.path.join(out_struct, "pools.json"), "w"), indent=1, sort_keys=True)
+
+
+    # ---- loot tables
+    ITEMS = {
+        "acacia_sapling": ("minecraft:sapling", 4), "oak_sapling": ("minecraft:sapling", 0),
+        "spruce_sapling": ("minecraft:sapling", 1), "beetroot_seeds": ("minecraft:beetroot_seeds", 0),
+        "black_wool": ("minecraft:wool", 15), "brown_wool": ("minecraft:wool", 12), "gray_wool": ("minecraft:wool", 7),
+        "light_gray_wool": ("minecraft:wool", 8), "white_wool": ("minecraft:wool", 0),
+        "blue_ice": ("minecraft:packed_ice", 0), "cod": ("minecraft:fish", 0), "salmon": ("minecraft:fish", 1),
+        "dandelion": ("minecraft:yellow_flower", 0), "poppy": ("minecraft:red_flower", 0),
+        "dead_bush": ("minecraft:deadbush", 0), "fern": ("minecraft:tallgrass", 2), "grass": ("minecraft:tallgrass", 1),
+        "large_fern": ("minecraft:double_plant", 3), "tall_grass": ("minecraft:double_plant", 2),
+        "green_dye": ("minecraft:dye", 2), "yellow_dye": ("minecraft:dye", 11), "lapis_lazuli": ("minecraft:dye", 4),
+        "golden_horse_armor": ("minecraft:golden_horse_armor", 0), "iron_horse_armor": ("minecraft:iron_horse_armor", 0),
+        "diamond_horse_armor": ("minecraft:diamond_horse_armor", 0),
+        "smooth_stone": ("minecraft:stone_slab", 0), "stone_bricks": ("minecraft:stonebrick", 0),
+        "snow_block": ("minecraft:snow", 0), "spruce_log": ("minecraft:log", 1), "spruce_sign": ("minecraft:sign", 0),
+        "barrel": ("villagerbackport:barrel", 0),
+        "dark_oak_log": ("minecraft:log2", 1),
+    }
+    # Sweet berries do not exist in 1.12.2. The crossbow is added at load time instead, from whichever
+    # mod adds one - this mod gives players no crossbow of its own.
+    DROP = {"sweet_berries", "crossbow"}
+
+
+    def convert_loot(path, dest):
+        j = json.load(open(path))
+        j.pop("type", None)
+        for pi, pool in enumerate(j.get("pools", [])):
+            pool.setdefault("name", "pool%d" % pi)
+            entries = []
+            for entry in pool.get("entries", []):
+                if entry.get("type") == "minecraft:item":
+                    short = entry["name"].split(":")[1]
+                    if short in DROP:
                         continue
-                    procs.append([{"input": map_test(r["input"], "input"),
-                                   "location": map_test(r["location"], "location"),
-                                   "output": map_output(r["output"])} for r in rules])
-                el["processors"] = procs
-                if not os.path.exists(os.path.join(struct_root, el["location"][len(kind + "/"):] + ".nbt")):
-                    raise SystemExit("missing template " + el["location"])
-            if el["type"] == "list":
-                for sub in el["elements"]:
-                    fix(sub)
-            return el
-
-        elems.append({"element": fix(el), "weight": e["weight"]})
-    pools[name] = {"fallback": pool["fallback"], "projection": pool["projection"], "elements": elems}
-
-json.dump(pools, open(os.path.join(out_struct, "pools.json"), "w"), indent=1, sort_keys=True)
-
-
-# ---- loot tables
-ITEMS = {
-    "acacia_sapling": ("minecraft:sapling", 4), "oak_sapling": ("minecraft:sapling", 0),
-    "spruce_sapling": ("minecraft:sapling", 1), "beetroot_seeds": ("minecraft:beetroot_seeds", 0),
-    "black_wool": ("minecraft:wool", 15), "brown_wool": ("minecraft:wool", 12), "gray_wool": ("minecraft:wool", 7),
-    "light_gray_wool": ("minecraft:wool", 8), "white_wool": ("minecraft:wool", 0),
-    "blue_ice": ("minecraft:packed_ice", 0), "cod": ("minecraft:fish", 0), "salmon": ("minecraft:fish", 1),
-    "dandelion": ("minecraft:yellow_flower", 0), "poppy": ("minecraft:red_flower", 0),
-    "dead_bush": ("minecraft:deadbush", 0), "fern": ("minecraft:tallgrass", 2), "grass": ("minecraft:tallgrass", 1),
-    "large_fern": ("minecraft:double_plant", 3), "tall_grass": ("minecraft:double_plant", 2),
-    "green_dye": ("minecraft:dye", 2), "yellow_dye": ("minecraft:dye", 11), "lapis_lazuli": ("minecraft:dye", 4),
-    "golden_horse_armor": ("minecraft:golden_horse_armor", 0), "iron_horse_armor": ("minecraft:iron_horse_armor", 0),
-    "diamond_horse_armor": ("minecraft:diamond_horse_armor", 0),
-    "smooth_stone": ("minecraft:stone_slab", 0), "stone_bricks": ("minecraft:stonebrick", 0),
-    "snow_block": ("minecraft:snow", 0), "spruce_log": ("minecraft:log", 1), "spruce_sign": ("minecraft:sign", 0),
-    "barrel": ("villagerbackport:barrel", 0),
-    "dark_oak_log": ("minecraft:log2", 1),
-}
-# Sweet berries do not exist in 1.12.2. The crossbow is added at load time instead, from whichever
-# mod adds one - this mod gives players no crossbow of its own.
-DROP = {"sweet_berries", "crossbow"}
+                    if short in ITEMS:
+                        name, data = ITEMS[short]
+                        entry["name"] = name
+                        if data:
+                            entry.setdefault("functions", []).append({"function": "minecraft:set_data", "data": data})
+                    entry["type"] = "item"
+                    entry.setdefault("entryName", entry["name"] + "#" + str(len(entries)))
+                entries.append(entry)
+            pool["entries"] = entries
+            for fn in pool.get("functions", []):
+                pass
+            for entry in entries:
+                for fn in entry.get("functions", []):
+                    fn["function"] = fn["function"].replace("minecraft:", "")
+                    cnt = fn.get("count")
+                    if isinstance(cnt, dict) and cnt.get("type") == "minecraft:uniform":
+                        cnt.pop("type")
+            roll = pool.get("rolls")
+            if isinstance(roll, dict) and roll.get("type") == "minecraft:uniform":
+                roll.pop("type")
+        os.makedirs(os.path.dirname(dest), exist_ok=True)
+        json.dump(j, open(dest, "w"), indent=2)
 
 
-def convert_loot(path, dest):
-    j = json.load(open(path))
-    j.pop("type", None)
-    for pi, pool in enumerate(j.get("pools", [])):
-        pool.setdefault("name", "pool%d" % pi)
-        entries = []
-        for entry in pool.get("entries", []):
-            if entry.get("type") == "minecraft:item":
-                short = entry["name"].split(":")[1]
-                if short in DROP:
-                    continue
-                if short in ITEMS:
-                    name, data = ITEMS[short]
-                    entry["name"] = name
-                    if data:
-                        entry.setdefault("functions", []).append({"function": "minecraft:set_data", "data": data})
-                entry["type"] = "item"
-                entry.setdefault("entryName", entry["name"] + "#" + str(len(entries)))
-            entries.append(entry)
-        pool["entries"] = entries
-        for fn in pool.get("functions", []):
-            pass
-        for entry in entries:
-            for fn in entry.get("functions", []):
-                fn["function"] = fn["function"].replace("minecraft:", "")
-                cnt = fn.get("count")
-                if isinstance(cnt, dict) and cnt.get("type") == "minecraft:uniform":
-                    cnt.pop("type")
-        roll = pool.get("rolls")
-        if isinstance(roll, dict) and roll.get("type") == "minecraft:uniform":
-            roll.pop("type")
-    os.makedirs(os.path.dirname(dest), exist_ok=True)
-    json.dump(j, open(dest, "w"), indent=2)
+    loot_src = os.path.join(src_root, "loot_tables", "chests", kind)
+    for f in glob.glob(os.path.join(loot_src, "*.json")):
+        convert_loot(f, os.path.join(out_root, "loot_tables", "chests", kind, os.path.basename(f)))
+    if os.path.isfile(loot_src + ".json"):
+        convert_loot(loot_src + ".json", os.path.join(out_root, "loot_tables", "chests", kind + ".json"))
+
+    print("templates", count)
+    print("unmapped", dict(unmapped))
+    print("skipped entities", dict(skipped_entities))
 
 
-loot_src = os.path.join(src_root, "loot_tables", "chests", kind)
-for f in glob.glob(os.path.join(loot_src, "*.json")):
-    convert_loot(f, os.path.join(out_root, "loot_tables", "chests", kind, os.path.basename(f)))
-if os.path.isfile(loot_src + ".json"):
-    convert_loot(loot_src + ".json", os.path.join(out_root, "loot_tables", "chests", kind + ".json"))
-
-print("templates", count)
-print("unmapped", dict(unmapped))
-print("skipped entities", dict(skipped_entities))
+if __name__ == "__main__":
+    main(sys.argv)

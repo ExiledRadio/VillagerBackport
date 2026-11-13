@@ -24,6 +24,7 @@ public final class SelfTestRunner {
             new WaterlogSelfTest(),
             new PickleMoveSelfTest(),
             new LocateSelfTest(),
+            new Templates118SelfTest(),
     };
 
     private final List<String> wanted;

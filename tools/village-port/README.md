@@ -33,3 +33,19 @@ python -I tools/village-port/convert.py v14/data/minecraft outpost_pools.json sr
 
 The chest's crossbow is dropped from the JSON and added at load time by `OutpostGenerator`, from
 whichever mod adds a crossbow.
+
+## 1.18.2's changed templates
+
+Mojang changed some of these files after 1.14.4: more jigsaws on the outpost's feature plate and on some houses
+and streets, terminators that ask for nothing, a resized savanna mason, fixed beds, doors and snow. Villages and
+outposts laid out as 1.18.2 lays them out (Backport Core's 1.18 rule starts) read the 1.18.2 file where it differs.
+Extract the same folders from the 1.18.2 jar as from the 1.14.4 one, then:
+
+```
+python -I tools/village-port/convert118.py v14/data/minecraft v18/data/minecraft src/main/resources/assets/villagerbackport
+```
+
+It converts both versions and writes the 1.18.2 file to `structures/v1_18/` wherever the converted blocks, size,
+jigsaws or entities differ, after putting 1.18.2's renamed blocks and new properties back to 1.14's. A 1.18.2
+jigsaw keeps its name, target, top and joint; a 1.14 one keeps its attachment type, which is both its name and its
+target.

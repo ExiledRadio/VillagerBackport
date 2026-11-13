@@ -198,7 +198,8 @@ public class ModernVillageStart extends StructureStart {
         /**
          * Laid out as 1.18.2's {@code JigsawPlacement} does where it differs from this 1.14 port: a template's jigsaws
          * are listed in 1.18.2's order before each shuffle (see ModernTemplate.jigsaws), and pools are shuffled with
-         * fastutil's shuffle (see ModernPools.Pool.shuffled).
+         * fastutil's shuffle (see ModernPools.Pool.shuffled). And the templates are 1.18.2's, where Mojang changed them
+         * after 1.14 (see ModernTemplate.get(String, boolean)).
          */
         private final boolean modern;
 
@@ -219,8 +220,9 @@ public class ModernVillageStart extends StructureStart {
             }
             Rotation rotation = Rotation.values()[this.random.nextInt(Rotation.values().length)];
             ModernPools.Element element = pool.random(this.random);
-            StructureBoundingBox box = element.boundingBox(origin, rotation);
-            ModernVillagePiece start = new ModernVillagePiece(element, origin, element.groundLevelDelta(), rotation, box);
+            StructureBoundingBox box = element.boundingBox(origin, rotation, this.modern);
+            ModernVillagePiece start = new ModernVillagePiece(element, origin, element.groundLevelDelta(), rotation, box,
+                    this.modern);
 
             int cx = (box.maxX + box.minX) / 2;
             int cz = (box.maxZ + box.minZ) / 2;
@@ -286,7 +288,7 @@ public class ModernVillageStart extends StructureStart {
 
                     for (Rotation rotation : shuffledRotations()) {
                         List<ModernTemplate.PlacedJigsaw> theirs = candidate.jigsaws(BlockPos.ORIGIN, rotation, this.random, this.modern);
-                        StructureBoundingBox bare = candidate.boundingBox(BlockPos.ORIGIN, rotation);
+                        StructureBoundingBox bare = candidate.boundingBox(BlockPos.ORIGIN, rotation, this.modern);
                         int headroom = headroom(theirs, bare);
 
                         for (ModernTemplate.PlacedJigsaw their : theirs) {
@@ -296,7 +298,7 @@ public class ModernVillageStart extends StructureStart {
                             BlockPos theirPos = their.pos;
                             BlockPos at = new BlockPos(target.getX() - theirPos.getX(), target.getY() - theirPos.getY(),
                                     target.getZ() - theirPos.getZ());
-                            StructureBoundingBox box = candidate.boundingBox(at, rotation);
+                            StructureBoundingBox box = candidate.boundingBox(at, rotation, this.modern);
                             boolean childRigid = candidate.projection == ModernPools.Projection.RIGID;
                             int theirY = theirPos.getY();
                             int dy = fromRelY - theirY + facing.getYOffset();
@@ -323,7 +325,8 @@ public class ModernVillageStart extends StructureStart {
                             if (space.fits(placed)) {
                                 space.take(placed);
                                 int groundLevelDelta = childRigid ? parent.groundLevelDelta() - dy : candidate.groundLevelDelta();
-                                ModernVillagePiece child = new ModernVillagePiece(candidate, placedAt, groundLevelDelta, rotation, placed);
+                                ModernVillagePiece child = new ModernVillagePiece(candidate, placedAt, groundLevelDelta, rotation, placed,
+                                        this.modern);
                                 this.pieces.add(child);
                                 if (depth + 1 <= this.maxDepth) {
                                     this.queue.addLast(new Entry(child, space, depth + 1));
@@ -351,7 +354,7 @@ public class ModernVillageStart extends StructureStart {
                 }
                 ModernPools.Pool p = ModernPools.get(j.source.pool);
                 ModernPools.Pool f = p == null ? null : ModernPools.get(p.fallback);
-                max = Math.max(max, Math.max(p == null ? 0 : p.maxHeight(), f == null ? 0 : f.maxHeight()));
+                max = Math.max(max, Math.max(p == null ? 0 : p.maxHeight(this.modern), f == null ? 0 : f.maxHeight(this.modern)));
             }
             return max;
         }
