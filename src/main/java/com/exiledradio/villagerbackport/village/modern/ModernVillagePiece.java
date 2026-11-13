@@ -56,7 +56,8 @@ import java.util.Set;
  * ground with the biome's own filler. Without either, a house on a slope is half buried on one side
  * and standing on stilts on the other.
  */
-public class ModernVillagePiece extends StructureComponent {
+public class ModernVillagePiece extends StructureComponent
+        implements com.exiledradio.backportcore.structure.TerrainAdaptation.AdaptingPiece {
 
     /** How deep a foundation is filled before giving up, for a house on the edge of a cliff. */
     private static final int MAX_FOUNDATION = 24;
@@ -103,8 +104,21 @@ public class ModernVillagePiece extends StructureComponent {
         return this.rotation;
     }
 
-    int groundLevelDelta() {
+    @Override
+    public int groundLevelDelta() {
         return this.groundLevelDelta;
+    }
+
+    /** For a 1.18 terrain's beardifier (Backport Core's TerrainAdaptation): rigid pieces get a beard of their own. */
+    @Override
+    public boolean rigid() {
+        return element().projection == ModernPools.Projection.RIGID;
+    }
+
+    /** 1.14's jigsaw junctions are not kept by the assembler. */
+    @Override
+    public int[] junctions() {
+        return new int[0];
     }
 
     @Override

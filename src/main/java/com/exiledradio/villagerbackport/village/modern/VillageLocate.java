@@ -65,7 +65,7 @@ public final class VillageLocate {
                 }
                 throw new StructureLocate.Unavailable("commands.villagerbackport.locate.nooutposts");
             }
-            return new StructureLocate.Grid(new ScatteredPlacement(outposts.spacing(), SEPARATION, MapGenOutpost.salt()),
+            return new StructureLocate.Grid(outposts.placement(),
                     (x, z) -> outposts.startsAt(world, x, z) ? "minecraft:pillager_outpost" : null);
         }, "minecraft:pillager_outpost");
     }

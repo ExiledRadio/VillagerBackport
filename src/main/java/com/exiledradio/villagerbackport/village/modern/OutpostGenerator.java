@@ -53,6 +53,15 @@ public final class OutpostGenerator implements IWorldGenerator {
         MapGenStructureIO.registerStructure(OutpostStart.class, "VBP_PillagerOutpost");
         GameRegistry.registerWorldGenerator(new OutpostGenerator(), WEIGHT);
         net.minecraftforge.common.MinecraftForge.EVENT_BUS.register(new Events());
+        // 1.18 terrain (Caves & Cliffs Backport) shapes itself around outposts, as 1.18's outposts' beard_thin.
+        com.exiledradio.backportcore.structure.TerrainAdaptation.register(
+                com.exiledradio.backportcore.structure.Structures.PILLAGER_OUTPOST,
+                com.exiledradio.backportcore.structure.TerrainAdaptation.Kind.BEARD_THIN, (world, chunkX, chunkZ, out) -> {
+                    MapGenOutpost outposts = MapGenOutpost.of(world);
+                    if (outposts != null) {
+                        outposts.startsNear(world, chunkX, chunkZ, out);
+                    }
+                });
     }
 
     @Override
