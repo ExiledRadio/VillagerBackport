@@ -39,6 +39,10 @@ final class JungleBamboo {
             return;
         }
         World world = event.getWorld();
+        // A world generator that places 1.18's features (Caves & Cliffs Backport's) places jungle bamboo itself.
+        if (com.exiledradio.backportcore.worldgen.FeatureSource.places(world, "1.14")) {
+            return;
+        }
         BlockPos corner = event.getChunkPos().getBlock(0, 0, 0);
         Biome biome = world.getBiome(corner.add(16, 0, 16));
         if (biome != Biomes.JUNGLE && biome != Biomes.JUNGLE_HILLS) {

@@ -1,5 +1,11 @@
 package com.exiledradio.villagerbackport.village.modern;
 
+import com.exiledradio.backportcore.structure.ScatteredPlacement;
+import com.exiledradio.backportcore.structure.StartRule;
+import com.exiledradio.backportcore.structure.StartRules;
+import com.exiledradio.backportcore.structure.StructureGenerators;
+import com.exiledradio.backportcore.structure.Structures;
+import com.exiledradio.backportcore.structure.TerrainAdaptation;
 import com.exiledradio.backportcore.terrain.TerrainHeights;
 import com.exiledradio.backportcore.terrain.WorldHeights;
 import com.exiledradio.backportcore.terrain.OtgTerrain;
@@ -36,10 +42,21 @@ import java.lang.reflect.Field;
  *
  * <p>Village spacing is copied from the generator being replaced, so a superflat preset's village
  * settings still apply.
+ *
+ * <p>A world generator that builds its structure generators without Forge's event offers its village generator
+ * through Backport Core's {@code StructureGenerators} instead (Caves &amp; Cliffs Backport's 1.18 terrain), and this
+ * takes its place there too. Where that generator rules where villages start ({@code StartRules}: 1.18.2's village
+ * set, its biome checks and the type each start is), the start check, the nearest search, {@code /locate} and the
+ * village's type follow it, and the 1.18 terrain is shaped around the houses (1.18's beard_thin, through
+ * {@code TerrainAdaptation}).
  */
 public class MapGenModernVillage extends MapGenVillage {
 
     private static boolean registered;
+
+    /** The generators standing in for a world generator's own (Caves &amp; Cliffs Backport's), by world. */
+    private static final java.util.Map<net.minecraft.world.World, MapGenModernVillage> STAND_INS =
+            new java.util.WeakHashMap<net.minecraft.world.World, MapGenModernVillage>();
 
     /** 1.12.2's village spacing in chunks, as copied from the generator replaced. */
     private int spacing = 32;
@@ -117,6 +134,10 @@ public class MapGenModernVillage extends MapGenVillage {
      */
     @Override
     protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ) {
+        StartRule rule = rule();
+        if (rule != null) {
+            return rule.startAt(chunkX, chunkZ) != null;
+        }
         if (this.otgBiomes == null) {
             return startsAtModern(this.world, this.spacing, chunkX, chunkZ);
         }
@@ -161,9 +182,94 @@ public class MapGenModernVillage extends MapGenVillage {
         return canSpawnStructureAtCoords(chunkX, chunkZ);
     }
 
-    /** @return the village grid spacing, in chunks */
+    /** @return the village grid spacing, in chunks (the world generator's, where it rules villages) */
     public int spacing() {
-        return this.spacing;
+        StartRule rule = rule();
+        return rule != null ? rule.grid().spacing() : this.spacing;
+    }
+
+    /** @return the grid villages start on in this world: 1.14's (this generator's spacing), or the world generator's */
+    public ScatteredPlacement placement() {
+        StartRule rule = rule();
+        return rule != null ? rule.grid() : new ScatteredPlacement(this.spacing, 8, 10387312);
+    }
+
+    /** @return {@link #placement()} in this world */
+    public ScatteredPlacement placement(net.minecraft.world.World world) {
+        if (this.world == null) {
+            this.world = world;
+        }
+        return placement();
+    }
+
+    /**
+     * The world generator's rule for where villages start, where it has one (Caves &amp; Cliffs Backport's 1.18
+     * terrain, through Backport Core's {@code StartRules}: 1.18.2's villages), or null for 1.14's.
+     */
+    @javax.annotation.Nullable
+    private StartRule rule() {
+        return this.world == null || this.otg != null ? null : StartRules.of(this.world, Structures.VILLAGE);
+    }
+
+    /** @return the type the world generator's rule names for a start ("village_desert"), or null for none */
+    @javax.annotation.Nullable
+    private static ModernVillageStart.Type ruledType(StartRule rule, int chunkX, int chunkZ) {
+        String id = rule.startAt(chunkX, chunkZ);
+        if (id == null || !id.startsWith("village_")) {
+            return null;
+        }
+        try {
+            return ModernVillageStart.Type.valueOf(id.substring("village_".length()).toUpperCase(java.util.Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            return ModernVillageStart.Type.PLAINS;
+        }
+    }
+
+    @Override
+    public net.minecraft.util.math.BlockPos getNearestStructurePos(net.minecraft.world.World world,
+                                                                   net.minecraft.util.math.BlockPos pos, boolean findUnexplored) {
+        this.world = world;
+        StartRule rule = rule();
+        if (rule != null) {
+            net.minecraft.util.math.ChunkPos c = rule.grid().nearest(world.getSeed(), pos, rule.grid().spacing() * 100,
+                    p -> startTypeAt(world, p.x, p.z) != null && !(findUnexplored && world.isChunkGeneratedAt(p.x, p.z)));
+            return c == null ? null : new net.minecraft.util.math.BlockPos((c.x << 4) + 8, 64, (c.z << 4) + 8);
+        }
+        return super.getNearestStructurePos(world, pos, findUnexplored);
+    }
+
+    /**
+     * Every village whose box (grown by 12 blocks, 1.18's adapt_noise box) reaches a chunk, laid out first if it was
+     * not, for Backport Core's {@code TerrainAdaptation}: a 1.18 generator shapes its terrain around the houses
+     * before the chunk exists. The layout reads only {@code TerrainHeights}, so laying it out early changes nothing.
+     * Loads and generates nothing.
+     */
+    void startsNear(net.minecraft.world.World world, int chunkX, int chunkZ,
+                    java.util.function.Consumer<StructureStart> out) {
+        this.world = world;
+        ScatteredPlacement grid = placement();
+        int s = grid.spacing();
+        int x0 = chunkX << 4;
+        int z0 = chunkZ << 4;
+        for (int gx = Math.floorDiv(chunkX - 8, s); gx <= Math.floorDiv(chunkX + 8, s); gx++) {
+            for (int gz = Math.floorDiv(chunkZ - 8, s); gz <= Math.floorDiv(chunkZ + 8, s); gz++) {
+                net.minecraft.util.math.ChunkPos c = grid.candidate(world.getSeed(), gx * s, gz * s);
+                if (Math.abs(c.x - chunkX) > 8 || Math.abs(c.z - chunkZ) > 8 || !canSpawnStructureAtCoords(c.x, c.z)) {
+                    continue;
+                }
+                long k = net.minecraft.util.math.ChunkPos.asLong(c.x, c.z);
+                StructureStart start = this.structureMap.get(k);
+                if (start == null) {
+                    generate(world, c.x, c.z, null);
+                    start = this.structureMap.get(k);
+                }
+                net.minecraft.world.gen.structure.StructureBoundingBox b = start == null ? null : start.getBoundingBox();
+                if (b != null && start.isSizeableStructure() && b.maxX + 12 >= x0 && b.minX - 12 <= x0 + 15
+                        && b.maxZ + 12 >= z0 && b.minZ - 12 <= z0 + 15) {
+                    out.accept(start);
+                }
+            }
+        }
     }
 
     /** OTG saves its villages as "OTGVillage"; keeping the name keeps the villages already there. */
@@ -206,14 +312,26 @@ public class MapGenModernVillage extends MapGenVillage {
         if (existing != null && (!(existing instanceof ModernVillageStart) || !existing.isSizeableStructure())) {
             return null;
         }
+        StartRule rule = rule();
+        if (rule != null) {
+            return ruledType(rule, chunkX, chunkZ);
+        }
         return typeAt(world.getBiomeProvider().getBiome(new net.minecraft.util.math.BlockPos((chunkX << 4) + 9, 0, (chunkZ << 4) + 9)));
     }
 
     /** @return the overworld's village generator if it is this one and builds 1.14 villages, else null */
     @javax.annotation.Nullable
     public static MapGenModernVillage of(net.minecraft.world.World world) {
-        if (ModConfig.villages.style != Style.MODERN || !(world instanceof net.minecraft.world.WorldServer)
-                || TerrainHeights.forWorld(world) == null) {
+        if (ModConfig.villages.style != Style.MODERN || !(world instanceof net.minecraft.world.WorldServer)) {
+            return null;
+        }
+        synchronized (STAND_INS) {
+            MapGenModernVillage standIn = STAND_INS.get(world);
+            if (standIn != null) {
+                return standIn;
+            }
+        }
+        if (TerrainHeights.forWorld(world) == null) {
             return null;
         }
         net.minecraft.world.gen.IChunkGenerator generator =
@@ -328,10 +446,14 @@ public class MapGenModernVillage extends MapGenVillage {
         if (ModConfig.villages.style == Style.MODERN) {
             TerrainHeights heights = TerrainHeights.forWorld(this.world);
             if (heights != null) {
-                net.minecraft.world.biome.Biome biome = this.world.getBiomeProvider()
-                        .getBiome(new net.minecraft.util.math.BlockPos((chunkX << 4) + 9, 0, (chunkZ << 4) + 9));
-                return new ModernVillageStart(this.world, this.rand, chunkX, chunkZ, heights, typeAt(biome),
-                        villageSize());
+                StartRule rule = rule();
+                ModernVillageStart.Type type = rule != null ? ruledType(rule, chunkX, chunkZ) : null;
+                if (type == null) {
+                    net.minecraft.world.biome.Biome biome = this.world.getBiomeProvider()
+                            .getBiome(new net.minecraft.util.math.BlockPos((chunkX << 4) + 9, 0, (chunkZ << 4) + 9));
+                    type = typeAt(biome);
+                }
+                return new ModernVillageStart(this.world, this.rand, chunkX, chunkZ, heights, type, villageSize());
             }
         }
         if (this.otg != null) {
@@ -408,6 +530,26 @@ public class MapGenModernVillage extends MapGenVillage {
             BiomeManager.addVillageBiome(Biomes.ICE_PLAINS, true);
         }
         MinecraftForge.TERRAIN_GEN_BUS.register(new MapGenModernVillage.Swap());
+        if (ModConfig.villages.style == Style.MODERN) {
+            // A world generator that builds its own village generator (Caves & Cliffs Backport's 1.18 terrain)
+            // offers it through Backport Core; 1.14's villages take its place, and its terrain adapts to them.
+            StructureGenerators.register(Structures.VILLAGE, (world, standIn) -> {
+                if (!(standIn instanceof MapGenVillage) || ModConfig.villages.style != Style.MODERN) {
+                    return null;
+                }
+                MapGenModernVillage villages = new MapGenModernVillage((MapGenVillage) standIn);
+                synchronized (STAND_INS) {
+                    STAND_INS.put(world, villages);
+                }
+                return villages;
+            });
+            TerrainAdaptation.register(Structures.VILLAGE, TerrainAdaptation.Kind.BEARD_THIN, (world, chunkX, chunkZ, out) -> {
+                MapGenModernVillage villages = of(world);
+                if (villages != null && StartRules.ruled(world, Structures.VILLAGE)) {
+                    villages.startsNear(world, chunkX, chunkZ, out);
+                }
+            });
+        }
         // Superflat builds its village generator without Forge's event; see FlatVillageSwap.
         MinecraftForge.EVENT_BUS.register(new FlatVillageSwap());
     }

@@ -107,6 +107,10 @@ public final class FloraWorldGen implements IWorldGenerator {
         if (!world.provider.isSurfaceWorld() || FloraContent.cornflower == null || !active()) {
             return;
         }
+        // A world generator that places 1.18's features (Caves & Cliffs Backport's) places both flowers itself.
+        if (com.exiledradio.backportcore.worldgen.FeatureSource.places(world, "1.14")) {
+            return;
+        }
 
         int centerX = chunkX * 16 + 8;
         int centerZ = chunkZ * 16 + 8;

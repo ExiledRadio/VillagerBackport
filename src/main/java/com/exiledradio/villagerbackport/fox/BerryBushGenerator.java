@@ -51,6 +51,10 @@ public class BerryBushGenerator implements IWorldGenerator {
         if (!ModConfig.foxes.generateBushes || FoxContent.bush == null || !world.provider.isSurfaceWorld()) {
             return;
         }
+        // A world generator that places 1.18's features (Caves & Cliffs Backport's) places these bushes itself.
+        if (com.exiledradio.backportcore.worldgen.FeatureSource.places(world, "1.14")) {
+            return;
+        }
         int baseX = chunkX * 16 + 8;
         int baseZ = chunkZ * 16 + 8;
         Biome biome = world.getBiome(new BlockPos(baseX, 0, baseZ));

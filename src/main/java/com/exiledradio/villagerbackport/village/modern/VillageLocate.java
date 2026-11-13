@@ -1,7 +1,6 @@
 package com.exiledradio.villagerbackport.village.modern;
 
 import com.exiledradio.backportcore.locate.StructureLocate;
-import com.exiledradio.backportcore.structure.ScatteredPlacement;
 
 import com.exiledradio.villagerbackport.ModConfig;
 
@@ -17,7 +16,8 @@ import java.util.Locale;
  * ({@code minecraft:village_plains} ...; tag {@code #minecraft:village}) and {@code minecraft:pillager_outpost}.
  *
  * <p>Villages are found on the grid {@link MapGenModernVillage} places them on, whichever terrain it stands in for
- * (vanilla's, superflat, Open Terrain Generator, Biomes O' Plenty, RTG, Caves Not Cliffs), each start named by the
+ * (vanilla's, superflat, Open Terrain Generator, Biomes O' Plenty, RTG, Caves Not Cliffs; Caves &amp; Cliffs Backport's
+ * 1.18 terrain on 1.18.2's grid), each start named by the
  * type its biome gives it. Where 1.14 villages are not built (villages.style LEGACY, or terrain they cannot be
  * planned on) the types say why, and {@code #minecraft:village} falls back to Core's 1.12.2 village search, so the
  * world's own villages are still found. {@code /locate Village} keeps working the same way, unlisted.
@@ -50,7 +50,7 @@ public final class VillageLocate {
                 }
                 throw whyNoModernVillages(world);
             }
-            return new StructureLocate.Grid(new ScatteredPlacement(villages.spacing(), SEPARATION, VILLAGE_SALT), (x, z) -> {
+            return new StructureLocate.Grid(villages.placement(world), (x, z) -> {
                 ModernVillageStart.Type type = villages.startTypeAt(world, x, z);
                 return type == null ? null : id(type);
             });
