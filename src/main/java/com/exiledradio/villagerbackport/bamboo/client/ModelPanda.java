@@ -4,6 +4,7 @@ import com.exiledradio.villagerbackport.bamboo.EntityPanda;
 
 import net.minecraft.client.model.ModelQuadruped;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.MathHelper;
@@ -45,6 +46,36 @@ public class ModelPanda extends ModelQuadruped {
         this.leg2 = leg(5.5F, 9.0F);
         this.leg3 = leg(-5.5F, -9.0F);
         this.leg4 = leg(5.5F, -9.0F);
+    }
+
+    /**
+     * 1.14.4's {@code PandaModel.render} (read from its client jar): a baby's head is scaled by 0.5555555 and moved by
+     * (0, 23 * scale, 0.3), its body and legs scaled to 1/3 and moved down by 49 * scale. 1.12's {@code ModelQuadruped}
+     * would use its defaults instead (full-size head moved by (0, 8, 4), body at 1/2), which left a baby's head
+     * floating in front of its body.
+     */
+    @Override
+    public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw,
+                       float headPitch, float scale) {
+        if (!this.isChild) {
+            super.render(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+            return;
+        }
+        this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entity);
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(0.5555555F, 0.5555555F, 0.5555555F);
+        GlStateManager.translate(0.0F, 23.0F * scale, 0.3F);
+        this.head.render(scale);
+        GlStateManager.popMatrix();
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(0.33333334F, 0.33333334F, 0.33333334F);
+        GlStateManager.translate(0.0F, 49.0F * scale, 0.0F);
+        this.body.render(scale);
+        this.leg1.render(scale);
+        this.leg2.render(scale);
+        this.leg3.render(scale);
+        this.leg4.render(scale);
+        GlStateManager.popMatrix();
     }
 
     private ModelRenderer leg(float x, float z) {
