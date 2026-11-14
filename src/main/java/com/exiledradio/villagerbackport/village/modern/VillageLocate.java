@@ -45,7 +45,9 @@ public final class VillageLocate {
         StructureLocate.placement("minecraft:villages", world -> {
             MapGenModernVillage villages = MapGenModernVillage.of(world);
             if (villages == null) {
-                if (world.provider.getDimension() != 0 || !world.getWorldInfo().isMapFeaturesEnabled()) {
+                if (world.provider.getDimension() != 0 || !world.getWorldInfo().isMapFeaturesEnabled()
+                        || !com.exiledradio.backportcore.worldgen.FlatWorlds.structure(world,
+                        com.exiledradio.backportcore.structure.Structures.VILLAGE)) {
                     return null;
                 }
                 throw whyNoModernVillages(world);
@@ -60,7 +62,9 @@ public final class VillageLocate {
         StructureLocate.placement("minecraft:pillager_outposts", world -> {
             MapGenOutpost outposts = MapGenOutpost.of(world);
             if (outposts == null) {
-                if (world.provider.getDimension() != 0 || !world.getWorldInfo().isMapFeaturesEnabled()) {
+                if (world.provider.getDimension() != 0 || !world.getWorldInfo().isMapFeaturesEnabled()
+                        || !com.exiledradio.backportcore.worldgen.FlatWorlds.structure(world,
+                        com.exiledradio.backportcore.structure.Structures.PILLAGER_OUTPOST)) {
                     return null;
                 }
                 throw new StructureLocate.Unavailable("commands.villagerbackport.locate.nooutposts");

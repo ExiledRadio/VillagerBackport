@@ -51,6 +51,10 @@ public class BerryBushGenerator implements IWorldGenerator {
         if (!ModConfig.foxes.generateBushes || FoxContent.bush == null || !world.provider.isSurfaceWorld()) {
             return;
         }
+        // Superflat decorates only with its preset's "decoration", as 1.12.2's flat generator.
+        if (!com.exiledradio.backportcore.worldgen.FlatWorlds.decoration(world)) {
+            return;
+        }
         // A world generator that places 1.18's features (Caves & Cliffs Backport's) places these bushes itself.
         if (com.exiledradio.backportcore.worldgen.FeatureSource.places(world, "1.14")) {
             return;

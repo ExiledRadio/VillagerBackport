@@ -25,6 +25,7 @@ public final class SelfTestRunner {
             new PickleMoveSelfTest(),
             new LocateSelfTest(),
             new Templates118SelfTest(),
+            new FlatSelfTest(),
     };
 
     private final List<String> wanted;

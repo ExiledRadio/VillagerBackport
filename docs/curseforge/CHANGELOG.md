@@ -2,6 +2,7 @@
 
 *   **Cats sit and stand with an empty hand.** Right-clicking your cat with an empty hand gave the order twice, so it sat down and stood straight back up; only a click with fish in hand worked. Now any click the cat has no other use for tells it to sit or stand, as in current Java.
 *   **Recipes unlock like vanilla's**, with Backport Core 1.2.0: an iron ingot unlocks the smithing table's recipe, a stick or coal the campfire's, and so on for every recipe of this mod, with the recipe toast. Update Backport Core to get it.
+*   **Superflat worlds generate only what their preset asks for**, with Backport Core 1.3.0: cornflowers, lilies of the valley, sweet berry bushes and bamboo only with `decoration`, 1.14 villages only with `village`, and no pillager outposts at all, as in vanilla.
 *   **The hotbar scrolls again on Cleanroom.** Cleanroom reports one wheel notch as 1 where Forge reports 120, and the 1.14 scroll code read every notch as 1/120 of a slot, so the selected slot never moved. Forge was not affected.
 
 # 2.5.0

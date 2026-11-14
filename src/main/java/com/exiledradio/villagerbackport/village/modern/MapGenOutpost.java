@@ -15,7 +15,6 @@ import net.minecraft.init.Biomes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.structure.MapGenStructure;
 import net.minecraft.world.gen.structure.MapGenVillage;
@@ -97,15 +96,15 @@ public class MapGenOutpost extends MapGenStructure {
     /**
      * Outposts are this mod's own raid content: only with this mod's raids, only in the overworld,
      * only where structures are on, and only where the terrain can be predicted to plan on.
-     * Superflat gets them only when its preset has villages.
+     * Never in superflat: no 1.12.2 preset can list them, and today's default preset has villages and no outposts
+     * (Backport Core's {@code FlatWorlds}).
      */
     private static boolean allowedIn(World world) {
         if (world.isRemote || !ModConfig.raids.outposts || !Raids.usingOwnRaids()
                 || world.provider.getDimension() != 0 || !world.getWorldInfo().isMapFeaturesEnabled()) {
             return false;
         }
-        if (world.getWorldType() == WorldType.FLAT
-                && !world.getWorldInfo().getGeneratorOptions().contains("village")) {
+        if (!com.exiledradio.backportcore.worldgen.FlatWorlds.structure(world, Structures.PILLAGER_OUTPOST)) {
             return false;
         }
         return TerrainHeights.forWorld(world) != null;
