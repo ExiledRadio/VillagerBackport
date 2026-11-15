@@ -83,13 +83,10 @@ final class LocateSelfTest implements SelfTest {
             check.ok(start != null && start.isSizeableStructure(), "the generator laid out an outpost where locate said: " + outpost);
         }
 
-        // The command, and the plain 1.12.2 name players are used to.
+        // The command (Backport Core 1.3.1 dropped 1.12.2's names such as /locate Village, as today's game has none).
         List<String> said = LocateChecks.run(server, world, spawn, "locate structure #minecraft:village");
         check.ok(said.size() == 1 && any != null && said.get(0).startsWith("The nearest #minecraft:village (" + any.id + ") is at ["
                 + any.pos.getX() + ", ~, " + any.pos.getZ() + "]"), "the tag's reply names the type: " + said);
-        said = LocateChecks.run(server, world, spawn, "locate Village");
-        check.ok(said.size() == 1 && any != null && said.get(0).startsWith("The nearest Village is at [" + any.pos.getX() + ", ~, "
-                + any.pos.getZ() + "]"), "/locate Village quietly finds the same village: " + said);
         said = LocateChecks.run(server, world, spawn, "locate structure village_plains");
         check.ok(said.size() == 1 && said.get(0).startsWith("The nearest minecraft:village_plains is at ["), "a typed village: " + said);
 
@@ -114,8 +111,7 @@ final class LocateSelfTest implements SelfTest {
                 "no villages in the nether: " + said);
 
         List<String> first = LocateChecks.complete(server, world, spawn, "locate ");
-        check.ok(first.contains("structure") && first.contains("Stronghold") && !first.contains("Village"),
-                "Village is no longer listed: " + first);
+        check.ok(first.contains("structure") && !first.contains("Village"), "Village is not listed: " + first);
         List<String> types = LocateChecks.complete(server, world, spawn, "locate structure village_");
         check.eq(5, types.size(), "completion lists the five types: " + types);
         List<String> tags = LocateChecks.complete(server, world, spawn, "locate structure #");
