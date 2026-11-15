@@ -46,6 +46,13 @@ public class OutpostStart extends StructureStart {
         }
     }
 
+    /** Places the pieces in the chunk, with features set onto the ground under the buildings (ModernVillagePiece.ground). */
+    @Override
+    public void generateStructure(net.minecraft.world.World world, Random random,
+                                  net.minecraft.world.gen.structure.StructureBoundingBox box) {
+        ModernVillagePiece.placing(ModernVillagePiece.rigidBoxes(this.components), () -> super.generateStructure(world, random, box));
+    }
+
     @Override
     public boolean isSizeableStructure() {
         return !this.components.isEmpty();

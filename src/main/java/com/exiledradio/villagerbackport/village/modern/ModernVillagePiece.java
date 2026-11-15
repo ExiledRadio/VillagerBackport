@@ -35,7 +35,9 @@ import net.minecraft.world.gen.structure.StructureComponent;
 import net.minecraft.world.gen.structure.template.TemplateManager;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -202,7 +204,7 @@ public class ModernVillagePiece extends StructureComponent
             if (x < area.minX || x > area.maxX || z < area.minZ || z > area.maxZ) {
                 continue;
             }
-            int y = rigid ? this.pos.getY() + rel.getY() : surface(world, x, z) - 1 + rel.getY();
+            int y = rigid ? this.pos.getY() + rel.getY() : ground(world, x, z) - 1 + rel.getY();
             BlockPos at = new BlockPos(x, y, z);
             if (!area.isVecInside(at)) {
                 continue;
@@ -231,7 +233,10 @@ public class ModernVillagePiece extends StructureComponent
                 continue;
             }
             state = state.withRotation(this.rotation);
-            if (state.getBlock() instanceof net.minecraft.block.BlockTorch) {
+            if (state.getBlock() instanceof net.minecraft.block.BlockTorch || state.getBlock() == Blocks.GRASS_PATH) {
+                // A path too: 1.12.2's onBlockAdded turns a path with a solid block above into dirt, with a block
+                // update that turns the next one, and so on. A street under a well took the well's whole path ring
+                // with it. 1.14 and later check a path only when a neighbor changes in the world, not in worldgen.
                 setWithoutSupportCheck(world, at, state);
             } else {
                 world.setBlockState(at, state, 2);
@@ -265,6 +270,61 @@ public class ModernVillagePiece extends StructureComponent
     }
 
     /**
+     * The rigid pieces' boxes of the structure whose pieces are being placed on this thread, set by its start
+     * ({@link #placing}). See {@link #ground}.
+     */
+    private static final ThreadLocal<List<StructureBoundingBox>> RIGID_BOXES = new ThreadLocal<List<StructureBoundingBox>>();
+
+    /** @return the rigid pieces' boxes among a structure's pieces, for {@link #placing} */
+    static List<StructureBoundingBox> rigidBoxes(List<StructureComponent> components) {
+        List<StructureBoundingBox> boxes = new ArrayList<StructureBoundingBox>();
+        for (StructureComponent c : components) {
+            if (c instanceof ModernVillagePiece && ((ModernVillagePiece) c).rigid()) {
+                boxes.add(c.getBoundingBox());
+            }
+        }
+        return boxes;
+    }
+
+    /**
+     * Runs a structure start's placement with its rigid pieces' boxes known to {@link #ground}.
+     *
+     * @param boxes from {@link #rigidBoxes}
+     */
+    static void placing(List<StructureBoundingBox> boxes, Runnable place) {
+        List<StructureBoundingBox> outer = RIGID_BOXES.get();
+        RIGID_BOXES.set(boxes);
+        try {
+            place.run();
+        } finally {
+            RIGID_BOXES.set(outer);
+        }
+    }
+
+    /**
+     * Where a terrain-matching piece's column stands: {@link #surface}, looking past the structure's own rigid pieces.
+     *
+     * <p>1.14 and later drop a street onto {@code WORLD_SURFACE_WG}. While structures are placed, that heightmap still
+     * holds the terrain as generated, so a street that the layout puts under a building (the jigsaw check only keeps
+     * boxes apart, and a street's box sits below the building's) goes into the ground under it, out of sight. Read
+     * from the chunk as it stands, the ground there is the building itself: a street under a well was laid over its
+     * rim and its roof.
+     */
+    static int ground(World world, int x, int z) {
+        List<StructureBoundingBox> all = RIGID_BOXES.get();
+        if (all == null || all.isEmpty()) {
+            return surface(world, x, z);
+        }
+        List<StructureBoundingBox> here = new ArrayList<StructureBoundingBox>();
+        for (StructureBoundingBox b : all) {
+            if (x >= b.minX && x <= b.maxX && z >= b.minZ && z <= b.maxZ) {
+                here.add(b);
+            }
+        }
+        return here.isEmpty() ? surface(world, x, z) : surface(world, x, z, here);
+    }
+
+    /**
      * 1.14's surface: one above the highest block that is solid or liquid, ignoring leaves and plants.
      *
      * <p>Not {@code World.getTopSolidOrLiquidBlock}: despite its name 1.12.2's version only stops at
@@ -272,10 +332,22 @@ public class ModernVillagePiece extends StructureComponent
      * with it runs along the bottom of a lake instead of becoming 1.14's plank bridge across it.
      */
     static int surface(World world, int x, int z) {
+        return surface(world, x, z, java.util.Collections.<StructureBoundingBox>emptyList());
+    }
+
+    /** {@link #surface}, not counting blocks inside {@code skip} (boxes over this column). */
+    private static int surface(World world, int x, int z, List<StructureBoundingBox> skip) {
         net.minecraft.world.chunk.Chunk chunk = world.getChunk(x >> 4, z >> 4);
         int bottom = WorldHeights.minY(world);
         BlockPos.MutableBlockPos at = new BlockPos.MutableBlockPos(x, WorldHeights.topOfFilledSections(world, chunk), z);
+        scan:
         while (at.getY() >= bottom) {
+            for (StructureBoundingBox b : skip) {
+                if (at.getY() >= b.minY && at.getY() <= b.maxY) {
+                    at.setY(b.minY - 1);
+                    continue scan;
+                }
+            }
             IBlockState state = chunk.getBlockState(at);
             Material m = state.getMaterial();
             if ((m.blocksMovement() || m.isLiquid()) && !state.getBlock().isLeaves(state, world, at)

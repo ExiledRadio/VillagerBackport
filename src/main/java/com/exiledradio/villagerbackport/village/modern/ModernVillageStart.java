@@ -121,6 +121,12 @@ public class ModernVillageStart extends StructureStart {
         return random;
     }
 
+    /** Places the pieces in the chunk, with streets set onto the ground under the buildings (ModernVillagePiece.ground). */
+    @Override
+    public void generateStructure(World world, Random random, net.minecraft.world.gen.structure.StructureBoundingBox box) {
+        ModernVillagePiece.placing(ModernVillagePiece.rigidBoxes(this.components), () -> super.generateStructure(world, random, box));
+    }
+
     /** 1.14 keeps every village, however few pieces fitted; there is no 1.12.2-style size cull. */
     @Override
     public boolean isSizeableStructure() {
