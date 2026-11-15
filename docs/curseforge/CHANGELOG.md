@@ -1,8 +1,3 @@
-# 2.6.1
-
-*   **Sounds as current Java plays them**: the bell rings louder and at its three pitches and is heard from far away, the grindstone is half as loud, and a ravager's roar and a fox's screech carry as far as in vanilla (with Backport Core 1.3.1).
-*   **Fixed village wells and other buildings in Caves & Cliffs Backport's 1.18 worlds** being cut through by a street. A street under a building now goes into the ground beneath it, as in vanilla, so wells keep their roof, rim and path ring.
-
 # 2.6.0
 
 **Requires Backport Core 1.3.0 or newer.**
@@ -10,6 +5,8 @@
 *   **Villages and pillager outposts in Caves & Cliffs Backport's 1.18 worlds**: 1.14's villages instead of 1.12's, where 1.18 puts them, laid out piece for piece as 1.18.2 lays them out for the seed, from 1.18.2's own templates. The ground is shaped around them as in 1.18. `/locate` finds them there. Worlds without Caves & Cliffs Backport keep their villages as before.
 *   **Superflat worlds generate only what their preset asks for**: cornflowers, lilies of the valley, sweet berry bushes and bamboo only with `decoration`, 1.14 villages only with `village`, and no pillager outposts at all, as in vanilla.
 *   **Fixed baby pandas' heads floating in front of their bodies.** Babies now use 1.14's own baby proportions.
+*   **Sounds as current Java plays them**: the bell rings louder and at its three pitches and is heard from far away, the grindstone is half as loud, and a ravager's roar and a fox's screech carry as far as in vanilla (with Backport Core 1.3.1).
+*   **Fixed village wells and other buildings in Caves & Cliffs Backport's 1.18 worlds** being cut through by a street. A street under a building now goes into the ground beneath it, as in vanilla, so wells keep their roof, rim and path ring.
 
 # 2.5.1
 
