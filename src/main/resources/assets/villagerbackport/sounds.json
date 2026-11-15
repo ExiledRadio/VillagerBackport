@@ -4,20 +4,47 @@
     "sounds": [
       {
         "name": "villagerbackport:block/bell/bell_use01",
-        "stream": false
+        "pitch": 0.93,
+        "volume": 12.0
+      },
+      {
+        "name": "villagerbackport:block/bell/bell_use01",
+        "pitch": 0.95,
+        "volume": 12.0
+      },
+      {
+        "name": "villagerbackport:block/bell/bell_use01",
+        "pitch": 0.97,
+        "volume": 12.0
       },
       {
         "name": "villagerbackport:block/bell/bell_use02",
-        "stream": false
+        "pitch": 0.93,
+        "volume": 12.0
+      },
+      {
+        "name": "villagerbackport:block/bell/bell_use02",
+        "pitch": 0.95,
+        "volume": 12.0
+      },
+      {
+        "name": "villagerbackport:block/bell/bell_use02",
+        "pitch": 0.97,
+        "volume": 12.0
       }
     ]
   },
   "block.bell.resonate": {
     "category": "block",
     "sounds": [
+      "villagerbackport:block/bell/resonate",
       {
         "name": "villagerbackport:block/bell/resonate",
-        "stream": false
+        "pitch": 0.85
+      },
+      {
+        "name": "villagerbackport:block/bell/resonate",
+        "pitch": 0.9
       }
     ]
   },
@@ -26,15 +53,15 @@
     "sounds": [
       {
         "name": "villagerbackport:block/grindstone/grindstone1",
-        "stream": false
+        "volume": 0.5
       },
       {
         "name": "villagerbackport:block/grindstone/grindstone2",
-        "stream": false
+        "volume": 0.5
       },
       {
         "name": "villagerbackport:block/grindstone/grindstone3",
-        "stream": false
+        "volume": 0.5
       }
     ]
   },
@@ -851,20 +878,20 @@
     "category": "hostile",
     "sounds": [
       {
-        "name": "villagerbackport:mob/ravager/roar1",
-        "stream": false
+        "attenuation_distance": 35,
+        "name": "villagerbackport:mob/ravager/roar1"
       },
       {
-        "name": "villagerbackport:mob/ravager/roar2",
-        "stream": false
+        "attenuation_distance": 35,
+        "name": "villagerbackport:mob/ravager/roar2"
       },
       {
-        "name": "villagerbackport:mob/ravager/roar3",
-        "stream": false
+        "attenuation_distance": 35,
+        "name": "villagerbackport:mob/ravager/roar3"
       },
       {
-        "name": "villagerbackport:mob/ravager/roar4",
-        "stream": false
+        "attenuation_distance": 35,
+        "name": "villagerbackport:mob/ravager/roar4"
       }
     ],
     "subtitle": "subtitles.villagerbackport.entity.ravager.roar"
@@ -1673,18 +1700,22 @@
     "category": "neutral",
     "sounds": [
       {
+        "attenuation_distance": 32,
         "name": "villagerbackport:mob/fox/screech1",
         "volume": 0.45
       },
       {
+        "attenuation_distance": 32,
         "name": "villagerbackport:mob/fox/screech2",
         "volume": 0.45
       },
       {
+        "attenuation_distance": 32,
         "name": "villagerbackport:mob/fox/screech3",
         "volume": 0.45
       },
       {
+        "attenuation_distance": 32,
         "name": "villagerbackport:mob/fox/screech4",
         "volume": 0.4
       }
