@@ -81,6 +81,8 @@ Works with Open Terrain Generator (RLCraft Dregora), Biomes O' Plenty, Realistic
 
 With Update Aquatic Backport installed, the wandering trader sells sea pickles.
 
+With Caves & Cliffs Backport, its 1.18 worlds get 1.18's villages and pillager outposts.
+
 Using Village Names? Set `Activate New Village Generator` to `false` in `config/VillageNames4/newvillages/village_gen.cfg` to get 1.14 villages.
 
 ## Commands
@@ -95,7 +97,7 @@ Using Village Names? Set `Activate New Village Generator` to `false` in `config/
 
 ## Requirements
 
-Minecraft 1.12.2 with Forge 14.23.5.2847 or newer, and [Backport Core](https://www.curseforge.com/minecraft/mc-mods/backport-core) 1.1.0 or newer. The CurseForge app installs Backport Core and Fluidlogged API with it.
+Minecraft 1.12.2 with Forge 14.23.5.2847 or newer, and [Backport Core](https://www.curseforge.com/minecraft/mc-mods/backport-core) 1.3.0 or newer. The CurseForge app installs Backport Core and Fluidlogged API with it.
 
 Delete the old version of this mod before updating.
 
