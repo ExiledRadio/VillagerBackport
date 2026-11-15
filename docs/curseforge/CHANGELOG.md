@@ -1,5 +1,6 @@
 # 2.6.1
 
+*   **Sounds as current Java plays them**: the bell rings louder and at its three pitches and is heard from far away, the grindstone is half as loud, and a ravager's roar and a fox's screech carry as far as in vanilla (with Backport Core 1.3.1).
 *   **Fixed village wells and other buildings in Caves & Cliffs Backport's 1.18 worlds** being cut through by a street. A street under a building now goes into the ground beneath it, as in vanilla, so wells keep their roof, rim and path ring.
 
 # 2.6.0
