@@ -1,3 +1,7 @@
+# 2.6.1
+
+*   **Fixed village wells and other buildings in Caves & Cliffs Backport's 1.18 worlds** being cut through by a street. A street under a building now goes into the ground beneath it, as in vanilla, so wells keep their roof, rim and path ring.
+
 # 2.6.0
 
 **Requires Backport Core 1.3.0 or newer.**
