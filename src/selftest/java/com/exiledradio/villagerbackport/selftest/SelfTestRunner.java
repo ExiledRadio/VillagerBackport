@@ -27,6 +27,7 @@ public final class SelfTestRunner {
             new Templates118SelfTest(),
             new FlatSelfTest(),
             new StewSelfTest(),
+            new SnowSelfTest(),
     };
 
     private final List<String> wanted;

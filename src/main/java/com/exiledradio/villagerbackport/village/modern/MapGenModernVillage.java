@@ -470,11 +470,17 @@ public class MapGenModernVillage extends MapGenVillage {
     /**
      * Places the chunk's village pieces, then - for villages built 1.12.2's way - the workstations
      * 1.12.2's houses lack. See {@link com.exiledradio.villagerbackport.village.LegacyHouseWorkstations}.
+     * Then snow over the pieces (1.14's freeze_top_layer, Backport Core's {@code FreezeTopLayer}): 1.12.2's own
+     * snow pass comes later in a Default world but skips every column a lamp lights, and Caves &amp; Cliffs' 1.18
+     * terrain snowed before the village was built.
      */
     @Override
     public synchronized boolean generateStructure(net.minecraft.world.World world, java.util.Random random,
                                                   net.minecraft.util.math.ChunkPos chunk) {
         boolean placed = super.generateStructure(world, random, chunk);
+        if (placed) {
+            com.exiledradio.backportcore.structure.FreezeTopLayer.afterBuilding(world, this, chunk.x, chunk.z);
+        }
         if (placed && ModConfig.villages.legacyHouseWorkstations) {
             int x = (chunk.x << 4) + 8;
             int z = (chunk.z << 4) + 8;
