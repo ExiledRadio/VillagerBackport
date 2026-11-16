@@ -36,7 +36,8 @@ import java.util.List;
  *   wither rose         Wither            7 s
  * </pre>
  *
- * <p>Later versions' torchflower and eyeblossoms have no 1.12.2 block to belong to. Future MC's
+ * <p>Later versions' flowers come from the backports that add them, through {@link #add} (Trails &amp; Tales
+ * Backport's torchflower: Night Vision, 5 s, as 1.20; eyeblossoms when one adds them). Future MC's
  * cornflower, lily of the valley and wither rose count as ours, so a mooshroom fed one of those, or
  * a stew crafted with one, works the same.
  *
@@ -58,6 +59,8 @@ public final class StewEffects {
     }
 
     private static List<Entry> table;
+    /** Flowers added by other mods ({@link #add}), after this mod's. */
+    private static final List<Entry> ADDED = new ArrayList<Entry>();
 
     private StewEffects() {
     }
@@ -84,8 +87,26 @@ public final class StewEffects {
         ours(entries, FloraContent.lilyOfTheValley, "lily_of_the_valley", MobEffects.POISON, 220);
         ours(entries, FloraContent.witherRose, "wither_rose", MobEffects.WITHER, 140);
 
+        entries.addAll(ADDED);
         table = Collections.unmodifiableList(entries);
         return table;
+    }
+
+    /**
+     * A later version's flower in suspicious stew (crafting, and a brown mooshroom fed it), for the backports that
+     * add one: call it once the flower's item exists, before recipes register (an item registry event is right).
+     * Reach it by reflection; it never changes shape.
+     *
+     * @param flower the flower's item stack (its metadata counts when the item has subtypes)
+     * @param effect the effect
+     * @param ticks  how long it lasts
+     */
+    public static synchronized void add(ItemStack flower, Potion effect, int ticks) {
+        if (flower.isEmpty() || effect == null) {
+            return;
+        }
+        ADDED.add(new Entry(flower.copy(), effect, ticks));
+        table = null;
     }
 
     private static void red(List<Entry> entries, BlockFlower.EnumFlowerType type, Potion effect, int ticks) {
