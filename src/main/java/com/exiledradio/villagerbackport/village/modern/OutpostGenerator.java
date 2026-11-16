@@ -74,7 +74,10 @@ public final class OutpostGenerator implements IWorldGenerator {
         try {
             // Plans every outpost within eight chunks; the primer is never touched by a structure.
             outposts.generate(world, chunkX, chunkZ, null);
-            outposts.generateStructure(world, random, new ChunkPos(chunkX, chunkZ));
+            if (outposts.generateStructure(world, random, new ChunkPos(chunkX, chunkZ))) {
+                // 1.14 snows over the outpost (freeze_top_layer, after the structures); 1.12 snowed before this ran.
+                com.exiledradio.backportcore.structure.FreezeTopLayer.afterBuilding(world, outposts, chunkX, chunkZ);
+            }
         } catch (RuntimeException e) {
             VillagerBackport.LOGGER.error("Could not build a pillager outpost at chunk {}, {}.", chunkX, chunkZ, e);
         }
