@@ -26,6 +26,7 @@ public final class SelfTestRunner {
             new LocateSelfTest(),
             new Templates118SelfTest(),
             new FlatSelfTest(),
+            new StewSelfTest(),
     };
 
     private final List<String> wanted;

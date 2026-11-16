@@ -1,3 +1,7 @@
+# Unreleased
+
+*   Suspicious stew takes later versions' flowers from the backports that add them (`StewEffects.add`): with Trails & Tales Backport, the torchflower gives Night Vision for 5 seconds, crafted or from a brown mooshroom, as in 1.20.
+
 # 2.6.0
 
 **Requires Backport Core 1.3.0 or newer.**
