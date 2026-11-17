@@ -76,7 +76,10 @@ public class EntityRavager extends EntityMob implements Celebrates {
         this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityLiving.class, 8.0F));
         this.targetTasks.addTask(2, new EntityAIRaiderHurtByTarget(this));
         this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<EntityPlayer>(this, EntityPlayer.class, true));
-        this.targetTasks.addTask(4, new EntityAINearestAttackableTarget<EntityVillager>(this, EntityVillager.class, true));
+        // 1.18-pre8: ravagers leave baby villagers alone (RaidUtils' predicate in today's Ravager); 1.14's invisibility.
+        this.targetTasks.addTask(4, new EntityAINearestAttackableTarget<EntityVillager>(this, EntityVillager.class, 10, true, false,
+                v -> com.exiledradio.villagerbackport.mechanics.Targeting.sparesBaby(v)
+                        && com.exiledradio.villagerbackport.mechanics.Targeting.noticed(this, v)));
         this.targetTasks.addTask(4, new EntityAINearestAttackableTarget<EntityIronGolem>(this, EntityIronGolem.class, true));
     }
 

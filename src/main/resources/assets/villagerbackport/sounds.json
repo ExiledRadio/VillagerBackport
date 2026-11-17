@@ -2874,5 +2874,89 @@
       }
     ],
     "subtitle": "subtitles.villagerbackport.item.axe.strip"
+  },
+  "block.note_block.iron_xylophone": {
+    "category": "record",
+    "sounds": [
+      {
+        "name": "villagerbackport:block/note_block/iron_xylophone",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.note.note"
+  },
+  "block.note_block.cow_bell": {
+    "category": "record",
+    "sounds": [
+      {
+        "name": "villagerbackport:block/note_block/cow_bell",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.note.note"
+  },
+  "block.note_block.didgeridoo": {
+    "category": "record",
+    "sounds": [
+      {
+        "name": "villagerbackport:block/note_block/didgeridoo",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.note.note"
+  },
+  "block.note_block.bit": {
+    "category": "record",
+    "sounds": [
+      {
+        "name": "villagerbackport:block/note_block/bit",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.note.note"
+  },
+  "block.note_block.banjo": {
+    "category": "record",
+    "sounds": [
+      {
+        "name": "villagerbackport:block/note_block/banjo",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.note.note"
+  },
+  "block.note_block.pling": {
+    "category": "record",
+    "sounds": [
+      {
+        "name": "villagerbackport:block/note_block/pling",
+        "stream": false
+      }
+    ],
+    "subtitle": "subtitles.block.note.note"
+  },
+  "entity.parrot.imitate.pillager": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:entity.pillager.ambient",
+        "type": "event",
+        "pitch": 1.8,
+        "volume": 0.4
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.parrot.imitate.pillager"
+  },
+  "entity.parrot.imitate.ravager": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "villagerbackport:entity.ravager.ambient",
+        "type": "event",
+        "pitch": 1.8,
+        "volume": 0.2
+      }
+    ],
+    "subtitle": "subtitles.villagerbackport.entity.parrot.imitate.ravager"
   }
 }

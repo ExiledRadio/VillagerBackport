@@ -62,3 +62,19 @@ The places are in `docs/CREATIVE_TABS.md`; a dev client already checked the list
 - [ ] The search tab finds the mod's items, and JEI lists them.
 - [ ] Other mods' items are still in their tabs, in their own order.
 - [ ] With another update backport installed too, its items and this mod's sit together by kind (stripped logs, slabs).
+
+## 1.14's changes to things 1.12.2 has (mechanics, with Backport Core 1.4.2)
+
+Self-tests: `gradlew runServer -Pselftest=mechanics` and `gradlew runClient -Pselftest=client` (book editor, horse
+armor). See `docs/streams/mechanics.md`.
+
+- [ ] **Crouch**: sneaking lowers the view to 1.27 smoothly; you walk under a ceiling of top slabs one block up (1.5)
+      while sneaking, and stay crouched (slow, drawn crouching, also to another player) when you let go under it.
+      On a server without this mod, sneaking is 1.12.2's.
+- [ ] **Maps**: a plains cartographer's village maps show today's village icon, tinted map item; swamp and jungle
+      maps their hut and temple icons; in an item frame too.
+- [ ] **Note blocks** on iron, soul sand, pumpkin, emerald, hay and glowstone sound like 1.14's, with the note particle.
+- [ ] **Horse armor**: no red flash when the horse is hurt; an invisible horse's armor shows.
+- [ ] **Torches** stand on glass panes and iron bars and stay when the pane updates.
+- [ ] **Book and quill**: click places the cursor, drag selects (highlighted), Ctrl+C/X/V/A, double click a word,
+      third click the page, Page Up/Down, Sign works and the written book reads the same.

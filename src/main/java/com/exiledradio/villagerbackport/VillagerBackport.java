@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
         acceptedMinecraftVersions = "[1.12.2]",
         // Backport Core holds the code the backports share: textures, Future MC migration, duplicate
         // hiding, smithing upgrades and the terrain the villages are planned on.
-        dependencies = "required-after:backportcore@[1.4.0,)",
+        dependencies = "required-after:backportcore@[1.4.2,)",
         // A client without the mod can still join a server that has it: the trading changes are all
         // server-side, and the server sends the resulting trade list the way it always does. Such a
         // client will not see this mod's blocks, so a server using them should expect it installed.
@@ -63,6 +63,9 @@ public final class VillagerBackport {
         VillagerAccess.init();
 
         NetworkHandler.init();
+
+        // 1.14 (and 1.18) behavior changes to things 1.12.2 already has (mechanics/).
+        com.exiledradio.villagerbackport.mechanics.Mechanics.preInit();
 
         // 1.14's look and feel (panorama, splashes, options, F3 keys) for Backport Core's presentation module.
         com.exiledradio.villagerbackport.lookfeel.LookAndFeel.preInit();
@@ -146,6 +149,7 @@ public final class VillagerBackport {
     public void postInit(net.minecraftforge.fml.common.event.FMLPostInitializationEvent event) {
         com.exiledradio.villagerbackport.compat.FutureMc.removeLateRecipes();
         com.exiledradio.villagerbackport.block.CropSounds.apply();
+        com.exiledradio.villagerbackport.mechanics.Mechanics.init();
         com.exiledradio.backportcore.smithing.SmithingUpgrades.registerIngots();
         com.exiledradio.villagerbackport.raid.Raids.init();
     }

@@ -48,12 +48,21 @@ public class LayerLeatherHorseArmor implements LayerRenderer<EntityLivingBase> {
     @Override
     public void doRenderLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks,
                               float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-        if (!(entity instanceof EntityHorse) || entity.isInvisible()) {
+        // 1.14 draws horse armor as a layer, so an invisible horse's armor shows (mechanics.horseArmorLayer).
+        boolean modern = com.exiledradio.villagerbackport.mechanics.client.HorseArmorClient.active();
+        if (!(entity instanceof EntityHorse) || entity.isInvisible() && !modern) {
             return;
         }
 
         ItemStack armor = armor((EntityHorse) entity);
         if (!(armor.getItem() instanceof ItemLeatherHorseArmor)) {
+            // Iron, gold and diamond, which mechanics.client.HorseArmorClient took out of the baked texture.
+            ResourceLocation texture = com.exiledradio.villagerbackport.mechanics.client.HorseArmorClient.texture(armor);
+            if (texture != null) {
+                this.renderer.bindTexture(texture);
+                GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+                this.renderer.getMainModel().render(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+            }
             return;
         }
 

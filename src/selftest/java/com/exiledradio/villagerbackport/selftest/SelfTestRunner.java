@@ -29,6 +29,7 @@ public final class SelfTestRunner {
             new StewSelfTest(),
             new SnowSelfTest(),
             new JobPathSelfTest(),
+            new MechanicsSelfTest(),
     };
 
     private final List<String> wanted;

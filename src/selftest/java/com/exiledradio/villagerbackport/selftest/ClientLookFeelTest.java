@@ -63,6 +63,12 @@ public final class ClientLookFeelTest {
             VillagerBackport.LOGGER.error("CLIENT SELFTEST threw", t);
             this.fail++;
         }
+        try {
+            ClientMechanicsTest.run(mc, this::ok);
+        } catch (Throwable t) {
+            VillagerBackport.LOGGER.error("CLIENT SELFTEST mechanics threw", t);
+            this.fail++;
+        }
         VillagerBackport.LOGGER.info("CLIENT SELFTEST DONE pass={} fail={}", this.pass, this.fail);
         mc.shutdown();
     }
