@@ -39,6 +39,7 @@ public final class ClientSetup {
     }
 
     public static void init() {
+        com.exiledradio.villagerbackport.mechanics.client.MechanicsClient.init();
         MinecraftForge.EVENT_BUS.register(new MerchantOverlay());
         MinecraftForge.EVENT_BUS.register(new MapLockTooltip());
         MinecraftForge.EVENT_BUS.register(new LayerInstaller());

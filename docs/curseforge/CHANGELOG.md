@@ -1,5 +1,26 @@
 # Unreleased
 
+**Requires Backport Core 1.4.2 or newer.**
+
+*   **1.14's shorter crouch**: sneaking makes you 1.5 blocks tall with your eyes at 1.27, so you fit through a 1.5-block gap, and under a 1.5-block ceiling you stay crouched.
+*   **Vindicators break wooden doors** during a raid, on Normal and Hard.
+*   **TNT and TNT minecarts drop every block they destroy.** Creepers and other explosions keep their chance.
+*   **Leaves drop sticks** now and then, more with Fortune.
+*   **Illagers and ravagers leave baby villagers alone**, as since 1.18.
+*   **Cartographers trade as in current Java**: village maps by biome, swamp hut and jungle temple maps, a trial chambers map with Tricky Trials Backport, banners by biome and the woodland mansion map at master. A map is only offered for a structure an installed mod builds.
+*   **Note blocks play 1.14's six new instruments**: iron xylophone, cow bell, didgeridoo, bit, banjo and pling.
+*   **Parrots imitate pillagers and ravagers.**
+*   **Mobs no longer spawn only to vanish** the next tick far from every player.
+*   **Zombie sieges as in 1.14**: one night in ten, zombies come for a player in any village, however small.
+*   **Arrows break chorus flowers**, which drop.
+*   **A creeper killed by a stray or wither skeleton drops a music disc.**
+*   **Invisibility hides you from guardians, and villagers from zombies and illagers**, until they are close.
+*   **A tamed wolf's kills count as its owner's**, so they drop what only player kills drop.
+*   **Dead bushes are furnace fuel.**
+*   **Horse armor is drawn as in 1.14**: it no longer flashes red when the horse is hurt, and an invisible horse's armor shows.
+*   **Torches stand on glass panes and iron bars.**
+*   **The book and quill editor as 1.14 rewrote it**: a cursor, text selection, copy, cut and paste, double-click for a word, and 100 pages.
+*   Each of these has a setting in the new **1.14 Changes** section, on by default.
 *   Suspicious stew takes later versions' flowers from the backports that add them (`StewEffects.add`): with Trails & Tales Backport, the torchflower gives Night Vision for 5 seconds, crafted or from a brown mooshroom, as in 1.20.
 
 # 2.6.0

@@ -112,6 +112,11 @@ public final class ModConfig {
     @Setting.Feature(icon = "villagerbackport:stripped_oak_log")
     public static final VillageBlocks villageBlocks = new VillageBlocks();
 
+    @Config.LangKey("config.villagerbackport.mechanics")
+    @Config.Comment("How 1.14 changed things 1.12.2 already has: crouching, explosions, illagers and more.")
+    @Setting.Feature(icon = "minecraft:tnt")
+    public static final Mechanics mechanics = new Mechanics();
+
     private ModConfig() {
     }
 
@@ -142,6 +147,16 @@ public final class ModConfig {
                 "villager anyone has traded with, even once, is never touched."
         })
         public boolean rebuildUntradedVillagers = true;
+
+        @Config.Comment({
+                "Cartographers trade as in current Java (1.21.5): an apprentice sells two of the village",
+                "maps, swamp hut map and jungle temple map its biome offers, a journeyman a trial",
+                "chambers map beside the ocean monument map, an expert its biome's banners and a master",
+                "the woodland mansion map. A map is only offered when an installed mod builds that",
+                "structure (trial chambers come from Tricky Trials Backport). Off keeps 1.14's table."
+        })
+        @Setting.Vanilla("false")
+        public boolean modernCartographer = true;
     }
 
     public static final class Restock {
@@ -1330,6 +1345,100 @@ public final class ModConfig {
      * Writes edits made through the in-game config screen back onto the static fields.
      * Without this, changes only take effect after a restart.
      */
+    public static final class Mechanics {
+
+        @Config.Comment({
+                "1.14's shorter crouch: sneaking makes you 1.5 blocks tall with your eyes at 1.27 (1.12.2:",
+                "1.65 and 1.54), so you fit through a 1.5-block gap, and under a 1.5-block ceiling you",
+                "stay crouched. On a server, the server's setting counts."
+        })
+        @Setting.Vanilla("false")
+        @Setting.Server
+        public boolean shortCrouch = true;
+
+        @Config.Comment("Vindicators in a raid break wooden doors, on Normal and Hard, as in 1.14.")
+        @Setting.Vanilla("false")
+        public boolean vindicatorsBreakDoors = true;
+
+        @Config.Comment({"Every block TNT and TNT minecarts destroy drops, as since 1.14. Creepers, beds and other",
+                "explosions keep 1.12.2's chance."})
+        @Setting.Vanilla("false")
+        public boolean tntDropsAll = true;
+
+        @Config.Comment({"Leaves drop 1 or 2 sticks now and then, as since 1.14: 2% of the time, more with Fortune.",
+                "Not when sheared or broken with Silk Touch."})
+        @Setting.Vanilla("false")
+        public boolean leavesDropSticks = true;
+
+        @Config.Comment({"Vindicators, evokers, illusioners, pillagers and ravagers leave baby villagers alone, as",
+                "since 1.18."})
+        @Setting.Vanilla("false")
+        public boolean illagersSpareBabies = true;
+
+        @Config.Comment({"Note blocks play 1.14's six new instruments: iron xylophone on iron blocks, cow bell on",
+                "soul sand, didgeridoo on pumpkins, bit on emerald blocks, banjo on hay bales and pling on",
+                "glowstone."})
+        @Setting.Vanilla("false")
+        public boolean noteBlockInstruments = true;
+
+        @Config.Comment("Parrots imitate pillagers and ravagers, as since 1.14. Takes effect on restart.")
+        @Config.RequiresMcRestart
+        @Setting.Vanilla("false")
+        public boolean parrotsImitateRaiders = true;
+
+        @Config.Comment({"Mobs no longer spawn more than 128 blocks from every player only to vanish the next tick,",
+                "as since 1.14."})
+        @Setting.Vanilla("false")
+        public boolean refuseInstantDespawns = true;
+
+        @Config.Comment({"Zombie sieges as since 1.14: on one night in ten, at midnight, zombies come for a player",
+                "who is in any village, however few villagers it has (1.12.2 needed 10 doors and 20",
+                "villagers). Not in mushroom fields."})
+        @Setting.Vanilla("false")
+        public boolean modernSieges = true;
+
+        @Config.Comment("An arrow that hits a chorus flower breaks it, and it drops, as since 1.14.")
+        @Setting.Vanilla("false")
+        public boolean arrowsBreakChorusFlowers = true;
+
+        @Config.Comment({"A creeper killed by a stray or a wither skeleton drops a music disc, as one killed by a",
+                "skeleton does (since 1.14)."})
+        @Setting.Vanilla("false")
+        public boolean anySkeletonDisc = true;
+
+        @Config.Comment({"Invisibility hides you from guardians, and villagers from zombies and illagers, as since",
+                "1.14: they notice an invisible target only from close by."})
+        @Setting.Vanilla("false")
+        public boolean invisibilityHides = true;
+
+        @Config.Comment({"A mob killed by a tamed wolf counts as killed by the wolf's owner, so it drops what only",
+                "player kills drop, as since 1.14."})
+        @Setting.Vanilla("false")
+        public boolean wolfKillsCount = true;
+
+        @Config.Comment("Dead bushes burn in a furnace, for half an item's smelting (since 1.14).")
+        @Setting.Vanilla("false")
+        public boolean deadBushFuel = true;
+
+        @Config.Comment({"Horse armor is drawn as 1.14 draws it: over the horse rather than painted into its skin,",
+                "so it doesn't flash red when the horse is hurt, and stays visible on an invisible horse.",
+                "Takes effect on restart."})
+        @Config.RequiresMcRestart
+        @Setting.Vanilla("false")
+        @Setting.Client
+        public boolean horseArmorLayer = true;
+
+        @Config.Comment("Torches and redstone torches stand on glass panes and iron bars, as since 1.14.")
+        @Setting.Vanilla("false")
+        public boolean torchesOnPanes = true;
+
+        @Config.Comment({"The book and quill editor as 1.14 rewrote it: a cursor you can move, text selection,",
+                "copy, cut and paste, double-click for a word and triple-click for the page, and 100 pages."})
+        @Setting.Vanilla("false")
+        @Setting.Client
+        public boolean modernBookEditor = true;
+    }
+
     public static final class EventHandler {
 
         @SubscribeEvent

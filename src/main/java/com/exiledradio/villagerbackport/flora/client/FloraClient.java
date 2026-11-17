@@ -120,7 +120,8 @@ public final class FloraClient {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private static void installHorseLayer(Render<?> render) {
-        if (!(render instanceof RenderLivingBase) || FloraContent.leatherHorseArmor == null) {
+        if (!(render instanceof RenderLivingBase) || FloraContent.leatherHorseArmor == null
+                && !com.exiledradio.villagerbackport.mechanics.client.HorseArmorClient.active()) {
             return;
         }
         try {

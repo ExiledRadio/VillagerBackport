@@ -157,15 +157,15 @@ public final class ModernTrades {
             }
         }
 
-        // 1.14 draws indices until it has two different ones, which is a uniform pick of two; a
-        // shuffle is the same thing without the loop.
-        if (pool.size() > TRADES_PER_LEVEL) {
-            Collections.shuffle(pool, random);
-            pool = pool.subList(0, TRADES_PER_LEVEL);
-        }
-
+        // Today's addOffersFromItemListings: draw entries at random without putting them back until two give a trade,
+        // so an entry that gives none here (a map to a structure not found, another biome's trade) makes way for
+        // another. A shuffle is the same draw. 1.14.4 drew two and kept whatever they gave.
+        Collections.shuffle(pool, random);
         int added = 0;
         for (Trade trade : pool) {
+            if (added >= TRADES_PER_LEVEL) {
+                break;
+            }
             MerchantRecipe recipe = trade.offer(villager, random);
             if (recipe != null) {
                 list.add(recipe);
@@ -266,12 +266,26 @@ public final class ModernTrades {
                         optionalSell(3, 1, STOCK, "deeperdepths:red_candle"),
                         unless(sell(Items.NAME_TAG, 20, 1, STOCK), "deeperdepths:yellow_candle", "deeperdepths:red_candle")));
 
+        // 1.14's table, or with trades.modernCartographer current Java's (1.21.5, VillagerTrades' CARTOGRAPHER): maps by
+        // the villager's biome, the trial chambers map, banners by biome, the mansion map at master.
         table("minecraft:librarian", "cartographer",
-                level(buy(Items.PAPER, 24, 16), sell(Items.MAP, 7, 1, STOCK)),
-                level(buy(new ItemStack(Blocks.GLASS_PANE, 11), 16), map(13, "Monument", MapDecoration.Type.MONUMENT)),
-                level(buy(Items.COMPASS, 1, 12), map(14, "Mansion", MapDecoration.Type.MANSION)),
-                concat(level(sell(Items.ITEM_FRAME, 7, 1, STOCK)), banners()),
-                level(bannerPattern()));
+                concat(legacy(buy(Items.PAPER, 24, 16), sell(Items.MAP, 7, 1, STOCK)),
+                        modern(buy(Items.PAPER, 24, STOCK), sell(Items.MAP, 7, 1, STOCK))),
+                concat(legacy(buy(new ItemStack(Blocks.GLASS_PANE, 11), 16), map(13, "Monument", MapDecoration.Type.MONUMENT)),
+                        modern(buy(new ItemStack(Blocks.GLASS_PANE, 11), STOCK),
+                                biomeMap("minecraft:village_taiga", "village_taiga", "taiga_village", "swamp", "snow", "plains"),
+                                biomeMap("minecraft:swamp_hut", "explorer_swamp", "swamp_hut", "taiga", "snow", "jungle"),
+                                biomeMap("minecraft:village_snowy", "village_snowy", "snowy_village", "taiga", "swamp"),
+                                biomeMap("minecraft:village_savanna", "village_savanna", "savanna_village", "plains", "jungle", "desert"),
+                                biomeMap("minecraft:village_plains", "village_plains", "plains_village", "taiga", "snow", "savanna", "desert"),
+                                biomeMap("minecraft:jungle_pyramid", "explorer_jungle", "jungle_temple", "swamp", "savanna", "desert"),
+                                biomeMap("minecraft:village_desert", "village_desert", "desert_village", "savanna", "jungle"))),
+                concat(legacy(buy(Items.COMPASS, 1, 12), map(14, "Mansion", MapDecoration.Type.MANSION)),
+                        modern(buy(Items.COMPASS, 1, STOCK), map(13, "Monument", MapDecoration.Type.MONUMENT),
+                                locatedMap(12, "minecraft:trial_chambers", "trial_chambers", "trial_chambers"))),
+                concat(legacy(concat(level(sell(Items.ITEM_FRAME, 7, 1, STOCK)), banners())),
+                        modern(concat(level(sell(Items.ITEM_FRAME, 7, 1, STOCK)), biomeBanners()))),
+                concat(legacy(bannerPattern()), modern(bannerPattern(), map(14, "Mansion", MapDecoration.Type.MANSION))));
 
         table("minecraft:priest", "cleric",
                 level(buy(Items.ROTTEN_FLESH, 32, 16), sell(Items.REDSTONE, 1, 2, STOCK)),
@@ -471,6 +485,129 @@ public final class ModernTrades {
                 return recipe(new ItemStack(Items.EMERALD, emeralds), new ItemStack(Items.COMPASS), map, STOCK);
             }
         };
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // Current Java's cartographer (1.21.5)
+    // ---------------------------------------------------------------------------------------------
+
+    /** @return the trades, each offered only while trades.modernCartographer is off (1.14's table) */
+    private static Trade[] legacy(Trade... trades) {
+        return switched(false, trades);
+    }
+
+    /** @return the trades, each offered only while trades.modernCartographer is on */
+    private static Trade[] modern(Trade... trades) {
+        return switched(true, trades);
+    }
+
+    private static Trade[] switched(final boolean modern, Trade[] trades) {
+        Trade[] out = new Trade[trades.length];
+        for (int i = 0; i < trades.length; i++) {
+            final Trade trade = trades[i];
+            out[i] = new Trade() {
+                @Override
+                public boolean available() {
+                    return com.exiledradio.villagerbackport.ModConfig.trades.modernCartographer == modern && trade.available();
+                }
+
+                @Nullable
+                @Override
+                public MerchantRecipe offer(@Nullable EntityVillager villager, Random random) {
+                    return trade.offer(villager, random);
+                }
+            };
+        }
+        return out;
+    }
+
+    /**
+     * Today's {@code TypeSpecificTrade.oneTradeInBiomes(TreasureMapForEmeralds(8, ...))}: 8 emeralds and a compass for
+     * a map to the nearest such structure, sold only by cartographers of the listed biomes.
+     */
+    private static Trade biomeMap(final String structure, final String name, final String icon, final String... types) {
+        final Trade map = locatedMap(8, structure, name, icon);
+        return new Trade() {
+            @Override
+            public boolean available() {
+                return map.available();
+            }
+
+            @Nullable
+            @Override
+            public MerchantRecipe offer(@Nullable EntityVillager villager, Random random) {
+                if (villager == null || !Arrays.asList(types).contains(com.exiledradio.villagerbackport.data.VillagerTypes.of(villager))) {
+                    return null;
+                }
+                return map.offer(villager, random);
+            }
+        };
+    }
+
+    /**
+     * Today's {@code TreasureMapForEmeralds} for a structure found through Backport Core's {@code /locate} registry
+     * (this mod's villages, Core's temples, Tricky Trials Backport's trial chambers): offered only when an installed
+     * mod has registered the structure, and only if one is found within today's 100 regions.
+     */
+    private static Trade locatedMap(final int emeralds, final String structure, final String name, final String icon) {
+        return new Trade() {
+            @Override
+            public boolean available() {
+                return com.exiledradio.backportcore.locate.StructureLocate.known(structure);
+            }
+
+            @Nullable
+            @Override
+            public MerchantRecipe offer(@Nullable EntityVillager villager, Random random) {
+                if (villager == null || !(villager.world instanceof net.minecraft.world.WorldServer)) {
+                    return null;
+                }
+                net.minecraft.world.WorldServer world = (net.minecraft.world.WorldServer) villager.world;
+                com.exiledradio.backportcore.locate.StructureLocate.Found found;
+                try {
+                    found = com.exiledradio.backportcore.locate.StructureLocate.nearest(world, new BlockPos(villager), structure);
+                } catch (com.exiledradio.backportcore.locate.StructureLocate.Unavailable e) {
+                    return null;
+                }
+                if (found == null) {
+                    return null;
+                }
+                BlockPos target = found.pos;
+                ItemStack map = net.minecraft.item.ItemMap.setupNewMap(world, target.getX(), target.getZ(), (byte) 2, true, true);
+                net.minecraft.item.ItemMap.renderBiomePreviewMap(world, map);
+                net.minecraft.world.storage.MapData.addTargetDecoration(map, target, "+",
+                        com.exiledradio.villagerbackport.mechanics.Cartography.icon(icon));
+                map.setTranslatableName("filled_map." + name);
+                return recipe(new ItemStack(Items.EMERALD, emeralds), new ItemStack(Items.COMPASS), map, STOCK);
+            }
+        };
+    }
+
+    /** Today's expert cartographer banners: 2 emeralds each, each color sold in the biomes listed (VillagerTrades). */
+    private static Trade[] biomeBanners() {
+        Object[][] colors = {
+                {EnumDyeColor.BLUE, "snow", "taiga"}, {EnumDyeColor.WHITE, "snow", "plains"},
+                {EnumDyeColor.RED, "snow", "savanna"}, {EnumDyeColor.GREEN, "desert", "savanna", "jungle"},
+                {EnumDyeColor.LIME, "desert", "taiga"}, {EnumDyeColor.PURPLE, "taiga", "swamp"},
+                {EnumDyeColor.CYAN, "desert", "snow"}, {EnumDyeColor.YELLOW, "plains", "jungle"},
+                {EnumDyeColor.ORANGE, "savanna", "desert"}, {EnumDyeColor.BROWN, "plains", "jungle"},
+                {EnumDyeColor.MAGENTA, "savanna"}, {EnumDyeColor.LIGHT_BLUE, "snow", "swamp"},
+                {EnumDyeColor.PINK, "taiga", "plains"}, {EnumDyeColor.GRAY, "desert"}, {EnumDyeColor.BLACK, "swamp"}};
+        Trade[] trades = new Trade[colors.length];
+        for (int i = 0; i < colors.length; i++) {
+            EnumDyeColor color = (EnumDyeColor) colors[i][0];
+            final List<Object> types = Arrays.asList(colors[i]).subList(1, colors[i].length);
+            final Trade banner = sell(new ItemStack(Items.BANNER, 1, color.getDyeDamage()), 2, STOCK);
+            trades[i] = new Fixed() {
+                @Nullable
+                @Override
+                public MerchantRecipe offer(@Nullable EntityVillager villager, Random random) {
+                    return villager != null && types.contains(com.exiledradio.villagerbackport.data.VillagerTypes.of(villager))
+                            ? banner.offer(villager, random) : null;
+                }
+            };
+        }
+        return trades;
     }
 
     /** Runs a vanilla trade and returns what it added, or null if it added nothing. */
