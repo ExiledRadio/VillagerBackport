@@ -70,6 +70,8 @@ final class ClientMechanicsTest {
         }
         ok.accept(gui.pageCount() == 100, "book: 100 pages at most (" + gui.pageCount() + ")");
 
+        ok.accept(!com.exiledradio.villagerbackport.mechanics.Mechanics.crouch(),
+                "crouch: not connected to a server that runs this mod, 1.12.2's crouch on the client");
         ok.accept(HorseArmorClient.active(), "horse armor: drawn as a layer");
         String baked = ObfuscationReflectionHelper.getPrivateValue(HorseArmorType.class, HorseArmorType.IRON, "field_188586_e");
         ok.accept(baked == null, "horse armor: iron no longer baked into the horse texture");

@@ -43,4 +43,6 @@ are Backport Core 1.4.2's (P33 to P35), switched on from here.
 *   A wolf's kill counts for its owner when the wolf lands the killing blow. 1.14 also credits the owner for a mob a wolf
     hurt that dies of something else within 5 seconds.
 *   Sticks come from vanilla's leaves only; other mods' leaves keep their own drops.
-*   The book editor and horse armor layer are client-side and are not covered by the server self-tests.
+*   The book editor and horse armor layer are client-side: `gradlew runClient -Pselftest=client` checks them
+    (`selftest/ClientMechanicsTest`). The crouch on a real client (camera easing, the 1.5 gap, the held crouch, sneak
+    speed, drawing) is Backport Core's `runClient -Pselftest` (`ClientCrouchTests`).
