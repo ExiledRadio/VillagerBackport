@@ -4,7 +4,7 @@ From the family audit of 2026-11-16 (`family-notes/MECHANICS_AUDIT_2026-11-16.md
 `mechanics/` (and `trade/ModernTrades` for the cartographer); settings in `ModConfig.mechanics` (section
 "1.14 Changes") and `ModConfig.trades.modernCartographer`, all on by default; self-tests in
 `selftest/MechanicsSelfTest` (`-Pselftest=mechanics`). V&P still has no coremod: the three changes that need a patch
-are Backport Core 1.4.2's (P33 to P35), switched on from here.
+are Backport Core 1.4.0's (P33 to P35), switched on from here.
 
 | Change | Version | How | Setting |
 |---|---|---|---|

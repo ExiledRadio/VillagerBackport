@@ -63,7 +63,7 @@ The places are in `docs/CREATIVE_TABS.md`; a dev client already checked the list
 - [ ] Other mods' items are still in their tabs, in their own order.
 - [ ] With another update backport installed too, its items and this mod's sit together by kind (stripped logs, slabs).
 
-## 1.14's changes to things 1.12.2 has (mechanics, with Backport Core 1.4.2)
+## 1.14's changes to things 1.12.2 has (mechanics, with Backport Core 1.4.0)
 
 Self-tests: `gradlew runServer -Pselftest=mechanics` and `gradlew runClient -Pselftest=client` (book editor, horse
 armor). See `docs/streams/mechanics.md`.
