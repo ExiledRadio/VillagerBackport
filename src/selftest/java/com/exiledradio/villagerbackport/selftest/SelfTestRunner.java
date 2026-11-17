@@ -28,6 +28,7 @@ public final class SelfTestRunner {
             new FlatSelfTest(),
             new StewSelfTest(),
             new SnowSelfTest(),
+            new JobPathSelfTest(),
     };
 
     private final List<String> wanted;
@@ -39,6 +40,11 @@ public final class SelfTestRunner {
 
     public static void start(String which) {
         VillagerBackport.LOGGER.info("SELFTEST requested: {}", which);
+        if ("jobvillage".equals(which)) {
+            // A measurement in a generated village; see JobVillageBench.
+            JobVillageBench.start();
+            return;
+        }
         if (which.startsWith("night")) {
             // A tick-driven measurement, not a pass/fail test; see NightBench.
             NightBench.start(which);

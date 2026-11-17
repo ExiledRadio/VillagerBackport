@@ -134,6 +134,7 @@ public final class JobSiteAttacher {
             // wandering, fleeing, going indoors - search a far larger volume. See WorkPathing.
             WorkPathing.removeStale(villager);
             useModernDoors(villager);
+            removeStayNearVillage(villager);
             allowDoors(villager);
         } catch (RuntimeException e) {
             // A villager that never walks to work still trades; the gate fails open for it.
@@ -179,6 +180,31 @@ public final class JobSiteAttacher {
             }
         }
         villager.tasks.addTask(DOOR_PRIORITY, new com.exiledradio.villagerbackport.home.EntityAIInteractWithDoors(villager));
+    }
+
+    /**
+     * Takes away 1.12.2's "stay near the village" goal, which 1.14 does not have.
+     *
+     * <h2>Why villagers paced outside a house and stuck in its corners</h2>
+     * 1.12.2 gives every villager a home: the centre and radius of the door-made village it last saw,
+     * refreshed every few seconds. {@code EntityAIMoveTowardsRestriction} sits at priority 5 and, the
+     * moment a villager is outside that radius, walks it back in - and it outranks the walk to work,
+     * to bed and to the bell. A workstation or bed just past the edge (a house a player built beside
+     * the village, a farm on the outskirts, a village whose doors 1.12 has not all counted) was walked
+     * towards, abandoned as the edge was crossed, walked towards again: the villager paced outside, or
+     * stood at the last corner before the line, until its minute ran out.
+     *
+     * <p>1.14's villagers have no such leash; their idle stroll prefers the village, and their job,
+     * bed and meeting point are walked to wherever they are. The home stays set, so 1.12.2's wander
+     * goal still picks spots inside the village as 1.14's stroll does.
+     */
+    private void removeStayNearVillage(EntityVillager villager) {
+        for (EntityAITasks.EntityAITaskEntry entry :
+                new java.util.ArrayList<EntityAITasks.EntityAITaskEntry>(villager.tasks.taskEntries)) {
+            if (entry.action instanceof net.minecraft.entity.ai.EntityAIMoveTowardsRestriction) {
+                villager.tasks.removeTask(entry.action);
+            }
+        }
     }
 
     private void allowDoors(EntityVillager villager) {

@@ -165,7 +165,9 @@ public final class EntityAISleep extends EntityAIBase {
     private void walkToBed() {
         WorkPathing.Walk walk = WorkPathing.walk(this.villager, this.bed, ModConfig.jobs.walkSpeed);
         this.repathIn = walk.moving() ? this.villager.getRNG().nextInt(10) : NO_PATH_RETRY;
-        ClaimReach.walked(this.villager, ClaimReach.Claim.HOME, walk == WorkPathing.Walk.REACHES);
+        if (walk.answered()) {
+            ClaimReach.walked(this.villager, ClaimReach.Claim.HOME, walk == WorkPathing.Walk.REACHES);
+        }
     }
 
     @Override

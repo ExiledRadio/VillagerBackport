@@ -165,6 +165,8 @@ public class EntityAIWorkAtSite extends EntityAIBase {
         // Walks a path that falls short, as 1.14 does; only one that arrives stops the clock.
         WorkPathing.Walk walk = WorkPathing.walk(this.villager, this.target, ModConfig.jobs.walkSpeed);
         this.onTheWay = walk.moving();
-        ClaimReach.walked(this.villager, ClaimReach.Claim.JOB, walk == WorkPathing.Walk.REACHES);
+        if (walk.answered()) {
+            ClaimReach.walked(this.villager, ClaimReach.Claim.JOB, walk == WorkPathing.Walk.REACHES);
+        }
     }
 }

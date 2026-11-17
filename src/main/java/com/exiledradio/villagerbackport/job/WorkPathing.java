@@ -46,11 +46,22 @@ public final class WorkPathing {
          * target, and will ask again from there. The can't-reach clock runs meanwhile.
          */
         PARTIAL,
+        /**
+         * The villager is off the ground - mid-hop up a step, falling, climbing - and no path can be
+         * searched from there. Not an answer about the target: ask again in a moment, and leave the
+         * can't-reach clock alone.
+         */
+        WAITING,
         /** No way at all from here. */
         NONE;
 
         public boolean moving() {
             return this != NONE;
+        }
+
+        /** @return true when this walk says whether the target can be reached, which WAITING does not */
+        public boolean answered() {
+            return this != WAITING;
         }
     }
 
@@ -97,6 +108,14 @@ public final class WorkPathing {
      * does, and tries again from there.
      */
     public static Walk walk(EntityVillager villager, BlockPos pos, double speed) {
+        // A path is only searched from the ground (PathNavigateGround's rule, and 1.14's). Asked in
+        // the air, the old answer was "no way at all", which sent a villager hopping up a step towards
+        // its workstation off to do something else for ten seconds and started its can't-reach clock.
+        // 1.14 simply asks again on a later tick.
+        if (!villager.onGround && !villager.isRiding() && !villager.isInWater() && !villager.isInLava()) {
+            return Walk.WAITING;
+        }
+
         Path path = pathTo(villager, pos);
 
         if (path != null && follow(villager, path, speed)) {
