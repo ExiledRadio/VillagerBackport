@@ -14,10 +14,10 @@ Workstations spawn naturally inside village structures. Villages are built from 
 
 Mods that add village buildings, like Waystones and RLCraft, add them to 1.14 villages too.
 
-| | |
-| --- | --- |
-| ![A plains village in the day](https://media.forgecdn.net/attachments/2173/996/vp-plains-village-day-jpg.jpg) | ![A desert village in the day](https://media.forgecdn.net/attachments/2173/992/vp-desert-village-day-jpg.jpg) |
-| ![A snowy village](https://media.forgecdn.net/attachments/2169/793/vp-snowy-village-jpg.jpg) | ![Foxes in a taiga village](https://media.forgecdn.net/attachments/2169/792/vp-taiga-village-foxes-jpg.jpg) |
+|                                                                                                                             |                                                                                                                             |
+| --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| <img src="https://media.forgecdn.net/attachments/2173/996/vp-plains-village-day-jpg.jpg" alt="A plains village in the day"> | <img src="https://media.forgecdn.net/attachments/2173/992/vp-desert-village-day-jpg.jpg" alt="A desert village in the day"> |
+| <img src="https://media.forgecdn.net/attachments/2169/793/vp-snowy-village-jpg.jpg" alt="A snowy village">                  | <img src="https://media.forgecdn.net/attachments/2169/792/vp-taiga-village-foxes-jpg.jpg" alt="Foxes in a taiga village">   |
 
 ## Villagers
 
@@ -77,11 +77,19 @@ Every feature can be turned off in Backport Core's settings screen, under Mod Op
 
 ## Compatibility
 
-Works with Open Terrain Generator (RLCraft Dregora), Biomes O' Plenty, Realistic Terrain Generation, Antique Atlas, JEI Villagers, TradeStages Legacy, Scape and Run: Parasites, and Hunter Illager.
+**[Update Aquatic Backport](https://www.curseforge.com/minecraft/mc-mods/update-aquatic-backport)**: the wandering trader sells sea pickles, and desert houses get sea pickles. Its kelp, seagrass and sea pickles go in the composter, the stonecutter cuts prismarine, cats scare phantoms away, and stray cats and foxes hunt baby turtles.
 
-With Update Aquatic Backport installed, the wandering trader sells sea pickles.
+**[Caves & Cliffs Backport](https://www.curseforge.com/minecraft/mc-mods/caves-cliffs-backport)**: in its 1.18 worlds, villages and outposts start where 1.18 puts them and the ground is shaped around them, and its terrain grows this mod's bamboo, berry bushes and flowers. The composter takes its lush cave plants, foxes walk on powder snow, and the wandering trader sells pointed dripstone.
 
-With Caves & Cliffs Backport, its 1.18 worlds get 1.18's villages and pillager outposts.
+**[Buzzy Bees Backport](https://www.curseforge.com/minecraft/mc-mods/buzzy-bees-backport)**: campfires calm bees, bees pollinate cornflowers, lilies of the valley and wither roses and grow berry bushes, bells ring from redstone, and village golems crack.
+
+**[Nether Update Backport](https://www.curseforge.com/minecraft/mc-mods/nether-update-backport)**: netherite upgrades use the smithing table, piglins carry crossbows and love bells, the composter takes nether plants, the soul campfire cooks what the campfire cooks, and wither roses grow on soul soil.
+
+**[Wild Update Backport](https://www.curseforge.com/minecraft/mc-mods/wild-update-backport)**: pillager outposts get the allay cage and goat horns, the wandering trader sells propagules, the composter takes mangrove plants, and scaffolding burns as fuel.
+
+**[Trails & Tales Backport](https://www.curseforge.com/minecraft/mc-mods/trails-tales-backport)**: camels spawn in desert villages, the smithing table takes its templates, and its bamboo is this mod's bamboo.
+
+**Other mods**: works with Open Terrain Generator (RLCraft Dregora), Biomes O' Plenty, Realistic Terrain Generation, Antique Atlas, JEI Villagers, TradeStages Legacy, Scape and Run: Parasites, and Hunter Illager.
 
 Using Village Names? Set `Activate New Village Generator` to `false` in `config/VillageNames4/newvillages/village_gen.cfg` to get 1.14 villages.
 
