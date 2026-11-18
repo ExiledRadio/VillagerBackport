@@ -1,6 +1,7 @@
 package com.exiledradio.villagerbackport.lookfeel.client;
 
 import com.exiledradio.backportcore.presentation.Contribution;
+import com.exiledradio.backportcore.presentation.LookArea;
 import com.exiledradio.backportcore.presentation.Presentation;
 import com.exiledradio.backportcore.presentation.client.PresentationHooks;
 import com.exiledradio.villagerbackport.lookfeel.ScrollAccumulator;
@@ -88,7 +89,7 @@ public final class LookAndFeelClient {
     public void onGuiOpen(GuiOpenEvent event) {
         Minecraft mc = Minecraft.getMinecraft();
         if (event.getGui() != null && event.getGui().getClass() == GuiIngameMenu.class && mc.currentScreen == null
-                && Keyboard.isKeyDown(Keyboard.KEY_F3) && Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+                && Presentation.isAtLeast(LookArea.DEBUG, "1.14.1") && Keyboard.isKeyDown(Keyboard.KEY_F3) && Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
             event.setGui(new GuiPauseOnly());
             pauseOnlyScreens++;
         }
@@ -104,7 +105,9 @@ public final class LookAndFeelClient {
         int wheel = event.getDwheel();
         Minecraft mc = Minecraft.getMinecraft();
         EntityPlayerSP player = mc.player;
-        if (wheel == 0 || event.getButton() != -1 || mc.currentScreen != null || player == null) {
+        // While Scroll Sensitivity is hidden (Core's Look & Feel page turned the options screens off), 1.12.2's scrolling.
+        if (wheel == 0 || event.getButton() != -1 || mc.currentScreen != null || player == null
+                || !com.exiledradio.villagerbackport.lookfeel.LookAndFeel.SCROLL_SENSITIVITY.isShown()) {
             return;
         }
         event.setCanceled(true);
