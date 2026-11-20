@@ -60,6 +60,21 @@ public final class CrossbowClient {
                 });
     }
 
+    /** The crossbow is held close to the camera, where 1.12.2's per-pixel item edges show seams; close them. */
+    @SubscribeEvent
+    public void onModelBake(net.minecraftforge.client.event.ModelBakeEvent event) {
+        ItemCrossbow item = com.exiledradio.villagerbackport.crossbow.CrossbowContent.crossbow;
+        if (item == null || item.getRegistryName() == null) {
+            return;
+        }
+        net.minecraft.client.renderer.block.model.ModelResourceLocation key =
+                new net.minecraft.client.renderer.block.model.ModelResourceLocation(item.getRegistryName(), "inventory");
+        net.minecraft.client.renderer.block.model.IBakedModel model = event.getModelRegistry().getObject(key);
+        if (model != null && !(model instanceof SeamlessItemModel)) {
+            event.getModelRegistry().putObject(key, new SeamlessItemModel(model));
+        }
+    }
+
     @SubscribeEvent
     public void onRenderHand(RenderSpecificHandEvent event) {
         EntityPlayerSP player = Minecraft.getMinecraft().player;
