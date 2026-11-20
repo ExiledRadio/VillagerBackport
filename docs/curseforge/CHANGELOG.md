@@ -1,3 +1,8 @@
+# 2.7.1
+
+*   **Fixed: village blocks that stand in water were placed dry**, such as the fence posts in the savanna fisher cottage's pool. Applies to newly generated villages.
+*   **Fixed see-through gaps along the edges of a held crossbow.**
+
 # 2.7.0
 
 *   **1.14's shorter crouch**: sneaking makes you 1.5 blocks tall with your eyes at 1.27, so you fit through a 1.5-block gap, and under a 1.5-block ceiling you stay crouched.
