@@ -238,6 +238,10 @@ public class ModernVillagePiece extends StructureComponent
                 // update that turns the next one, and so on. A street under a well took the well's whole path ring
                 // with it. 1.14 and later check a path only when a neighbor changes in the world, not in worldgen.
                 setWithoutSupportCheck(world, at, state);
+            } else if ("true".equals(entry.sourceProps.getString("waterlogged"))) {
+                // 1.14's waterlogged block (the savanna fisher cottage's fence posts in its pool): with its
+                // water through Fluidlogged API, else dry as 1.12.2 can only have it.
+                com.exiledradio.backportcore.waterlog.Waterlogging.placeWithWater(world, at, state, 2);
             } else {
                 world.setBlockState(at, state, 2);
             }
