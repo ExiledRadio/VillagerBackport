@@ -25,6 +25,7 @@ public final class SelfTestRunner {
             new PickleMoveSelfTest(),
             new LocateSelfTest(),
             new Templates118SelfTest(),
+            new FisherPoolSelfTest(),
             new FlatSelfTest(),
             new StewSelfTest(),
             new SnowSelfTest(),
