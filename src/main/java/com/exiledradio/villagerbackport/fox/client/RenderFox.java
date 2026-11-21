@@ -1,5 +1,7 @@
 package com.exiledradio.villagerbackport.fox.client;
 
+import com.exiledradio.villagerbackport.babies.client.BabyModels;
+import com.exiledradio.villagerbackport.babies.client.model.BabyFoxModel;
 import com.exiledradio.villagerbackport.VillagerBackport;
 import com.exiledradio.villagerbackport.fox.EntityFox;
 
@@ -21,14 +23,33 @@ public class RenderFox extends RenderLiving<EntityFox> {
     private static final ResourceLocation RED_SLEEP = texture("fox_sleep");
     private static final ResourceLocation SNOW = texture("snow_fox");
     private static final ResourceLocation SNOW_SLEEP = texture("snow_fox_sleep");
+    private static final ResourceLocation RED_BABY = texture("fox_baby");
+    private static final ResourceLocation RED_SLEEP_BABY = texture("fox_sleep_baby");
+    private static final ResourceLocation SNOW_BABY = texture("fox_snow_baby");
+    private static final ResourceLocation SNOW_SLEEP_BABY = texture("fox_snow_sleep_baby");
+
+    private final ModelFox adultModel;
+    private final BabyFoxModel babyModel = new BabyFoxModel();
 
     public RenderFox(RenderManager manager) {
         super(manager, new ModelFox(), 0.4F);
+        adultModel = (ModelFox) mainModel;
         addLayer(new LayerFoxHeldItem(this));
     }
 
     private static ResourceLocation texture(String name) {
         return new ResourceLocation(VillagerBackport.MOD_ID, "textures/entity/fox/" + name + ".png");
+    }
+
+    /** @return true when this fox draws 26.1's baby model */
+    static boolean newBaby(EntityFox fox) {
+        return fox.isChild() && BabyModels.active();
+    }
+
+    @Override
+    public void doRender(EntityFox fox, double x, double y, double z, float yaw, float partialTicks) {
+        mainModel = newBaby(fox) ? babyModel : adultModel;
+        super.doRender(fox, x, y, z, yaw, partialTicks);
     }
 
     @Override
@@ -42,6 +63,12 @@ public class RenderFox extends RenderLiving<EntityFox> {
 
     @Override
     protected ResourceLocation getEntityTexture(EntityFox fox) {
+        if (newBaby(fox)) {
+            if (fox.getFoxType() == EntityFox.Type.RED) {
+                return fox.isSleeping() ? RED_SLEEP_BABY : RED_BABY;
+            }
+            return fox.isSleeping() ? SNOW_SLEEP_BABY : SNOW_BABY;
+        }
         if (fox.getFoxType() == EntityFox.Type.RED) {
             return fox.isSleeping() ? RED_SLEEP : RED;
         }

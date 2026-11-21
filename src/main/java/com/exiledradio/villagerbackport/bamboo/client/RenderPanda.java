@@ -1,5 +1,7 @@
 package com.exiledradio.villagerbackport.bamboo.client;
 
+import com.exiledradio.villagerbackport.babies.client.BabyModels;
+import com.exiledradio.villagerbackport.babies.client.model.BabyPandaModel;
 import com.exiledradio.villagerbackport.VillagerBackport;
 import com.exiledradio.villagerbackport.bamboo.EntityPanda;
 import com.exiledradio.villagerbackport.bamboo.PandaGene;
@@ -39,19 +41,44 @@ public class RenderPanda extends RenderLiving<EntityPanda> {
         TEXTURES.put(PandaGene.AGGRESSIVE, texture("aggressive_panda"));
     }
 
+    private static final Map<PandaGene, ResourceLocation> BABY_TEXTURES = new EnumMap<PandaGene, ResourceLocation>(PandaGene.class);
+
+    static {
+        for (Map.Entry<PandaGene, ResourceLocation> e : TEXTURES.entrySet()) {
+            BABY_TEXTURES.put(e.getKey(), new ResourceLocation(e.getValue().getNamespace(),
+                    e.getValue().getPath().replace(".png", "_baby.png")));
+        }
+    }
+
+    private final ModelPanda adultModel;
+    private final BabyPandaModel babyModel = new BabyPandaModel();
+
     private static ResourceLocation texture(String name) {
         return new ResourceLocation(VillagerBackport.MOD_ID, "textures/entity/panda/" + name + ".png");
     }
 
     public RenderPanda(RenderManager manager) {
         super(manager, new ModelPanda(), 0.9F);
+        adultModel = (ModelPanda) mainModel;
         addLayer(new HeldItemLayer());
+    }
+
+    /** @return true when this panda draws 26.1's baby model */
+    static boolean newBaby(EntityPanda panda) {
+        return panda.isChild() && BabyModels.active();
+    }
+
+    @Override
+    public void doRender(EntityPanda panda, double x, double y, double z, float yaw, float partialTicks) {
+        mainModel = newBaby(panda) ? babyModel : adultModel;
+        super.doRender(panda, x, y, z, yaw, partialTicks);
     }
 
     @Override
     protected ResourceLocation getEntityTexture(EntityPanda panda) {
-        ResourceLocation texture = TEXTURES.get(panda.getPersonality());
-        return texture != null ? texture : TEXTURES.get(PandaGene.NORMAL);
+        Map<PandaGene, ResourceLocation> textures = newBaby(panda) ? BABY_TEXTURES : TEXTURES;
+        ResourceLocation texture = textures.get(panda.getPersonality());
+        return texture != null ? texture : textures.get(PandaGene.NORMAL);
     }
 
     @Override

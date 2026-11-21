@@ -152,6 +152,9 @@ public final class VillagerBackport {
         com.exiledradio.villagerbackport.mechanics.Mechanics.init();
         com.exiledradio.backportcore.smithing.SmithingUpgrades.registerIngots();
         com.exiledradio.villagerbackport.raid.Raids.init();
+        if (event.getSide().isClient()) {
+            com.exiledradio.villagerbackport.babies.client.VillagerBabies.install();
+        }
     }
 
     /** Every mod's recipes are in by now, so the smithing table's upgrades can be gathered. */
@@ -183,7 +186,7 @@ public final class VillagerBackport {
     @Mod.EventHandler
     public void selfTest(net.minecraftforge.fml.common.event.FMLServerStartedEvent event) {
         String selftest = System.getProperty(MOD_ID + ".selftest");
-        if (selftest == null || selftest.isEmpty() || selftest.equals("client")) {
+        if (selftest == null || selftest.isEmpty() || selftest.startsWith("client")) {
             return;
         }
         try {

@@ -1,5 +1,7 @@
 package com.exiledradio.villagerbackport.fox.client;
 
+import com.exiledradio.villagerbackport.babies.client.model.BabyFoxModel;
+import com.exiledradio.villagerbackport.babies.client.model.ModelPart;
 import com.exiledradio.villagerbackport.fox.EntityFox;
 
 import net.minecraft.client.Minecraft;
@@ -32,9 +34,25 @@ public class LayerFoxHeldItem implements LayerRenderer<EntityFox> {
         }
         boolean sleeping = fox.isSleeping();
         boolean cub = fox.isChild();
-        ModelFox model = (ModelFox) renderer.getMainModel();
-
         GlStateManager.pushMatrix();
+        if (renderer.getMainModel() instanceof BabyFoxModel) {
+            // 26.3's FoxHeldItemLayer for the baby model: from the posed head, then three quarters size.
+            ModelPart head = ((BabyFoxModel) renderer.getMainModel()).head;
+            GlStateManager.translate(head.x / 16.0F, head.y / 16.0F, head.z / 16.0F);
+            GlStateManager.scale(0.75F, 0.75F, 0.75F);
+            GlStateManager.rotate(fox.getHeadRollAngle(partialTicks) * 57.295776F, 0.0F, 0.0F, 1.0F);
+            GlStateManager.rotate(netHeadYaw, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(headPitch, 1.0F, 0.0F, 0.0F);
+            GlStateManager.translate(sleeping ? 0.4F : 0.06F, 0.26F, sleeping ? 0.15F : -0.5F);
+            GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
+            if (sleeping) {
+                GlStateManager.rotate(90.0F, 0.0F, 0.0F, 1.0F);
+            }
+            Minecraft.getMinecraft().getItemRenderer().renderItem(fox, held, ItemCameraTransforms.TransformType.GROUND);
+            GlStateManager.popMatrix();
+            return;
+        }
+        ModelFox model = (ModelFox) renderer.getMainModel();
         if (cub) {
             GlStateManager.scale(0.75F, 0.75F, 0.75F);
             GlStateManager.translate(0.0F, 8.0F * scale, 3.35F * scale);

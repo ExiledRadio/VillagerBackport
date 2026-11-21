@@ -1,3 +1,8 @@
+# 2.7.3
+
+*   **26.1's baby foxes, cats, pandas and villagers** when Game Drops Backport is installed: each with its new model and textures, and baby villagers wear their biome's clothes. They follow Game Drops' Baby Models setting; without Game Drops babies look as before.
+*   **Fixed: horse armor, leather included, could go undrawn on horses** while Game Drops Backport was installed.
+
 # 2.7.2
 
 *   **Fixed villagers who never took a job at a workstation they could see.** A villager whose path ended outside the house wall, or that got wedged on a step a few blocks from its workstation, held its claim for good and never looked elsewhere. Villagers now find their way in through the door, and let a claim go after a minute if they can't reach it, as in current Java.

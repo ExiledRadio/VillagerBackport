@@ -94,7 +94,9 @@ public final class FloraClient {
 
         if (entity instanceof EntityHorse && !horseLayerInstalled) {
             horseLayerInstalled = true;
-            installHorseLayer(Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(entity));
+            // Game Drops' 26.1 babies wrap vanilla's horse renderer: the layer goes on the one adults use.
+            installHorseLayer(com.exiledradio.villagerbackport.babies.client.BabyModels.unwrap(
+                    Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(entity)));
             return;
         }
 

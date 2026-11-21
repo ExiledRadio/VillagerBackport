@@ -61,8 +61,9 @@ public final class LayerInstaller {
         installed = true;
 
         try {
-            install(Minecraft.getMinecraft().getRenderManager()
-                    .getEntityClassRenderObject(EntityVillager.class));
+            // Under the 26.1 baby wrapper, when Game Drops' babies are on: the 1.14 skins go on the renderer adults use.
+            install(com.exiledradio.villagerbackport.babies.client.BabyModels.unwrap(Minecraft.getMinecraft()
+                    .getRenderManager().getEntityClassRenderObject(EntityVillager.class)));
         } catch (RuntimeException e) {
             VillagerBackport.LOGGER.error(
                     "Could not attach the villager level badge layer. Trading is unaffected; "

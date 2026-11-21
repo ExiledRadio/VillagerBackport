@@ -54,9 +54,11 @@ public final class ClientSetup {
         com.exiledradio.villagerbackport.lookfeel.client.LookAndFeelClient.init();
         // `runClient -Pselftest=client`: the look-and-feel title-screen check, reached by name (a release jar has no test classes).
         String selftest = System.getProperty(com.exiledradio.villagerbackport.VillagerBackport.MOD_ID + ".selftest");
+        // `-Pselftest=clientbabies`: 26.1's babies photographed in a flat world instead.
         if (selftest != null && selftest.contains("client")) {
             try {
-                Class.forName("com.exiledradio.villagerbackport.selftest.ClientLookFeelTest").getMethod("register").invoke(null);
+                Class.forName("com.exiledradio.villagerbackport.selftest."
+                        + (selftest.equals("clientbabies") ? "ClientBabiesTest" : "ClientLookFeelTest")).getMethod("register").invoke(null);
             } catch (ReflectiveOperationException e) {
                 com.exiledradio.villagerbackport.VillagerBackport.LOGGER.error("CLIENT SELFTEST DONE pass=0 fail=1: the test classes are not in this build", e);
             }
