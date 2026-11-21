@@ -30,6 +30,7 @@ public final class SelfTestRunner {
             new StewSelfTest(),
             new SnowSelfTest(),
             new JobPathSelfTest(),
+            new VillageJobsSelfTest(),
             new MechanicsSelfTest(),
     };
 
@@ -45,6 +46,11 @@ public final class SelfTestRunner {
         if ("jobvillage".equals(which)) {
             // A measurement in a generated village; see JobVillageBench.
             JobVillageBench.start();
+            return;
+        }
+        if ("census".equals(which)) {
+            // Workstations, beds and employment across several generated villages; see VillageCensusBench.
+            VillageCensusBench.start();
             return;
         }
         if (which.startsWith("night")) {

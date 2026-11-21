@@ -109,7 +109,8 @@ public final class JobSiteClaims {
         if (site != null) {
             if (JobSite.isAtSite(villager)) {
                 ClaimReach.reached(villager, ClaimReach.Claim.JOB);
-            } else if (ClaimReach.givenUp(villager, ClaimReach.Claim.JOB)) {
+            } else if (ClaimReach.givenUp(villager, ClaimReach.Claim.JOB)
+                    || (Employment.isUnemployed(villager) && JobSite.provisionalLapsed(villager))) {
                 // 1.14's StayNearPointTask: a minute of being unable to walk to its workstation and
                 // a villager lets it go, whether it has been there before or never once made it.
                 // Holding a claim is what stops a villager searching, so a claim it can no longer
@@ -422,6 +423,9 @@ public final class JobSiteClaims {
 
         if (best != null) {
             JobSite.set(villager, best);
+            if (unemployed) {
+                JobSite.markProvisional(villager);
+            }
             ClaimReach.reached(villager, ClaimReach.Claim.JOB);
             com.exiledradio.villagerbackport.home.VillageDebug.say(villager,
                     "work: claimed " + villager.world.getBlockState(best).getBlock().getLocalizedName()

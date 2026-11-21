@@ -27,15 +27,18 @@ import javax.annotation.Nullable;
  * times sixteen ({@code PathNavigator}: {@code getPathFinder(floor(FOLLOW_RANGE * 16))}), which for a
  * villager's 48 blocks is 768 nodes, and its villagers cross their villages without trouble.
  *
- * <p>This is the same search as 1.12's - the same heap, the same node processor (the villager's own,
- * with its door and water settings), the same costs and the same stopping rule - with only that budget
- * changed. It is used for the paths this mod asks for (to a workstation, a bed or the bell), never for
+ * <p>It uses 1.12's heap and the villager's own node processor (with its door and water settings),
+ * with 1.14.4's search on top: its budget, costs, heuristic and stopping rule (see {@link #search}).
+ * It is used for the paths this mod asks for (to a workstation, a bed or the bell), never for
  * vanilla's own goals, so a villager wandering about costs exactly what it did before.
  */
 public final class LongPathFinder {
 
     /** 1.14's budget: nodes per block of search range. */
     private static final int NODES_PER_BLOCK = 16;
+
+    /** How close counts as there: 1.14's valid range for a job site or a bed, in blocks, Manhattan. */
+    private static final int ACCURACY = 1;
 
     /** 1.12's own budget, which this never goes below. */
     private static final int VANILLA_NODES = 200;
@@ -88,6 +91,21 @@ public final class LongPathFinder {
         return entity.onGround || entity.isRiding() || entity.isInWater() || entity.isInLava();
     }
 
+    /**
+     * 1.14.4's {@code PathFinder.func_224779_a}, for one target: Euclidean step costs, the distance to
+     * the target weighted by 1.5 as the heuristic, the search range measured from the start, and done
+     * as soon as a node is within {@value #ACCURACY} block (Manhattan) of the target.
+     *
+     * <h2>Why villagers walked to the wrong side of the wall</h2>
+     * This used to be 1.12's search with 1.14's budget, and 1.12's stops only on the target block
+     * itself. A workstation or a bed is never a node anyone stands in, so every search ran through its
+     * whole budget and handed back the node nearest the target by Manhattan distance - for a lectern in
+     * a house, very often the grass outside its back wall, three blocks away through stone, rather than
+     * the floor inside the door. 1.14 asks for the job site's valid range (one block, {@code
+     * GatherPOITask}) and stops on it, and its greedier heuristic gets through the door long before the
+     * budget runs out. Measured on eight generated villages, a third of the workstations were out of
+     * reach before this and their villagers stayed unemployed.
+     */
     @Nullable
     private static Path search(EntityLiving entity, NodeProcessor processor, PathPoint from, PathPoint to, float maxDistance,
                                int budget) {
@@ -95,11 +113,13 @@ public final class LongPathFinder {
         PathPoint[] options = new PathPoint[32];
 
         from.totalPathDistance = 0.0F;
-        from.distanceToNext = from.distanceManhattan(to);
+        from.distanceToNext = from.distanceTo(to);
         from.distanceToTarget = from.distanceToNext;
         open.addPoint(from);
 
+        // 1.14's FlaggedPathPoint keeps the node it has seen nearest the target, by straight distance.
         PathPoint closest = from;
+        float closestDistance = from.distanceTo(to);
         int visited = 0;
 
         while (!open.isPathEmpty()) {
@@ -108,30 +128,36 @@ public final class LongPathFinder {
             }
 
             PathPoint current = open.dequeue();
+            current.visited = true;
 
-            if (current.equals(to)) {
-                closest = to;
+            if (current.distanceManhattan(to) <= ACCURACY) {
+                closest = current;
                 break;
             }
 
-            if (current.distanceManhattan(to) < closest.distanceManhattan(to)) {
-                closest = current;
+            if (current.distanceTo(from) >= maxDistance) {
+                continue;
             }
 
-            current.visited = true;
-            int count = fitting(entity, options, processor.findPathOptions(options, current, to, maxDistance));
+            // No target filter: 1.12's processor drops options further than this from the target,
+            // which 1.14's does not. The range is applied below, from the start, as 1.14 does.
+            int count = fitting(entity, options, processor.findPathOptions(options, current, to, Float.MAX_VALUE));
 
             for (int i = 0; i < count; i++) {
                 PathPoint next = options[i];
-                float step = current.distanceManhattan(next);
+                float step = current.distanceTo(next);
                 next.distanceFromOrigin = current.distanceFromOrigin + step;
-                next.cost = step + next.costMalus;
-                float total = current.totalPathDistance + next.cost;
+                float total = current.totalPathDistance + step + next.costMalus;
 
                 if (next.distanceFromOrigin < maxDistance && (!next.isAssigned() || total < next.totalPathDistance)) {
                     next.previous = current;
                     next.totalPathDistance = total;
-                    next.distanceToNext = next.distanceManhattan(to) + next.costMalus;
+                    float distance = next.distanceTo(to);
+                    if (distance < closestDistance) {
+                        closestDistance = distance;
+                        closest = next;
+                    }
+                    next.distanceToNext = distance * 1.5F;
 
                     if (next.isAssigned()) {
                         open.changeDistance(next, next.totalPathDistance + next.distanceToNext);

@@ -1,3 +1,7 @@
+# 2.7.2
+
+*   **Fixed villagers who never took a job at a workstation they could see.** A villager whose path ended outside the house wall, or that got wedged on a step a few blocks from its workstation, held its claim for good and never looked elsewhere. Villagers now find their way in through the door, and let a claim go after a minute if they can't reach it, as in current Java.
+
 # 2.7.1
 
 *   **Fixed: village blocks that stand in water were placed dry**, such as the fence posts in the savanna fisher cottage's pool. Applies to newly generated villages.

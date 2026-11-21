@@ -52,6 +52,37 @@ public final class JobSite {
         return VillagerTradeData.root(villager);
     }
 
+    /** When an unemployed villager staked its claim, for the minute it has to get there. */
+    private static final String PROVISIONAL_SINCE = "JobClaimedAt";
+
+    /** 1.14's {@code GoToPotentialJobSite}: a minute to reach a workstation before the claim lapses. */
+    private static final long PROVISIONAL_TICKS = 1200L;
+
+    /**
+     * @return true once an unemployed villager has held its claim for a minute without taking the job
+     *
+     * <p>The wiki's rule: a villager that spots a job site claims it provisionally, and releases it "if
+     * the villager cannot reach the block within 60 seconds", however the walk is going. The path-based
+     * give-up clock in {@link ClaimReach} stops whenever a path is found that reaches the block, so a
+     * villager wedged on a step a few blocks from its blast furnace, with a perfect path in hand, held
+     * the claim for days and never looked anywhere else. A claim with no time on it - made before this
+     * was recorded - starts its minute now.
+     */
+    public static boolean provisionalLapsed(EntityVillager villager) {
+        NBTTagCompound tag = root(villager);
+        long now = villager.world.getTotalWorldTime();
+        if (!tag.hasKey(PROVISIONAL_SINCE, TAG_ANY_NUMBER) || tag.getLong(PROVISIONAL_SINCE) > now) {
+            tag.setLong(PROVISIONAL_SINCE, now);
+            return false;
+        }
+        return now - tag.getLong(PROVISIONAL_SINCE) > PROVISIONAL_TICKS;
+    }
+
+    /** Starts the minute an unemployed villager has to reach the workstation it just claimed. */
+    static void markProvisional(EntityVillager villager) {
+        root(villager).setLong(PROVISIONAL_SINCE, villager.world.getTotalWorldTime());
+    }
+
     /** @return the villager's claimed workstation, or null if it has none. */
     @Nullable
     public static BlockPos get(EntityVillager villager) {
@@ -71,6 +102,7 @@ public final class JobSite {
 
     public static void clear(EntityVillager villager) {
         NBTTagCompound tag = root(villager);
+        tag.removeTag(PROVISIONAL_SINCE);
         tag.removeTag(SITE_X);
         tag.removeTag(SITE_Y);
         tag.removeTag(SITE_Z);
