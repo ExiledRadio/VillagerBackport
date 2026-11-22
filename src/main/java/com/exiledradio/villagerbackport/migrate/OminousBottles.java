@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import javax.annotation.Nullable;
 
 /**
- * The ominous bottle, which 1.21 added and which Tricky Trials Backport owns since its 1.0.2 (Backport Core 1.4.5's
+ * The ominous bottle, which 1.21 added and which Tricky Trials Backport owns since its 1.0.1 (Backport Core 1.4.5's
  * ownership table). Village &amp; Pillage 2.2.0 to 2.7.3 had its own, {@code villagerbackport:ominous_bottle}
  * (metadata 0-4 = Bad Omen I-V, as Tricky Trials' and Deeper Depths'), and worlds still hold it.
  *
