@@ -1,4 +1,4 @@
-# 2.7.4
+# 2.7.3
 
 *   **New trades appear while the trade screen is open**, as in 26.3: the trade that earns a level levels the villager there and then, and the new level's trades show up on the open screen at your price. **Trades Update While Open** in Trade Tables turns it off (1.14 waited until the screen was closed).
 *   **Enchanted trades as in 26.1**: a librarian's enchanted book can be any enchantment but soul speed, swift sneak and wind burst, and asks for the emeralds before the book; enchanted gear that comes out with no enchantment is no longer sold. Prices are as before. **Today's Enchanted Trades** turns it off.

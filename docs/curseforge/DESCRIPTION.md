@@ -83,7 +83,7 @@ Every feature can be turned off in Backport Core's settings screen, under Mod Op
 
 **[Buzzy Bees Backport](https://www.curseforge.com/minecraft/mc-mods/buzzy-bees-backport)**: campfires calm bees, bees pollinate cornflowers, lilies of the valley and wither roses and grow berry bushes, bells ring from redstone, and village golems crack.
 
-**[Nether Update Backport](https://www.curseforge.com/minecraft/mc-mods/nether-update-backport)**: netherite upgrades use the smithing table, piglins carry crossbows and love bells, the composter takes nether plants, the soul campfire cooks what the campfire cooks, and wither roses grow on soul soil.
+**[Nether Update Backport](https://www.curseforge.com/minecraft/mc-mods/nether-backport)**: netherite upgrades use the smithing table, piglins carry crossbows and love bells, the composter takes nether plants, the soul campfire cooks what the campfire cooks, and wither roses grow on soul soil.
 
 **[Wild Update Backport](https://www.curseforge.com/minecraft/mc-mods/wild-update-backport)**: pillager outposts get the allay cage and goat horns, the wandering trader sells propagules, the composter takes mangrove plants, and scaffolding burns as fuel.
 
@@ -113,4 +113,12 @@ Delete the old version of this mod before updating.
 
 Also by me: [Enchantment Recipes](https://www.curseforge.com/minecraft/mc-mods/rlcraft-enchantment-recipes), which lets you craft enchanted books from mod materials, and [Villager Tomes](https://www.curseforge.com/minecraft/mc-mods/rlcraft-villager-tomes), which lets you teach a librarian the books you find.
 
-Not affiliated with Mojang. MIT license. Source: [github.com/ExiledRadio/VillagerBackport](https://github.com/ExiledRadio/VillagerBackport)
+## Credits
+
+**Original content: [Minecraft](https://www.minecraft.net), by [Mojang Studios](https://www.minecraft.net/en-us/about-minecraft).** Every feature this mod adds is from a later version of Minecraft. The textures, models, sounds, music and translations are Mojang's, taken from Minecraft's own game files, and remain theirs. The features' names and designs are Mojang's too.
+
+**How this mod differs from the original:** Minecraft's newer versions don't run on 1.12.2. This mod is a Forge mod for Minecraft 1.12.2 that reimplements those features on the older game, matching the newer versions as closely as it can. It is not a copy or port of another mod. Where 1.12.2 can't do something the same way, the description above says so.
+
+This is an unofficial fan project, made under Mojang's [Minecraft Usage Guidelines](https://www.minecraft.net/en-us/usage-guidelines). Not an official Minecraft product. Not approved by or associated with Mojang or Microsoft.
+
+The mod's own code is MIT licensed. Source: [github.com/ExiledRadio/VillagerBackport](https://github.com/ExiledRadio/VillagerBackport)
