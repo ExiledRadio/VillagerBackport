@@ -5,6 +5,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemMap;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
@@ -32,6 +33,10 @@ import net.minecraft.world.storage.MapData;
  * 1.14's third operation, a glass pane to lock a map so it never changes again, works too. 1.12.2
  * has no locked flag to set, so see {@link MapLocking} for how it is done without one. A locked map
  * cannot be zoomed or locked again.
+ *
+ * <h2>Explorer maps</h2>
+ * As in 26.3, any map item copies and locks - Game Drops Backport's explorer maps come out as themselves, two of
+ * the same item - and only the filled map zooms out ({@link #isExtendable}).
  */
 public class ContainerCartographyTable extends Container {
 
@@ -90,22 +95,39 @@ public class ContainerCartographyTable extends Container {
         ItemStack map = this.inputs.getStackInSlot(SLOT_MAP);
         ItemStack modifier = this.inputs.getStackInSlot(SLOT_MODIFIER);
 
-        if (map.isEmpty() || modifier.isEmpty() || map.getItem() != Items.FILLED_MAP) {
+        if (map.isEmpty() || modifier.isEmpty() || !isMap(map)) {
             setResult(ItemStack.EMPTY);
             return;
         }
 
-        boolean locked = MapLocking.isLocked(map, Items.FILLED_MAP.getMapData(map, this.world));
+        boolean locked = MapLocking.isLocked(map, ((ItemMap) map.getItem()).getMapData(map, this.world));
 
         if (modifier.getItem() == Items.MAP) {
             setResult(copyOf(map));
         } else if (modifier.getItem() == Items.PAPER) {
-            setResult(!locked && canZoom(map) ? zoomedOut(map) : ItemStack.EMPTY);
+            setResult(!locked && isExtendable(map) && canZoom(map) ? zoomedOut(map) : ItemStack.EMPTY);
         } else if (modifier.getItem() == Item.getItemFromBlock(Blocks.GLASS_PANE)) {
             setResult(locked ? ItemStack.EMPTY : MapLocking.lockRequest(map));
         } else {
             setResult(ItemStack.EMPTY);
         }
+    }
+
+    /**
+     * @return true for any map item holding a map: 1.12.2's filled map, or another mod's {@link ItemMap} - Game Drops
+     * Backport's sixteen explorer maps ({@code gamedropsbackport:abandoned_camp_map} and the rest) are, as 26.3's are
+     * {@code MapItem}s. 26.3's table takes any item with a {@code map_id}, and copies and locks it as it is.
+     */
+    public static boolean isMap(ItemStack stack) {
+        return !stack.isEmpty() && stack.getItem() instanceof ItemMap;
+    }
+
+    /**
+     * @return true if paper can zoom the map out: 26.3's {@code #extendable_maps}, which is the filled map alone.
+     * Explorer maps "can no longer be zoomed out, neither in a crafting table nor in a cartography table" (26.3).
+     */
+    public static boolean isExtendable(ItemStack stack) {
+        return !stack.isEmpty() && stack.getItem() == Items.FILLED_MAP;
     }
 
     /**
@@ -228,7 +250,7 @@ public class ContainerCartographyTable extends Container {
 
         @Override
         public boolean isItemValid(ItemStack stack) {
-            return stack.getItem() == Items.FILLED_MAP;
+            return isMap(stack);
         }
     }
 

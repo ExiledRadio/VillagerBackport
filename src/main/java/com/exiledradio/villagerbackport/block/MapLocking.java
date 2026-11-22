@@ -1,6 +1,5 @@
 package com.exiledradio.villagerbackport.block;
 
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -74,7 +73,7 @@ public final class MapLocking {
             return;
         }
 
-        MapData source = Items.FILLED_MAP.getMapData(stack, world);
+        MapData source = ((net.minecraft.item.ItemMap) stack.getItem()).getMapData(stack, world);
         if (source == null || source.dimension == LOCKED_DIMENSION) {
             return;
         }

@@ -32,6 +32,19 @@ import java.io.File;
 @Mod.EventBusSubscriber(modid = VillagerBackport.MOD_ID)
 public final class FakeUpdateAquatic {
 
+    /** Plain stand-ins, by Update Aquatic's names, for the trader's trades. */
+    static final String[] TRADER_ITEMS = {"kelp", "tube_coral_block", "brain_coral_block", "bubble_coral_block",
+            "fire_coral_block", "horn_coral_block", "nautilus_shell", "pufferfish_bucket", "tropical_fish_bucket", "blue_ice"};
+
+    /** Stand-ins for the villagers' trades (ModernTrades): fisherman, butcher, cleric and leatherworker. */
+    static final String[] VILLAGER_ITEMS = {"cod_bucket", "dried_kelp_block", "scute"};
+
+    private static String[] concat(String[] a, String[] b) {
+        String[] out = java.util.Arrays.copyOf(a, a.length + b.length);
+        System.arraycopy(b, 0, out, a.length, b.length);
+        return out;
+    }
+
     static Block pickle;
     static Item pickleItem;
 
@@ -100,5 +113,9 @@ public final class FakeUpdateAquatic {
         }
         pickleItem = new ItemBlock(pickle).setRegistryName(pickle.getRegistryName());
         event.getRegistry().register(pickleItem);
+        // What the wandering trader sells by Update Aquatic's names (TraderTrades).
+        for (String name : concat(TRADER_ITEMS, VILLAGER_ITEMS)) {
+            event.getRegistry().register(new Item().setRegistryName(new ResourceLocation("updateaquaticbackport", name)));
+        }
     }
 }

@@ -2,7 +2,6 @@ package com.exiledradio.villagerbackport.client;
 
 import com.exiledradio.villagerbackport.block.MapLocking;
 
-import net.minecraft.init.Items;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -15,7 +14,7 @@ public final class MapLockTooltip {
 
     @SubscribeEvent
     public void onTooltip(ItemTooltipEvent event) {
-        if (event.getItemStack().getItem() == Items.FILLED_MAP && MapLocking.isLocked(event.getItemStack(), null)) {
+        if (event.getItemStack().getItem() instanceof net.minecraft.item.ItemMap && MapLocking.isLocked(event.getItemStack(), null)) {
             event.getToolTip().add(1, TextFormatting.GRAY + Translate.of("filled_map.villagerbackport.locked", "Locked"));
         }
     }

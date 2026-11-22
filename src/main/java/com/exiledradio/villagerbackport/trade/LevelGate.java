@@ -11,7 +11,8 @@ import net.minecraft.village.MerchantRecipeList;
 
 /**
  * Applies villager level-ups on 1.14's terms: after the trade screen closes, and only when the
- * villager has actually earned one.
+ * villager has actually earned one. With trades.tradesUpdateWhileOpen, on 26.3's: at the trade that earns it, the
+ * new trades appearing on the open screen ({@link TradeScreen}).
  *
  * <h2>What 1.12.2 gets wrong</h2>
  * Both versions share the same reset block in {@code updateAITasks} - count down from 40, then
@@ -85,7 +86,9 @@ public final class LevelGate {
         // 1.14 will not let a level-up land while the screen is open - its reset block is guarded by
         // "not currently trading". Holding off here is what lets the bar fill and stay full until
         // the player closes the screen, with the rank and the new trades arriving together after.
-        if (villager.getCustomer() != null) {
+        // 26.3 (trades.tradesUpdateWhileOpen) levels the villager inside the trade instead, screen open or not.
+        boolean live = ModConfig.trades.tradesUpdateWhileOpen;
+        if (villager.getCustomer() != null && !live) {
             VillagerTradeData.clearLevelUpAt(villager);
             return;
         }
@@ -104,23 +107,33 @@ public final class LevelGate {
         // seconds after walking away rather than the instant the screen shuts. That pause is what
         // makes the particles read as the villager reacting rather than as part of closing the
         // window, and without it the whole thing happened too fast to notice.
-        long now = villager.world.getTotalWorldTime();
-        long scheduled = VillagerTradeData.getLevelUpAt(villager);
+        // 26.3 has no such pause: rewardTradeXp levels the villager in the trade itself.
+        if (!live) {
+            long now = villager.world.getTotalWorldTime();
+            long scheduled = VillagerTradeData.getLevelUpAt(villager);
 
-        if (scheduled < 0) {
-            VillagerTradeData.setLevelUpAt(villager, now + LEVEL_UP_DELAY_TICKS);
-            return;
-        }
+            if (scheduled < 0) {
+                VillagerTradeData.setLevelUpAt(villager, now + LEVEL_UP_DELAY_TICKS);
+                return;
+            }
 
-        // Guard against a world whose time ran backwards, which would otherwise strand the level-up
-        // until the clock caught back up.
-        if (now < scheduled && now >= scheduled - LEVEL_UP_DELAY_TICKS) {
-            return;
+            // Guard against a world whose time ran backwards, which would otherwise strand the level-up
+            // until the clock caught back up.
+            if (now < scheduled && now >= scheduled - LEVEL_UP_DELAY_TICKS) {
+                return;
+            }
         }
 
         VillagerTradeData.clearLevelUpAt(villager);
         VillagerTradeData.root(villager).removeTag(LEVEL_UP_EARNED);
+        MerchantRecipeList before = VillagerAccess.getBuyingList(villager);
+        int had = before == null ? 0 : before.size();
         levelUp(villager, applied + 1);
+
+        // 26.3's updateTrades with a player trading: the new trades priced for them and sent to the open screen.
+        if (villager.getCustomer() != null) {
+            TradeScreen.refresh(villager, had);
+        }
     }
 
     /**

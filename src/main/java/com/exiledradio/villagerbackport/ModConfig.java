@@ -157,6 +157,23 @@ public final class ModConfig {
         })
         @Setting.Vanilla("false")
         public boolean modernCartographer = true;
+
+        @Config.Comment({
+                "Enchanted trades as in 26.1: a librarian's book can hold any enchantment but soul speed,",
+                "swift sneak and wind burst, with the emeralds asked before the book, and enchanted gear",
+                "that rolls no enchantment is not offered. Prices are unchanged. Off keeps 1.12.2's book",
+                "trade."
+        })
+        @Setting.Vanilla("false")
+        public boolean modernEnchantedTrades = true;
+
+        @Config.Comment({
+                "Trades update while the trade screen is open, as in 26.3: the trade that earns a level",
+                "levels the villager at once, and the new trades appear on the open screen. Off, the level",
+                "waits until the screen has been closed, as in 1.14."
+        })
+        @Setting.Vanilla("false")
+        public boolean tradesUpdateWhileOpen = true;
     }
 
     public static final class Restock {

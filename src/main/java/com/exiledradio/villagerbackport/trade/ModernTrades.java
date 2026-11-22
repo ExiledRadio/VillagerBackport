@@ -3,7 +3,6 @@ package com.exiledradio.villagerbackport.trade;
 import com.exiledradio.backportcore.trade.TradeRegistry;
 
 import net.minecraft.block.Block;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -38,8 +37,12 @@ import java.util.Random;
  * {@code VillagerTrades} from the 1.14.4 sources, entry for entry and in the same order, with the
  * few later changes minecraft.wiki documents for current Java applied on top: the librarian's
  * bookshelf is 9 emeralds for one rather than 6 for three, an enchanted fishing rod is stocked 3
- * like every other piece of enchanted gear, and a master librarian sells candles rather than a name
- * tag when a mod that adds candles is installed.
+ * like every other piece of enchanted gear.
+ *
+ * <h2>Versions</h2>
+ * Rows carry the version they belong to ({@link TradeVersion}, the newest installed backport's): 1.17's bookshelf
+ * price and the mason's dripstone, 1.21's cartographer, 26.1's master librarian candles and cake price. Enchanted
+ * books and gear follow the version too ({@link EnchantedTrades}).
  *
  * <h2>Picking</h2>
  * Each level is a pool, and a villager reaching that level takes two different trades from it at
@@ -69,6 +72,10 @@ public final class ModernTrades {
 
     /** Stock for enchanted tools, weapons and armour. */
     private static final int GEAR_STOCK = 3;
+
+    /** The candles a master librarian sells, by name: Deeper Depths', then Caves &amp; Cliffs Backport's. */
+    private static final String[] YELLOW_CANDLES = {"deeperdepths:yellow_candle", "cavesandcliffsbackport:yellow_candle"};
+    private static final String[] RED_CANDLES = {"deeperdepths:red_candle", "cavesandcliffsbackport:red_candle"};
 
     /** Career key ("profession registry name/career name") to its five levels of pools. */
     private static final Map<String, Trade[][]> TABLES = new HashMap<String, Trade[][]>();
@@ -209,7 +216,8 @@ public final class ModernTrades {
                 level(buy(Blocks.PUMPKIN, 6, 12), sell(Items.PUMPKIN_PIE, 1, 4, STOCK),
                         sell(Items.APPLE, 1, 4, 16)),
                 level(sell(Items.COOKIE, 3, 18, STOCK), buy(Blocks.MELON_BLOCK, 4, 12)),
-                level(sell(Items.CAKE, 1, 1, STOCK), stew("night_vision", 100), stew("jump_boost", 160),
+                level(between(TradeVersion.V1_14, TradeVersion.V26, sell(Items.CAKE, 1, 1, STOCK)),
+                        from(TradeVersion.V26, sell(Items.CAKE, 3, 1, STOCK)), stew("night_vision", 100), stew("jump_boost", 160),
                         stew("weakness", 140), stew("blindness", 120), stew("poison", 280),
                         stew("saturation", 7)),
                 level(sell(Items.GOLDEN_CARROT, 3, 3, STOCK), sell(Items.SPECKLED_MELON, 4, 3, STOCK)));
@@ -217,7 +225,7 @@ public final class ModernTrades {
         table("minecraft:farmer", "fisherman",
                 level(buy(Items.STRING, 20, 16), buy(Items.COAL, 10, 16),
                         convert(stack(Items.FISH, 6, 0), 1, stack(Items.COOKED_FISH, 6, 0), 16),
-                        optionalSell(3, 1, 16, "futuremc:cod_bucket")),
+                        optionalSell(3, 1, 16, "updateaquaticbackport:cod_bucket", "futuremc:cod_bucket")),
                 level(buy(stack(Items.FISH, 15, 0), 16),
                         convert(stack(Items.FISH, 6, 1), 1, stack(Items.COOKED_FISH, 6, 1), 16),
                         optionalSell(2, 1, STOCK, "villagerbackport:campfire", "futuremc:campfire")),
@@ -255,16 +263,19 @@ public final class ModernTrades {
                         tippedArrows()));
 
         table("minecraft:librarian", "librarian",
-                level(buy(Items.PAPER, 24, 16), enchantedBook(), sell(new ItemStack(Blocks.BOOKSHELF), 9, 1, STOCK)),
+                level(buy(Items.PAPER, 24, 16), enchantedBook(),
+                        between(TradeVersion.V1_14, TradeVersion.V1_17, sell(new ItemStack(Blocks.BOOKSHELF), 6, 3, STOCK)),
+                        from(TradeVersion.V1_17, sell(new ItemStack(Blocks.BOOKSHELF), 9, 1, STOCK))),
                 level(buy(Items.BOOK, 4, 12), enchantedBook(), optionalSell(1, 1, STOCK, "villagerbackport:lantern", "futuremc:lantern")),
                 level(buy(dye(EnumDyeColor.BLACK, 5), 12), enchantedBook(), sell(new ItemStack(Blocks.GLASS), 1, 4, STOCK)),
                 level(buy(Items.WRITABLE_BOOK, 2, 12), enchantedBook(), sell(Items.CLOCK, 5, 1, STOCK),
                         sell(Items.COMPASS, 4, 1, STOCK)),
-                // Current Java's master librarian sells candles, which replaced 1.14's name tag in 1.17.
-                // Without a mod that adds candles, the name tag stays.
-                level(optionalSell(3, 1, STOCK, "deeperdepths:yellow_candle"),
-                        optionalSell(3, 1, STOCK, "deeperdepths:red_candle"),
-                        unless(sell(Items.NAME_TAG, 20, 1, STOCK), "deeperdepths:yellow_candle", "deeperdepths:red_candle")));
+                // 1.14 to 1.21.11: the name tag. 26.1 (Game Drops): a yellow and a red candle for 3 emeralds each, and
+                // no name tag (26.1 made name tags craftable and gave them to the wandering trader); with no candle
+                // mod installed there is nothing left to sell.
+                level(from(TradeVersion.V26, optionalSell(3, 1, STOCK, YELLOW_CANDLES)),
+                        from(TradeVersion.V26, optionalSell(3, 1, STOCK, RED_CANDLES)),
+                        between(TradeVersion.V1_14, TradeVersion.V26, sell(Items.NAME_TAG, 20, 1, STOCK))));
 
         // 1.14's table, or with trades.modernCartographer current Java's (1.21.5, VillagerTrades' CARTOGRAPHER): maps by
         // the villager's biome, the trial chambers map, banners by biome, the mansion map at master.
@@ -291,7 +302,7 @@ public final class ModernTrades {
                 level(buy(Items.ROTTEN_FLESH, 32, 16), sell(Items.REDSTONE, 1, 2, STOCK)),
                 level(buy(Items.GOLD_INGOT, 3, 12), sell(dye(EnumDyeColor.BLUE, 1), 1, STOCK)),
                 level(buy(Items.RABBIT_FOOT, 2, 12), sell(new ItemStack(Blocks.GLOWSTONE), 4, 1, STOCK)),
-                level(optionalBuy(4, 12, "oe:turtle_scute"), buy(Items.GLASS_BOTTLE, 9, 12),
+                level(optionalBuy(4, 12, "updateaquaticbackport:scute", "oe:turtle_scute"), buy(Items.GLASS_BOTTLE, 9, 12),
                         sell(Items.ENDER_PEARL, 5, 1, STOCK)),
                 level(buy(Items.NETHER_WART, 22, 12), sell(Items.EXPERIENCE_BOTTLE, 3, 1, STOCK)));
 
@@ -326,7 +337,9 @@ public final class ModernTrades {
                 level(buy(new ItemStack(Blocks.STONE, 20), 16), sell(new ItemStack(Blocks.STONEBRICK, 1, 3), 1, 4, 16)),
                 level(buy(new ItemStack(Blocks.STONE, 16, 1), 16), buy(new ItemStack(Blocks.STONE, 16, 5), 16),
                         buy(new ItemStack(Blocks.STONE, 16, 3), 16), sell(new ItemStack(Blocks.STONE, 1, 6), 1, 4, 16),
-                        sell(new ItemStack(Blocks.STONE, 1, 4), 1, 4, 16), sell(new ItemStack(Blocks.STONE, 1, 2), 1, 4, 16)),
+                        sell(new ItemStack(Blocks.STONE, 1, 4), 1, 4, 16), sell(new ItemStack(Blocks.STONE, 1, 2), 1, 4, 16),
+                        // 1.17's dripstone block, with Caves & Cliffs Backport.
+                        from(TradeVersion.V1_17, optionalSell(1, 4, 16, "cavesandcliffsbackport:dripstone_block"))),
                 concat(level(buy(Items.QUARTZ, 12, 12)), everyColour(Blocks.STAINED_HARDENED_CLAY, 1, 1, STOCK),
                         glazedTerracotta()),
                 level(sell(new ItemStack(Blocks.QUARTZ_BLOCK, 1, 2), 1, 1, STOCK), sell(new ItemStack(Blocks.QUARTZ_BLOCK), 1, 1, STOCK)));
@@ -336,14 +349,14 @@ public final class ModernTrades {
                         sell(Items.RABBIT_STEW, 1, 1, STOCK)),
                 level(buy(Items.COAL, 15, 16), sell(Items.COOKED_PORKCHOP, 1, 5, 16), sell(Items.COOKED_CHICKEN, 1, 8, 16)),
                 level(buy(Items.MUTTON, 7, 16), buy(Items.BEEF, 10, 16)),
-                level(optionalBuy(10, 12, "oe:dried_kelp_block")),
+                level(optionalBuy(10, 12, "updateaquaticbackport:dried_kelp_block", "oe:dried_kelp_block")),
                 level(sweetBerriesBuy(10, 12)));
 
         table("minecraft:butcher", "leather",
                 level(buy(Items.LEATHER, 6, 16), dyed(Items.LEATHER_LEGGINGS, 3), dyed(Items.LEATHER_CHESTPLATE, 7)),
                 level(buy(Items.FLINT, 26, 12), dyed(Items.LEATHER_HELMET, 5), dyed(Items.LEATHER_BOOTS, 4)),
                 level(buy(Items.RABBIT_HIDE, 9, 12), dyed(Items.LEATHER_CHESTPLATE, 7)),
-                level(optionalBuy(4, 12, "oe:turtle_scute"), dyedHorseArmor(6)),
+                level(optionalBuy(4, 12, "updateaquaticbackport:scute", "oe:turtle_scute"), dyedHorseArmor(6)),
                 level(sell(Items.SADDLE, 6, 1, STOCK), dyed(Items.LEATHER_HELMET, 5)));
     }
 
@@ -448,18 +461,23 @@ public final class ModernTrades {
         };
     }
 
+    @Nullable
     private static MerchantRecipe enchantedOffer(Item item, int basePrice, Random random) {
-        int level = 5 + random.nextInt(15);
-        ItemStack result = EnchantmentHelper.addRandomEnchantment(random, new ItemStack(item), level, false);
-        return recipe(new ItemStack(Items.EMERALD, Math.min(basePrice + level, 64)), ItemStack.EMPTY, result, GEAR_STOCK);
+        return EnchantedTrades.item(item, basePrice, GEAR_STOCK, random);
     }
 
-    /** {@code EnchantedBookForEmeraldsTrade}. 1.12.2's own librarian trade is the same formula. */
+    /**
+     * {@code EnchantedBookForEmeraldsTrade}, or with trades.modernEnchantedTrades 26.1's enchanted book trade
+     * ({@link EnchantedTrades#book}). 1.12.2's own librarian trade is 1.14's formula.
+     */
     private static Trade enchantedBook() {
         final EntityVillager.ITradeList vanilla = new EntityVillager.ListEnchantedBookForEmeralds();
         return new Fixed() {
             @Override
             public MerchantRecipe offer(EntityVillager villager, Random random) {
+                if (com.exiledradio.villagerbackport.ModConfig.trades.modernEnchantedTrades) {
+                    return EnchantedTrades.book(STOCK, random);
+                }
                 return single(vanilla, villager, random);
             }
         };
@@ -508,7 +526,9 @@ public final class ModernTrades {
             out[i] = new Trade() {
                 @Override
                 public boolean available() {
-                    return com.exiledradio.villagerbackport.ModConfig.trades.modernCartographer == modern && trade.available();
+                    boolean today = com.exiledradio.villagerbackport.ModConfig.trades.modernCartographer
+                            && TradeVersion.current().atLeast(TradeVersion.V1_21);
+                    return today == modern && trade.available();
                 }
 
                 @Nullable
@@ -923,6 +943,36 @@ public final class ModernTrades {
         public boolean available() {
             return item() != null;
         }
+    }
+
+    private static String[] concat(String[]... parts) {
+        List<String> out = new ArrayList<String>();
+        for (String[] part : parts) {
+            out.addAll(Arrays.asList(part));
+        }
+        return out.toArray(new String[0]);
+    }
+
+    /** The trade, from that version's table on. */
+    private static Trade from(TradeVersion since, Trade trade) {
+        return between(since, null, trade);
+    }
+
+    /** The trade in the tables of {@code since} up to, not including, {@code until} (null: every later one). */
+    private static Trade between(final TradeVersion since, @Nullable final TradeVersion until, final Trade trade) {
+        return new Trade() {
+            @Override
+            public boolean available() {
+                TradeVersion now = TradeVersion.current();
+                return now.atLeast(since) && (until == null || !now.atLeast(until)) && trade.available();
+            }
+
+            @Nullable
+            @Override
+            public MerchantRecipe offer(@Nullable EntityVillager villager, Random random) {
+                return trade.offer(villager, random);
+            }
+        };
     }
 
     /** A trade offered only when none of the named items exist - the fallback for a missing one. */

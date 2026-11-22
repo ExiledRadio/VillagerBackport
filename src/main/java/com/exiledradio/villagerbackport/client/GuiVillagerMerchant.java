@@ -219,6 +219,10 @@ public class GuiVillagerMerchant extends GuiContainer {
         return this.merchant.getRecipes(this.mc.player);
     }
 
+    IMerchant merchant() {
+        return this.merchant;
+    }
+
     // ------------------------------------------------------------------ input
 
     @Override
