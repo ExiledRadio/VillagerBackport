@@ -5,6 +5,8 @@
 *   **With Game Drops Backport, master librarians no longer sell name tags** (26.1). They sell yellow and red candles where a mod adds candles, Caves & Cliffs Backport's now included.
 *   **Trades sell the family's items**: the wandering trader sells Update Aquatic's kelp, corals, nautilus shells, fish buckets and blue ice, and (each with its mod) cherry, mangrove and pale oak logs, cherry and pale oak saplings, pale hanging moss, pale moss, eyeblossoms, wildflowers, tall dry grass, firefly bushes, small dripleaf, rooted dirt, moss blocks and sulfur spikes, at current prices. Fishermen, butchers, clerics and leatherworkers trade Update Aquatic's cod buckets, dried kelp blocks and scutes, and masons sell Caves & Cliffs' dripstone blocks.
 *   **Fixed: with Game Drops Backport the wandering trader could offer name tags twice.**
+*   **Villagers and the wandering trader trade as the newest installed backport's version does**: 1.14's trades with Village & Pillage alone, 1.17's with Caves & Cliffs, 1.19's with Wild Update, 1.20's with Trails & Tales, 1.21's with Tricky Trials and 26.3's with Game Drops - prices, stock and which trades exist. With Tricky Trials the trader also buys things, sells logs and has two special offers. Villagers keep the trades they already have.
+*   **Fixed: the wandering trader's slime balls and glowstone cost 5 and 3 emeralds** instead of 4 and 2.
 *   **The cartography table copies and locks Game Drops Backport's explorer maps**, which come out as the same map; as in 26.3, only plain maps can be zoomed out.
 
 # 2.7.2

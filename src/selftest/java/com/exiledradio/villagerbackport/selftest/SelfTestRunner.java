@@ -33,6 +33,7 @@ public final class SelfTestRunner {
             new VillageJobsSelfTest(),
             new MechanicsSelfTest(),
             new Trades26SelfTest(),
+            new TradeVersionsSelfTest(),
     };
 
     private final List<String> wanted;

@@ -555,6 +555,8 @@ public final class MechanicsSelfTest implements SelfTest {
         com.exiledradio.villagerbackport.data.VillagerTypes.set(v, "plains");
         boolean was = ModConfig.trades.modernCartographer;
         ModConfig.trades.modernCartographer = true;
+        // Current Java's cartographer is 1.21's table (Tricky Trials installed).
+        com.exiledradio.villagerbackport.trade.TradeVersion.override(com.exiledradio.villagerbackport.trade.TradeVersion.V1_21);
         Random random = new Random(42L);
         int maps = 0;
         boolean wrongType = false;
@@ -602,6 +604,7 @@ public final class MechanicsSelfTest implements SelfTest {
             }
         }
         ModConfig.trades.modernCartographer = was;
+        com.exiledradio.villagerbackport.trade.TradeVersion.override(null);
         v.setDead();
     }
 }

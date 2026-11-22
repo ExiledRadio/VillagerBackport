@@ -17,7 +17,7 @@ row says otherwise.
 | Trade (26.3) | Version | Item owner | Status |
 | --- | --- | --- | --- |
 | Farmer: wheat, potato, carrot, beetroot, bread, pumpkin, pie, apple, cookie, melon, golden carrot, glistering melon | 1.14 | vanilla | ok |
-| Farmer 4: cake | 1.14 | vanilla | price: 1 emerald (1.14); 26.3 asks 3 |
+| Farmer 4: cake | 1.14; 26.1 price | vanilla | ok: 1 emerald, 3 from 26.1 |
 | Farmer 4: suspicious stew (six effects) | 1.14 | this mod (flora) | ok |
 | Fisherman 1: cod bucket | 1.14 | Update Aquatic, Future MC | ok (owner) - Update Aquatic's id added |
 | Fisherman 2: campfire | 1.14 | this mod, Future MC | ok (owner) |
@@ -61,27 +61,35 @@ This mod's table already has current Java's three pools (buying, uncommon, commo
 | Sulfur spike | 26.2 | Game Drops | ok (owner) - added (Game Drops registers none) |
 | Pointed dripstone | 1.17 | Caves & Cliffs | owner registers |
 | Small dripleaf, rooted dirt, moss block | 1.17 | Caves & Cliffs | ok (owner) - added |
-| Invisibility potion | 1.14 | vanilla | price: 1.14's normal potion; 26.3 sells the long one |
+| Invisibility potion | 1.21 | vanilla | ok: the long one from 1.21 |
 | Kelp, coral blocks, nautilus shell, tropical fish and pufferfish buckets | 1.14 | Update Aquatic, Oceanic Expanse, Future MC | ok (owner) - Update Aquatic's ids added first |
 | Sea pickle | 1.14 | Update Aquatic | ok (owner) |
-| Slime ball, glowstone | 1.14 | vanilla | price: 1.14's 5 and 3 emeralds; 26.3 asks 4 and 2 |
+| Slime ball, glowstone | 1.14 | vanilla | ok: 4 and 2 emeralds (were 5 and 3, a mistake) |
 | Flowers, seeds, saplings, dyes, vines, mushrooms, lily pads, sand, red sand, fern, sugar cane, pumpkin, cactus | 1.14 | vanilla; cornflower and lily of the valley this mod, Future MC | ok |
 
-## Not done: trade tables by installed version
+## Trade tables by installed version
 
-The design the user asked for (2026-11-21): villagers and the trader use the trade table of the newest installed
-backport's version - Village & Pillage alone 1.14's, with Caves & Cliffs 1.17's, Wild Update 1.19's, Trails & Tales
-1.20's, Tricky Trials 1.21.11's, Game Drops 26.3's - built as data keyed by version, so a later backport adds a row.
-Existing villagers keep the offers they have; new levels and new villagers use the current table.
+Villagers and the wandering trader use the table of the newest installed backport (`trade/TradeVersion`, from Backport
+Core's `Presentation.installedNewest()`): this mod alone 1.14's, Caves & Cliffs 1.17's, Wild Update 1.19's, Trails &
+Tales 1.20's, Tricky Trials 1.21's (to 1.21.11), Game Drops 26.1's (to 26.3). Update Aquatic, Buzzy Bees and Nether Update
+(1.13 to 1.16) leave 1.14's: those versions changed no trade. Each row carries the version it appears from (and,
+where a later one changed it, the version it ends at), so a later backport adds a constant and its rows. A villager
+keeps the trades it already has; a new level, a new villager and a new trader take the current table. An item whose
+owner is not installed drops out as before.
 
-Today the tables are one mix: 1.14's numbers, with the later changes above switched on by setting or by the owner
-being installed. The rows marked **price** are the ones a per-version table would change; the owner-gated rows already
-appear only from the version whose mod is installed. What the per-version tables still need:
+The rows come from the decompiled `VillagerTrades` of 1.14.4, 1.17.1, 1.19.2, 1.20.1, 1.21.11 and 26.3, compared:
 
-- each version's own data (1.17.1, 1.19.4, 1.20.6, 1.21.11, 26.3 decompiled `VillagerTrades`), diffed into per-version
-  rows: prices, stock, experience, which level a trade sits at, removed trades;
-- the version from Backport Core (`Presentation` newest installed, or `VanillaRevisions`);
-- self-tests per version with that version's mods (or stand-ins) loaded.
+| From | Villagers | Wandering trader |
+| --- | --- | --- |
+| 1.14 | 1.14.4's tables: three bookshelves for 6 emeralds, 1.14's cartographer, the master librarian's name tag, cake for 1 | five ordinary and one special; special: fish buckets (5), packed ice (3), blue ice, gunpowder (1), podzol; vines, mushrooms one for an emerald, lily pads two |
+| 1.17 | one bookshelf for 9; mason 3 dripstone block | small dripleaf, rooted dirt, moss block (pointed dripstone: Caves & Cliffs registers it) |
+| 1.19 | - | mangrove propagule (Wild Update registers it) |
+| 1.20 | - | cherry sapling |
+| 1.21 | current Java's cartographer (`trades.modernCartographer`); books from `#tradeable` (no soul speed, swift sneak, wind burst) | the rework: buying pool (two), two specials (ice 1, gunpowder four for 1, nine logs, enchanted pickaxe, long invisibility), fish buckets 3 in the ordinary pool, vines and mushrooms in threes, lily pads in fives, eyeblossom, wildflowers, tall dry grass, pale oak sapling, pale hanging moss, pale moss block, firefly bush |
+| 26.1 | master librarian: yellow and red candles, no name tag; cake for 3; enchanted gear or books that roll nothing are not offered (with `trades.modernEnchantedTrades`) | sulfur spike (26.2); Game Drops registers the golden dandelion, name tag, poplar and shelf mushroom |
+
+Fixed on the way: the trader's slime balls and glowstone cost 4 and 2 emeralds in every version (this mod had 5 and
+3), and this mod's own name tag trade is gone (no version before 26.1 had it; Game Drops adds 26.1's).
 
 ## Tests
 
@@ -89,3 +97,7 @@ appear only from the version whose mod is installed. What the per-version tables
 `fake-cc`, `fake-gd` register Update Aquatic's, Caves & Cliffs' and Game Drops' items by name
 (`selftest/Fake*.java`). Each wired row above with a stand-in is checked to appear in its pool; Trails & Tales', Wild
 Update's and Tricky Trials' rows have no stand-in yet.
+
+`-Pselftest=tradeversions` maps each family version to its table and checks each table's rows at its version
+(`TradeVersion.override`): bookshelf, name tag, cake, cartographer, dripstone, the trader's buying pool, prices and
+logs, the cave blocks and sulfur spikes.

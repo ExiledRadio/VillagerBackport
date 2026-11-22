@@ -55,11 +55,15 @@ public final class EnchantedTrades {
     private EnchantedTrades() {
     }
 
-    /** @return {@code #tradeable}: every registered enchantment a book may hold but soul speed, swift sneak and wind burst */
+    /**
+     * @return the books' pool: from 1.21 {@code #tradeable}, every registered enchantment a book may hold but soul speed,
+     * swift sneak and wind burst; before 1.21 every one a book may hold (1.14's {@code Registry.ENCHANTMENT.getRandom})
+     */
     public static List<Enchantment> tradeable() {
+        boolean tag = TradeVersion.current().atLeast(TradeVersion.V1_21);
         List<Enchantment> out = new ArrayList<Enchantment>();
         for (Enchantment e : ForgeRegistries.ENCHANTMENTS.getValuesCollection()) {
-            if (e.getRegistryName() != null && e.isAllowedOnBooks() && !UNTRADEABLE.contains(e.getRegistryName().getPath())) {
+            if (e.getRegistryName() != null && e.isAllowedOnBooks() && (!tag || !UNTRADEABLE.contains(e.getRegistryName().getPath()))) {
                 out.add(e);
             }
         }
@@ -77,6 +81,8 @@ public final class EnchantedTrades {
     public static MerchantRecipe book(int stock, Random random) {
         List<Enchantment> pool = tradeable();
         if (pool.isEmpty()) {
+            // 26.1 discards a book that rolled nothing; before it the trade sold a plain book. Neither happens with a
+            // registry holding any enchantment.
             return null;
         }
         Enchantment enchantment = pool.get(random.nextInt(pool.size()));
@@ -99,7 +105,7 @@ public final class EnchantedTrades {
     public static MerchantRecipe item(Item item, int basePrice, int stock, Random random) {
         int level = 5 + random.nextInt(15);
         ItemStack result = EnchantmentHelper.addRandomEnchantment(random, new ItemStack(item), level, false);
-        if (ModConfig.trades.modernEnchantedTrades && !result.isItemEnchanted()) {
+        if (ModConfig.trades.modernEnchantedTrades && TradeVersion.current().atLeast(TradeVersion.V26) && !result.isItemEnchanted()) {
             return null;
         }
         return new MerchantRecipe(new ItemStack(Items.EMERALD, Math.min(basePrice + level, MAX_COST)), ItemStack.EMPTY,

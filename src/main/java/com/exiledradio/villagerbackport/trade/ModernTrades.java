@@ -37,9 +37,12 @@ import java.util.Random;
  * {@code VillagerTrades} from the 1.14.4 sources, entry for entry and in the same order, with the
  * few later changes minecraft.wiki documents for current Java applied on top: the librarian's
  * bookshelf is 9 emeralds for one rather than 6 for three, an enchanted fishing rod is stocked 3
- * like every other piece of enchanted gear, and a master librarian sells candles rather than a name
- * tag when a mod that adds candles is installed (26.1), and no name tag at all with Game Drops Backport.
- * Enchanted books and gear are 26.1's with trades.modernEnchantedTrades ({@link EnchantedTrades}).
+ * like every other piece of enchanted gear.
+ *
+ * <h2>Versions</h2>
+ * Rows carry the version they belong to ({@link TradeVersion}, the newest installed backport's): 1.17's bookshelf
+ * price and the mason's dripstone, 1.21's cartographer, 26.1's master librarian candles and cake price. Enchanted
+ * books and gear follow the version too ({@link EnchantedTrades}).
  *
  * <h2>Picking</h2>
  * Each level is a pool, and a villager reaching that level takes two different trades from it at
@@ -73,12 +76,6 @@ public final class ModernTrades {
     /** The candles a master librarian sells, by name: Deeper Depths', then Caves &amp; Cliffs Backport's. */
     private static final String[] YELLOW_CANDLES = {"deeperdepths:yellow_candle", "cavesandcliffsbackport:yellow_candle"};
     private static final String[] RED_CANDLES = {"deeperdepths:red_candle", "cavesandcliffsbackport:red_candle"};
-
-    /**
-     * Present when Game Drops Backport's 26.1 name tag changes are (its babies stream registers the golden dandelion
-     * with them): the master librarian then sells no name tag.
-     */
-    static final String[] GAME_DROPS_NAME_TAGS = {"gamedropsbackport:golden_dandelion"};
 
     /** Career key ("profession registry name/career name") to its five levels of pools. */
     private static final Map<String, Trade[][]> TABLES = new HashMap<String, Trade[][]>();
@@ -219,7 +216,8 @@ public final class ModernTrades {
                 level(buy(Blocks.PUMPKIN, 6, 12), sell(Items.PUMPKIN_PIE, 1, 4, STOCK),
                         sell(Items.APPLE, 1, 4, 16)),
                 level(sell(Items.COOKIE, 3, 18, STOCK), buy(Blocks.MELON_BLOCK, 4, 12)),
-                level(sell(Items.CAKE, 1, 1, STOCK), stew("night_vision", 100), stew("jump_boost", 160),
+                level(between(TradeVersion.V1_14, TradeVersion.V26, sell(Items.CAKE, 1, 1, STOCK)),
+                        from(TradeVersion.V26, sell(Items.CAKE, 3, 1, STOCK)), stew("night_vision", 100), stew("jump_boost", 160),
                         stew("weakness", 140), stew("blindness", 120), stew("poison", 280),
                         stew("saturation", 7)),
                 level(sell(Items.GOLDEN_CARROT, 3, 3, STOCK), sell(Items.SPECKLED_MELON, 4, 3, STOCK)));
@@ -265,18 +263,19 @@ public final class ModernTrades {
                         tippedArrows()));
 
         table("minecraft:librarian", "librarian",
-                level(buy(Items.PAPER, 24, 16), enchantedBook(), sell(new ItemStack(Blocks.BOOKSHELF), 9, 1, STOCK)),
+                level(buy(Items.PAPER, 24, 16), enchantedBook(),
+                        between(TradeVersion.V1_14, TradeVersion.V1_17, sell(new ItemStack(Blocks.BOOKSHELF), 6, 3, STOCK)),
+                        from(TradeVersion.V1_17, sell(new ItemStack(Blocks.BOOKSHELF), 9, 1, STOCK))),
                 level(buy(Items.BOOK, 4, 12), enchantedBook(), optionalSell(1, 1, STOCK, "villagerbackport:lantern", "futuremc:lantern")),
                 level(buy(dye(EnumDyeColor.BLACK, 5), 12), enchantedBook(), sell(new ItemStack(Blocks.GLASS), 1, 4, STOCK)),
                 level(buy(Items.WRITABLE_BOOK, 2, 12), enchantedBook(), sell(Items.CLOCK, 5, 1, STOCK),
                         sell(Items.COMPASS, 4, 1, STOCK)),
-                // 26.1's master librarian: a yellow and a red candle for 3 emeralds each, and no name tag (26.1 made
-                // name tags craftable and gave them to the wandering trader). Without a mod that adds candles the
-                // name tag stays, unless Game Drops Backport has made that 26.1 change (its name tag recipe and
-                // trader trade come with its golden dandelion), when there is nothing left to sell.
-                level(optionalSell(3, 1, STOCK, YELLOW_CANDLES),
-                        optionalSell(3, 1, STOCK, RED_CANDLES),
-                        unless(sell(Items.NAME_TAG, 20, 1, STOCK), concat(YELLOW_CANDLES, RED_CANDLES, GAME_DROPS_NAME_TAGS))));
+                // 1.14 to 1.21.11: the name tag. 26.1 (Game Drops): a yellow and a red candle for 3 emeralds each, and
+                // no name tag (26.1 made name tags craftable and gave them to the wandering trader); with no candle
+                // mod installed there is nothing left to sell.
+                level(from(TradeVersion.V26, optionalSell(3, 1, STOCK, YELLOW_CANDLES)),
+                        from(TradeVersion.V26, optionalSell(3, 1, STOCK, RED_CANDLES)),
+                        between(TradeVersion.V1_14, TradeVersion.V26, sell(Items.NAME_TAG, 20, 1, STOCK))));
 
         // 1.14's table, or with trades.modernCartographer current Java's (1.21.5, VillagerTrades' CARTOGRAPHER): maps by
         // the villager's biome, the trial chambers map, banners by biome, the mansion map at master.
@@ -340,7 +339,7 @@ public final class ModernTrades {
                         buy(new ItemStack(Blocks.STONE, 16, 3), 16), sell(new ItemStack(Blocks.STONE, 1, 6), 1, 4, 16),
                         sell(new ItemStack(Blocks.STONE, 1, 4), 1, 4, 16), sell(new ItemStack(Blocks.STONE, 1, 2), 1, 4, 16),
                         // 1.17's dripstone block, with Caves & Cliffs Backport.
-                        optionalSell(1, 4, 16, "cavesandcliffsbackport:dripstone_block")),
+                        from(TradeVersion.V1_17, optionalSell(1, 4, 16, "cavesandcliffsbackport:dripstone_block"))),
                 concat(level(buy(Items.QUARTZ, 12, 12)), everyColour(Blocks.STAINED_HARDENED_CLAY, 1, 1, STOCK),
                         glazedTerracotta()),
                 level(sell(new ItemStack(Blocks.QUARTZ_BLOCK, 1, 2), 1, 1, STOCK), sell(new ItemStack(Blocks.QUARTZ_BLOCK), 1, 1, STOCK)));
@@ -527,7 +526,9 @@ public final class ModernTrades {
             out[i] = new Trade() {
                 @Override
                 public boolean available() {
-                    return com.exiledradio.villagerbackport.ModConfig.trades.modernCartographer == modern && trade.available();
+                    boolean today = com.exiledradio.villagerbackport.ModConfig.trades.modernCartographer
+                            && TradeVersion.current().atLeast(TradeVersion.V1_21);
+                    return today == modern && trade.available();
                 }
 
                 @Nullable
@@ -950,6 +951,28 @@ public final class ModernTrades {
             out.addAll(Arrays.asList(part));
         }
         return out.toArray(new String[0]);
+    }
+
+    /** The trade, from that version's table on. */
+    private static Trade from(TradeVersion since, Trade trade) {
+        return between(since, null, trade);
+    }
+
+    /** The trade in the tables of {@code since} up to, not including, {@code until} (null: every later one). */
+    private static Trade between(final TradeVersion since, @Nullable final TradeVersion until, final Trade trade) {
+        return new Trade() {
+            @Override
+            public boolean available() {
+                TradeVersion now = TradeVersion.current();
+                return now.atLeast(since) && (until == null || !now.atLeast(until)) && trade.available();
+            }
+
+            @Nullable
+            @Override
+            public MerchantRecipe offer(@Nullable EntityVillager villager, Random random) {
+                return trade.offer(villager, random);
+            }
+        };
     }
 
     /** A trade offered only when none of the named items exist - the fallback for a missing one. */

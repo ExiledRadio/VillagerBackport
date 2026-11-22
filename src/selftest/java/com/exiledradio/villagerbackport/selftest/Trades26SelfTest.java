@@ -8,6 +8,7 @@ import com.exiledradio.villagerbackport.data.VillagerTradeData;
 import com.exiledradio.villagerbackport.trade.EnchantedTrades;
 import com.exiledradio.villagerbackport.trade.LevelGate;
 import com.exiledradio.villagerbackport.trade.ModernTrades;
+import com.exiledradio.villagerbackport.trade.TradeVersion;
 import com.exiledradio.villagerbackport.trade.VillagerLevel;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -48,6 +49,7 @@ public final class Trades26SelfTest implements SelfTest {
         WorldServer world = DimensionManager.getWorld(0);
         boolean enchanted = ModConfig.trades.modernEnchantedTrades;
         boolean live = ModConfig.trades.tradesUpdateWhileOpen;
+        TradeVersion.override(TradeVersion.V26);
         try {
             enchantedBooks(c);
             enchantedGear(c);
@@ -57,6 +59,7 @@ public final class Trades26SelfTest implements SelfTest {
             trader(c);
             owners(c);
         } finally {
+            TradeVersion.override(null);
             ModConfig.trades.modernEnchantedTrades = enchanted;
             ModConfig.trades.tradesUpdateWhileOpen = live;
         }
@@ -137,7 +140,7 @@ public final class Trades26SelfTest implements SelfTest {
         Item deeper = ForgeRegistries.ITEMS.getValue(new net.minecraft.util.ResourceLocation("deeperdepths", "yellow_candle"));
         boolean candles = candle != null && candle != Items.AIR || deeper != null && deeper != Items.AIR;
         Item dandelion = ForgeRegistries.ITEMS.getValue(new net.minecraft.util.ResourceLocation("gamedropsbackport", "golden_dandelion"));
-        boolean gameDrops = dandelion != null && dandelion != Items.AIR;
+        boolean gameDrops = true; // run at 26.3
 
         EntityVillager v = new EntityVillager(world, 1);
         MerchantRecipeList list = new MerchantRecipeList();
@@ -228,7 +231,7 @@ public final class Trades26SelfTest implements SelfTest {
             nameTags += r.getItemToSell().getItem() == Items.NAME_TAG ? 1 : 0;
         }
         // With Game Drops its own name tag trade (through Core) is the one; this mod's steps aside.
-        c.eq(FakeGameDrops.active() ? 0 : 1, nameTags, "this mod's trader name tag trade, unless Game Drops adds its own");
+        c.eq(0, nameTags, "this mod's trader has no name tag trade of its own (Game Drops adds 26.1's)");
         if (FakeGameDrops.active()) {
             c.ok(sold.contains("gamedropsbackport:sulfur_spike"), "the wandering trader sells Game Drops' sulfur spikes (26.2)");
         }

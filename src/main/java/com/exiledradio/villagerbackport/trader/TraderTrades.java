@@ -1,6 +1,7 @@
 package com.exiledradio.villagerbackport.trader;
 
 import com.exiledradio.backportcore.trade.TradeRegistry;
+import com.exiledradio.villagerbackport.trade.TradeVersion;
 
 import net.minecraft.block.BlockDirt;
 import net.minecraft.block.BlockFlower;
@@ -47,8 +48,12 @@ import java.util.Random;
  * sea pickles, coral blocks, cornflowers, fish buckets, the nautilus shell - is looked up by name
  * from the mods that commonly add it, and drops out of its pool when none is installed, so the
  * trader picks from what is left. Sea pickles are Update Aquatic Backport's, the family mod they fit
- * best, and are sold only when it is installed. Things only much later versions added (cherry and mangrove wood,
- * moss, dripleaf, dripstone, wildflowers, firefly bushes) are left out entirely.
+ * best, and are sold only when it is installed. Items later versions added are sold by their owners' names.
+ *
+ * <h2>Versions</h2>
+ * The table is the newest installed backport's ({@link TradeVersion}): 1.14's layout and prices up to 1.20, with
+ * 1.17's cave blocks and 1.20's cherry sapling from those versions; 1.21's rework (the buying pool, two specials,
+ * logs, new prices) from Tricky Trials on; 26.x's additions with Game Drops.
  */
 public final class TraderTrades {
 
@@ -87,8 +92,12 @@ public final class TraderTrades {
      */
     public static MerchantRecipeList roll(Random random) {
         MerchantRecipeList list = new MerchantRecipeList();
-        pick(list, pool(BUYING, TradeRegistry.TraderPool.BUYING), BUYING_PICKS, random);
-        pick(list, pool(SPECIAL, TradeRegistry.TraderPool.SPECIAL), SPECIAL_PICKS, random);
+        // 1.14 to 1.20: five ordinary and one special, nothing bought. 1.21 added the buying pool and a second special.
+        boolean modern = TradeVersion.current().atLeast(TradeVersion.V1_21);
+        if (modern) {
+            pick(list, pool(BUYING, TradeRegistry.TraderPool.BUYING), BUYING_PICKS, random);
+        }
+        pick(list, pool(SPECIAL, TradeRegistry.TraderPool.SPECIAL), modern ? SPECIAL_PICKS : 1, random);
         pick(list, pool(ORDINARY, TradeRegistry.TraderPool.ORDINARY), ORDINARY_PICKS, random);
         return list;
     }
@@ -154,31 +163,56 @@ public final class TraderTrades {
     // ---------------------------------------------------------------------------------------------
 
     private static void build() {
-        // Buying: the trader pays one to three emeralds, two of each.
-        BUYING.add(buy(new ItemStack(Blocks.HAY_BLOCK), 1, 2));
-        BUYING.add(buy(potion(PotionTypes.WATER), 1, 2));
-        BUYING.add(buy(new ItemStack(Items.BAKED_POTATO, 4), 1, 2));
-        BUYING.add(buy(new ItemStack(Items.MILK_BUCKET), 2, 2));
-        BUYING.add(buy(new ItemStack(Items.WATER_BUCKET), 2, 2));
-        BUYING.add(buy(new ItemStack(Items.FERMENTED_SPIDER_EYE), 3, 2));
+        final TradeVersion v14 = TradeVersion.V1_14;
+        final TradeVersion v17 = TradeVersion.V1_17;
+        final TradeVersion v20 = TradeVersion.V1_20;
+        final TradeVersion v21 = TradeVersion.V1_21;
+        final TradeVersion v26 = TradeVersion.V26;
 
-        // Special.
-        SPECIAL.add(sell(new ItemStack(Blocks.PACKED_ICE), 1, 6));
-        SPECIAL.add(sell(new ItemStack(Items.GUNPOWDER, 4), 1, 2));
-        for (BlockPlanks.EnumType wood : BlockPlanks.EnumType.values()) {
-            SPECIAL.add(sell(log(wood, 8), 1, 4));
-        }
-        // Later versions' logs, 8 for an emerald, by their owners' names (26.3; poplar is Game Drops' own).
-        SPECIAL.add(optionalSell(1, 8, 4, "trailsandtalesbackport:cherry_log"));
-        SPECIAL.add(optionalSell(1, 8, 4, "wildupdatebackport:mangrove_log"));
-        SPECIAL.add(optionalSell(1, 8, 4, "trickytrialsbackport:pale_oak_log"));
+        // Buying (1.21): the trader pays one to three emeralds, two of each.
+        BUYING.add(from(v21, buy(new ItemStack(Blocks.HAY_BLOCK), 1, 2)));
+        BUYING.add(from(v21, buy(potion(PotionTypes.WATER), 1, 2)));
+        BUYING.add(from(v21, buy(new ItemStack(Items.BAKED_POTATO, 4), 1, 2)));
+        BUYING.add(from(v21, buy(new ItemStack(Items.MILK_BUCKET), 2, 2)));
+        BUYING.add(from(v21, buy(new ItemStack(Items.WATER_BUCKET), 2, 2)));
+        BUYING.add(from(v21, buy(new ItemStack(Items.FERMENTED_SPIDER_EYE), 3, 2)));
+
+        // Special. 1.14 to 1.20: the fish buckets, packed and blue ice, gunpowder and podzol. 1.21: ice, gunpowder,
+        // podzol, logs, the enchanted pickaxe and the long invisibility potion.
+        String[] tropical = {"updateaquaticbackport:tropical_fish_bucket", "futuremc:tropical_fish_bucket"};
+        String[] puffer = {"updateaquaticbackport:pufferfish_bucket", "futuremc:pufferfish_bucket"};
+        String[] blueIce = {"updateaquaticbackport:blue_ice", "villagerbackport:blue_ice", "oe:blue_ice", "futuremc:blue_ice"};
+        SPECIAL.add(between(v14, v21, optionalSell(5, 1, 4, tropical)));
+        SPECIAL.add(between(v14, v21, optionalSell(5, 1, 4, puffer)));
+        SPECIAL.add(between(v14, v21, sell(new ItemStack(Blocks.PACKED_ICE), 3, 6)));
+        SPECIAL.add(from(v21, sell(new ItemStack(Blocks.PACKED_ICE), 1, 6)));
+        SPECIAL.add(optionalSell(6, 1, 6, blueIce));
+        SPECIAL.add(between(v14, v21, sell(new ItemStack(Items.GUNPOWDER), 1, 8)));
+        SPECIAL.add(from(v21, sell(new ItemStack(Items.GUNPOWDER, 4), 1, 2)));
         SPECIAL.add(sell(new ItemStack(Blocks.DIRT, 3, BlockDirt.DirtType.PODZOL.getMetadata()), 3, 6));
-        SPECIAL.add(sell(potion(PotionTypes.INVISIBILITY), 5, 1));
-        SPECIAL.add(optionalSell(6, 1, 6, "updateaquaticbackport:blue_ice", "villagerbackport:blue_ice", "oe:blue_ice", "futuremc:blue_ice"));
-        SPECIAL.add(enchantedPickaxe());
+        for (BlockPlanks.EnumType wood : BlockPlanks.EnumType.values()) {
+            SPECIAL.add(from(v21, sell(log(wood, 8), 1, 4)));
+        }
+        // Later woods' logs by their owners' names (poplar is Game Drops' own, through Backport Core).
+        SPECIAL.add(from(v21, optionalSell(1, 8, 4, "trailsandtalesbackport:cherry_log")));
+        SPECIAL.add(from(v21, optionalSell(1, 8, 4, "wildupdatebackport:mangrove_log")));
+        SPECIAL.add(from(v21, optionalSell(1, 8, 4, "trickytrialsbackport:pale_oak_log")));
+        SPECIAL.add(from(v21, enchantedPickaxe()));
+        SPECIAL.add(from(v21, sell(potion(PotionTypes.LONG_INVISIBILITY), 5, 1)));
 
-        // Ordinary: one emerald for one, twelve in stock.
+        // Ordinary.
+        ORDINARY.add(from(v21, optionalSell(3, 1, 4, tropical)));
+        ORDINARY.add(from(v21, optionalSell(3, 1, 4, puffer)));
+        // Sea pickles are Update Aquatic Backport's: the trader sells them only when it is installed.
+        ORDINARY.add(optionalSell(2, 1, 5, "updateaquaticbackport:sea_pickle"));
+        ORDINARY.add(sell(new ItemStack(Items.SLIME_BALL), 4, 5));
+        ORDINARY.add(sell(new ItemStack(Blocks.GLOWSTONE), 2, 5));
+        ORDINARY.add(optionalSell(5, 1, 5, "updateaquaticbackport:nautilus_shell", "oe:nautilus_shell", "futuremc:nautilus_shell"));
         ORDINARY.add(sell(new ItemStack(Blocks.TALLGRASS, 1, BlockTallGrass.EnumType.FERN.getMeta()), 1, 12));
+        ORDINARY.add(sell(new ItemStack(Items.REEDS), 1, 8));
+        ORDINARY.add(sell(new ItemStack(Blocks.PUMPKIN), 1, 4));
+        ORDINARY.add(optionalSell(3, 1, 12, "updateaquaticbackport:kelp", "oe:kelp", "futuremc:kelp"));
+        ORDINARY.add(sell(new ItemStack(Blocks.CACTUS), 3, 8));
         ORDINARY.add(sell(new ItemStack(Blocks.YELLOW_FLOWER), 1, 12));
         for (BlockFlower.EnumFlowerType flower : new BlockFlower.EnumFlowerType[] {
                 BlockFlower.EnumFlowerType.POPPY, BlockFlower.EnumFlowerType.ALLIUM,
@@ -187,34 +221,22 @@ public final class TraderTrades {
                 BlockFlower.EnumFlowerType.PINK_TULIP, BlockFlower.EnumFlowerType.OXEYE_DAISY}) {
             ORDINARY.add(sell(new ItemStack(Blocks.RED_FLOWER, 1, flower.getMeta()), 1, 12));
         }
+        ORDINARY.add(sell(new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.BLUE_ORCHID.getMeta()), 1, 8));
         ORDINARY.add(optionalSell(1, 1, 12, "villagerbackport:cornflower", "futuremc:cornflower"));
+        ORDINARY.add(optionalSell(1, 1, 7, "villagerbackport:lily_of_the_valley", "futuremc:lily_of_the_valley"));
+        ORDINARY.add(from(v21, optionalSell(1, 1, 7, "trickytrialsbackport:open_eyeblossom")));
+        ORDINARY.add(from(v21, optionalSell(1, 1, 12, "trickytrialsbackport:wildflowers")));
+        ORDINARY.add(from(v21, optionalSell(1, 1, 12, "trickytrialsbackport:tall_dry_grass")));
         ORDINARY.add(sell(new ItemStack(Items.WHEAT_SEEDS), 1, 12));
         ORDINARY.add(sell(new ItemStack(Items.BEETROOT_SEEDS), 1, 12));
         ORDINARY.add(sell(new ItemStack(Items.PUMPKIN_SEEDS), 1, 12));
         ORDINARY.add(sell(new ItemStack(Items.MELON_SEEDS), 1, 12));
-
-        ORDINARY.add(sell(new ItemStack(Items.REEDS), 1, 8));
-        ORDINARY.add(sell(new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.BLUE_ORCHID.getMeta()), 1, 8));
-        ORDINARY.add(optionalSell(1, 1, 7, "villagerbackport:lily_of_the_valley", "futuremc:lily_of_the_valley"));
-        ORDINARY.add(sell(new ItemStack(Blocks.PUMPKIN), 1, 4));
-        // Game Drops Backport adds this same trade (26.1) itself; one is enough.
-        ORDINARY.add(unless(sell(new ItemStack(Items.NAME_TAG), 1, 5), "gamedropsbackport:golden_dandelion"));
-
-        // What 1.17 to 26.3 added, by their owners' names and at 26.3's prices; each only with its owner installed.
-        // The mangrove propagule (Wild Update), pointed dripstone (Caves & Cliffs), golden dandelion, poplar and
-        // shelf mushroom (Game Drops) are registered by their owners through Backport Core.
-        ORDINARY.add(optionalSell(1, 1, 12, "trickytrialsbackport:wildflowers"));
-        ORDINARY.add(optionalSell(1, 1, 12, "trickytrialsbackport:tall_dry_grass"));
-        ORDINARY.add(optionalSell(1, 1, 7, "trickytrialsbackport:open_eyeblossom"));
-        ORDINARY.add(optionalSell(5, 1, 8, "trailsandtalesbackport:cherry_sapling"));
-        ORDINARY.add(optionalSell(5, 1, 8, "trickytrialsbackport:pale_oak_sapling"));
-        ORDINARY.add(optionalSell(1, 3, 4, "trickytrialsbackport:pale_hanging_moss"));
-        ORDINARY.add(optionalSell(1, 2, 5, "cavesandcliffsbackport:small_dripleaf"));
-        ORDINARY.add(optionalSell(1, 2, 5, "cavesandcliffsbackport:rooted_dirt"));
-        ORDINARY.add(optionalSell(1, 2, 5, "cavesandcliffsbackport:moss_block"));
-        ORDINARY.add(optionalSell(1, 2, 5, "trickytrialsbackport:pale_moss_block"));
-        ORDINARY.add(optionalSell(3, 1, 12, "trickytrialsbackport:firefly_bush"));
-        ORDINARY.add(optionalSell(1, 2, 5, "gamedropsbackport:sulfur_spike"));
+        for (BlockPlanks.EnumType wood : BlockPlanks.EnumType.values()) {
+            ORDINARY.add(sell(new ItemStack(Blocks.SAPLING, 1, wood.getMetadata()), 5, 8));
+        }
+        // The mangrove propagule (1.19) is Wild Update's own, through Backport Core.
+        ORDINARY.add(from(v20, optionalSell(5, 1, 8, "trailsandtalesbackport:cherry_sapling")));
+        ORDINARY.add(from(v21, optionalSell(5, 1, 8, "trickytrialsbackport:pale_oak_sapling")));
 
         // Dyes, three for an emerald. The four 1.14 split off from other items are taken from a mod
         // that adds them when there is one, and are 1.12.2's bone meal, ink sac, cocoa beans and lapis
@@ -223,20 +245,6 @@ public final class TraderTrades {
             ORDINARY.add(dye(color));
         }
 
-        ORDINARY.add(sell(new ItemStack(Blocks.VINE, 3), 1, 4));
-        ORDINARY.add(sell(new ItemStack(Blocks.BROWN_MUSHROOM, 3), 1, 4));
-        ORDINARY.add(sell(new ItemStack(Blocks.RED_MUSHROOM, 3), 1, 4));
-        ORDINARY.add(sell(new ItemStack(Blocks.WATERLILY, 5), 1, 2));
-        ORDINARY.add(sell(new ItemStack(Blocks.SAND, 8), 1, 8));
-        ORDINARY.add(sell(new ItemStack(Blocks.SAND, 4, 1), 1, 6));
-
-        // Sea pickles are Update Aquatic Backport's: the trader sells them only when it is installed.
-        ORDINARY.add(optionalSell(2, 1, 5, "updateaquaticbackport:sea_pickle"));
-        ORDINARY.add(sell(new ItemStack(Blocks.GLOWSTONE), 3, 5));
-        ORDINARY.add(optionalSell(3, 1, 4, "updateaquaticbackport:tropical_fish_bucket", "futuremc:tropical_fish_bucket"));
-        ORDINARY.add(optionalSell(3, 1, 4, "updateaquaticbackport:pufferfish_bucket", "futuremc:pufferfish_bucket"));
-        ORDINARY.add(optionalSell(3, 1, 12, "updateaquaticbackport:kelp", "oe:kelp", "futuremc:kelp"));
-        ORDINARY.add(sell(new ItemStack(Blocks.CACTUS), 3, 8));
         // 1.13's five coral blocks: Update Aquatic Backport's, or Oceanic Expanse's, which names them by color (blue is
         // tube, pink is brain, purple is bubble, red is fire, yellow is horn).
         String[] corals = {"tube", "brain", "bubble", "fire", "horn"};
@@ -245,11 +253,48 @@ public final class TraderTrades {
             ORDINARY.add(optionalSell(3, 1, 8, "updateaquaticbackport:" + corals[i] + "_coral_block", "oe:" + oeColors[i] + "_coral_block"));
         }
 
-        ORDINARY.add(sell(new ItemStack(Items.SLIME_BALL), 5, 5));
-        ORDINARY.add(optionalSell(5, 1, 5, "updateaquaticbackport:nautilus_shell", "oe:nautilus_shell", "futuremc:nautilus_shell"));
-        for (BlockPlanks.EnumType wood : BlockPlanks.EnumType.values()) {
-            ORDINARY.add(sell(new ItemStack(Blocks.SAPLING, 1, wood.getMetadata()), 5, 8));
-        }
+        // 1.14 to 1.20 sold vines and mushrooms one at a time and lily pads in twos; 1.21 in threes and fives.
+        ORDINARY.add(between(v14, v21, sell(new ItemStack(Blocks.VINE), 1, 12)));
+        ORDINARY.add(from(v21, sell(new ItemStack(Blocks.VINE, 3), 1, 4)));
+        ORDINARY.add(from(v21, optionalSell(1, 3, 4, "trickytrialsbackport:pale_hanging_moss")));
+        ORDINARY.add(between(v14, v21, sell(new ItemStack(Blocks.BROWN_MUSHROOM), 1, 12)));
+        ORDINARY.add(between(v14, v21, sell(new ItemStack(Blocks.RED_MUSHROOM), 1, 12)));
+        ORDINARY.add(from(v21, sell(new ItemStack(Blocks.BROWN_MUSHROOM, 3), 1, 4)));
+        ORDINARY.add(from(v21, sell(new ItemStack(Blocks.RED_MUSHROOM, 3), 1, 4)));
+        ORDINARY.add(between(v14, v21, sell(new ItemStack(Blocks.WATERLILY, 2), 1, 5)));
+        ORDINARY.add(from(v21, sell(new ItemStack(Blocks.WATERLILY, 5), 1, 2)));
+        ORDINARY.add(sell(new ItemStack(Blocks.SAND, 8), 1, 8));
+        ORDINARY.add(sell(new ItemStack(Blocks.SAND, 4, 1), 1, 6));
+
+        // 1.17's cave blocks, Caves & Cliffs Backport's (its pointed dripstone it adds itself, through Backport Core).
+        ORDINARY.add(from(v17, optionalSell(1, 2, 5, "cavesandcliffsbackport:small_dripleaf")));
+        ORDINARY.add(from(v17, optionalSell(1, 2, 5, "cavesandcliffsbackport:rooted_dirt")));
+        ORDINARY.add(from(v17, optionalSell(1, 2, 5, "cavesandcliffsbackport:moss_block")));
+        ORDINARY.add(from(v21, optionalSell(1, 2, 5, "trickytrialsbackport:pale_moss_block")));
+        ORDINARY.add(from(v21, optionalSell(3, 1, 12, "trickytrialsbackport:firefly_bush")));
+        // 26.2's sulfur spikes. Game Drops adds the golden dandelion, name tag, poplar and shelf mushroom itself.
+        ORDINARY.add(from(v26, optionalSell(1, 2, 5, "gamedropsbackport:sulfur_spike")));
+    }
+
+    /** The trade, from that version's table on. */
+    private static Trade from(TradeVersion since, Trade trade) {
+        return between(since, null, trade);
+    }
+
+    /** The trade in the tables of {@code since} up to, not including, {@code until} (null: every later one). */
+    private static Trade between(final TradeVersion since, @Nullable final TradeVersion until, final Trade trade) {
+        return new Trade() {
+            @Override
+            public boolean available() {
+                TradeVersion now = TradeVersion.current();
+                return now.atLeast(since) && (until == null || !now.atLeast(until)) && trade.available();
+            }
+
+            @Override
+            public MerchantRecipe offer(Random random) {
+                return trade.offer(random);
+            }
+        };
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -344,27 +389,6 @@ public final class TraderTrades {
     }
 
     /** A sale of an item looked up by name: the first of the candidates that exists, or no trade. */
-    /** The trade, offered only while none of the named items exist. */
-    private static Trade unless(final Trade trade, final String... absent) {
-        return new Trade() {
-            @Override
-            public boolean available() {
-                for (String name : absent) {
-                    Item item = net.minecraftforge.fml.common.registry.ForgeRegistries.ITEMS.getValue(new net.minecraft.util.ResourceLocation(name));
-                    if (item != null && item != Items.AIR) {
-                        return false;
-                    }
-                }
-                return trade.available();
-            }
-
-            @Override
-            public MerchantRecipe offer(Random random) {
-                return trade.offer(random);
-            }
-        };
-    }
-
     private static Trade optionalSell(final int emeralds, final int count, final int stock, final String... candidates) {
         return new Trade() {
             @Override
