@@ -227,7 +227,7 @@ public final class ModernTrades {
         table("minecraft:farmer", "fisherman",
                 level(buy(Items.STRING, 20, 16), buy(Items.COAL, 10, 16),
                         convert(stack(Items.FISH, 6, 0), 1, stack(Items.COOKED_FISH, 6, 0), 16),
-                        optionalSell(3, 1, 16, "futuremc:cod_bucket")),
+                        optionalSell(3, 1, 16, "updateaquaticbackport:cod_bucket", "futuremc:cod_bucket")),
                 level(buy(stack(Items.FISH, 15, 0), 16),
                         convert(stack(Items.FISH, 6, 1), 1, stack(Items.COOKED_FISH, 6, 1), 16),
                         optionalSell(2, 1, STOCK, "villagerbackport:campfire", "futuremc:campfire")),
@@ -303,7 +303,7 @@ public final class ModernTrades {
                 level(buy(Items.ROTTEN_FLESH, 32, 16), sell(Items.REDSTONE, 1, 2, STOCK)),
                 level(buy(Items.GOLD_INGOT, 3, 12), sell(dye(EnumDyeColor.BLUE, 1), 1, STOCK)),
                 level(buy(Items.RABBIT_FOOT, 2, 12), sell(new ItemStack(Blocks.GLOWSTONE), 4, 1, STOCK)),
-                level(optionalBuy(4, 12, "oe:turtle_scute"), buy(Items.GLASS_BOTTLE, 9, 12),
+                level(optionalBuy(4, 12, "updateaquaticbackport:scute", "oe:turtle_scute"), buy(Items.GLASS_BOTTLE, 9, 12),
                         sell(Items.ENDER_PEARL, 5, 1, STOCK)),
                 level(buy(Items.NETHER_WART, 22, 12), sell(Items.EXPERIENCE_BOTTLE, 3, 1, STOCK)));
 
@@ -338,7 +338,9 @@ public final class ModernTrades {
                 level(buy(new ItemStack(Blocks.STONE, 20), 16), sell(new ItemStack(Blocks.STONEBRICK, 1, 3), 1, 4, 16)),
                 level(buy(new ItemStack(Blocks.STONE, 16, 1), 16), buy(new ItemStack(Blocks.STONE, 16, 5), 16),
                         buy(new ItemStack(Blocks.STONE, 16, 3), 16), sell(new ItemStack(Blocks.STONE, 1, 6), 1, 4, 16),
-                        sell(new ItemStack(Blocks.STONE, 1, 4), 1, 4, 16), sell(new ItemStack(Blocks.STONE, 1, 2), 1, 4, 16)),
+                        sell(new ItemStack(Blocks.STONE, 1, 4), 1, 4, 16), sell(new ItemStack(Blocks.STONE, 1, 2), 1, 4, 16),
+                        // 1.17's dripstone block, with Caves & Cliffs Backport.
+                        optionalSell(1, 4, 16, "cavesandcliffsbackport:dripstone_block")),
                 concat(level(buy(Items.QUARTZ, 12, 12)), everyColour(Blocks.STAINED_HARDENED_CLAY, 1, 1, STOCK),
                         glazedTerracotta()),
                 level(sell(new ItemStack(Blocks.QUARTZ_BLOCK, 1, 2), 1, 1, STOCK), sell(new ItemStack(Blocks.QUARTZ_BLOCK), 1, 1, STOCK)));
@@ -348,14 +350,14 @@ public final class ModernTrades {
                         sell(Items.RABBIT_STEW, 1, 1, STOCK)),
                 level(buy(Items.COAL, 15, 16), sell(Items.COOKED_PORKCHOP, 1, 5, 16), sell(Items.COOKED_CHICKEN, 1, 8, 16)),
                 level(buy(Items.MUTTON, 7, 16), buy(Items.BEEF, 10, 16)),
-                level(optionalBuy(10, 12, "oe:dried_kelp_block")),
+                level(optionalBuy(10, 12, "updateaquaticbackport:dried_kelp_block", "oe:dried_kelp_block")),
                 level(sweetBerriesBuy(10, 12)));
 
         table("minecraft:butcher", "leather",
                 level(buy(Items.LEATHER, 6, 16), dyed(Items.LEATHER_LEGGINGS, 3), dyed(Items.LEATHER_CHESTPLATE, 7)),
                 level(buy(Items.FLINT, 26, 12), dyed(Items.LEATHER_HELMET, 5), dyed(Items.LEATHER_BOOTS, 4)),
                 level(buy(Items.RABBIT_HIDE, 9, 12), dyed(Items.LEATHER_CHESTPLATE, 7)),
-                level(optionalBuy(4, 12, "oe:turtle_scute"), dyedHorseArmor(6)),
+                level(optionalBuy(4, 12, "updateaquaticbackport:scute", "oe:turtle_scute"), dyedHorseArmor(6)),
                 level(sell(Items.SADDLE, 6, 1, STOCK), dyed(Items.LEATHER_HELMET, 5)));
     }
 

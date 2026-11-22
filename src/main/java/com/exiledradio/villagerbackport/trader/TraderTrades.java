@@ -168,6 +168,10 @@ public final class TraderTrades {
         for (BlockPlanks.EnumType wood : BlockPlanks.EnumType.values()) {
             SPECIAL.add(sell(log(wood, 8), 1, 4));
         }
+        // Later versions' logs, 8 for an emerald, by their owners' names (26.3; poplar is Game Drops' own).
+        SPECIAL.add(optionalSell(1, 8, 4, "trailsandtalesbackport:cherry_log"));
+        SPECIAL.add(optionalSell(1, 8, 4, "wildupdatebackport:mangrove_log"));
+        SPECIAL.add(optionalSell(1, 8, 4, "trickytrialsbackport:pale_oak_log"));
         SPECIAL.add(sell(new ItemStack(Blocks.DIRT, 3, BlockDirt.DirtType.PODZOL.getMetadata()), 3, 6));
         SPECIAL.add(sell(potion(PotionTypes.INVISIBILITY), 5, 1));
         SPECIAL.add(optionalSell(6, 1, 6, "updateaquaticbackport:blue_ice", "villagerbackport:blue_ice", "oe:blue_ice", "futuremc:blue_ice"));
@@ -193,7 +197,24 @@ public final class TraderTrades {
         ORDINARY.add(sell(new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.BLUE_ORCHID.getMeta()), 1, 8));
         ORDINARY.add(optionalSell(1, 1, 7, "villagerbackport:lily_of_the_valley", "futuremc:lily_of_the_valley"));
         ORDINARY.add(sell(new ItemStack(Blocks.PUMPKIN), 1, 4));
-        ORDINARY.add(sell(new ItemStack(Items.NAME_TAG), 1, 5));
+        // Game Drops Backport adds this same trade (26.1) itself; one is enough.
+        ORDINARY.add(unless(sell(new ItemStack(Items.NAME_TAG), 1, 5), "gamedropsbackport:golden_dandelion"));
+
+        // What 1.17 to 26.3 added, by their owners' names and at 26.3's prices; each only with its owner installed.
+        // The mangrove propagule (Wild Update), pointed dripstone (Caves & Cliffs), golden dandelion, poplar and
+        // shelf mushroom (Game Drops) are registered by their owners through Backport Core.
+        ORDINARY.add(optionalSell(1, 1, 12, "trickytrialsbackport:wildflowers"));
+        ORDINARY.add(optionalSell(1, 1, 12, "trickytrialsbackport:tall_dry_grass"));
+        ORDINARY.add(optionalSell(1, 1, 7, "trickytrialsbackport:open_eyeblossom"));
+        ORDINARY.add(optionalSell(5, 1, 8, "trailsandtalesbackport:cherry_sapling"));
+        ORDINARY.add(optionalSell(5, 1, 8, "trickytrialsbackport:pale_oak_sapling"));
+        ORDINARY.add(optionalSell(1, 3, 4, "trickytrialsbackport:pale_hanging_moss"));
+        ORDINARY.add(optionalSell(1, 2, 5, "cavesandcliffsbackport:small_dripleaf"));
+        ORDINARY.add(optionalSell(1, 2, 5, "cavesandcliffsbackport:rooted_dirt"));
+        ORDINARY.add(optionalSell(1, 2, 5, "cavesandcliffsbackport:moss_block"));
+        ORDINARY.add(optionalSell(1, 2, 5, "trickytrialsbackport:pale_moss_block"));
+        ORDINARY.add(optionalSell(3, 1, 12, "trickytrialsbackport:firefly_bush"));
+        ORDINARY.add(optionalSell(1, 2, 5, "gamedropsbackport:sulfur_spike"));
 
         // Dyes, three for an emerald. The four 1.14 split off from other items are taken from a mod
         // that adds them when there is one, and are 1.12.2's bone meal, ink sac, cocoa beans and lapis
@@ -323,6 +344,27 @@ public final class TraderTrades {
     }
 
     /** A sale of an item looked up by name: the first of the candidates that exists, or no trade. */
+    /** The trade, offered only while none of the named items exist. */
+    private static Trade unless(final Trade trade, final String... absent) {
+        return new Trade() {
+            @Override
+            public boolean available() {
+                for (String name : absent) {
+                    Item item = net.minecraftforge.fml.common.registry.ForgeRegistries.ITEMS.getValue(new net.minecraft.util.ResourceLocation(name));
+                    if (item != null && item != Items.AIR) {
+                        return false;
+                    }
+                }
+                return trade.available();
+            }
+
+            @Override
+            public MerchantRecipe offer(Random random) {
+                return trade.offer(random);
+            }
+        };
+    }
+
     private static Trade optionalSell(final int emeralds, final int count, final int stock, final String... candidates) {
         return new Trade() {
             @Override

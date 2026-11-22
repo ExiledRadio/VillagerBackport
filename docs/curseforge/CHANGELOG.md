@@ -3,6 +3,8 @@
 *   **New trades appear while the trade screen is open**, as in 26.3: the trade that earns a level levels the villager there and then, and the new level's trades show up on the open screen at your price. **Trades Update While Open** in Trade Tables turns it off (1.14 waited until the screen was closed).
 *   **Enchanted trades as in 26.1**: a librarian's enchanted book can be any enchantment but soul speed, swift sneak and wind burst, and asks for the emeralds before the book; enchanted gear that comes out with no enchantment is no longer sold. Prices are as before. **Today's Enchanted Trades** turns it off.
 *   **With Game Drops Backport, master librarians no longer sell name tags** (26.1). They sell yellow and red candles where a mod adds candles, Caves & Cliffs Backport's now included.
+*   **Trades sell the family's items**: the wandering trader sells Update Aquatic's kelp, corals, nautilus shells, fish buckets and blue ice, and (each with its mod) cherry, mangrove and pale oak logs, cherry and pale oak saplings, pale hanging moss, pale moss, eyeblossoms, wildflowers, tall dry grass, firefly bushes, small dripleaf, rooted dirt, moss blocks and sulfur spikes, at current prices. Fishermen, butchers, clerics and leatherworkers trade Update Aquatic's cod buckets, dried kelp blocks and scutes, and masons sell Caves & Cliffs' dripstone blocks.
+*   **Fixed: with Game Drops Backport the wandering trader could offer name tags twice.**
 *   **The cartography table copies and locks Game Drops Backport's explorer maps**, which come out as the same map; as in 26.3, only plain maps can be zoomed out.
 
 # 2.7.2

@@ -35,6 +35,7 @@ public final class FakeGameDrops {
             return;
         }
         event.getRegistry().register(new Item().setRegistryName(new ResourceLocation("gamedropsbackport", "golden_dandelion")));
+        event.getRegistry().register(new Item().setRegistryName(new ResourceLocation("gamedropsbackport", "sulfur_spike")));
         explorerMap = new ItemMap() {
         }.setRegistryName(new ResourceLocation("gamedropsbackport", "abandoned_camp_map"));
         event.getRegistry().register(explorerMap);

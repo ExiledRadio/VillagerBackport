@@ -55,6 +55,7 @@ public final class Trades26SelfTest implements SelfTest {
             liveLevelUp(c, world);
             cartography(c, world);
             trader(c);
+            owners(c);
         } finally {
             ModConfig.trades.modernEnchantedTrades = enchanted;
             ModConfig.trades.tradesUpdateWhileOpen = live;
@@ -218,18 +219,65 @@ public final class Trades26SelfTest implements SelfTest {
 
     /** Under {@code fake-ua}: the wandering trader sells Update Aquatic's ocean items with only that mod installed. */
     private static void trader(Check c) {
-        if (!FakeUpdateAquatic.active()) {
-            return;
-        }
         java.util.Set<String> sold = new java.util.HashSet<String>();
+        int nameTags = 0;
         for (MerchantRecipe r : com.exiledradio.villagerbackport.trader.TraderTrades.examples(new Random(13))) {
             if (r.getItemToSell().getItem().getRegistryName() != null) {
                 sold.add(r.getItemToSell().getItem().getRegistryName().toString());
             }
+            nameTags += r.getItemToSell().getItem() == Items.NAME_TAG ? 1 : 0;
+        }
+        // With Game Drops its own name tag trade (through Core) is the one; this mod's steps aside.
+        c.eq(FakeGameDrops.active() ? 0 : 1, nameTags, "this mod's trader name tag trade, unless Game Drops adds its own");
+        if (FakeGameDrops.active()) {
+            c.ok(sold.contains("gamedropsbackport:sulfur_spike"), "the wandering trader sells Game Drops' sulfur spikes (26.2)");
+        }
+        if (FakeCavesAndCliffs.active()) {
+            for (String name : new String[] {"small_dripleaf", "rooted_dirt", "moss_block"}) {
+                c.ok(sold.contains("cavesandcliffsbackport:" + name), "the wandering trader sells Caves & Cliffs' " + name);
+            }
+        }
+        if (!FakeUpdateAquatic.active()) {
+            return;
         }
         for (String name : FakeUpdateAquatic.TRADER_ITEMS) {
             c.ok(sold.contains("updateaquaticbackport:" + name), "the wandering trader sells Update Aquatic's " + name);
         }
+    }
+
+    /** Under {@code fake-ua} / {@code fake-cc}: the villager trades wired to Update Aquatic's and Caves &amp; Cliffs' items. */
+    private static void owners(Check c) {
+        if (FakeUpdateAquatic.active()) {
+            c.ok(sells("minecraft:farmer/fisherman", 1, "updateaquaticbackport:cod_bucket"), "a novice fisherman sells Update Aquatic's cod bucket");
+            c.ok(sells("minecraft:butcher/butcher", 4, "updateaquaticbackport:dried_kelp_block"), "an expert butcher buys Update Aquatic's dried kelp blocks");
+            c.ok(sells("minecraft:priest/cleric", 4, "updateaquaticbackport:scute"), "an expert cleric buys Update Aquatic's scutes");
+            c.ok(sells("minecraft:butcher/leather", 4, "updateaquaticbackport:scute"), "an expert leatherworker buys Update Aquatic's scutes");
+        }
+        if (FakeCavesAndCliffs.active()) {
+            c.ok(sells("minecraft:smith/mason", 3, "cavesandcliffsbackport:dripstone_block"), "a journeyman mason sells Caves & Cliffs' dripstone blocks (1.17)");
+        } else {
+            c.ok(!sells("minecraft:smith/mason", 3, "cavesandcliffsbackport:dripstone_block"), "without Caves & Cliffs no dripstone trade");
+        }
+    }
+
+    /** @return true if a trade in the career's level pool buys or sells the named item */
+    private static boolean sells(String career, int level, String item) {
+        List<List<net.minecraft.entity.passive.EntityVillager.ITradeList>> tiers = ModernTrades.asCareerTrades(career);
+        if (tiers == null || tiers.size() < level) {
+            return false;
+        }
+        for (net.minecraft.entity.passive.EntityVillager.ITradeList trade : tiers.get(level - 1)) {
+            MerchantRecipeList list = new MerchantRecipeList();
+            trade.addMerchantRecipe(null, list, new Random(level));
+            for (MerchantRecipe r : list) {
+                for (ItemStack s : new ItemStack[] {r.getItemToBuy(), r.getSecondItemToBuy(), r.getItemToSell()}) {
+                    if (!s.isEmpty() && s.getItem().getRegistryName() != null && item.equals(s.getItem().getRegistryName().toString())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private static ItemStack result(ContainerCartographyTable table, ItemStack map, ItemStack modifier) {
