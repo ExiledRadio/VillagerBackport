@@ -118,7 +118,6 @@ entity.villagerbackport.pillager.name=Saqueador
 entity.villagerbackport.ravager.name=Devastador
 item.villagerbackport.pillager_crossbow.name=Besta
 item.villagerbackport.ominous_bottle.name=Frasco Sombrio
-jei.villagerbackport.ominous_bottle=Beba para receber Mau Presságio, de I a V conforme o frasco, por 100 minutos. Leve o Mau Presságio para uma vila e, 30 segundos depois, chega uma invasão. Os capitães deixam cair estes frascos quando raids.captainDropsOminousBottle está ativado; caso contrário, matar um capitão dá Mau Presságio na hora.
 
 # The crossbow
 item.villagerbackport.crossbow.name=Besta
@@ -554,8 +553,6 @@ villagerbackport.general.raids.pillagers=Criatura do Saqueador
 villagerbackport.general.raids.pillagers.short=Qual criatura uma invasão envia como Saqueador. Usa a primeira instalada.
 villagerbackport.general.raids.crossbows=Bestas dos Saqueadores
 villagerbackport.general.raids.crossbows.short=Qual Besta um Saqueador carrega. Usa a primeira instalada.
-villagerbackport.general.raids.captaindropsominousbottle=Capitães soltam Frascos Sombrios
-villagerbackport.general.raids.captaindropsominousbottle.short=Capitães soltam um Frasco Sombrio, como no Java atual.
 villagerbackport.general.raids.patrols=Patrulhas
 villagerbackport.general.raids.patrols.short=Patrulhas de Saqueadores percorrem a Superfície.
 villagerbackport.general.raids.outposts=Postos avançados

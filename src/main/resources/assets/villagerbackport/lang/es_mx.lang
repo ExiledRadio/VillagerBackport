@@ -118,7 +118,6 @@ entity.villagerbackport.pillager.name=Saqueador
 entity.villagerbackport.ravager.name=Devastador
 item.villagerbackport.pillager_crossbow.name=Ballesta
 item.villagerbackport.ominous_bottle.name=Botella siniestra
-jei.villagerbackport.ominous_bottle=Bébela para obtener Mal presagio, del I al V según la botella, durante 100 minutos. Entra en una aldea con Mal presagio y, 30 segundos después, llegará una invasión. Los capitanes las sueltan cuando raids.captainDropsOminousBottle está activado; si no, matar a un capitán otorga Mal presagio directamente.
 
 # The crossbow
 item.villagerbackport.crossbow.name=Ballesta
@@ -554,8 +553,6 @@ villagerbackport.general.raids.pillagers=Criaturas saqueadoras
 villagerbackport.general.raids.pillagers.short=Qué criatura envía una invasión como saqueador. Se usa la primera instalada.
 villagerbackport.general.raids.crossbows=Ballestas de saqueador
 villagerbackport.general.raids.crossbows.short=Qué ballesta lleva un saqueador. Se usa la primera instalada.
-villagerbackport.general.raids.captaindropsominousbottle=Los capitanes sueltan botellas siniestras
-villagerbackport.general.raids.captaindropsominousbottle.short=Los capitanes sueltan una Botella siniestra, como en la versión actual de Java.
 villagerbackport.general.raids.patrols=Patrullas
 villagerbackport.general.raids.patrols.short=Las patrullas de saqueadores recorren la superficie.
 villagerbackport.general.raids.outposts=Puestos

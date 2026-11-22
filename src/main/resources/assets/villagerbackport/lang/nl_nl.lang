@@ -118,7 +118,6 @@ entity.villagerbackport.pillager.name=Rover
 entity.villagerbackport.ravager.name=Verwoester
 item.villagerbackport.pillager_crossbow.name=Kruisboog
 item.villagerbackport.ominous_bottle.name=Onheilspellende fles
-jei.villagerbackport.ominous_bottle=Drink hem op voor Slecht voorteken, I tot V afhankelijk van de fles, 100 minuten lang. Loop met Slecht voorteken een dorp in en 30 seconden later komt er een overval. Overvalsleiders laten deze vallen als raids.captainDropsOminousBottle aan staat; anders geeft het doden van een overvalsleider meteen Slecht voorteken.
 
 # The crossbow
 item.villagerbackport.crossbow.name=Kruisboog
@@ -554,8 +553,6 @@ villagerbackport.general.raids.pillagers=Roverwezens
 villagerbackport.general.raids.pillagers.short=Welk wezen een overval als rover stuurt. Het eerste geïnstalleerde wordt gebruikt.
 villagerbackport.general.raids.crossbows=Kruisbogen van rovers
 villagerbackport.general.raids.crossbows.short=Welke kruisboog een rover draagt. De eerste geïnstalleerde wordt gebruikt.
-villagerbackport.general.raids.captaindropsominousbottle=Leiders laten onheilspellende flessen vallen
-villagerbackport.general.raids.captaindropsominousbottle.short=Leiders laten een onheilspellende fles vallen, zoals in de huidige Java.
 villagerbackport.general.raids.patrols=Patrouilles
 villagerbackport.general.raids.patrols.short=Roverspatrouilles zwerven door de Bovenwereld.
 villagerbackport.general.raids.outposts=Buitenposten

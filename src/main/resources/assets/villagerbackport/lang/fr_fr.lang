@@ -118,7 +118,6 @@ entity.villagerbackport.pillager.name=Pillard
 entity.villagerbackport.ravager.name=Ravageur
 item.villagerbackport.pillager_crossbow.name=Arbalète
 item.villagerbackport.ominous_bottle.name=Fiole funeste
-jei.villagerbackport.ominous_bottle=Buvez-la pour obtenir Mauvais présage, de I à V selon la fiole, pendant 100 minutes. Entrez dans un village sous Mauvais présage et, 30 secondes plus tard, une invasion arrive. Les capitaines en lâchent quand raids.captainDropsOminousBottle est activé ; sinon, tuer un capitaine donne directement Mauvais présage.
 
 # The crossbow
 item.villagerbackport.crossbow.name=Arbalète
@@ -554,8 +553,6 @@ villagerbackport.general.raids.pillagers=Créatures pillards
 villagerbackport.general.raids.pillagers.short=La créature qu'une invasion envoie comme pillard. La première installée est utilisée.
 villagerbackport.general.raids.crossbows=Arbalètes des pillards
 villagerbackport.general.raids.crossbows.short=L'arbalète que porte un pillard. La première installée est utilisée.
-villagerbackport.general.raids.captaindropsominousbottle=Fioles funestes des capitaines
-villagerbackport.general.raids.captaindropsominousbottle.short=Les capitaines lâchent une Fiole funeste, comme dans la version Java actuelle.
 villagerbackport.general.raids.patrols=Patrouilles
 villagerbackport.general.raids.patrols.short=Des patrouilles de pillards parcourent la Surface.
 villagerbackport.general.raids.outposts=Avant-postes

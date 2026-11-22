@@ -118,7 +118,6 @@ entity.villagerbackport.pillager.name=Разбойник
 entity.villagerbackport.ravager.name=Разоритель
 item.villagerbackport.pillager_crossbow.name=Арбалет
 item.villagerbackport.ominous_bottle.name=Зловещая бутылочка
-jei.villagerbackport.ominous_bottle=Выпейте, чтобы получить Дурной знак на 100 минут — от I до V, в зависимости от бутылочки. Войдите с Дурным знаком в деревню, и через 30 секунд начнётся рейд. Главари выбрасывают такие бутылочки, если включён raids.captainDropsOminousBottle; иначе убийство главаря сразу даёт Дурной знак.
 
 # The crossbow
 item.villagerbackport.crossbow.name=Арбалет
@@ -554,8 +553,6 @@ villagerbackport.general.raids.pillagers=Моб-разбойник
 villagerbackport.general.raids.pillagers.short=Какого моба рейд посылает как разбойника. Берётся первый установленный.
 villagerbackport.general.raids.crossbows=Арбалеты разбойников
 villagerbackport.general.raids.crossbows.short=Какой арбалет носит разбойник. Берётся первый установленный.
-villagerbackport.general.raids.captaindropsominousbottle=Зловещие бутылочки с капитанов
-villagerbackport.general.raids.captaindropsominousbottle.short=Капитаны роняют зловещую бутылочку, как в текущей Java.
 villagerbackport.general.raids.patrols=Патрули
 villagerbackport.general.raids.patrols.short=Патрули разбойников бродят по Обычному миру.
 villagerbackport.general.raids.outposts=Аванпосты

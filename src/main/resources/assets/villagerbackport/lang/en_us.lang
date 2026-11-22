@@ -117,7 +117,6 @@ entity.villagerbackport.pillager.name=Pillager
 entity.villagerbackport.ravager.name=Ravager
 item.villagerbackport.pillager_crossbow.name=Crossbow
 item.villagerbackport.ominous_bottle.name=Ominous Bottle
-jei.villagerbackport.ominous_bottle=Drink it for Bad Omen, I to V by the bottle, for 100 minutes. Carry Bad Omen into a village and, 30 seconds later, a raid comes. Captains drop these when raids.captainDropsOminousBottle is on; otherwise killing a captain gives Bad Omen straight away.
 
 # The crossbow
 item.villagerbackport.crossbow.name=Crossbow
@@ -553,8 +552,6 @@ villagerbackport.general.raids.pillagers=Pillager Mobs
 villagerbackport.general.raids.pillagers.short=Which mob a raid sends as its pillager. The first installed is used.
 villagerbackport.general.raids.crossbows=Pillager Crossbows
 villagerbackport.general.raids.crossbows.short=Which crossbow a pillager carries. The first installed is used.
-villagerbackport.general.raids.captaindropsominousbottle=Captains Drop Ominous Bottles
-villagerbackport.general.raids.captaindropsominousbottle.short=Captains drop an Ominous Bottle, as in current Java.
 villagerbackport.general.raids.patrols=Patrols
 villagerbackport.general.raids.patrols.short=Pillager patrols roam the overworld.
 villagerbackport.general.raids.outposts=Outposts

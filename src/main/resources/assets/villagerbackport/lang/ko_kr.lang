@@ -118,7 +118,6 @@ entity.villagerbackport.pillager.name=약탈자
 entity.villagerbackport.ravager.name=파괴수
 item.villagerbackport.pillager_crossbow.name=쇠뇌
 item.villagerbackport.ominous_bottle.name=불길한 병
-jei.villagerbackport.ominous_bottle=마시면 병에 따라 I~V단계의 흉조를 100분 동안 얻습니다. 흉조를 지닌 채 마을에 들어가면 30초 뒤에 습격이 시작됩니다. raids.captainDropsOminousBottle이 켜져 있으면 대장이 이것을 떨어뜨리고, 꺼져 있으면 대장을 처치하는 즉시 흉조를 얻습니다.
 
 # The crossbow
 item.villagerbackport.crossbow.name=쇠뇌
@@ -554,8 +553,6 @@ villagerbackport.general.raids.pillagers=약탈자 몹
 villagerbackport.general.raids.pillagers.short=습격이 약탈자로 보내는 몹입니다. 설치된 것 중 첫 번째를 씁니다.
 villagerbackport.general.raids.crossbows=약탈자의 쇠뇌
 villagerbackport.general.raids.crossbows.short=약탈자가 드는 쇠뇌입니다. 설치된 것 중 첫 번째를 씁니다.
-villagerbackport.general.raids.captaindropsominousbottle=대장이 불길한 병 떨굼
-villagerbackport.general.raids.captaindropsominousbottle.short=현재 Java 에디션처럼 대장이 불길한 병을 떨굽니다.
 villagerbackport.general.raids.patrols=순찰대
 villagerbackport.general.raids.patrols.short=약탈자 순찰대가 오버월드를 돌아다닙니다.
 villagerbackport.general.raids.outposts=전초기지

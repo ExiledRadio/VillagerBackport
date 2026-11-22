@@ -65,9 +65,12 @@ public final class JeiPlugin implements IModPlugin {
         // The pillagers' own crossbow is a prop, never meant for a player's hands - see ItemPillagerCrossbow.
         blacklist.addIngredientToBlacklist(new ItemStack(com.exiledradio.villagerbackport.illager.IllagerContent.pillagerCrossbow));
 
-        for (int level = 0; level < com.exiledradio.villagerbackport.illager.ItemOminousBottle.LEVELS; level++) {
-            registry.addIngredientInfo(new ItemStack(com.exiledradio.villagerbackport.illager.IllagerContent.ominousBottle, 1, level),
-                    ItemStack.class, "jei.villagerbackport.ominous_bottle");
+        // Old worlds' ominous bottles without Tricky Trials Backport, which owns them now.
+        Item oldBottle = com.exiledradio.villagerbackport.migrate.OminousBottles.standIn();
+        if (oldBottle != null) {
+            for (int level = 0; level < com.exiledradio.villagerbackport.migrate.OminousBottles.LEVELS; level++) {
+                blacklist.addIngredientToBlacklist(new ItemStack(oldBottle, 1, level));
+            }
         }
 
         if (JeiSmithing.shown()) {

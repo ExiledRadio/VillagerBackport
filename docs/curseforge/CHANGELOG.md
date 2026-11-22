@@ -1,3 +1,9 @@
+# 2.7.4
+
+*   **The ominous bottle is now Tricky Trials Backport's**, since 1.21 added it. Village & Pillage alone has 1.14's raids again: killing a captain gives Bad Omen and there is no bottle.
+*   **With Tricky Trials Backport, captains drop an ominous bottle instead**, as in 1.21: a pillager captain that isn't in a raid drops a bottle of level I to V, and no captain gives Bad Omen. Drinking the bottle gives Bad Omen, which turns into Raid Omen in a village. The Captains Drop Ominous Bottles setting is gone.
+*   **Ominous bottles from older worlds are kept.** With Tricky Trials Backport 1.0.2 they become its bottles, with the same level. Without it they stay in your inventory as plain items that can't be drunk, and they become Tricky Trials' bottles once it is added.
+
 # 2.7.3
 
 *   **New trades appear while the trade screen is open**, as in 26.3: the trade that earns a level levels the villager there and then, and the new level's trades show up on the open screen at your price. **Trades Update While Open** in Trade Tables turns it off (1.14 waited until the screen was closed).

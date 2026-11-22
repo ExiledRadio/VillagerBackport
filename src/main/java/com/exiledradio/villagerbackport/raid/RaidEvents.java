@@ -3,6 +3,8 @@ package com.exiledradio.villagerbackport.raid;
 import com.exiledradio.villagerbackport.ModConfig;
 import com.exiledradio.villagerbackport.VillagerBackport;
 import com.exiledradio.villagerbackport.block.ModSounds;
+import com.exiledradio.villagerbackport.illager.EntityPillager;
+import com.exiledradio.villagerbackport.migrate.OminousBottles;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -37,9 +39,10 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
  *       they were when it runs out - current Java's rule. With {@code raids.raidOmen} off it starts
  *       at once, as in 1.14.</li>
  *   <li>Killing a captain - a raider wearing the ominous banner, outside a raid - gives Bad Omen, one
- *       level more than the killer had, up to V, for 100 minutes, as in 1.14; or, with
- *       {@code raids.captainDropsOminousBottle}, drops an ominous bottle of a random level, as in
- *       current Java.</li>
+ *       level more than the killer had, up to V, for 100 minutes, as in 1.14. With Tricky Trials
+ *       Backport's ominous bottle (1.21, {@link OminousBottles#captainsDropBottles}) a pillager captain
+ *       outside a raid drops a bottle of a random level, I to V, instead, and no captain gives Bad Omen;
+ *       drinking it gives this mod's Bad Omen.</li>
  *   <li>Raiders saved mid-raid rejoin it as they load, never despawn while in it, and make whoever
  *       kills them a hero of the village.</li>
  * </ul>
@@ -173,28 +176,24 @@ public final class RaidEvents {
             return;
         }
 
-        // A captain killed away from any raid: 1.14's Bad Omen, or current Java's ominous bottle.
-        if (killer instanceof EntityPlayer && OminousBanner.isOminous(dead.getItemStackFromSlot(EntityEquipmentSlot.HEAD))
-                && manager.findRaid(new BlockPos(dead)) == null) {
-            if (ModConfig.raids.captainDropsOminousBottle) {
-                dead.entityDropItem(ominousBottle(dead.getRNG().nextInt(5)), 0.0F);
-                return;
+        boolean captain = OminousBanner.isOminous(dead.getItemStackFromSlot(EntityEquipmentSlot.HEAD));
+        if (captain && OminousBottles.captainsDropBottles()) {
+            // 1.21's pillager loot table: a captain not in a raid drops a bottle, I to V, whatever killed it.
+            // Other illager captains drop none (MC-270014, works as intended).
+            if (dead instanceof EntityPillager) {
+                dead.entityDropItem(OminousBottles.bottle(dead.getRNG().nextInt(OminousBottles.LEVELS)), 0.0F);
             }
+            return;
+        }
+
+        // A captain a player killed away from any raid: 1.14's Bad Omen.
+        if (captain && killer instanceof EntityPlayer && manager.findRaid(new BlockPos(dead)) == null) {
             EntityPlayer player = (EntityPlayer) killer;
             PotionEffect had = player.getActivePotionEffect(ModEffects.badOmen);
             int level = had == null ? 0 : Math.min(had.getAmplifier() + 1, 4);
             player.removePotionEffect(ModEffects.badOmen);
             player.addPotionEffect(new PotionEffect(ModEffects.badOmen, BAD_OMEN_TICKS, level, false, false));
         }
-    }
-
-    /** Deeper Depths' bottle when it is installed, so a pack has one ominous bottle, not two. */
-    private static net.minecraft.item.ItemStack ominousBottle(int level) {
-        net.minecraft.item.Item theirs = net.minecraftforge.fml.common.registry.ForgeRegistries.ITEMS.getValue(
-                new net.minecraft.util.ResourceLocation("deeperdepths", "ominous_bottle"));
-        net.minecraft.item.Item item = theirs != null && theirs != net.minecraft.init.Items.AIR
-                ? theirs : com.exiledradio.villagerbackport.illager.IllagerContent.ominousBottle;
-        return new net.minecraft.item.ItemStack(item, 1, level);
     }
 
     @SubscribeEvent

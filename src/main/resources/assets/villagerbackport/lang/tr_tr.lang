@@ -118,7 +118,6 @@ entity.villagerbackport.pillager.name=Yağmacı
 entity.villagerbackport.ravager.name=Yıkıcı
 item.villagerbackport.pillager_crossbow.name=Arbalet
 item.villagerbackport.ominous_bottle.name=Uğursuz Şişe
-jei.villagerbackport.ominous_bottle=İçtiğinizde, şişeye göre I ile V arası seviyede 100 dakikalık Kötü Kehanet verir. Kötü Kehanet etkisindeyken bir köye girin; 30 saniye sonra bir baskın gelir. raids.captainDropsOminousBottle açıkken kaptanlar bunu düşürür; kapalıyken bir kaptanı öldürmek doğrudan Kötü Kehanet verir.
 
 # The crossbow
 item.villagerbackport.crossbow.name=Arbalet
@@ -554,8 +553,6 @@ villagerbackport.general.raids.pillagers=Yağmacı Canlıları
 villagerbackport.general.raids.pillagers.short=Baskının yağmacı olarak hangi canlıyı gönderdiği. Yüklü olan ilki kullanılır.
 villagerbackport.general.raids.crossbows=Yağmacı Arbaletleri
 villagerbackport.general.raids.crossbows.short=Yağmacının hangi arbaleti taşıdığı. Yüklü olan ilki kullanılır.
-villagerbackport.general.raids.captaindropsominousbottle=Kaptanlar Uğursuz Şişe Düşürür
-villagerbackport.general.raids.captaindropsominousbottle.short=Kaptanlar Uğursuz Şişe düşürür, güncel Java'daki gibi.
 villagerbackport.general.raids.patrols=Devriyeler
 villagerbackport.general.raids.patrols.short=Yağmacı devriyeleri dünyada dolaşır.
 villagerbackport.general.raids.outposts=Karakollar

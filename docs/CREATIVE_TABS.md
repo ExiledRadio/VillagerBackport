@@ -143,12 +143,9 @@ Village & Pillage Backport has no creative tab of its own. Each block and item i
 
 | Item | After | Before |
 |---|---|---|
-| `sweet_berries` | `beetroot_soup` | `ominous_bottle` (this mod) |
-| `ominous_bottle` | `sweet_berries` (this mod) | `ominous_bottle` (this mod) |
-| `ominous_bottle` | `ominous_bottle` (this mod) | `ominous_bottle` (this mod) |
-| `ominous_bottle` | `ominous_bottle` (this mod) | `ominous_bottle` (this mod) |
-| `ominous_bottle` | `ominous_bottle` (this mod) | `ominous_bottle` (this mod) |
-| `ominous_bottle` | `ominous_bottle` (this mod) | `suspicious_stew` |
+| `sweet_berries` | `beetroot_soup` | `suspicious_stew` |
+
+The ominous bottle is Tricky Trials Backport's since 2.7.4.
 
 ## Combat
 
@@ -159,3 +156,5 @@ Village & Pillage Backport has no creative tab of its own. Each block and item i
 ## Not in the creative menu
 
 As in vanilla 1.19.2, which keeps them out of every tab (they are still in the game): `suspicious_stew`.
+
+Without Tricky Trials Backport, older worlds' ominous bottles load as a stand-in (`villagerbackport:ominous_bottle`), in no tab and hidden in JEI.

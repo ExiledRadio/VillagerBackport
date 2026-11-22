@@ -118,7 +118,6 @@ entity.villagerbackport.pillager.name=Plünderer
 entity.villagerbackport.ravager.name=Verwüster
 item.villagerbackport.pillager_crossbow.name=Armbrust
 item.villagerbackport.ominous_bottle.name=Unheilvolle Flasche
-jei.villagerbackport.ominous_bottle=Trinke sie für Drohendes Unheil, I bis V je nach Flasche, für 100 Minuten. Trägst du Drohendes Unheil in ein Dorf, kommt 30 Sekunden später ein Überfall. Räuberhauptleute lassen diese fallen, wenn raids.captainDropsOminousBottle aktiviert ist; andernfalls gibt das Töten eines Räuberhauptmanns sofort Drohendes Unheil.
 
 # The crossbow
 item.villagerbackport.crossbow.name=Armbrust
@@ -554,8 +553,6 @@ villagerbackport.general.raids.pillagers=Plünderer-Kreaturen
 villagerbackport.general.raids.pillagers.short=Welche Kreatur ein Überfall als Plünderer schickt. Die erste installierte wird genutzt.
 villagerbackport.general.raids.crossbows=Plünderer-Armbrüste
 villagerbackport.general.raids.crossbows.short=Welche Armbrust ein Plünderer trägt. Die erste installierte wird genutzt.
-villagerbackport.general.raids.captaindropsominousbottle=Hauptmänner lassen Unheilvolle Flaschen fallen
-villagerbackport.general.raids.captaindropsominousbottle.short=Hauptmänner lassen eine Unheilvolle Flasche fallen, wie in der aktuellen Java Edition.
 villagerbackport.general.raids.patrols=Patrouillen
 villagerbackport.general.raids.patrols.short=Plünderer-Patrouillen streifen durch die Oberwelt.
 villagerbackport.general.raids.outposts=Außenposten

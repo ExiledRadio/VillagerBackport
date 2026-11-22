@@ -118,7 +118,6 @@ entity.villagerbackport.pillager.name=Predone
 entity.villagerbackport.ravager.name=Devastatore
 item.villagerbackport.pillager_crossbow.name=Balestra
 item.villagerbackport.ominous_bottle.name=Ampolla infausta
-jei.villagerbackport.ominous_bottle=Bevila per ottenere Cattivo presagio, da I a V a seconda dell'ampolla, per 100 minuti. Porta il Cattivo presagio in un villaggio e, 30 secondi dopo, arriva un'incursione. I capitani la rilasciano quando raids.captainDropsOminousBottle è attivo; altrimenti, uccidere un capitano dà subito Cattivo presagio.
 
 # The crossbow
 item.villagerbackport.crossbow.name=Balestra
@@ -554,8 +553,6 @@ villagerbackport.general.raids.pillagers=Creature predone
 villagerbackport.general.raids.pillagers.short=Quale creatura un'incursione manda come predone. Si usa la prima installata.
 villagerbackport.general.raids.crossbows=Balestre dei predoni
 villagerbackport.general.raids.crossbows.short=Quale balestra porta un predone. Si usa la prima installata.
-villagerbackport.general.raids.captaindropsominousbottle=I capitani lasciano ampolle infauste
-villagerbackport.general.raids.captaindropsominousbottle.short=I capitani lasciano un'Ampolla infausta, come nell'attuale Java Edition.
 villagerbackport.general.raids.patrols=Pattuglie
 villagerbackport.general.raids.patrols.short=Pattuglie di predoni girano per l'Overworld.
 villagerbackport.general.raids.outposts=Avamposti

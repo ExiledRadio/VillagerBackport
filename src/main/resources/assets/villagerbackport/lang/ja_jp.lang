@@ -118,7 +118,6 @@ entity.villagerbackport.pillager.name=ピリジャー
 entity.villagerbackport.ravager.name=ラヴェジャー
 item.villagerbackport.pillager_crossbow.name=クロスボウ
 item.villagerbackport.ominous_bottle.name=不吉な瓶
-jei.villagerbackport.ominous_bottle=飲むと、瓶に応じてI〜Vの不吉な予感が100分間付与されます。不吉な予感を持ったまま村に入ると、30秒後に襲撃が始まります。raids.captainDropsOminousBottleがオンなら隊長がこれをドロップし、オフなら隊長を倒した時点ですぐに不吉な予感が付与されます。
 
 # The crossbow
 item.villagerbackport.crossbow.name=クロスボウ
@@ -554,8 +553,6 @@ villagerbackport.general.raids.pillagers=ピリジャーのMob
 villagerbackport.general.raids.pillagers.short=襲撃がピリジャーとして送るMob。導入済みの最初のものを使います。
 villagerbackport.general.raids.crossbows=ピリジャーのクロスボウ
 villagerbackport.general.raids.crossbows.short=ピリジャーが持つクロスボウ。導入済みの最初のものを使います。
-villagerbackport.general.raids.captaindropsominousbottle=隊長が不吉な瓶をドロップ
-villagerbackport.general.raids.captaindropsominousbottle.short=現在のJava版と同じく、隊長が不吉な瓶を落とします。
 villagerbackport.general.raids.patrols=パトロール
 villagerbackport.general.raids.patrols.short=ピリジャーのパトロール隊がオーバーワールドを巡回します。
 villagerbackport.general.raids.outposts=前哨基地

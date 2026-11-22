@@ -1061,14 +1061,6 @@ public final class ModConfig {
                 "spartanweaponry:crossbow_wood", "villagerbackport:pillager_crossbow"};
 
         @Config.Comment({
-                "A captain killed away from a raid drops an ominous bottle of a random level, as in",
-                "current Java, instead of giving Bad Omen straight away, as in 1.14. Deeper Depths'",
-                "bottle is dropped when it is installed."
-        })
-        @Setting.Vanilla("true")
-        public boolean captainDropsOminousBottle = false;
-
-        @Config.Comment({
                 "Pillager patrols roam the overworld, as in 1.14: from the fifth day, by day, now and",
                 "then a band of pillagers appears 24 to 48 blocks from a player who is not in a",
                 "village, led by a captain with the ominous banner. Only with this mod's raids."

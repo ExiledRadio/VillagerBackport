@@ -118,7 +118,6 @@ entity.villagerbackport.pillager.name=Розбійник
 entity.villagerbackport.ravager.name=Спустошувач
 item.villagerbackport.pillager_crossbow.name=Арбалет
 item.villagerbackport.ominous_bottle.name=Зловісна пляшка
-jei.villagerbackport.ominous_bottle=Випийте, щоб отримати Погану прикмету на 100 хвилин — від I до V залежно від пляшки. Увійдіть із Поганою прикметою в село, і за 30 секунд почнеться набіг. Капітани залишають ці пляшки, якщо ввімкнено raids.captainDropsOminousBottle; інакше вбивство капітана одразу дає Погану прикмету.
 
 # The crossbow
 item.villagerbackport.crossbow.name=Арбалет
@@ -554,8 +553,6 @@ villagerbackport.general.raids.pillagers=Моб-розбійник
 villagerbackport.general.raids.pillagers.short=Якого моба набіг посилає як розбійника. Береться перший встановлений.
 villagerbackport.general.raids.crossbows=Арбалети розбійників
 villagerbackport.general.raids.crossbows.short=Який арбалет носить розбійник. Береться перший встановлений.
-villagerbackport.general.raids.captaindropsominousbottle=Зловісні пляшки з капітанів
-villagerbackport.general.raids.captaindropsominousbottle.short=Капітани кидають зловісну пляшку, як у поточній Java.
 villagerbackport.general.raids.patrols=Патрулі
 villagerbackport.general.raids.patrols.short=Патрулі розбійників блукають Верхнім світом.
 villagerbackport.general.raids.outposts=Аванпости

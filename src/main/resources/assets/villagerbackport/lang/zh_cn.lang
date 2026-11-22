@@ -118,7 +118,6 @@ entity.villagerbackport.pillager.name=掠夺者
 entity.villagerbackport.ravager.name=劫掠兽
 item.villagerbackport.pillager_crossbow.name=弩
 item.villagerbackport.ominous_bottle.name=不祥之瓶
-jei.villagerbackport.ominous_bottle=饮用后获得不祥之兆，等级视瓶子而定，为I至V，持续100分钟。带着不祥之兆进入村庄，30秒后袭击便会到来。开启raids.captainDropsOminousBottle时，队长会掉落此物品；否则，击杀队长会直接获得不祥之兆。
 
 # The crossbow
 item.villagerbackport.crossbow.name=弩
@@ -554,8 +553,6 @@ villagerbackport.general.raids.pillagers=掠夺者生物
 villagerbackport.general.raids.pillagers.short=袭击派出哪种生物作为掠夺者。使用第一个已安装的。
 villagerbackport.general.raids.crossbows=掠夺者的弩
 villagerbackport.general.raids.crossbows.short=掠夺者携带哪种弩。使用第一个已安装的。
-villagerbackport.general.raids.captaindropsominousbottle=队长掉落不祥之瓶
-villagerbackport.general.raids.captaindropsominousbottle.short=队长掉落不祥之瓶，与当前Java版相同。
 villagerbackport.general.raids.patrols=巡逻队
 villagerbackport.general.raids.patrols.short=掠夺者巡逻队在主世界游荡。
 villagerbackport.general.raids.outposts=前哨站

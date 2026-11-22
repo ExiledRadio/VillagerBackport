@@ -118,7 +118,6 @@ entity.villagerbackport.pillager.name=Rozbójnik
 entity.villagerbackport.ravager.name=Dewastator
 item.villagerbackport.pillager_crossbow.name=Kusza
 item.villagerbackport.ominous_bottle.name=Złowieszcza butelka
-jei.villagerbackport.ominous_bottle=Wypij ją, by otrzymać efekt Zły omen, od I do V zależnie od butelki, na 100 minut. Wnieś Zły omen do wioski, a 30 sekund później nadejdzie najazd. Przywódcy upuszczają te butelki, gdy raids.captainDropsOminousBottle jest włączone; w przeciwnym razie zabicie przywódcy od razu daje Zły omen.
 
 # The crossbow
 item.villagerbackport.crossbow.name=Kusza
@@ -554,8 +553,6 @@ villagerbackport.general.raids.pillagers=Stworzenie rozbójnika
 villagerbackport.general.raids.pillagers.short=Które stworzenie najazd wysyła jako rozbójnika. Używane jest pierwsze zainstalowane.
 villagerbackport.general.raids.crossbows=Kusze rozbójników
 villagerbackport.general.raids.crossbows.short=Jaką kuszę nosi rozbójnik. Używana jest pierwsza zainstalowana.
-villagerbackport.general.raids.captaindropsominousbottle=Przywódcy upuszczają złowieszcze butelki
-villagerbackport.general.raids.captaindropsominousbottle.short=Przywódcy upuszczają złowieszczą butelkę, jak w obecnej Javie.
 villagerbackport.general.raids.patrols=Patrole
 villagerbackport.general.raids.patrols.short=Patrole rozbójników przemierzają Nadziemie.
 villagerbackport.general.raids.outposts=Posterunki

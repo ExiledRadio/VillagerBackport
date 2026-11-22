@@ -133,6 +133,7 @@ public final class ModSounds {
         for (int level = 1; level <= 3; level++) {
             crossbowQuickCharge[level - 1] = create(event, "item.crossbow.quick_charge_" + level);
         }
+        // Nothing plays it since the ominous bottle became Tricky Trials' (2.7.4); kept registered for saved worlds.
         ominousBottleDispose = create(event, "item.ominous_bottle.dispose");
         grindstoneUse = create(event, "block.grindstone.use");
         cartographyTableUse = create(event, "ui.cartography_table.take_result");
