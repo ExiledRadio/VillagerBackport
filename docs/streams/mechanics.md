@@ -26,6 +26,7 @@ are Backport Core 1.4.0's (P33 to P35), switched on from here.
 | Horse armor drawn as a layer: no red flash, visible on an invisible horse | 1.14 (19w08a) | Iron, gold and diamond leave the baked horse texture; `LayerLeatherHorseArmor` draws them (client, restart) | `horseArmorLayer` |
 | Torches on glass panes and iron bars | 1.14.3-pre3 | Core's P35 (`BlockRules.torchesOnPanes`) | `torchesOnPanes` |
 | Book editor: cursor, selection, Ctrl+A/C/X/V, word and page clicks, Page Up/Down, 100 pages | 1.14 (18w43a) | `GuiBookEditor` in place of vanilla's unsigned book screen; same `MC|BEdit`/`MC|BSign` messages | `modernBookEditor` |
+| Signing on its own screen (`BookSignScreen`): 15-character centered title, Sign and Close / Cancel back to the book | 1.21.6 | `GuiBookSign`, from the editor's Sign when Core's menus look is 1.21.6 or later; below it the editor signs on its page (1.14) | `modernBookEditor` |
 
 ## Checked and left alone
 

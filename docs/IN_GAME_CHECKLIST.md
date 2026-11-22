@@ -77,4 +77,5 @@ armor). See `docs/streams/mechanics.md`.
 - [ ] **Horse armor**: no red flash when the horse is hurt; an invisible horse's armor shows.
 - [ ] **Torches** stand on glass panes and iron bars and stay when the pane updates.
 - [ ] **Book and quill**: click places the cursor, drag selects (highlighted), Ctrl+C/X/V/A, double click a word,
-      third click the page, Page Up/Down, Sign works and the written book reads the same.
+      third click the page, Page Up/Down, Sign works and the written book reads the same. With a 1.21.6+ backport,
+      Sign opens its own screen: Cancel returns to the book with the title kept, Escape closes, Enter signs.

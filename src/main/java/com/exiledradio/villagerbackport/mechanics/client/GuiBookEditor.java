@@ -1,5 +1,7 @@
 package com.exiledradio.villagerbackport.mechanics.client;
 
+import com.exiledradio.backportcore.presentation.LookArea;
+import com.exiledradio.backportcore.presentation.Presentation;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -31,6 +33,9 @@ import java.util.List;
  * <p>It edits and signs exactly as 1.12.2's {@code GuiScreenBook} does, with the same {@code MC|BEdit} and
  * {@code MC|BSign} messages, so a server needs nothing to accept it. A page holds what fits in the 116 x 128 text
  * area, under 256 characters.
+ *
+ * <p>Sign names the book on the editor's own page as 1.14 does; at 1.21.6 or later (Core's menus look) it opens
+ * {@link GuiBookSign} instead, as 1.21.6 does.
  */
 @SideOnly(Side.CLIENT)
 public class GuiBookEditor extends GuiScreen {
@@ -57,6 +62,8 @@ public class GuiBookEditor extends GuiScreen {
     private int frameTick;
     private long lastClick;
     private int lastClickIndex = -1;
+    private final boolean signScreen;
+    private GuiBookSign signer;
 
     private GuiButton signButton;
     private GuiButton doneButton;
@@ -66,8 +73,14 @@ public class GuiBookEditor extends GuiScreen {
     private PageButton previousButton;
 
     public GuiBookEditor(EntityPlayer player, ItemStack book) {
+        this(player, book, Presentation.isAtLeast(LookArea.MENUS, "1.21.6"));
+    }
+
+    /** @param signScreen true to sign on 1.21.6's separate screen, false on the editor's page (1.14) */
+    public GuiBookEditor(EntityPlayer player, ItemStack book, boolean signScreen) {
         this.player = player;
         this.book = book;
+        this.signScreen = signScreen;
         NBTTagCompound tag = book.getTagCompound();
         if (tag != null) {
             NBTTagList list = tag.getTagList("pages", 8);
@@ -130,6 +143,14 @@ public class GuiBookEditor extends GuiScreen {
                 this.send(false);
                 break;
             case 3:
+                if (this.signScreen) {
+                    // 1.21.6: one signing screen per editor, so Cancel and Sign again keep the title.
+                    if (this.signer == null) {
+                        this.signer = new GuiBookSign(this, this.owner());
+                    }
+                    this.mc.displayGuiScreen(this.signer);
+                    return;
+                }
                 this.signing = true;
                 break;
             case 4:
@@ -171,6 +192,17 @@ public class GuiBookEditor extends GuiScreen {
         this.updateButtons();
     }
 
+    /** 1.21.6's signing screen signs here: the same {@code MC|BSign} as the editor's own page. */
+    void sign(String title) {
+        this.title = title;
+        this.send(true);
+    }
+
+    /** @return the player's name (the session's, for an editor opened without a player) */
+    private String owner() {
+        return this.player != null ? this.player.getName() : this.mc.getSession().getUsername();
+    }
+
     /** 1.12.2's {@code sendBookToServer}: trailing empty pages dropped, then {@code MC|BEdit} or {@code MC|BSign}. */
     private void send(boolean sign) {
         if (!this.modified && !sign) {
@@ -185,7 +217,7 @@ public class GuiBookEditor extends GuiScreen {
         }
         this.book.setTagInfo("pages", list);
         if (sign) {
-            this.book.setTagInfo("author", new NBTTagString(this.player.getName()));
+            this.book.setTagInfo("author", new NBTTagString(this.owner()));
             this.book.setTagInfo("title", new NBTTagString(this.title.trim()));
         }
         PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
@@ -569,7 +601,7 @@ public class GuiBookEditor extends GuiScreen {
         String edit = I18n.format("book.editTitle");
         this.fontRenderer.drawString(edit, left + 36 + (TEXT_WIDTH - this.fontRenderer.getStringWidth(edit)) / 2, 34, 0);
         this.fontRenderer.drawString(shown, left + 36 + (TEXT_WIDTH - this.fontRenderer.getStringWidth(shown)) / 2, 50, 0);
-        String by = I18n.format("book.byAuthor", this.player.getName());
+        String by = I18n.format("book.byAuthor", this.owner());
         this.fontRenderer.drawString(TextFormatting.DARK_GRAY + by, left + 36 + (TEXT_WIDTH - this.fontRenderer.getStringWidth(by)) / 2, 60, 0);
         this.fontRenderer.drawSplitString(I18n.format("book.finalizeWarning"), left + 36, 82, TEXT_WIDTH, 0);
     }
@@ -620,6 +652,20 @@ public class GuiBookEditor extends GuiScreen {
 
     public int selectionTo() {
         return this.selectionEnd();
+    }
+
+    /** For the client self-test: the book being edited, and whether Sign opens 1.21.6's screen. */
+    public ItemStack book() {
+        return this.book;
+    }
+
+    public boolean usesSignScreen() {
+        return this.signScreen;
+    }
+
+    /** For the client self-test: the editor's Sign button. */
+    public void pressSign() {
+        this.actionPerformed(this.signButton);
     }
 
     /** For the client self-test: a key press, as LWJGL would deliver it. */
