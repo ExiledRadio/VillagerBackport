@@ -86,7 +86,9 @@ public class GuiCartographyTable extends GuiContainer {
 
         // Paper on a map that cannot get any wider produces nothing, so the crossed-out marker beside
         // the result slot is drawn for the same reason the grindstone draws its own.
-        if (!refused && zooming && map != null && map.scale >= MAX_SCALE) {
+        // 26.3: paper on an explorer map (not #extendable_maps) is refused the same way.
+        if (!refused && zooming && !mapStack.isEmpty()
+                && (!ContainerCartographyTable.isExtendable(mapStack) || map != null && map.scale >= MAX_SCALE)) {
             refused = true;
             drawTexturedModalRect(this.guiLeft + 35, this.guiTop + 31, 226, 132, 28, 21);
         }
@@ -98,8 +100,8 @@ public class GuiCartographyTable extends GuiContainer {
     private MapData mapData() {
         ItemStack stack = this.inventorySlots.getSlot(ContainerCartographyTable.SLOT_MAP).getStack();
 
-        return stack.getItem() == Items.FILLED_MAP
-                ? Items.FILLED_MAP.getMapData(stack, this.mc.world)
+        return ContainerCartographyTable.isMap(stack)
+                ? ((net.minecraft.item.ItemMap) stack.getItem()).getMapData(stack, this.mc.world)
                 : null;
     }
 

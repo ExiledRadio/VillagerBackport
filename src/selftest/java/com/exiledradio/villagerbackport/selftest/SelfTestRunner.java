@@ -32,6 +32,7 @@ public final class SelfTestRunner {
             new JobPathSelfTest(),
             new VillageJobsSelfTest(),
             new MechanicsSelfTest(),
+            new Trades26SelfTest(),
     };
 
     private final List<String> wanted;

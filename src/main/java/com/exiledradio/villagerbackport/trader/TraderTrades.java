@@ -170,7 +170,7 @@ public final class TraderTrades {
         }
         SPECIAL.add(sell(new ItemStack(Blocks.DIRT, 3, BlockDirt.DirtType.PODZOL.getMetadata()), 3, 6));
         SPECIAL.add(sell(potion(PotionTypes.INVISIBILITY), 5, 1));
-        SPECIAL.add(optionalSell(6, 1, 6, "villagerbackport:blue_ice", "oe:blue_ice", "futuremc:blue_ice"));
+        SPECIAL.add(optionalSell(6, 1, 6, "updateaquaticbackport:blue_ice", "villagerbackport:blue_ice", "oe:blue_ice", "futuremc:blue_ice"));
         SPECIAL.add(enchantedPickaxe());
 
         // Ordinary: one emerald for one, twelve in stock.
@@ -212,18 +212,20 @@ public final class TraderTrades {
         // Sea pickles are Update Aquatic Backport's: the trader sells them only when it is installed.
         ORDINARY.add(optionalSell(2, 1, 5, "updateaquaticbackport:sea_pickle"));
         ORDINARY.add(sell(new ItemStack(Blocks.GLOWSTONE), 3, 5));
-        ORDINARY.add(optionalSell(3, 1, 4, "futuremc:tropical_fish_bucket"));
-        ORDINARY.add(optionalSell(3, 1, 4, "futuremc:pufferfish_bucket"));
-        ORDINARY.add(optionalSell(3, 1, 12, "oe:kelp", "futuremc:kelp"));
+        ORDINARY.add(optionalSell(3, 1, 4, "updateaquaticbackport:tropical_fish_bucket", "futuremc:tropical_fish_bucket"));
+        ORDINARY.add(optionalSell(3, 1, 4, "updateaquaticbackport:pufferfish_bucket", "futuremc:pufferfish_bucket"));
+        ORDINARY.add(optionalSell(3, 1, 12, "updateaquaticbackport:kelp", "oe:kelp", "futuremc:kelp"));
         ORDINARY.add(sell(new ItemStack(Blocks.CACTUS), 3, 8));
-        // 1.13's five coral blocks; Oceanic Expanse names them by color (blue is tube, pink is brain,
-        // purple is bubble, red is fire, yellow is horn).
-        for (String coral : new String[] {"blue", "pink", "purple", "red", "yellow"}) {
-            ORDINARY.add(optionalSell(3, 1, 8, "oe:" + coral + "_coral_block"));
+        // 1.13's five coral blocks: Update Aquatic Backport's, or Oceanic Expanse's, which names them by color (blue is
+        // tube, pink is brain, purple is bubble, red is fire, yellow is horn).
+        String[] corals = {"tube", "brain", "bubble", "fire", "horn"};
+        String[] oeColors = {"blue", "pink", "purple", "red", "yellow"};
+        for (int i = 0; i < corals.length; i++) {
+            ORDINARY.add(optionalSell(3, 1, 8, "updateaquaticbackport:" + corals[i] + "_coral_block", "oe:" + oeColors[i] + "_coral_block"));
         }
 
         ORDINARY.add(sell(new ItemStack(Items.SLIME_BALL), 5, 5));
-        ORDINARY.add(optionalSell(5, 1, 5, "oe:nautilus_shell", "futuremc:nautilus_shell"));
+        ORDINARY.add(optionalSell(5, 1, 5, "updateaquaticbackport:nautilus_shell", "oe:nautilus_shell", "futuremc:nautilus_shell"));
         for (BlockPlanks.EnumType wood : BlockPlanks.EnumType.values()) {
             ORDINARY.add(sell(new ItemStack(Blocks.SAPLING, 1, wood.getMetadata()), 5, 8));
         }

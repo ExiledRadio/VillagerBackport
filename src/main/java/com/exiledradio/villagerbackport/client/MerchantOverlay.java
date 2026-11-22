@@ -94,6 +94,34 @@ public final class MerchantOverlay {
     }
 
     /**
+     * Takes a villager's trade list sent again while its screen is open (26.3: a level's new trades appear there),
+     * for vanilla's merchant screen or this mod's, whichever has that window open.
+     */
+    public static void acceptTradeList(int windowId, byte[] data) {
+        Minecraft mc = Minecraft.getMinecraft();
+        if (mc.player == null || mc.player.openContainer == null || mc.player.openContainer.windowId != windowId) {
+            return;
+        }
+        GuiScreen screen = mc.currentScreen;
+        IMerchant merchant = screen instanceof GuiMerchant ? ((GuiMerchant) screen).getMerchant()
+                : screen instanceof GuiVillagerMerchant ? ((GuiVillagerMerchant) screen).merchant() : null;
+        if (merchant == null) {
+            return;
+        }
+        MerchantRecipeList recipes;
+        try {
+            recipes = MerchantRecipeList.readFromBuf(new net.minecraft.network.PacketBuffer(io.netty.buffer.Unpooled.wrappedBuffer(data)));
+        } catch (java.io.IOException | RuntimeException e) {
+            VillagerBackport.LOGGER.warn("Could not read a villager's trade list", e);
+            return;
+        }
+        merchant.setRecipes(recipes);
+        if (mc.player.openContainer instanceof net.minecraft.inventory.ContainerMerchant) {
+            ((net.minecraft.inventory.ContainerMerchant) mc.player.openContainer).getMerchantInventory().resetRecipeAndSlots();
+        }
+    }
+
+    /**
      * Corrects the client's idea of how used up each trade is.
      *
      * <p>The client maintains its own use counts, incrementing them as it predicts each trade, and

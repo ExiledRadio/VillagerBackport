@@ -42,6 +42,8 @@ public final class NetworkHandler {
         channel.registerMessage(PacketVillagerSleep.Handler.class, PacketVillagerSleep.class, 4, Side.CLIENT);
         channel.registerMessage(PacketVillageOutline.Handler.class, PacketVillageOutline.class, 5, Side.CLIENT);
         channel.registerMessage(PacketVillagerShake.Handler.class, PacketVillagerShake.class, 6, Side.CLIENT);
+        // 26.3: a trade list sent again to an open trade screen. See trade.TradeScreen.
+        channel.registerMessage(PacketTradeList.Handler.class, PacketTradeList.class, 7, Side.CLIENT);
         // 1.14 completion streams own ids 10-19 (docs/V14_COMPLETION_PLAN.md).
         channel.registerMessage(com.exiledradio.villagerbackport.campfire.PacketCampfireDowse.Handler.class,
                 com.exiledradio.villagerbackport.campfire.PacketCampfireDowse.class, 18, Side.CLIENT);

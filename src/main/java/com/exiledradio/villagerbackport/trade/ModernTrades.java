@@ -3,7 +3,6 @@ package com.exiledradio.villagerbackport.trade;
 import com.exiledradio.backportcore.trade.TradeRegistry;
 
 import net.minecraft.block.Block;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -39,7 +38,8 @@ import java.util.Random;
  * few later changes minecraft.wiki documents for current Java applied on top: the librarian's
  * bookshelf is 9 emeralds for one rather than 6 for three, an enchanted fishing rod is stocked 3
  * like every other piece of enchanted gear, and a master librarian sells candles rather than a name
- * tag when a mod that adds candles is installed.
+ * tag when a mod that adds candles is installed (26.1), and no name tag at all with Game Drops Backport.
+ * Enchanted books and gear are 26.1's with trades.modernEnchantedTrades ({@link EnchantedTrades}).
  *
  * <h2>Picking</h2>
  * Each level is a pool, and a villager reaching that level takes two different trades from it at
@@ -69,6 +69,16 @@ public final class ModernTrades {
 
     /** Stock for enchanted tools, weapons and armour. */
     private static final int GEAR_STOCK = 3;
+
+    /** The candles a master librarian sells, by name: Deeper Depths', then Caves &amp; Cliffs Backport's. */
+    private static final String[] YELLOW_CANDLES = {"deeperdepths:yellow_candle", "cavesandcliffsbackport:yellow_candle"};
+    private static final String[] RED_CANDLES = {"deeperdepths:red_candle", "cavesandcliffsbackport:red_candle"};
+
+    /**
+     * Present when Game Drops Backport's 26.1 name tag changes are (its babies stream registers the golden dandelion
+     * with them): the master librarian then sells no name tag.
+     */
+    static final String[] GAME_DROPS_NAME_TAGS = {"gamedropsbackport:golden_dandelion"};
 
     /** Career key ("profession registry name/career name") to its five levels of pools. */
     private static final Map<String, Trade[][]> TABLES = new HashMap<String, Trade[][]>();
@@ -260,11 +270,13 @@ public final class ModernTrades {
                 level(buy(dye(EnumDyeColor.BLACK, 5), 12), enchantedBook(), sell(new ItemStack(Blocks.GLASS), 1, 4, STOCK)),
                 level(buy(Items.WRITABLE_BOOK, 2, 12), enchantedBook(), sell(Items.CLOCK, 5, 1, STOCK),
                         sell(Items.COMPASS, 4, 1, STOCK)),
-                // Current Java's master librarian sells candles, which replaced 1.14's name tag in 1.17.
-                // Without a mod that adds candles, the name tag stays.
-                level(optionalSell(3, 1, STOCK, "deeperdepths:yellow_candle"),
-                        optionalSell(3, 1, STOCK, "deeperdepths:red_candle"),
-                        unless(sell(Items.NAME_TAG, 20, 1, STOCK), "deeperdepths:yellow_candle", "deeperdepths:red_candle")));
+                // 26.1's master librarian: a yellow and a red candle for 3 emeralds each, and no name tag (26.1 made
+                // name tags craftable and gave them to the wandering trader). Without a mod that adds candles the
+                // name tag stays, unless Game Drops Backport has made that 26.1 change (its name tag recipe and
+                // trader trade come with its golden dandelion), when there is nothing left to sell.
+                level(optionalSell(3, 1, STOCK, YELLOW_CANDLES),
+                        optionalSell(3, 1, STOCK, RED_CANDLES),
+                        unless(sell(Items.NAME_TAG, 20, 1, STOCK), concat(YELLOW_CANDLES, RED_CANDLES, GAME_DROPS_NAME_TAGS))));
 
         // 1.14's table, or with trades.modernCartographer current Java's (1.21.5, VillagerTrades' CARTOGRAPHER): maps by
         // the villager's biome, the trial chambers map, banners by biome, the mansion map at master.
@@ -448,18 +460,23 @@ public final class ModernTrades {
         };
     }
 
+    @Nullable
     private static MerchantRecipe enchantedOffer(Item item, int basePrice, Random random) {
-        int level = 5 + random.nextInt(15);
-        ItemStack result = EnchantmentHelper.addRandomEnchantment(random, new ItemStack(item), level, false);
-        return recipe(new ItemStack(Items.EMERALD, Math.min(basePrice + level, 64)), ItemStack.EMPTY, result, GEAR_STOCK);
+        return EnchantedTrades.item(item, basePrice, GEAR_STOCK, random);
     }
 
-    /** {@code EnchantedBookForEmeraldsTrade}. 1.12.2's own librarian trade is the same formula. */
+    /**
+     * {@code EnchantedBookForEmeraldsTrade}, or with trades.modernEnchantedTrades 26.1's enchanted book trade
+     * ({@link EnchantedTrades#book}). 1.12.2's own librarian trade is 1.14's formula.
+     */
     private static Trade enchantedBook() {
         final EntityVillager.ITradeList vanilla = new EntityVillager.ListEnchantedBookForEmeralds();
         return new Fixed() {
             @Override
             public MerchantRecipe offer(EntityVillager villager, Random random) {
+                if (com.exiledradio.villagerbackport.ModConfig.trades.modernEnchantedTrades) {
+                    return EnchantedTrades.book(STOCK, random);
+                }
                 return single(vanilla, villager, random);
             }
         };
@@ -923,6 +940,14 @@ public final class ModernTrades {
         public boolean available() {
             return item() != null;
         }
+    }
+
+    private static String[] concat(String[]... parts) {
+        List<String> out = new ArrayList<String>();
+        for (String[] part : parts) {
+            out.addAll(Arrays.asList(part));
+        }
+        return out.toArray(new String[0]);
     }
 
     /** A trade offered only when none of the named items exist - the fallback for a missing one. */

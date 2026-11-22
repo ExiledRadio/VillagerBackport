@@ -318,7 +318,8 @@ public final class PriceEngine {
 
         Item item = sold.getItem();
 
-        if (item == Items.ENCHANTED_BOOK || item == Items.FILLED_MAP) {
+        // Any map item: Game Drops Backport turns sold explorer maps into its own map items.
+        if (item == Items.ENCHANTED_BOOK || item instanceof net.minecraft.item.ItemMap) {
             return true;
         }
 

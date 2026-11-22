@@ -32,6 +32,10 @@ import java.io.File;
 @Mod.EventBusSubscriber(modid = VillagerBackport.MOD_ID)
 public final class FakeUpdateAquatic {
 
+    /** Plain stand-ins, by Update Aquatic's names, for the trader's trades. */
+    static final String[] TRADER_ITEMS = {"kelp", "tube_coral_block", "brain_coral_block", "bubble_coral_block",
+            "fire_coral_block", "horn_coral_block", "nautilus_shell", "pufferfish_bucket", "tropical_fish_bucket", "blue_ice"};
+
     static Block pickle;
     static Item pickleItem;
 
@@ -100,5 +104,9 @@ public final class FakeUpdateAquatic {
         }
         pickleItem = new ItemBlock(pickle).setRegistryName(pickle.getRegistryName());
         event.getRegistry().register(pickleItem);
+        // What the wandering trader sells by Update Aquatic's names (TraderTrades).
+        for (String name : TRADER_ITEMS) {
+            event.getRegistry().register(new Item().setRegistryName(new ResourceLocation("updateaquaticbackport", name)));
+        }
     }
 }
