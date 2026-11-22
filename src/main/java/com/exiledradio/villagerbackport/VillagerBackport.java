@@ -33,6 +33,8 @@ import org.apache.logging.log4j.Logger;
         acceptedMinecraftVersions = "[1.12.2]",
         // Backport Core holds the code the backports share: textures, Future MC migration, duplicate
         // hiding, smithing upgrades and the terrain the villages are planned on.
+        // Newer releases, read by Forge's update check and Backport Core's settings screen.
+        updateJSON = "https://raw.githubusercontent.com/ExiledRadio/BackportCore/main/updates/villagerbackport.json",
         dependencies = "required-after:backportcore@[1.4.0,)",
         // A client without the mod can still join a server that has it: the trading changes are all
         // server-side, and the server sends the resulting trade list the way it always does. Such a
