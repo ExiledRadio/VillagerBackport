@@ -203,6 +203,8 @@ public final class BambooContent {
                 .setTemperature(0.95F).setRainfall(0.9F).setBaseHeight(0.45F).setHeightVariation(0.3F));
         bambooJungleHills.setRegistryName(new ResourceLocation(VillagerBackport.MOD_ID, "bamboo_jungle_hills"));
         event.getRegistry().registerAll(bambooJungle, bambooJungleHills);
+        rtgTerrain(bambooJungle, "JUNGLE");
+        rtgTerrain(bambooJungleHills, "JUNGLE_HILLS");
 
         BiomeDictionary.addTypes(bambooJungle, BiomeDictionary.Type.JUNGLE, BiomeDictionary.Type.HOT,
                 BiomeDictionary.Type.WET, BiomeDictionary.Type.DENSE);
@@ -272,5 +274,19 @@ public final class BambooContent {
         }
         Item item = stack.getItem();
         return item == bambooItem || (item != null && item == BambooFutureMc.futureMcBamboo());
+    }
+
+    /**
+     * Realistic Terrain Generation builds only biomes registered with it, and makes any other one plains. Backport
+     * Core's {@code RtgBiomes} (1.4.5) registers this biome on the terrain of the vanilla biome named here; reached by
+     * name, so with an older Core the biome simply stays RTG's patch biome in RTG worlds.
+     */
+    private static void rtgTerrain(Biome biome, String template) {
+        try {
+            Class.forName("com.exiledradio.backportcore.terrain.RtgBiomes").getMethod("register", Biome.class, String.class)
+                    .invoke(null, biome, template);
+        } catch (ReflectiveOperationException | LinkageError e) {
+            // A Backport Core without RtgBiomes.
+        }
     }
 }

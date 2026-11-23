@@ -1,5 +1,6 @@
 # 2.7.4
 
+*   **Realistic Terrain Generation** (and RTG Unofficial): bamboo jungles now generate in RTG worlds, on RTG's jungle terrain. RTG turned them into plains. Needs Backport Core 1.4.5.
 *   **The ominous bottle is now Tricky Trials Backport's**, since 1.21 added it. Village & Pillage alone has 1.14's raids again: killing a captain gives Bad Omen and there is no bottle.
 *   **With Tricky Trials Backport, captains drop an ominous bottle instead**, as in 1.21: a pillager captain that isn't in a raid drops a bottle of level I to V, and no captain gives Bad Omen. Drinking the bottle gives Bad Omen, which turns into Raid Omen in a village. The Captains Drop Ominous Bottles setting is gone.
 *   **Ominous bottles from older worlds are kept.** With Tricky Trials Backport 1.0.1 they become its bottles, with the same level. Without it they stay in your inventory as plain items that can't be drunk, and they become Tricky Trials' bottles once it is added.
