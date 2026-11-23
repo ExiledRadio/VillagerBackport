@@ -29,6 +29,7 @@ public final class SelfTestRunner {
             new FlatSelfTest(),
             new StewSelfTest(),
             new SnowSelfTest(),
+            new CutTreesSelfTest(),
             new JobPathSelfTest(),
             new VillageJobsSelfTest(),
             new MechanicsSelfTest(),
