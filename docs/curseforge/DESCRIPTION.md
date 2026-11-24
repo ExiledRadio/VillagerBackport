@@ -93,6 +93,8 @@ Every feature can be turned off in Backport Core's settings screen, under Mod Op
 
 **[Game Drops Backport](https://www.curseforge.com/minecraft/mc-mods/game-drops-backport)**: villagers and the wandering trader trade as in 26.3, with its items. The wandering trader sells golden dandelions, name tags, poplar saplings, logs and shelf mushrooms. The composter takes its plants and the stonecutter cuts its concrete stairs and slabs. Cartography tables copy explorer maps, and village explorer maps lead to this mod's villages.
 
+**Dynamic Trees**: bamboo jungles grow its jungle trees, and village trees are its own where it grows the biome's trees.
+
 **Other mods**: works with Open Terrain Generator (RLCraft Dregora), Biomes O' Plenty, Realistic Terrain Generation, Antique Atlas, JEI Villagers, TradeStages Legacy, Scape and Run: Parasites, and Hunter Illager.
 
 Using Village Names? Set `Activate New Village Generator` to `false` in `config/VillageNames4/newvillages/village_gen.cfg` to get 1.14 villages.

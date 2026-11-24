@@ -59,6 +59,8 @@ public final class VillagerBackport {
         com.exiledradio.villagerbackport.worldgen.Placement114.register();
         // This mod's spawn eggs in Miscellaneous where vanilla lists each mob's (Backport Core's creative placement).
         com.exiledradio.backportcore.creative.CreativePlacement.placeSpawnEggs(MOD_ID);
+        // Dynamic Trees' jungle trees in the bamboo jungles where it is installed (assets/villagerbackport/worldgen).
+        com.exiledradio.backportcore.compat.DynamicTrees.biomeData(new net.minecraft.util.ResourceLocation(MOD_ID, "worldgen/dynamictrees.json"));
         // Resolve the private villager fields once, up front. If this fails the handler below
         // still registers but every villager check short-circuits, so the pack loads normally
         // and the failure is one log line rather than an exception per villager per tick.

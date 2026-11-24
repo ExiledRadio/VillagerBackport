@@ -1,3 +1,9 @@
+# 2.7.6
+
+*   **Dynamic Trees**: bamboo jungles grow Dynamic Trees' jungle trees (mostly mega jungle trees, an odd oak), as its own jungles do, and village trees are Dynamic Trees' where it grows the biome's trees. Bamboo jungles had only normal trees, and villages normal trees among dynamic ones. A pack's `config/dynamictrees/worldgen.json` still decides last.
+
+Needs Backport Core 1.4.9 or newer.
+
 # 2.7.5
 
 *   **1.14's look and feel pieces moved into Backport Core**, so every backport of 1.14 or later has them, even without this mod: Scroll Sensitivity and Discrete Scrolling, F3 + N, F3 + Esc, the F3 server chunk line, the title screen's Accessibility icon, the Mojang startup logo, 1.14's splashes and vanilla's text as 1.14 words it. Your Scroll Sensitivity and Discrete Scrolling settings carry over.

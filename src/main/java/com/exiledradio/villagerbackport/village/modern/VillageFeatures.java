@@ -25,7 +25,8 @@ import java.util.Random;
 /**
  * The features 1.14's village decoration pools place: trees, crop piles, flowers.
  *
- * <p>Trees use 1.12.2's own generators for the same trees. The piles are 1.14's
+ * <p>Trees use 1.12.2's own generators for the same trees, or Dynamic Trees' where it grows its own in the biome
+ * (Backport Core's {@code DynamicTrees.grow}). The piles are 1.14's
  * {@code BlockPileFeature}, which 1.12.2 has no equivalent of.
  */
 final class VillageFeatures {
@@ -34,6 +35,9 @@ final class VillageFeatures {
     }
 
     static void place(String feature, World world, Random random, BlockPos pos) {
+        if (feature.endsWith("_tree") && com.exiledradio.backportcore.compat.DynamicTrees.grow(world, pos, random, feature)) {
+            return;   // Dynamic Trees grows its own trees in this biome: the village gets its dynamic tree
+        }
         if ("normal_tree".equals(feature)) {
             new WorldGenTrees(false).generate(world, random, pos);
         } else if ("savanna_tree".equals(feature)) {

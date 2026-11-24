@@ -1,0 +1,18 @@
+[
+	{
+		"__comment": "The bamboo jungles: Dynamic Trees' jungle trees in place of 1.12.2's, as its own jungles get. 1.14's bamboo jungle grows mostly mega jungle trees and an odd fancy oak; Dynamic Trees' jungles bring their bushes. Read by Backport Core before config/dynamictrees/worldgen.json.",
+		"select": { "name": "villagerbackport:bamboo_jungle.*" },
+		"apply": {
+			"cancelvanilla": true,
+			"species": {
+				"random": {
+					"megajungle": 11,
+					"oak": 1
+				}
+			},
+			"density": { "math": { "mul": [ "trees", "noise" ] } },
+			"chance": "standard",
+			"forestness": 1.0
+		}
+	}
+]
