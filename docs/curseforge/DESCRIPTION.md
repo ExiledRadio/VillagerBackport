@@ -79,7 +79,7 @@ Every feature can be turned off in Backport Core's settings screen, under Mod Op
 
 **[Update Aquatic Backport](https://www.curseforge.com/minecraft/mc-mods/update-aquatic-backport)**: the wandering trader sells sea pickles, and desert houses get sea pickles. Its kelp, seagrass and sea pickles go in the composter, the stonecutter cuts prismarine, cats scare phantoms away, and stray cats and foxes hunt baby turtles.
 
-**[Caves & Cliffs Backport](https://www.curseforge.com/minecraft/mc-mods/caves-cliffs-backport)**: in its 1.18 worlds, villages and outposts start where 1.18 puts them and the ground is shaped around them, and its terrain grows this mod's bamboo, berry bushes and flowers. The composter takes its lush cave plants, foxes walk on powder snow, and the wandering trader sells pointed dripstone.
+**[Caves & Cliffs Backport](https://www.curseforge.com/minecraft/mc-mods/caves-cliffs-backport)**: in its 1.18 worlds, villages and outposts generate on 1.18 terrain and the ground is shaped around them, and its terrain grows this mod's bamboo, berry bushes and flowers. The composter takes its lush cave plants, foxes walk on powder snow, and the wandering trader sells pointed dripstone.
 
 **[Buzzy Bees Backport](https://www.curseforge.com/minecraft/mc-mods/buzzy-bees-backport)**: campfires calm bees, bees pollinate cornflowers, lilies of the valley and wither roses and grow berry bushes, bells ring from redstone, and village golems crack.
 
@@ -88,6 +88,10 @@ Every feature can be turned off in Backport Core's settings screen, under Mod Op
 **[Wild Update Backport](https://www.curseforge.com/minecraft/mc-mods/wild-update-backport)**: pillager outposts get the allay cage and goat horns, the wandering trader sells propagules, the composter takes mangrove plants, and scaffolding burns as fuel.
 
 **[Trails & Tales Backport](https://www.curseforge.com/minecraft/mc-mods/trails-tales-backport)**: camels spawn in desert villages, the smithing table takes its templates, and its bamboo is this mod's bamboo.
+
+**[Tricky Trials Backport](https://www.curseforge.com/minecraft/mc-mods/trials-backport)**: pillager captains drop its ominous bottle, which gives its Bad Omen: raids in villages, ominous trials at trial spawners. The loom takes its banner patterns, the stonecutter cuts tuff, and the composter takes its plants.
+
+**[Game Drops Backport](https://www.curseforge.com/minecraft/mc-mods/game-drops-backport)**: villagers and the wandering trader trade as in 26.3, with its items. The wandering trader sells golden dandelions, name tags, poplar saplings, logs and shelf mushrooms. The composter takes its plants and the stonecutter cuts its concrete stairs and slabs. Cartography tables copy explorer maps, and village explorer maps lead to this mod's villages.
 
 **Other mods**: works with Open Terrain Generator (RLCraft Dregora), Biomes O' Plenty, Realistic Terrain Generation, Antique Atlas, JEI Villagers, TradeStages Legacy, Scape and Run: Parasites, and Hunter Illager.
 
@@ -105,17 +109,17 @@ Using Village Names? Set `Activate New Village Generator` to `false` in `config/
 
 ## Requirements
 
-Minecraft 1.12.2 with Forge 14.23.5.2847 or newer, and [Backport Core](https://www.curseforge.com/minecraft/mc-mods/backport-core) 1.3.0 or newer. The CurseForge app installs Backport Core and Fluidlogged API with it.
+Minecraft 1.12.2 with Forge 14.23.5.2847 or newer, and [Backport Core](https://www.curseforge.com/minecraft/mc-mods/backport-core) 1.4.7 or newer. The CurseForge app installs Backport Core and Fluidlogged API with it.
 
 Delete the old version of this mod before updating.
 
 ***
 
-Also by me: [Enchantment Recipes](https://www.curseforge.com/minecraft/mc-mods/rlcraft-enchantment-recipes), which lets you craft enchanted books from mod materials, and [Villager Tomes](https://www.curseforge.com/minecraft/mc-mods/rlcraft-villager-tomes), which lets you teach a librarian the books you find.
+Also by me: [Update Aquatic Backport](https://www.curseforge.com/minecraft/mc-mods/update-aquatic-backport), all of 1.13 on 1.12.2, [Buzzy Bees Backport](https://www.curseforge.com/minecraft/mc-mods/buzzy-bees-backport), all of 1.15 on 1.12.2, [Nether Update Backport](https://www.curseforge.com/minecraft/mc-mods/nether-backport), all of 1.16 on 1.12.2, [Caves & Cliffs Backport](https://www.curseforge.com/minecraft/mc-mods/caves-cliffs-backport), all of 1.17 and 1.18 on 1.12.2, [Wild Update Backport](https://www.curseforge.com/minecraft/mc-mods/wild-update-backport), all of 1.19 on 1.12.2, [Trails & Tales Backport](https://www.curseforge.com/minecraft/mc-mods/trails-tales-backport), all of 1.20 on 1.12.2, [Tricky Trials Backport](https://www.curseforge.com/minecraft/mc-mods/trials-backport), all of 1.21 on 1.12.2, [Game Drops Backport](https://www.curseforge.com/minecraft/mc-mods/game-drops-backport), the 26.x game drops on 1.12.2, [Enchantment Recipes](https://www.curseforge.com/minecraft/mc-mods/rlcraft-enchantment-recipes), which lets you craft enchanted books from mod materials, and [Villager Tomes](https://www.curseforge.com/minecraft/mc-mods/rlcraft-villager-tomes), which lets you teach a librarian the books you find.
 
 ## Credits
 
-**Original content: [Minecraft](https://www.minecraft.net), by [Mojang Studios](https://www.minecraft.net/en-us/about-minecraft).** Every feature this mod adds is from a later version of Minecraft. The textures, models, sounds, music and translations are Mojang's, taken from Minecraft's own game files, and remain theirs. The features' names and designs are Mojang's too.
+**Original content: [Minecraft](https://www.minecraft.net), by [Mojang Studios](https://www.minecraft.net/en-us/about-minecraft).** Every feature this mod adds is from a later version of Minecraft. The textures, models, sounds, music and translations are Mojang's and remain theirs. The features' names and designs are Mojang's too.
 
 **How this mod differs from the original:** Minecraft's newer versions don't run on 1.12.2. This mod is a Forge mod for Minecraft 1.12.2 that reimplements those features on the older game, matching the newer versions as closely as it can. It is not a copy or port of another mod. Where 1.12.2 can't do something the same way, the description above says so.
 
