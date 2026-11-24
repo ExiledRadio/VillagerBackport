@@ -51,7 +51,6 @@ public final class ClientSetup {
         MinecraftForge.EVENT_BUS.register(new CrossbowClient());
         CrossbowClient.registerRenderers();
         com.exiledradio.villagerbackport.bamboo.client.BambooClient.init();
-        com.exiledradio.villagerbackport.lookfeel.client.LookAndFeelClient.init();
         // `runClient -Pselftest=client`: the look-and-feel title-screen check, reached by name (a release jar has no test classes).
         String selftest = System.getProperty(com.exiledradio.villagerbackport.VillagerBackport.MOD_ID + ".selftest");
         // `-Pselftest=clientbabies`: 26.1's babies photographed in a flat world instead.

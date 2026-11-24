@@ -349,9 +349,6 @@ subtitles.villagerbackport.item.axe.strip=Обтёсывание топором
 
 # --- look and feel ---
 # 1.14's options (Mouse Settings) and screen text, and vanilla text 1.14 reworded on 1.12.2's own keys.
-options.mouseWheelSensitivity=Скорость прокрутки
-options.discrete_mouse_scroll=Дискретная прокрутка
-menu.paused=Игра приостановлена
 # --- end look and feel ---
 
 # Settings screen: each setting's name, and its one line (.short).

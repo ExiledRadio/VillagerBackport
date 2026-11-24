@@ -1,8 +1,0 @@
-tile.stoneSlab.stone.name=매끄러운 돌 반 블록
-tile.sandStone.smooth.name=깎인 사암
-tile.redSandStone.smooth.name=깎인 붉은 사암
-item.sign.name=참나무 표지판
-tile.sign.name=참나무 표지판
-tile.trapdoor.name=참나무 다락문
-tile.pressurePlateWood.name=참나무 압력판
-options.chat.opacity=대화 문자 불투명도

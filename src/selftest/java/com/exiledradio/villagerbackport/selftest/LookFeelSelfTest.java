@@ -8,8 +8,8 @@ import com.exiledradio.backportcore.presentation.Splashes;
 import com.exiledradio.backportcore.presentation.option.OptionScreen;
 import com.exiledradio.backportcore.presentation.option.PresentationOption;
 import com.exiledradio.villagerbackport.VillagerBackport;
-import com.exiledradio.villagerbackport.lookfeel.LookAndFeel;
-import com.exiledradio.villagerbackport.lookfeel.ScrollAccumulator;
+import com.exiledradio.backportcore.presentation.versions.Look114;
+import com.exiledradio.backportcore.presentation.versions.ScrollAccumulator;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.BufferedReader;
@@ -26,10 +26,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/** 1.14's look and feel registered with Backport Core, its assets, the scroll arithmetic and the lang overrides. */
+/**
+ * 1.14's look and feel registered with Backport Core, its assets, the scroll arithmetic and the lang overrides. Since
+ * Backport Core 1.4.7 all but the panorama and the version declarations are Core's; they are checked as Core serves
+ * them with this mod installed.
+ */
 public final class LookFeelSelfTest implements SelfTest {
 
     private static final String ID = VillagerBackport.MOD_ID;
+    private static final String CORE = "backportcore";
 
     @Override
     public String name() {
@@ -54,18 +59,19 @@ public final class LookFeelSelfTest implements SelfTest {
         c.ok(Presentation.contribution("1.14.2") != null, "1.14.2 is registered too (its F3 line)");
         c.eq(GameVersion.parse("1.14.2"), Presentation.newest(), "the newest installed version (this mod alone)");
         c.eq(LoadingRevision.GRID_1_14, Presentation.loadingRevision(), "the world-loading screen revision");
-        // Core's finished single slots: 1.14.4's icon, startup logo and vanilla text.
-        c.eq(new ResourceLocation(ID, "textures/gui/accessibility.png"), Presentation.titleAccessibilityIcon(), "the title screen's Accessibility icon");
-        c.eq(new ResourceLocation(ID, "textures/gui/title/mojang.png"), Presentation.asset("textures/gui/title/mojang.png"), "1.14's startup logo");
+        // Core's finished single slots: 1.14.4's icon, startup logo and vanilla text, Backport Core's own since 1.4.7.
+        c.eq(new ResourceLocation(CORE, "look/1.14/textures/gui/accessibility.png"), Presentation.titleAccessibilityIcon(), "the title screen's Accessibility icon");
+        c.eq(new ResourceLocation(CORE, "look/1.14/textures/gui/title/mojang.png"), Presentation.asset("textures/gui/title/mojang.png"), "1.14's startup logo");
         c.eq(com.exiledradio.backportcore.presentation.VanillaRevisions.Startup.BAR_1_14,
                 com.exiledradio.backportcore.presentation.VanillaRevisions.startup(), "the startup screen is 1.14's white one with its bar");
-        c.ok(Presentation.vanillaTexts().contains(new ResourceLocation(ID, "vanilla_text")), "1.14's vanilla text is registered");
+        c.ok(Presentation.vanillaTexts().contains(new ResourceLocation(CORE, "look/1.14/vanilla_text")), "1.14's vanilla text is registered (Core's)");
+        c.ok(LookFeelSelfTest.class.getResource("/assets/" + ID + "/vanilla_text/en_us.lang") == null, "this mod no longer ships vanilla_text/");
         c.ok(com.exiledradio.backportcore.presentation.VanillaRevisions.pauseFeedback() && com.exiledradio.backportcore.presentation.VanillaRevisions.vboRemoved()
                 && Presentation.TEXT_BACKGROUND_OPACITY.isShown(), "Core's 1.14 table: pause feedback row, no Use VBOs, Text Background Opacity");
         try {
-            int[] size = pngSize(new ResourceLocation(ID, "textures/gui/accessibility.png"));
+            int[] size = pngSize(new ResourceLocation(CORE, "look/1.14/textures/gui/accessibility.png"));
             c.ok(size != null && size[0] == 32 && size[1] == 64, "1.14.4's accessibility.png is 32x64: " + java.util.Arrays.toString(size));
-            int[] logo = pngSize(new ResourceLocation(ID, "textures/gui/title/mojang.png"));
+            int[] logo = pngSize(new ResourceLocation(CORE, "look/1.14/textures/gui/title/mojang.png"));
             // 1.14.4 draws it as a 256 by 256 square (blit over the whole texture), whatever its pixel size.
             c.ok(logo != null && logo[0] == 512 && logo[1] == 512, "1.14.4's mojang.png (512x512): " + java.util.Arrays.toString(logo));
         } catch (IOException e) {
@@ -96,8 +102,8 @@ public final class LookFeelSelfTest implements SelfTest {
             "Hobo humping slobo babe!"};
 
     private static void splashes(Check c) throws IOException {
-        List<String> added = lines(new ResourceLocation(ID, "texts/splashes_added.txt"));
-        List<String> removed = lines(new ResourceLocation(ID, "texts/splashes_removed.txt"));
+        List<String> added = lines(new ResourceLocation(CORE, "look/1.14/texts/splashes_added.txt"));
+        List<String> removed = lines(new ResourceLocation(CORE, "look/1.14/texts/splashes_removed.txt"));
         c.eq(16, added.size(), "1.14.4 adds this many splashes to 1.13.2's");
         c.eq(5, removed.size(), "1.14.4 removes this many");
         List<String> base = lines("/assets/minecraft/texts/splashes.txt");
@@ -110,10 +116,12 @@ public final class LookFeelSelfTest implements SelfTest {
             c.ok(base.contains(s) && !pool.contains(s), "the splash pool lost \"" + s + "\"");
         }
         Set<String> expected = new LinkedHashSet<String>(base);
+        // Since Backport Core 1.4.7 1.13's three splashes are Core's own and come with any 1.13 or later backport.
+        expected.addAll(Arrays.asList("Thank you for the fish!", "All rumors are true!", "Truly gone fishing!"));
         expected.removeAll(removed);
         expected.addAll(added);
         expected.add("{PLAYER} IS YOU");
-        c.eq(expected.size(), pool.size(), "pool size: 1.12.2's set less 1.14's removals plus its additions");
+        c.eq(expected.size(), pool.size(), "pool size: 1.12.2's set plus 1.13's three, less 1.14's removals plus its additions");
         c.eq("STEVE IS YOU", Splashes.personalize("{PLAYER} IS YOU", "Steve"), "the IS YOU splash names the player in capitals");
     }
 
@@ -122,7 +130,7 @@ public final class LookFeelSelfTest implements SelfTest {
         for (PresentationOption o : Presentation.options()) {
             byId.put(o.id(), o);
         }
-        PresentationOption[] mine = {LookAndFeel.SCROLL_SENSITIVITY, LookAndFeel.DISCRETE_SCROLLING};
+        PresentationOption[] mine = {Look114.SCROLL_SENSITIVITY, Look114.DISCRETE_SCROLLING};
         String[] labels = {"options.mouseWheelSensitivity", "options.discrete_mouse_scroll"};
         for (int i = 0; i < mine.length; i++) {
             PresentationOption o = mine[i];
@@ -132,18 +140,18 @@ public final class LookFeelSelfTest implements SelfTest {
             c.eq(GameVersion.parse("1.14"), o.since(), o.id() + "'s since");
             c.eq(labels[i], o.labelKey(), o.id() + "'s label");
         }
-        c.eq("INVERT_MOUSE", LookAndFeel.SCROLL_SENSITIVITY.after(), "Scroll Sensitivity follows Invert Mouse");
-        c.eq(LookAndFeel.SCROLL_SENSITIVITY.id(), LookAndFeel.DISCRETE_SCROLLING.after(), "Discrete Scrolling follows Scroll Sensitivity");
-        c.eq(0.01, LookAndFeel.SCROLL_SENSITIVITY.min(), "Scroll Sensitivity min");
-        c.eq(10.0, LookAndFeel.SCROLL_SENSITIVITY.max(), "Scroll Sensitivity max");
-        c.eq(1.0, LookAndFeel.SCROLL_SENSITIVITY.defaultValue(), "Scroll Sensitivity default");
-        c.eq("1.00", LookAndFeel.SCROLL_SENSITIVITY.valueText(), "Scroll Sensitivity shows two decimals, as 1.14.4's %.2f");
-        c.eq(false, LookAndFeel.DISCRETE_SCROLLING.defaultValue(), "Discrete Scrolling default");
+        c.eq("INVERT_MOUSE", Look114.SCROLL_SENSITIVITY.after(), "Scroll Sensitivity follows Invert Mouse");
+        c.eq(Look114.SCROLL_SENSITIVITY.id(), Look114.DISCRETE_SCROLLING.after(), "Discrete Scrolling follows Scroll Sensitivity");
+        c.eq(0.01, Look114.SCROLL_SENSITIVITY.min(), "Scroll Sensitivity min");
+        c.eq(10.0, Look114.SCROLL_SENSITIVITY.max(), "Scroll Sensitivity max");
+        c.eq(1.0, Look114.SCROLL_SENSITIVITY.defaultValue(), "Scroll Sensitivity default");
+        c.eq("1.00", Look114.SCROLL_SENSITIVITY.valueText(), "Scroll Sensitivity shows two decimals, as 1.14.4's %.2f");
+        c.eq(false, Look114.DISCRETE_SCROLLING.defaultValue(), "Discrete Scrolling default");
         List<String> mouse = new ArrayList<String>();
         for (PresentationOption o : Presentation.optionsOn(OptionScreen.MOUSE)) {
             mouse.add(o.id());
         }
-        c.ok(mouse.indexOf(LookAndFeel.DISCRETE_SCROLLING.id()) == mouse.indexOf(LookAndFeel.SCROLL_SENSITIVITY.id()) + 1,
+        c.ok(mouse.indexOf(Look114.DISCRETE_SCROLLING.id()) == mouse.indexOf(Look114.SCROLL_SENSITIVITY.id()) + 1,
                 "Mouse Settings lists Scroll Sensitivity, then Discrete Scrolling: " + mouse);
     }
 
@@ -157,12 +165,12 @@ public final class LookFeelSelfTest implements SelfTest {
         c.eq(120.0, ScrollAccumulator.notch(false), "LWJGL 2 reports a notch as 120");
         c.eq(1.0, ScrollAccumulator.notch(true), "Cleanroom's LWJGL 3 layer reports a notch as 1");
         c.eq("[1]", sums(ScrollAccumulator.amount(1 / ScrollAccumulator.notch(true))), "one Cleanroom notch moves one slot");
-        LookAndFeel.SCROLL_SENSITIVITY.set(0.5);
+        Look114.SCROLL_SENSITIVITY.set(0.5);
         c.eq(0.5, ScrollAccumulator.amount(1.0), "Scroll Sensitivity 0.50 halves it");
-        LookAndFeel.DISCRETE_SCROLLING.set(true);
+        Look114.DISCRETE_SCROLLING.set(true);
         c.eq(0.5, ScrollAccumulator.amount(0.1), "Discrete Scrolling counts a small movement as a whole notch");
-        LookAndFeel.DISCRETE_SCROLLING.reset();
-        LookAndFeel.SCROLL_SENSITIVITY.reset();
+        Look114.DISCRETE_SCROLLING.reset();
+        Look114.SCROLL_SENSITIVITY.reset();
     }
 
     private static String sums(double... amounts) {
@@ -220,9 +228,11 @@ public final class LookFeelSelfTest implements SelfTest {
 
     // ------------------------------------------------------------------------------------------
 
+    /** Backport Core's lang file ({@code lang}) or its 1.14 vanilla text ({@code vanilla_text}), Core's since 1.4.7. */
     private static Map<String, String> langFile(String folder, String code) throws IOException {
         Map<String, String> out = new HashMap<String, String>();
-        for (String line : lines(new ResourceLocation(ID, folder + "/" + code + ".lang"))) {
+        String path = "vanilla_text".equals(folder) ? "look/1.14/vanilla_text" : folder;
+        for (String line : lines(new ResourceLocation(CORE, path + "/" + code + ".lang"))) {
             int eq = line.indexOf('=');
             if (eq > 0 && !line.startsWith("#")) {
                 out.put(line.substring(0, eq), line.substring(eq + 1));

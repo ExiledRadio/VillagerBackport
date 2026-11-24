@@ -349,9 +349,6 @@ subtitles.villagerbackport.item.axe.strip=도끼로 긁어냄
 
 # --- look and feel ---
 # 1.14's options (Mouse Settings) and screen text, and vanilla text 1.14 reworded on 1.12.2's own keys.
-options.mouseWheelSensitivity=스크롤 감도
-options.discrete_mouse_scroll=별도 스크롤
-menu.paused=게임 일시 정지
 # --- end look and feel ---
 
 # Settings screen: each setting's name, and its one line (.short).

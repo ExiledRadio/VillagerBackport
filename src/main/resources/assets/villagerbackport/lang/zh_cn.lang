@@ -349,9 +349,6 @@ subtitles.villagerbackport.item.axe.strip=斧：削皮
 
 # --- look and feel ---
 # 1.14's options (Mouse Settings) and screen text, and vanilla text 1.14 reworded on 1.12.2's own keys.
-options.mouseWheelSensitivity=滚轮灵敏度
-options.discrete_mouse_scroll=离散滚动
-menu.paused=游戏暂停
 # --- end look and feel ---
 
 # Settings screen: each setting's name, and its one line (.short).

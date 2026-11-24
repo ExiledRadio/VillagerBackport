@@ -1,8 +1,0 @@
-tile.stoneSlab.stone.name=Плита из гладкого камня
-tile.sandStone.smooth.name=Пиленый песчаник
-tile.redSandStone.smooth.name=Пиленый красный песчаник
-item.sign.name=Дубовая табличка
-tile.sign.name=Дубовая табличка
-tile.trapdoor.name=Дубовый люк
-tile.pressurePlateWood.name=Дубовая нажимная плита
-options.chat.opacity=Непрозрачный текст

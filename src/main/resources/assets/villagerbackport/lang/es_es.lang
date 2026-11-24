@@ -349,9 +349,6 @@ subtitles.villagerbackport.item.axe.strip=Hacha raspa
 
 # --- look and feel ---
 # 1.14's options (Mouse Settings) and screen text, and vanilla text 1.14 reworded on 1.12.2's own keys.
-options.mouseWheelSensitivity=Sensibilidad de rueda
-options.discrete_mouse_scroll=Desplazamiento discreto
-menu.paused=Juego en pausa
 # --- end look and feel ---
 
 # Settings screen: each setting's name, and its one line (.short).
