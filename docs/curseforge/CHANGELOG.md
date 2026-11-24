@@ -1,9 +1,9 @@
 # 2.7.5
 
-**Requires Backport Core 1.4.7 or newer.**
-
 *   **1.14's look and feel pieces moved into Backport Core**, so every backport of 1.14 or later has them, even without this mod: Scroll Sensitivity and Discrete Scrolling, F3 + N, F3 + Esc, the F3 server chunk line, the title screen's Accessibility icon, the Mojang startup logo, 1.14's splashes and vanilla's text as 1.14 words it. Your Scroll Sensitivity and Discrete Scrolling settings carry over.
 *   The village panorama stays in this mod.
+
+Needs Backport Core 1.4.7 or newer.
 
 # 2.7.4
 
