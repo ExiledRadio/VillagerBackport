@@ -165,6 +165,7 @@ public final class VillagerBackport {
     @Mod.EventHandler
     public void loadComplete(net.minecraftforge.fml.common.event.FMLLoadCompleteEvent event) {
         com.exiledradio.backportcore.smithing.SmithingUpgrades.isActive();
+        com.exiledradio.villagerbackport.compat.LittleMaidCompat.install();
     }
 
     /**

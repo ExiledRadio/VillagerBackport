@@ -36,6 +36,7 @@ public final class SelfTestRunner {
             new Trades26SelfTest(),
             new TradeVersionsSelfTest(),
             new OminousSelfTest(),
+            new LittleMaidSelfTest(),
     };
 
     private final List<String> wanted;

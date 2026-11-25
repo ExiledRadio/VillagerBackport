@@ -133,13 +133,23 @@ public final class ItemCrossbow extends Item {
 
     @Override
     public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase user, int timeLeft) {
-        if (world.isRemote || isCharged(stack) || USE_TIME - timeLeft < chargeTicks(stack)) {
+        if (world.isRemote || isCharged(stack) || USE_TIME - timeLeft < drawNeeded(stack, user)) {
             return;
         }
         if (load(user, stack)) {
             world.playSound(null, user.posX, user.posY, user.posZ, ModSounds.crossbowLoadingEnd, category(user),
                     1.0F, 1.0F / (world.rand.nextFloat() * 0.5F + 1.0F) + 0.2F);
         }
+    }
+
+    /**
+     * How long {@code user} must draw before a release loads the crossbow: the charge time, except for
+     * another mod's fake player (LittleMaidReengaged's maids). Those draw and release on their own
+     * timer, as they would a bow (a maid releases after 16 ticks, short of the 25 a crossbow takes),
+     * so any draw loads it, and their next use fires it.
+     */
+    private static int drawNeeded(ItemStack stack, EntityLivingBase user) {
+        return user instanceof net.minecraftforge.common.util.FakePlayer ? 0 : chargeTicks(stack);
     }
 
     @Override

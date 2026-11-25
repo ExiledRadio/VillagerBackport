@@ -1,6 +1,7 @@
 # 2.7.6
 
 *   **Dynamic Trees**: bamboo jungles grow Dynamic Trees' jungle trees (mostly mega jungle trees, an odd oak), as its own jungles do, and village trees are Dynamic Trees' where it grows the biome's trees. Bamboo jungles had only normal trees, and villages normal trees among dynamic ones. A pack's `config/dynamictrees/worldgen.json` still decides last.
+*   **LittleMaidReengaged**: maids use the crossbow as their bow. It counts as an archer's weapon, and a maid loads it as she draws and fires it on her next shot. A pack can still turn it off with a "-" entry in LittleMaidReengaged's trigger config.
 
 Needs Backport Core 1.4.9 or newer.
 
