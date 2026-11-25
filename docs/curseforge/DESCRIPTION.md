@@ -1,6 +1,8 @@
 ![Backport Family](https://media.forgecdn.net/attachments/2271/405/hero-family-png.png)
 
-**[Discord](https://discord.gg/kxQvMDJBTN)** · **[Source](https://github.com/ExiledRadio/VillagerBackport)**
+[![Join the Discord](https://discord.com/api/guilds/1532942417618141204/widget.png?style=banner2)](https://discord.gg/kxQvMDJBTN)
+
+**[Source](https://github.com/ExiledRadio/VillagerBackport)**
 
 **The Backport Family:** [Backport Core](https://www.curseforge.com/minecraft/mc-mods/backport-core) · [Update Aquatic (1.13)](https://www.curseforge.com/minecraft/mc-mods/update-aquatic-backport) · [Buzzy Bees (1.15)](https://www.curseforge.com/minecraft/mc-mods/buzzy-bees-backport) · [Nether Update (1.16)](https://www.curseforge.com/minecraft/mc-mods/nether-backport) · [Caves & Cliffs (1.17-1.18)](https://www.curseforge.com/minecraft/mc-mods/caves-cliffs-backport) · [Wild Update (1.19)](https://www.curseforge.com/minecraft/mc-mods/wild-update-backport) · [Trails & Tales (1.20)](https://www.curseforge.com/minecraft/mc-mods/trails-tales-backport) · [Tricky Trials (1.21)](https://www.curseforge.com/minecraft/mc-mods/trials-backport) · [Game Drops (26.x)](https://www.curseforge.com/minecraft/mc-mods/game-drops-backport)
 
