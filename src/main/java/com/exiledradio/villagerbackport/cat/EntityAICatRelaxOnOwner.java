@@ -142,13 +142,28 @@ public class EntityAICatRelaxOnOwner extends EntityAIBase {
     public void resetTask() {
         this.cat.setLying(false);
         float sun = this.cat.world.getCelestialAngle(1.0F);
-        if (this.owner != null && this.owner.getSleepTimer() >= 100 && sun > 0.77F && sun < 0.8F
+        if (this.owner != null && sleepTimer(this.owner) >= 100 && sun > 0.77F && sun < 0.8F
                 && this.cat.world.rand.nextFloat() < 0.7F) {
             giveMorningGift();
         }
         this.onBedTicks = 0;
         this.cat.setRelaxed(false);
         this.cat.getNavigator().clearPath();
+    }
+
+    private static final java.lang.reflect.Field SLEEP_TIMER =
+            net.minecraftforge.fml.common.ObfuscationReflectionHelper.findField(EntityPlayer.class, "field_71076_b");
+
+    /**
+     * {@code sleepTimer}, from the field: its getter is client-only, and calling it here (the server's goal) crashed a
+     * dedicated server when a cat got up from its owner's bed. Just after waking it reads 100-110, which the gift needs.
+     */
+    private static int sleepTimer(EntityPlayer player) {
+        try {
+            return SLEEP_TIMER.getInt(player);
+        } catch (IllegalAccessException e) {
+            return 0;
+        }
     }
 
     /** Public so the headless test can call it directly; the goal is the only caller in play. */
