@@ -104,6 +104,30 @@ public final class CampfireRecipes {
         return sized(out);
     }
 
+    /**
+     * @return every campfire recipe, input to result: the furnace's food recipes it takes and the config's extra foods
+     *         (Backport Core's campfire recipe book reads it, so its recipes unlock and toast as 1.14's
+     *         {@code campfire_cooking} do)
+     */
+    public static java.util.Map<ItemStack, ItemStack> recipes() {
+        load();
+        java.util.Map<ItemStack, ItemStack> out = new java.util.LinkedHashMap<ItemStack, ItemStack>();
+        for (java.util.Map.Entry<ItemStack, ItemStack> e : FurnaceRecipes.instance().getSmeltingList().entrySet()) {
+            ItemStack r = result(e.getKey());
+            if (!r.isEmpty()) {
+                out.put(e.getKey(), r);
+            }
+        }
+        for (Extra extra : extras) {
+            ItemStack in = new ItemStack(extra.input, 1, extra.inputMeta < 0 ? 0 : extra.inputMeta);
+            ItemStack r = result(in);
+            if (!r.isEmpty()) {
+                out.put(in, r);
+            }
+        }
+        return out;
+    }
+
     /** @return true if a campfire takes this */
     public static boolean cooks(ItemStack input) {
         return !result(input).isEmpty();

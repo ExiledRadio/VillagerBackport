@@ -24,17 +24,23 @@ public class ContainerFurnaceVariant extends ContainerFurnace {
 
     private static final int INPUT_SLOT = 0;
 
+    private final FurnaceKind kind;
+
     public ContainerFurnaceVariant(InventoryPlayer playerInventory, IInventory furnace) {
         super(playerInventory, furnace);
+        this.kind = furnace instanceof TileEntityFurnaceVariant ? ((TileEntityFurnaceVariant) furnace).kind() : FurnaceKind.SMOKER;
 
         Slot original = this.inventorySlots.get(INPUT_SLOT);
         Slot filtered = new FilteredInput(furnace, original.getSlotIndex(), original.xPos, original.yPos,
-                furnace instanceof TileEntityFurnaceVariant
-                        ? ((TileEntityFurnaceVariant) furnace).kind()
-                        : FurnaceKind.SMOKER);
+                this.kind);
 
         filtered.slotNumber = INPUT_SLOT;
         this.inventorySlots.set(INPUT_SLOT, filtered);
+    }
+
+    /** @return which of the two furnaces this screen is (the recipe books tell their screens apart by it) */
+    public FurnaceKind kind() {
+        return this.kind;
     }
 
     private static class FilteredInput extends Slot {

@@ -154,6 +154,7 @@ public final class VillagerBackport {
         com.exiledradio.villagerbackport.compat.FutureMc.removeLateRecipes();
         com.exiledradio.villagerbackport.block.CropSounds.apply();
         com.exiledradio.villagerbackport.mechanics.Mechanics.init();
+        com.exiledradio.villagerbackport.block.CookingBooks.init();
         com.exiledradio.backportcore.smithing.SmithingUpgrades.registerIngots();
         com.exiledradio.villagerbackport.raid.Raids.init();
         if (event.getSide().isClient()) {

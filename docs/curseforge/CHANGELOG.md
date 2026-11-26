@@ -1,5 +1,6 @@
 # 2.7.6
 
+*   **Recipe books for the blast furnace and smoker**, as in 1.14. The blast furnace's has Blocks and Miscellaneous tabs, the smoker's a Food tab. Campfire recipes unlock as you pick up their food and show a toast with the campfire.
 *   **Fixed: on a server, a cat getting up from its owner's bed in the morning crashed the server.** Singleplayer was not affected.
 *   **Dynamic Trees**: bamboo jungles grow Dynamic Trees' jungle trees (mostly mega jungle trees, an odd oak), as its own jungles do, and village trees are Dynamic Trees' where it grows the biome's trees. Bamboo jungles had only normal trees, and villages normal trees among dynamic ones. A pack's `config/dynamictrees/worldgen.json` still decides last.
 *   **LittleMaidReengaged**: maids use the crossbow as their bow. It counts as an archer's weapon, and a maid loads it as she draws and fires it on her next shot. A pack can still turn it off with a "-" entry in LittleMaidReengaged's trigger config.
