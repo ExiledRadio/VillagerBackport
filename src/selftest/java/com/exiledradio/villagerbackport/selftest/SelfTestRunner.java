@@ -37,6 +37,8 @@ public final class SelfTestRunner {
             new TradeVersionsSelfTest(),
             new OminousSelfTest(),
             new LittleMaidSelfTest(),
+            new CookingBooksSelfTest(),
+            new LanternTableSelfTest(),
     };
 
     private final List<String> wanted;

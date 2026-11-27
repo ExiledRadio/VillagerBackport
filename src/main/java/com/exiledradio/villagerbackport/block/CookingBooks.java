@@ -64,7 +64,8 @@ public final class CookingBooks {
     private static Map<ItemStack, ItemStack> furnaceRecipesFor(FurnaceKind kind) {
         Map<ItemStack, ItemStack> out = new LinkedHashMap<ItemStack, ItemStack>();
         for (Map.Entry<ItemStack, ItemStack> e : FurnaceRecipes.instance().getSmeltingList().entrySet()) {
-            if (kind.accepts(e.getKey())) {
+            ItemStack in = e.getKey();
+            if (in != null && !in.isEmpty() && e.getValue() != null && !e.getValue().isEmpty() && kind.accepts(in)) {
                 out.put(e.getKey(), e.getValue());
             }
         }

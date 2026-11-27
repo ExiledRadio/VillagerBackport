@@ -80,13 +80,15 @@ public class BlockLantern extends Block implements Waterloggable {
     }
 
     private static boolean canStand(IBlockAccess world, BlockPos pos) {
-        return world.getBlockState(pos.down()).getBlockFaceShape(world, pos.down(), EnumFacing.UP) != BlockFaceShape.UNDEFINED;
+        return world.getBlockState(pos.down()).getBlockFaceShape(world, pos.down(), EnumFacing.UP) != BlockFaceShape.UNDEFINED
+                || CenterSupport.byShape(world, pos.down(), EnumFacing.UP);
     }
 
     private static boolean canHang(IBlockAccess world, BlockPos pos) {
         IBlockState above = world.getBlockState(pos.up());
         // 1.14 lets a lantern hang from anything with an underside to grip, chains and fences included.
         return above.getBlockFaceShape(world, pos.up(), EnumFacing.DOWN) != BlockFaceShape.UNDEFINED
+                || CenterSupport.byShape(world, pos.up(), EnumFacing.DOWN)
                 || above.getBlock() instanceof net.minecraft.block.BlockFence;
     }
 

@@ -1,3 +1,10 @@
+# 2.7.7
+
+*   **Fixed: a crash ("Ticking player", "Stack can not be invalid!") when a mod adds a furnace recipe with an empty input.** The blast furnace and smoker recipe books skip such recipes now.
+*   **Lanterns stand on furniture tables**: MrCrayfish's Furniture Mod and other furniture mods' tables, desks and counters hold a lantern, as any block with a full top does. A lantern goes by the shape of the block's top, as current Java does.
+
+Needs Backport Core 1.4.9 or newer.
+
 # 2.7.6
 
 *   **Recipe books for the blast furnace and smoker**, as in 1.14. The blast furnace's has Blocks and Miscellaneous tabs, the smoker's a Food tab. Campfire recipes unlock as you pick up their food and show a toast with the campfire.

@@ -74,6 +74,10 @@ public enum FurnaceKind {
      * {@code ingotCopper} - so the prefix is the category and the rest is the material.
      */
     static boolean hasOrePrefix(ItemStack stack, String prefix) {
+        // Forge throws on an empty stack, and some mods register furnace recipes with an air input.
+        if (stack == null || stack.isEmpty()) {
+            return false;
+        }
         for (int id : OreDictionary.getOreIDs(stack)) {
             if (OreDictionary.getOreName(id).startsWith(prefix)) {
                 return true;
